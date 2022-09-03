@@ -15,28 +15,37 @@ module.exports = {
     async execute(oldState, newState, client) {
         const oldChannelId = oldState.channelId;
         const newChannelId = newState.channelId;
+        const guild = client.guilds.cache.get(newState.guild.id);
+        const member = guild.members.cache.get(newState.id);
         const oldChannel = oldState.guild.channels.fetch(oldChannelId);
         const newChannel = newState.guild.channels.fetch(newChannelId);
-        const member = client.users.fetch(newState.id)
+        
+        console.log(member);
+        console.log(guild);
 
         const tempChannelCheck = await tempChannels.getTempVoiceChannel(newState.guild.id, newChannelId);
         if (!tempChannelCheck) {
             return
         }
 
-        console.log(member);
-        console.log(member.username);
-
         const joinToCreate = tempChannelCheck.guildChannelId;
-        const newChannelName = `Einsatzraum #${member.username}`;
+        const newChannelName = `Einsatzraum #${member.user.username}`;
 
         if (oldChannel !== newChannel && newChannelId === joinToCreate) {
             console.log("Ich bin hier")
             const voiceChannel = await newState.guild.channels.create(newChannelName, {
                 type: 'GUILD_VOICE',
+                bitrate: '256',
+                parent: newChannel.parent,
+                permissionOverwrites: [
+                    {
+                        id: member.id,
+                        allow: [PermissionsBitField.Flags.CONNECT, PermissionsBitField.Flags.MOVE_MEMBERS, PermissionsBitField.Flags.MANAGE_CHANNELS],
+                    },
+                ],
             });
             console.log(voiceChannel);
-            client.voiceGenerator.set(member.id, voiceChannel.id);
+            client.voiceGenerator.set(member.user.id, voiceChannel.id);
             setTimeout(() => member.voice.setChannel(voiceChannel), 500);
         }
     }
