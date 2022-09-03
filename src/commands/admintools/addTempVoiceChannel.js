@@ -47,7 +47,14 @@ module.exports = {
         return resolve(null);
       }
 
+      const activeVC = await tempChannels.getTempVoiceChannel(interaction.guild.id, voiceChannel.id);
+      if (activeVC) {
+        console.log("Voice-Channel-ID bereits als Temp-Voice-Channel angelegt")
+        return resolve(null);
+      }
+
       await tempChannels.addTempVoiceChannel(interaction.guild.id, voiceChannel.id, permission);
+      console.log("Temp-Voice-Channel erfolgreich gespeichert")
       
       return resolve(null);
     })
