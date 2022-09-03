@@ -24,18 +24,17 @@ module.exports = {
             console.log("Kein Temp-Voice Channel")
             return
         }
-        
-        const newPosition = `${newChannel.position}+1`
-        console.log(newPosition)
 
+        console.log(newState);
         const joinToCreate = tempChannelCheck.guildChannelId;
         const newChannelName = `Einsatzraum #${member.username}`;
+        console.log(newChannelName);
         if (oldChannel !== newChannel && newChannelId === joinToCreate) {
             console.log("Ich bin hier")
-            const voiceChannel = await newState.guild.channels.create(newChannelName, {
+            const voiceChannel = await newState.guild.channels.create(`${newChannelName}`, {
                 type: 'GUILD_VOICE',
                 bitrate: '256',
-                position: newPosition,
+                parent: newChannel.parent,
                 permissionOverwrites: [
                     {
                         id: member.id,
