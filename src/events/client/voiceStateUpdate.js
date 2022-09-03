@@ -23,13 +23,13 @@ module.exports = {
         if (!tempChannelCheck) {
             return
         }
-        console.log(member);
+
         const joinToCreate = tempChannelCheck.guildChannelId;
-        const newChannelName = `Einsatzraum #${member.displayName}`;
+        const newChannelName = `Einsatzraum #${member.username}`;
         console.log(newChannelName);
         if (oldChannel !== newChannel && newChannelId === joinToCreate) {
             console.log("Ich bin hier")
-            const voiceChannel = await newState.guild.channels.create(`${newChannelName}`, {
+            const voiceChannel = await newState.guild.channels.create('bliblatest', {
                 type: 'GUILD_VOICE',
                 bitrate: '256',
                 parent: newChannel.parent,
