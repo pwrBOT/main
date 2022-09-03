@@ -31,7 +31,7 @@ module.exports = {
         console.log(newChannelName);
         if (oldChannel !== newChannel && newChannelId === joinToCreate) {
             console.log("Ich bin hier")
-            const voiceChannel = await newState.guild.channels.create(`${newChannelName}`, {
+            const voiceChannel = await newState.channels.create(`${newChannelName}`, {
                 type: 'GUILD_VOICE',
                 bitrate: '256',
                 parent: newChannel.parent,
@@ -42,7 +42,7 @@ module.exports = {
                     },
                 ],
             });
-
+            console.log(voiceChannel);
             client.voiceGenerator.set(member.id, voiceChannel.id);
             setTimeout(() => member.voice.setChannel(voiceChannel), 500);
         }
