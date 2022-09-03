@@ -27,13 +27,13 @@ module.exports = {
     DBD.Dashboard = DBD.UpdatedClass();
 
     const Dashboard = new DBD.Dashboard({
-      port: 9000,
+      port: 25890,
       client: {
         id: config.powerbot_clientId,
         secret: config.powerbot_clientSecret,
       },
       redirectUri: "http://dashboard.pwr.lol:25890/discord/callback/",
-      domain: "http://dashboard.pwr.lol:25890/",
+      domain: "http://dashboard.pwr.lol/",
       bot: client,
       supportServer: {
         slash: "/support",
