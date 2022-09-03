@@ -16,19 +16,13 @@ module.exports = {
         const { member, guild } = newState;
         const oldChannel = oldState.channel;
         const newChannel = newState.channel;
-        console.log(oldState)
-        console.log(newState)
-        console.log(oldChannel)
         console.log(newChannel)
 
-        const tempChannelCheck = await tempChannels.getTempVoiceChannel(newState.guild.id, newChannel.id);
+        const tempChannelCheck = await tempChannels.getTempVoiceChannel(guild.id, newChannel.id);
         if (!tempChannelCheck) {
             console.log("Kein Temp-Voice Channel")
             return
         }
-        console.log(tempChannelCheck)
-        console.log(tempChannelCheck.guildChannelId)
-        console.log(newChannel.id)
 
         const joinToCreate = tempChannelCheck.guildChannelId;
         const newChannelName = `Einsatzraum #${member.user.tag}`;
