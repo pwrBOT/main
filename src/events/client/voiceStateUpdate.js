@@ -19,10 +19,7 @@ module.exports = {
         const member = guild.members.cache.get(newState.id);
         const oldChannel = oldState.guild.channels.fetch(oldChannelId);
         const newChannel = newState.guild.channels.fetch(newChannelId);
-        
-        console.log(member.user.username);
-        console.log(member.user.id);
-        console.log(newChannel);
+
 
         const tempChannelCheck = await tempChannels.getTempVoiceChannel(guild.id, newChannelId);
         if (!tempChannelCheck) {
@@ -38,12 +35,6 @@ module.exports = {
                 type: 'GUILD_VOICE',
                 bitrate: '256',
                 parent: newChannel.parent,
-                permissionOverwrites: [
-                    {
-                        id: member.user.id,
-                        allow: [Permissions.FLAGS.CONNECT, Permissions.FLAGS.MOVE_MEMBERS, Permissions.FLAGS.MANAGE_CHANNELS],
-                    },
-                ],
             });
             console.log(voiceChannel);
             client.voiceGenerator.set(member.user.id, voiceChannel.id);
