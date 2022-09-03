@@ -26,6 +26,7 @@ module.exports = {
             return
         }
 
+        console.log(newChannel)
         const joinToCreate = tempChannelCheck.guildChannelId;
         const newChannelName = `Einsatzraum #${member.user.username}`;
 
@@ -34,7 +35,7 @@ module.exports = {
                 name: newChannelName,
                 type: ChannelType.GuildVoice,
                 bitrate: '25600',
-                parent: newChannel.parent,
+                position: 1,
                 permissionOverwrites: [
                     {
                         id: member.user.id,
