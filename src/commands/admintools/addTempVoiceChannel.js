@@ -47,7 +47,7 @@ module.exports = {
         return resolve(null);
       }
 
-      await tempChannels.addWarn(interaction.guild.id, voiceChannel.id, permission);
+      await tempChannels.addTempVoiceChannel(interaction.guild.id, voiceChannel.id, permission);
       
       return resolve(null);
     })
