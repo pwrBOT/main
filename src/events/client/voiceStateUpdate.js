@@ -1,4 +1,4 @@
-const { VoiceState, PermissionFlagBits } = require("discord.js");
+const { VoiceState, PermissionFlagBits, ChannelType } = require("discord.js");
 const tempRepository = require("../../mysql/tempRepository");
 const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 const tempChannels = require("../../mysql/tempChannels");
@@ -30,7 +30,7 @@ module.exports = {
         const newChannelName = `Einsatzraum #${member.user.username}`;
 
         if (oldChannel !== newChannel && newChannelId === joinToCreate) {
-            const voiceChannel = await guild.channels.create('new-voice', {
+            const voiceChannel = await guild.channels.create({
                 name: newChannelName,
                 type: ChannelType.GuildVoice,
                 bitrate: '256',
