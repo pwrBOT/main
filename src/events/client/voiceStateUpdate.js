@@ -43,7 +43,7 @@ module.exports = {
                 ],
             });
             client.voiceGenerator.set(member.user.id, voiceChannel.id);
-            setTimeout(() => member.voiceStates.setChannel(voiceChannel), 500);
+            setTimeout(() => member.voice.setChannel(voiceChannel), 500);
         }
     }
 }
