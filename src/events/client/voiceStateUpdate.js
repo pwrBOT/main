@@ -25,7 +25,7 @@ module.exports = {
         }
 
         const joinToCreate = tempChannelCheck.guildChannelId;
-        const newChannelName = `Einsatzraum #${member.user.tag}`;
+        const newChannelName = `Einsatzraum #${member.username}`;
         if (oldChannel !== newChannel && newChannel && newChannel.id === joinToCreate) {
             const voiceChannel = await guild.channels.create(newChannelName, {
                 type: 'GUILD_VOICE',
@@ -33,7 +33,7 @@ module.exports = {
                 parent: newChannel.parent,
                 permissionOverwrites: [
                     {
-                        id: message.author.id,
+                        id: member.id,
                         allow: [Permissions.FLAGS.CONNECT, Permissions.FLAGS.MOVE_MEMBERS, Permissions.FLAGS.MANAGE_CHANNELS],
                     },
                 ],
