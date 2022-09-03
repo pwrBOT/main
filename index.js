@@ -81,6 +81,7 @@ client.on("ready", async () => {
 });
 
 client.on("voiceStateUpdate", async (oldState, newState) => {
+  console.log("voice join")
   tempUnbanUser.tempChannelCreate(oldState, newState, client);
 });
 
