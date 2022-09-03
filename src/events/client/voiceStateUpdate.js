@@ -26,7 +26,6 @@ module.exports = {
             return
         }
 
-        console.log(newChannel)
         const joinToCreate = tempChannelCheck.guildChannelId;
         const newChannelName = `Einsatzraum #${member.user.username}`;
 
