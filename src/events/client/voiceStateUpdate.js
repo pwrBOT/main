@@ -13,12 +13,13 @@ module.exports = {
      */
 
     async execute(oldState, newState, client) {
-        const oldChannel = oldState.channelId;
-        const newChannel = newState.channelId;
+        const oldChannelId = oldState.channelId;
+        const newChannelId = newState.channelId;
+        const oldChannel = oldState.guild.channels.fetch(oldChannelId);
+        const newChannel = newState.guild.channels.fetch(newChannelId);
         const member = client.users.fetch(newState.id)
-        console.log(member)
 
-        const tempChannelCheck = await tempChannels.getTempVoiceChannel(newState.guild.id, newState.channelId);
+        const tempChannelCheck = await tempChannels.getTempVoiceChannel(newState.guild.id, newChannelId);
         if (!tempChannelCheck) {
             console.log("Kein Temp-Voice Channel")
             return
@@ -26,7 +27,10 @@ module.exports = {
 
         const joinToCreate = tempChannelCheck.guildChannelId;
         const newChannelName = `Einsatzraum #${member.username}`;
-        if (oldChannel !== newChannel && newChannel && newChannel.id === joinToCreate) {
+        console.log(oldChannel)
+        console.log(newChannel)
+        if (oldChannel !== newChannel && newChannelId === joinToCreate) {
+            console.log("Ich bin hier")
             const voiceChannel = await guild.channels.create(newChannelName, {
                 type: 'GUILD_VOICE',
                 bitrate: 256,
