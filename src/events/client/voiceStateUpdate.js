@@ -1,4 +1,4 @@
-const { VoiceState, Permissions, permissionOverwrites } = require("discord.js");
+const { VoiceState, PermissionsBitField } = require("discord.js");
 const tempRepository = require("../../mysql/tempRepository");
 const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 const tempChannels = require("../../mysql/tempChannels");
@@ -9,7 +9,7 @@ module.exports = {
     /**
      * 
      * @param {VoiceState} oldState 
-     * @param {VoiceState} newState 
+     * @param {VoiceState} newState
      */
 
     async execute(oldState, newState, client) {
@@ -36,7 +36,7 @@ module.exports = {
                 permissionOverwrites: [
                     {
                         id: member.id,
-                        allow: [Permissions.FLAGS.CONNECT, Permissions.FLAGS.MOVE_MEMBERS, Permissions.FLAGS.MANAGE_CHANNELS],
+                        allow: [PermissionsBitField.Flags.CONNECT, PermissionsBitField.Flags.MOVE_MEMBERS, PermissionsBitField.Flags.MANAGE_CHANNELS],
                     },
                 ],
             });
