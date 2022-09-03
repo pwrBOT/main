@@ -80,6 +80,10 @@ client.on("ready", async () => {
   tempUnmuteUser.init(client);
 });
 
+client.on("voiceStateUpdate", async (oldState, newState) => {
+  tempUnbanUser.tempChannelCreate(oldState, newState, client);
+});
+
 // Discord Together
 const { DiscordTogether } = require('discord-together');
 client.discordTogether = new DiscordTogether(client);

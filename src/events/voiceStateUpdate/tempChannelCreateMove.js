@@ -5,7 +5,7 @@ const tempChannels = require("../../mysql/tempChannels");
 var client;
 
 
-async function tempChannelCreate(oldState, newState) {
+async function tempChannelCreate(oldState, newState, client) {
     return new Promise(async (resolve) => {
         const guildId = newState.guild.id;
         const channelId = newState.channelId;
@@ -36,7 +36,6 @@ async function tempChannelCreate(oldState, newState) {
         return resolve(null);
     })
 }
-
 
 
 module.exports.tempChannelCreate = tempChannelCreate;
