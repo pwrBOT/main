@@ -1,0 +1,268 @@
+const {
+  SlashCommandBuilder,
+  PermissionFlagsBits,
+  EmbedBuilder,
+  PermissionsBitField,
+} = require("discord.js");
+const ms = require("ms");
+const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
+
+module.exports = {
+  name: "timeout",
+  category: "moderation",
+  description: "User für einen bestimmten Zeitraum timeouten",
+  data: new SlashCommandBuilder()
+    .setName(`timeout`)
+    .setDescription(`User timeouten / Timeout entfernen`)
+    .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName(`add`)
+        .setDescription(`User timeouten`)
+        .addUserOption((option) =>
+          option
+            .setName("user")
+            .setDescription("User der getimeouted werden soll")
+            .setRequired(true)
+        )
+        .addStringOption((option) =>
+          option
+            .setName("length")
+            .setDescription("Wie lange soll der Timeout sein?")
+            .setRequired(true)
+            .addChoices(
+              { name: "15 Minuten", value: "15m" },
+              { name: "30 Minuten", value: "30m" },
+              { name: "1 Stunde", value: "1h" },
+              { name: "1 Tag", value: "1d" },
+              { name: "1 Woche", value: "1w" }
+            )
+        )
+        .addStringOption((option) =>
+          option
+            .setName("reason")
+            .setDescription("Begründung")
+            .setRequired(true)
+        )
+    )
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName(`remove`)
+        .setDescription(`Timeout entfernen`)
+        .addUserOption((option) =>
+          option
+            .setName("user")
+            .setDescription("User der getimeouted werden soll")
+            .setRequired(true)
+        )
+    ),
+
+  async execute(interaction, client) {
+    return new Promise(async (resolve) => {
+      const { options, user, guild } = interaction;
+      const member = options.getMember("user");
+      const length = options.getString("length");
+      const reason = options.getString("reason") || "Kein Grund angegeben";
+      const servername = guild.name;
+
+      if (!member) {
+        interaction.editReply("❌ Der User ist nicht mehr auf dem Server ❌");
+        return resolve(null);
+      }
+
+      if (member.id === user.id) {
+        interaction.editReply("❌ Du kannst dich nicht selber timeouten! ❌");
+        return resolve(null);
+      }
+
+      if (member.id === client.user.id) {
+        interaction.editReply("❌ Du kannst den Bot nicht timeouten! ❌");
+        return resolve(null);
+      }
+
+      if (guild.ownerId === member.id) {
+        interaction.editReply(
+          "❌ Du kannst den Serverinhaber nicht timeouten! ❌"
+        );
+        return resolve(null);
+      }
+
+      if (member.manageable === false) {
+        interaction.editReply(
+          "❌ Du hast zuwenig Power um den Befehl auszuführen ❌"
+        );
+        return resolve(null);
+      }
+
+      if (member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+        interaction.editReply("❌ Du kannst keinen Admin timeouten! ❌");
+        return resolve(null);
+      }
+
+      if (interaction.options.getSubcommand() === "add") {
+        if (!length)
+          return interaction
+            .editReply("❌ Wähle einen gültigen Zeitraum aus! ❌")
+            .then(
+              setTimeout(function () {
+                interaction.deleteReply();
+              }, 3000)
+            );
+
+        const modlogembed = new EmbedBuilder()
+          .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+          .setDescription(
+            `User: ${member} wurde getimeouted!\nDauer: ${length}`
+          )
+          .setColor(0x51ff00)
+          .setTimestamp(Date.now())
+          .setThumbnail(member.displayAvatarURL())
+          .setFooter({
+            iconURL: client.user.displayAvatarURL(),
+            text: `powered by Powerbot`,
+          })
+          .addFields([
+            {
+              name: `Grund:`,
+              value: `${reason}`,
+              inline: true,
+            },
+            {
+              name: `Moderator:`,
+              value: interaction.user.tag,
+              inline: true,
+            },
+          ]);
+
+        const embedmember = new EmbedBuilder()
+          .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+          .setDescription(
+            `Du wurdest getimeouted!\nServer: "${servername}"\nDauer: ${length}!`
+          )
+          .setColor(0x51ff00)
+          .setTimestamp(Date.now())
+          .setThumbnail(guild.iconURL())
+          .setFooter({
+            iconURL: client.user.displayAvatarURL(),
+            text: `powered by Powerbot`,
+          })
+          .addFields([
+            {
+              name: `Grund:`,
+              value: `${reason}`,
+              inline: true,
+            },
+            {
+              name: `Moderator:`,
+              value: interaction.user.tag,
+              inline: true,
+            },
+            {
+              name: `Information:`,
+              value: `Bei Fragen wende dich bitte an die Projektleitung`,
+              inline: false,
+            },
+          ]);
+
+        member.timeout(ms(length), reason);
+
+        const newMessage = `User ${member} wurde getimeouted ✅`;
+        await interaction.reply({ content: newMessage });
+        setTimeout(function () {
+          interaction.deleteReply();
+        }, 3000);
+
+        const guildSettings = await guildSettingsRepository.getGuildSettings(
+          interaction.guild,
+          1
+        );
+        if (!guildSettings) {
+          return resolve(null);
+        }
+
+        const modLogChannel = guildSettings.modLog;
+        if (modLogChannel === undefined) {
+          interaction.reply(
+            `Mod-Log Channel nicht gefunden! Bot Einrichtung abschließen`
+          );
+          setTimeout(function () {
+            interaction.deleteReply();
+          }, 3000);
+        } else {
+          client.channels.cache
+            .get(modLogChannel)
+            .send({ embeds: [modlogembed] });
+        }
+        member.send({ embeds: [embedmember] });
+
+        const powerbot_commandLog = require("../../mysql/powerbot_commandLog");
+                                          // guild - command, user, affectedMember, reason
+        await powerbot_commandLog.logCommandUse(interaction.guild, "timeout add", interaction.user, member.user, "-")
+
+        return resolve(null);
+      }
+
+      if (interaction.options.getSubcommand() === "remove") {
+        const modlogembed2 = new EmbedBuilder()
+          .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+          .setDescription(
+            `Timeout von User: ${member} entfernt ✅\n\nModerator: ${interaction.user.tag}`
+          )
+          .setColor(0x51ff00)
+          .setTimestamp(Date.now())
+          .setFooter({
+            iconURL: client.user.displayAvatarURL(),
+            text: `powered by Powerbot`,
+          });
+
+        const embedmember2 = new EmbedBuilder()
+          .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+          .setDescription(
+            `Dein Timeout wurde entfernt. \nDu wurdest freigegeben ✅\n\nServer: "${servername}"\n\nModerator: ${interaction.user.tag}`
+          )
+          .setColor(0x51ff00)
+          .setTimestamp(Date.now())
+          .setFooter({
+            iconURL: client.user.displayAvatarURL(),
+            text: `powered by Powerbot`,
+          });
+
+        const guildSettings = await guildSettingsRepository.getGuildSettings(
+          interaction.guild,
+          1
+        );
+        if (!guildSettings) {
+          return resolve(null);
+        }
+
+        const modLogChannel = guildSettings.modLog;
+        if (modLogChannel === undefined) {
+          interaction.reply(
+            `Mod-Log Channel nicht gefunden! Bot Einrichtung abschließen`
+          );
+          setTimeout(function () {
+            interaction.deleteReply();
+          }, 3000);
+        } else {
+          client.channels.cache.get(modLogChannel).send({ embeds: [modlogembed2] });
+        }
+
+        member.send({ embeds: [embedmember2] }).catch(console.error);
+        interaction.reply({
+          content: `Timeout von User: ${member} entfernt ✅`,
+        });
+        setTimeout(function () {
+          interaction.deleteReply();
+        }, 3000);
+
+        member.timeout(null).catch(console.error);
+
+        const powerbot_commandLog = require("../../mysql/powerbot_commandLog");
+                                          // guild - command, user, affectedMember, reason
+        await powerbot_commandLog.logCommandUse(interaction.guild, "timeout remove", interaction.user, member.user, reason)
+
+        return resolve(null);
+      }
+    });
+  },
+};

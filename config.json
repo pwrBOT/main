@@ -1,0 +1,28 @@
+{
+  "powerbot_token": "ODE1NjIxMTE1NzY5OTEzMzY0.GrbI_D.z3D1Q07OPhZMv7bAG0WO52mrs21T2UbbbWW0Pc",
+  "powerbot_clientId": "815621115769913364",
+  "powerbot_clientSecret": "_GcIlgPYoMzYKb97Hfa_vKHtE2a9i-pD",
+  "powerbot_pwrguildID": "994975619521712219",
+  "powerbot_ldsguildID": "396282694906150913",
+  "powerbot_mbrguildID": "539519507597885440",
+
+  "botmaster": ["539513467313455105", "609057609953312789", "289759037573169162"],
+
+
+  "powerbot_token_LIVE": "MTAwOTg1MTIzNTcwNjMzOTQ0MA.G2JdQS.zPN7vc5su37-z3m9VP8sCWqA425TuMhvHanocQ",
+  "powerbot_clientId_LIVE": "1009851235706339440",
+
+  "powerbot_status_channel": "997875924655689788",
+  "powerbot_devlog_channel": "1012652868173565982",
+  "powerbot_modlog_channel": "997875909392609410",
+  "powerbot_error_channel": "994975620008263722",
+
+  "powerbot_mongoDBUrl": "mongodb+srv://powerbot:KCGuKtJ5iWm8JX4A@cluster0.1xjplbx.mongodb.net/?retryWrites=true&w=majority",
+
+  "powerbot_mysql_host": "162.55.11.41",
+  "powerbot_mysql_user": "mbr_hosting_powerbot",
+  "powerbot_mysql_pw": "mb4gU3*48Af78k8f3~Pm_98uc81",
+  "powerbot_mysql_database": "mbr_hosting_powerbot",
+
+  "powerbot_dashboard": "348c5b8a-91b9-4aa2-b0eb-d8d2ad2fe443"
+}

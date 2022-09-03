@@ -1,0 +1,59 @@
+const { REST } = require("@discordjs/rest");
+const { Routes } = require("discord-api-types/v9");
+const fs = require("fs");
+const config = require("../../../config.json");
+
+module.exports = (client) => {
+  client.handleCommands = async () => {
+    const commandFolders = fs.readdirSync("./src/commands");
+    for (const folder of commandFolders) {
+      const commandFiles = fs
+        .readdirSync(`./src/commands/${folder}`)
+        .filter((file) => file.endsWith(".js"));
+
+      const { commands, commandArray } = client;
+      for (const file of commandFiles) {
+        const command = require(`../../commands/${folder}/${file}`);
+        commands.set(command.data.name, command);
+        commandArray.push(command.data.toJSON());
+        console.log(
+          `\x1b[36mCommand: ${command.data.name} has been passed through the handler\x1b[0m`
+        );
+      }
+    }
+
+    const clientId = config.powerbot_clientId;
+    const TOKEN = config.powerbot_token;
+    const pwrguildID = config.powerbot_pwrguildID;
+    const ldsguildID = config.powerbot_ldsguildID;
+    const mbrguildID = config.powerbot_mbrguildID;
+
+    const rest = new REST({ version: "9" }).setToken(TOKEN);
+    try {
+      console.log("\x1b[33mStarted refreshing bot (/) commands.\x1b[0m");
+
+      // DEPLOY COMMANDS GLOBAL TO ALL GUILDS (1h Refresh Time)
+      await rest.put(Routes.applicationCommands(clientId), {
+        body: [],
+      });
+
+      // DEPLOY COMMANDS TO SPECIFIC GUILDS --> ATTENTION! COMMANDS ARE DOUBLED --> ONLY FOR DEV
+      console.log("\x1b[33mÜbertrage Commands zu Test-Guild: PowerBot\x1b[0m");
+      await rest.put(Routes.applicationGuildCommands(clientId, pwrguildID), {
+        body: client.commandArray,
+      });
+      console.log("\x1b[33mÜbertrage Commands zu Test-Guild: Lüdenscheid\x1b[0m");
+      await rest.put(Routes.applicationGuildCommands(clientId, ldsguildID), {
+        body: client.commandArray,
+      });
+      console.log("\x1b[33mÜbertrage Commands zu Test-Guild: Miami-Blue Records\x1b[0m");
+      await rest.put(Routes.applicationGuildCommands(clientId, mbrguildID), {
+        body: client.commandArray,
+      });
+
+      console.log("\x1b[32mAlle commands erfolgreich übertragen!\x1b[0m");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
