@@ -12,7 +12,7 @@ module.exports = {
   category: "admintools",
   description: "Verwalte Temp-Voice-Channels",
   data: new SlashCommandBuilder()
-    .setName(`TempVoiceChannel`)
+    .setName(`tempvoicechannel`)
     .setDescription(`Erstelle einen`)
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addSubcommand((subcommand) =>
