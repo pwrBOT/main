@@ -1,4 +1,4 @@
-const { VoiceState } = require("discord.js");
+const { VoiceState, Permissions, permissionOverwrites } = require("discord.js");
 const tempRepository = require("../../mysql/tempRepository");
 const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 const tempChannels = require("../../mysql/tempChannels");
