@@ -41,20 +41,19 @@ module.exports = {
       const voiceChannel = interaction.options.getChannel("voicechannel");
       const permission = interaction.options.getString("permission");
 
-      console.log(voiceChannel)
-      if (voiceChannel.type === 'voice'){
-        console.log("Ich bin ein Voice Channel")
+      if (voiceChannel.type === '2'){
+        interaction.editReply("Ich bin ein Voice Channel")
         return resolve(null);
       }
 
       const activeVC = await tempChannels.getTempVoiceChannel(interaction.guild.id, voiceChannel.id);
       if (activeVC) {
-        console.log("Voice-Channel-ID bereits als Temp-Voice-Channel angelegt")
+        interaction.editReply("Voice-Channel-ID bereits als Temp-Voice-Channel angelegt")
         return resolve(null);
       }
 
       await tempChannels.addTempVoiceChannel(interaction.guild.id, voiceChannel.id, permission);
-      console.log("Temp-Voice-Channel erfolgreich gespeichert")
+      interaction.editReply("Temp-Voice-Channel erfolgreich gespeichert")
       
       return resolve(null);
     })
