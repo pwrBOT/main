@@ -13,15 +13,11 @@ module.exports = {
      */
 
     async execute(oldState, newState, client) {
-        console.log("User in Voice Channel")
         const { member, guild } = newState;
         const oldChannel = oldState.channel;
         const newChannel = newState.channel;
 
-        console.log(newState.guild.id)
-        console.log(newState.channelId)
-
-        const tempChannelCheck = await tempChannels.getTempVoiceChannel(newState.guild.id, newState.channelId);
+        const tempChannelCheck = await tempChannels.getTempVoiceChannel(newState.guild.id, newChannel.id);
         if (!tempChannelCheck) {
             console.log("Kein Temp-Voice Channel")
             return resolve(null);
@@ -47,7 +43,6 @@ module.exports = {
 
             client.voiceGenerator.set(member.id, voiceChannel.id);
             setTimeout(() => member.voice.setChannel(voiceChannel), 500);
-            return resolve(null);
         }
     }
 }
