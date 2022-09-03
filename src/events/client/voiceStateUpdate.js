@@ -1,4 +1,4 @@
-const { VoiceState, PermissionFlagBits, ChannelType } = require("discord.js");
+const { VoiceState, PermissionFlagsBits, PermissionsBitField, ChannelType } = require("discord.js");
 const tempRepository = require("../../mysql/tempRepository");
 const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 const tempChannels = require("../../mysql/tempChannels");
@@ -19,7 +19,7 @@ module.exports = {
         const member = guild.members.cache.get(newState.id);
         const oldChannel = oldState.guild.channels.fetch(oldChannelId);
         const newChannel = newState.guild.channels.fetch(newChannelId);
-        
+
 
         const tempChannelCheck = await tempChannels.getTempVoiceChannel(guild.id, newChannelId);
         if (!tempChannelCheck) {
@@ -38,7 +38,7 @@ module.exports = {
                 permissionOverwrites: [
                     {
                         id: member.user.id,
-                        allow: [PermissionFlagBits.ViewChannel, PermissionFlagBits.Connect],
+                        allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.Connect],
                     },
                 ],
             });
