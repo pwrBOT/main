@@ -31,7 +31,7 @@ module.exports = {
             console.log("Ich bin hier")
             const voiceChannel = await newState.guild.channels.create(newChannelName, {
                 type: 'GUILD_VOICE',
-                bitrate: 256,
+                bitrate: '256',
                 parent: newChannel.parent,
                 permissionOverwrites: [
                     {
