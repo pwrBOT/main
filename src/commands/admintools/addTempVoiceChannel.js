@@ -46,7 +46,7 @@ module.exports = {
       const voiceChannel = interaction.options.getChannel("voicechannel");
       const permission = interaction.options.getString("permission");
       console.log(voiceChannel.type)
-      if (!voiceChannel.type === "2"){
+      if (voiceChannel.type != 2){
         interaction.editReply("Ich bin kein Voice Channel")
         return resolve(null);
       }
