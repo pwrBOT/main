@@ -22,6 +22,10 @@ module.exports = {
                 console.log("Kein Temp-Voice Channel")
                 return resolve(null);
             }
+            console.log(tempChannelCheck)
+            console.log(tempChannelCheck.guildChannelId)
+            console.log(newChannel.id)
+
             const joinToCreate = tempChannelCheck.guildChannelId;
             const newChannelName = `Einsatzraum #${member.user.tag}`;
             if (oldChannel !== newChannel && newChannel && newChannel.id === joinToCreate) {
