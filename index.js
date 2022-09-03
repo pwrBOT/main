@@ -48,6 +48,7 @@ client.commands = new Collection();
 client.buttons = new Collection();
 client.selectMenus = new Collection();
 client.modals = new Collection();
+client.voiceGenerator = new Collection();
 client.commandArray = [];
 
 const functionFolders = fs.readdirSync(`./src/functions`);
@@ -80,10 +81,6 @@ client.on("ready", async () => {
   tempUnmuteUser.init(client);
 });
 
-client.on('voiceStateUpdate', (oldState, newState) => {
-  console.log("voice join")
-  tempUnbanUser.tempChannelCreate(oldState, newState, client);
-});
 
 // Discord Together
 const { DiscordTogether } = require('discord-together');
