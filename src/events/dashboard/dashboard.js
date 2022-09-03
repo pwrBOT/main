@@ -32,8 +32,8 @@ module.exports = {
         id: config.powerbot_clientId,
         secret: config.powerbot_clientSecret,
       },
-      redirectUri: "https://dashboard.vps202.s-loer.de/discord/callback/",
-      domain: "https://dashboard.vps202.s-loer.de/",
+      redirectUri: "http://dashboard.pwr.lol:25890/discord/callback/",
+      domain: "http://dashboard.pwr.lol:25890/",
       bot: client,
       supportServer: {
         slash: "/support",
@@ -49,7 +49,7 @@ module.exports = {
         clientId: client.user.id,
         scopes: ["bot", "applications.commands", "guilds", "identify"],
         permissions: "1644971949303",
-        redirectUri: "https://dashboard.vps202.s-loer.de/discord/callback/",
+        redirectUri: "http://dashboard.pwr.lol:25890/discord/callback/",
       },
       theme: DarkDashboard({
         information: {
