@@ -17,12 +17,10 @@
   "powerbot_modlog_channel": "997875909392609410",
   "powerbot_error_channel": "994975620008263722",
 
-  "powerbot_mongoDBUrl": "mongodb+srv://powerbot:KCGuKtJ5iWm8JX4A@cluster0.1xjplbx.mongodb.net/?retryWrites=true&w=majority",
-
-  "powerbot_mysql_host": "162.55.11.41",
-  "powerbot_mysql_user": "mbr_hosting_powerbot",
-  "powerbot_mysql_pw": "mb4gU3*48Af78k8f3~Pm_98uc81",
-  "powerbot_mysql_database": "mbr_hosting_powerbot",
+  "powerbot_mysql_host": "142.132.233.69",
+  "powerbot_mysql_user": "u73496_iyU6aQdVkA",
+  "powerbot_mysql_pw": "dbUUVwU99AyJZ8P=2X0WH!N7",
+  "powerbot_mysql_database": "s73496_powerbot_db_live",
 
   "powerbot_dashboard": "348c5b8a-91b9-4aa2-b0eb-d8d2ad2fe443"
 }
