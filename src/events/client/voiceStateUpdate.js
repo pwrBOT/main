@@ -38,11 +38,10 @@ module.exports = {
                 permissionOverwrites: [
                     {
                         id: member.user.id,
-                        allow: [PermissionFlagBits.VieChannel, PermissionFlagBits.Connect],
+                        allow: [PermissionFlagBits.ViewChannel, PermissionFlagBits.Connect],
                     },
                 ],
             });
-            console.log(voiceChannel);
             client.voiceGenerator.set(member.user.id, voiceChannel.id);
             setTimeout(() => member.voiceStates.setChannel(voiceChannel), 500);
         }
