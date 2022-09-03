@@ -24,21 +24,16 @@ module.exports = {
             return
         }
 
+        console.log(member);
+        console.log(member.username);
+
         const joinToCreate = tempChannelCheck.guildChannelId;
         const newChannelName = `Einsatzraum #${member.username}`;
-        console.log(newChannelName);
+
         if (oldChannel !== newChannel && newChannelId === joinToCreate) {
             console.log("Ich bin hier")
-            const voiceChannel = await newState.guild.channels.create('bliblatest', {
+            const voiceChannel = await newState.guild.channels.create(newChannelName, {
                 type: 'GUILD_VOICE',
-                bitrate: '256',
-                parent: newChannel.parent,
-                permissionOverwrites: [
-                    {
-                        id: member.id,
-                        allow: [PermissionsBitField.Flags.CONNECT, PermissionsBitField.Flags.MOVE_MEMBERS, PermissionsBitField.Flags.MANAGE_CHANNELS],
-                    },
-                ],
             });
             console.log(voiceChannel);
             client.voiceGenerator.set(member.id, voiceChannel.id);
