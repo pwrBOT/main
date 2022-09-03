@@ -80,7 +80,7 @@ client.on("ready", async () => {
   tempUnmuteUser.init(client);
 });
 
-client.on("voiceStateUpdate", async (oldState, newState) => {
+client.on('voiceStateUpdate', (oldState, newState) => {
   console.log("voice join")
   tempUnbanUser.tempChannelCreate(oldState, newState, client);
 });
