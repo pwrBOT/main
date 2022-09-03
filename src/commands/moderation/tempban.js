@@ -14,7 +14,7 @@ module.exports = {
   description: "User vom Discord temp bannen",
   data: new SlashCommandBuilder()
     .setName(`tempban`)
-    .setDescription(`DEMO!!!! User temporär vom Server bannen`)
+    .setDescription(`User temporär vom Server bannen`)
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addUserOption((option) =>
       option
