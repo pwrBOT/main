@@ -1,4 +1,4 @@
-const { VoiceState } = require("discord.js");
+const { VoiceState, PermissionsBitField } = require("discord.js");
 const tempRepository = require("../../mysql/tempRepository");
 const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 const tempChannels = require("../../mysql/tempChannels");
@@ -19,7 +19,7 @@ module.exports = {
         const member = guild.members.cache.get(newState.id);
         const oldChannel = oldState.guild.channels.fetch(oldChannelId);
         const newChannel = newState.guild.channels.fetch(newChannelId);
-
+        
 
         const tempChannelCheck = await tempChannels.getTempVoiceChannel(guild.id, newChannelId);
         if (!tempChannelCheck) {
@@ -35,6 +35,12 @@ module.exports = {
                 type: 'GUILD_VOICE',
                 bitrate: '256',
                 parent: newChannel.parent,
+                permissionOverwrites: [
+                    {
+                        id: member.user.id,
+                        allow: [PermissionsBitField.Flags.CONNECT, PermissionsBitField.Flags.MOVE_MEMBERS, PermissionsBitField.Flags.MANAGE_CHANNELS],
+                    },
+                ],
             });
             console.log(voiceChannel);
             client.voiceGenerator.set(member.user.id, voiceChannel.id);
