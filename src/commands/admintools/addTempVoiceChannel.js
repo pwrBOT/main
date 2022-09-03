@@ -38,6 +38,11 @@ module.exports = {
     ),
   async execute(interaction, client) {
     return new Promise(async (resolve) => {
+      await interaction.deferReply({
+        ephemeral: false,
+        fetchReply: true,
+      });
+      
       const voiceChannel = interaction.options.getChannel("voicechannel");
       const permission = interaction.options.getString("permission");
 
