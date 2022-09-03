@@ -2,8 +2,7 @@ const {
   Client,
   Collection,
   GatewayIntentBits,
-  Partials,
-  CommandInteractionOptionResolver,
+  Partials
 } = require("discord.js");
 const config = require("./config.json");
 const fs = require("fs");
@@ -29,6 +28,7 @@ const client = new Client({
     GatewayIntentBits.GuildIntegrations,
     GatewayIntentBits.GuildEmojisAndStickers,
     GatewayIntentBits.GuildBans,
+    GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.DirectMessages,
     GatewayIntentBits.DirectMessageTyping,
     GatewayIntentBits.DirectMessageReactions,
@@ -37,6 +37,7 @@ const client = new Client({
     Partials.Channel,
     Partials.GuildMember,
     Partials.GuildScheduledEvent,
+    Partials.GuildVoiceStats,
     Partials.Message,
     Partials.Reaction,
     Partials.ThreadMember,
