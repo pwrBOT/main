@@ -13,11 +13,12 @@ module.exports = {
      */
 
     async execute(oldState, newState, client) {
-        console.log(newState);
-        const oldChannel = oldState.id;
-        const newChannel = newState.id;
+        const oldChannel = oldState.channelId;
+        const newChannel = newState.channelId;
+        const member = client.users.fetch(newState.id)
+        console.log(member)
 
-        const tempChannelCheck = await tempChannels.getTempVoiceChannel(guild.id, newState.id);
+        const tempChannelCheck = await tempChannels.getTempVoiceChannel(newState.guild.id, newState.channelId);
         if (!tempChannelCheck) {
             console.log("Kein Temp-Voice Channel")
             return
