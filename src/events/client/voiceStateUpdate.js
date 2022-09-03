@@ -1,4 +1,4 @@
-const { VoiceState, PermissionsBitField } = require("discord.js");
+const { VoiceState } = require("discord.js");
 const tempRepository = require("../../mysql/tempRepository");
 const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 const tempChannels = require("../../mysql/tempChannels");
@@ -20,10 +20,11 @@ module.exports = {
         const oldChannel = oldState.guild.channels.fetch(oldChannelId);
         const newChannel = newState.guild.channels.fetch(newChannelId);
         
-        console.log(member);
-        console.log(guild);
+        console.log(member.user.username);
+        console.log(member.user.id);
+        console.log(newChannel);
 
-        const tempChannelCheck = await tempChannels.getTempVoiceChannel(newState.guild.id, newChannelId);
+        const tempChannelCheck = await tempChannels.getTempVoiceChannel(guild.id, newChannelId);
         if (!tempChannelCheck) {
             return
         }
@@ -33,20 +34,20 @@ module.exports = {
 
         if (oldChannel !== newChannel && newChannelId === joinToCreate) {
             console.log("Ich bin hier")
-            const voiceChannel = await newState.guild.channels.create(newChannelName, {
+            const voiceChannel = await guild.channels.create(newChannelName, {
                 type: 'GUILD_VOICE',
                 bitrate: '256',
                 parent: newChannel.parent,
                 permissionOverwrites: [
                     {
-                        id: member.id,
-                        allow: [PermissionsBitField.Flags.CONNECT, PermissionsBitField.Flags.MOVE_MEMBERS, PermissionsBitField.Flags.MANAGE_CHANNELS],
+                        id: member.user.id,
+                        allow: [Permissions.FLAGS.CONNECT, Permissions.FLAGS.MOVE_MEMBERS, Permissions.FLAGS.MANAGE_CHANNELS],
                     },
                 ],
             });
             console.log(voiceChannel);
             client.voiceGenerator.set(member.user.id, voiceChannel.id);
-            setTimeout(() => member.voice.setChannel(voiceChannel), 500);
+            setTimeout(() => member.voiceStates.setChannel(voiceChannel), 500);
         }
     }
 }
