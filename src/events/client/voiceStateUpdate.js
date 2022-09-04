@@ -60,7 +60,7 @@ module.exports = {
       const voiceChannel = await guild.channels.create({
         name: newChannelName,
         type: ChannelType.GuildVoice,
-        bitrate: 25600,
+        bitrate: 256000,
         parent: newState.channel.parent,
         permissionOverwrites: [
           {
