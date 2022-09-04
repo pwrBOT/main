@@ -40,8 +40,6 @@ module.exports = {
           );
           return;
         }
-        
-        console.log("Es sind noch Personen im Channel");
         return;
       }
     }
@@ -56,7 +54,7 @@ module.exports = {
     }
 
     const joinToCreate = tempChannelCheck.guildChannelId;
-    const newChannelName = `Einsatzraum #${member.user.username}`;
+    const newChannelName = `${tempChannelCheck.tempChannelName} #${member.user.username}`;
 
     if (oldChannel !== newChannel && newChannelId === joinToCreate) {
       const voiceChannel = await guild.channels.create({
@@ -78,7 +76,9 @@ module.exports = {
         guild.id,
         voiceChannel.id,
         "temp",
-        "no"
+        newChannelName,
+        member.user.username,
+        "-"
       );
       client.voiceGenerator.set(member.user.id, voiceChannel.id);
       setTimeout(() => member.voice.setChannel(voiceChannel), 500);

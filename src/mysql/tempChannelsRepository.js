@@ -31,13 +31,15 @@ const addTempVoiceChannel = async (
     guildId,
     guildChannelId,
     type,
+    tempChannelName,
+    tempChannelOwner,
     giveUserPermission
 ) => {
     return new Promise((resolve) => {
         mysqlHelper
             .query(
-                "INSERT INTO powerbot_temp_channels (guildId, guildChannelId, type, giveUserPermission) VALUES (?, ?, ?, ?)",
-                [guildId, guildChannelId, type, giveUserPermission]
+                "INSERT INTO powerbot_temp_channels (guildId, guildChannelId, type, tempChannelName, tempChannelOwner, giveUserPermission) VALUES (?, ?, ?, ?, ?, ?)",
+                [guildId, guildChannelId, type, tempChannelOwner, tempChannelName, giveUserPermission]
             )
             .then((result) => {
                 // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK

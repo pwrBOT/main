@@ -27,6 +27,12 @@ module.exports = {
         )
         .addStringOption((option) =>
           option
+            .setName("channelname")
+            .setDescription("Wie soll der Channel heißen? '#username' wird dran gehängt!")
+            .setRequired(true)
+        )
+        .addStringOption((option) =>
+          option
             .setName("permission")
             .setDescription("Soll der User Mod-Rechte in seinem erstellen Channel bekommen?")
             .addChoices(
@@ -44,6 +50,7 @@ module.exports = {
       });
 
       const voiceChannel = interaction.options.getChannel("voicechannel");
+      const tempChannelName = interaction.options.getString("channelname");
       const permission = interaction.options.getString("permission");
 
       if (voiceChannel.type != 2) {
@@ -58,7 +65,7 @@ module.exports = {
         return resolve(null);
       }
 
-      await tempChannelsRepository.addTempVoiceChannel(interaction.guild.id, voiceChannel.id, "master", permission);
+      await tempChannelsRepository.addTempVoiceChannel(interaction.guild.id, voiceChannel.id, "master", tempChannelName, "-", permission);
       interaction.editReply("Temp-Voice-Channel erfolgreich gespeichert")
 
       return resolve(null);
