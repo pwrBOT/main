@@ -1,5 +1,4 @@
 const mysqlHelper = require("./mysqlHelper");
-const cache = new Map();
 
 const getAllTempVoiceChannel = async (guildId) => {
   return new Promise((resolve) => {
@@ -19,11 +18,6 @@ const getAllTempVoiceChannel = async (guildId) => {
 
 const getTempVoiceChannel = async (guildId, guildChannelId, type) => {
   return new Promise((resolve) => {
-    if (cache.has(guildId)) {
-      console.log("Temp-Channel Cache wurde benutzt");
-      return resolve(cache.get(guildId));
-    }
-
     mysqlHelper
       .query(
         `SELECT * FROM powerbot_temp_channels WHERE guildId = ? AND guildChannelId = ? AND type = ?`,
@@ -31,11 +25,6 @@ const getTempVoiceChannel = async (guildId, guildChannelId, type) => {
         1
       )
       .then((result) => {
-        if (result && result.length !== 0) {
-          cache.set(guildId, result[0]);
-          console.log("Temp-Channel Cache wurde geupdated");
-        }
-
         resolve(result && result.length !== 0 ? result[0] : null);
       })
       .catch(() => {
@@ -53,8 +42,6 @@ const addTempVoiceChannel = async (
   giveUserPermission
 ) => {
   return new Promise((resolve) => {
-    cache.delete(guildId);
-    console.log("Temp-Channel Cache wurde gecleared");
     mysqlHelper
       .query(
         "INSERT INTO powerbot_temp_channels (guildId, guildChannelId, type, tempChannelName, tempChannelOwner, giveUserPermission) VALUES (?, ?, ?, ?, ?, ?)",
@@ -79,8 +66,6 @@ const addTempVoiceChannel = async (
 
 const deleteTempVoiceChannel = async (guildId, guildChannelId, type) => {
   return new Promise((resolve) => {
-    cache.delete(guildId);
-    console.log("Temp-Channel Cache wurde gecleared");
     mysqlHelper
       .query(
         `DELETE FROM powerbot_temp_channels WHERE guildId = ? AND guildChannelId = ? AND type = ?`,
