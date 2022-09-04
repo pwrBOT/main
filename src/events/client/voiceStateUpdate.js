@@ -31,11 +31,9 @@ module.exports = {
 
         console.log(tempChannelToDelete);
 
-        tempChannelToDelete.delete('del temp channel')
-          .then(console.log)
-          .catch(console.error);
+        tempChannelToDelete.delete('del temp channel').catch(console.error);
 
-        await tempChannelsRepository.getTempVoiceChannel(
+        await tempChannelsRepository.deleteTempVoiceChannel(
           oldState.guild.id,
           oldChannelId,
           "temp"
