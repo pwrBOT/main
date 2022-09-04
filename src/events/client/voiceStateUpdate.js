@@ -1,11 +1,8 @@
 const {
   VoiceState,
   PermissionFlagsBits,
-  PermissionsBitField,
   ChannelType,
-} = require("discord.js");
-const tempCommandRepository = require("../../mysql/tempCommandRepository");
-const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
+} = require("discord.js");;
 const tempChannelsRepository = require("../../mysql/tempChannelsRepository");
 
 module.exports = {
@@ -57,7 +54,8 @@ module.exports = {
       await tempChannelsRepository.addTempVoiceChannel(
         guild.id,
         voiceChannel.id,
-        "temp"
+        "temp",
+        "no"
       );
       client.voiceGenerator.set(member.user.id, voiceChannel.id);
       setTimeout(() => member.voice.setChannel(voiceChannel), 500);
