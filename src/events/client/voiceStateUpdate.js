@@ -44,6 +44,9 @@ module.exports = {
             });
             client.voiceGenerator.set(member.user.id, voiceChannel.id);
             setTimeout(() => member.voice.setChannel(voiceChannel), 500);
+        } else if (!newState.channel) {
+            if (oldState.channel === voiceCollection.get(newState.id))
+                return oldState.channel.delete();
         }
     }
 }
