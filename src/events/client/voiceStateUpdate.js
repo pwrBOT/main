@@ -17,6 +17,8 @@ module.exports = {
     const oldChannel = oldState.guild.channels.fetch(oldChannelId);
     const newChannel = newState.guild.channels.fetch(newChannelId);
 
+    console.log(oldChannel)
+
     if (oldState) {
       const tempChannelCheckTemp =
         await tempChannelsRepository.getTempVoiceChannel(
