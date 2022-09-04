@@ -1,7 +1,7 @@
 const { VoiceState, PermissionFlagsBits, PermissionsBitField, ChannelType } = require("discord.js");
 const tempCommandRepository = require("../../mysql/tempCommandRepository");
 const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
-const tempChannelsRepository = require("../../mysql/tempChannelsRepositoryRepository");
+const tempChannelsRepository = require("../../mysql/tempChannelsRepository");
 
 
 module.exports = {
