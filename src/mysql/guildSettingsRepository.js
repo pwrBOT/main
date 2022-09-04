@@ -92,6 +92,7 @@ const updateGuild = async (
   language
 ) => {
   return new Promise((resolve) => {
+    cache.delete(guildId);
     mysqlHelper
       .query(
         "UPDATE powerbot_guilds SET guildId=?, guildName=?, botLog=?, modLog=?, botMaster=?, teamRole=?, modRole=?, welcomechannel=?, language=? WHERE guildId = ?",

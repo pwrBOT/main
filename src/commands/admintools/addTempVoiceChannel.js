@@ -65,7 +65,7 @@ module.exports = {
         return resolve(null);
       }
 
-      await tempChannelsRepository.addTempVoiceChannel(interaction.guild.id, voiceChannel.id, "master", tempChannelName, "-", permission);
+      await tempChannelsRepository.addTempVoiceChannel(interaction.guild.id, voiceChannel.id, "master", tempChannelName, "MASTER CHANNEL", permission);
       interaction.editReply("Temp-Voice-Channel erfolgreich gespeichert")
 
       return resolve(null);
