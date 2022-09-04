@@ -17,8 +17,6 @@ module.exports = {
     const oldChannel = oldState.guild.channels.fetch(oldChannelId);
     const newChannel = newState.guild.channels.fetch(newChannelId);
 
-    console.log(oldChannel)
-
     if (oldState) {
       const tempChannelCheckTemp =
         await tempChannelsRepository.getTempVoiceChannel(
@@ -28,18 +26,22 @@ module.exports = {
         );
 
       if (tempChannelCheckTemp) {
-        tempChannelToDelete =
-          oldState.guild.channels.cache.get(tempChannelCheckTemp.guildChannelId);
-
-        console.log(tempChannelToDelete);
-
-        tempChannelToDelete.delete('del temp channel').catch(console.error);
-
-        await tempChannelsRepository.deleteTempVoiceChannel(
-          oldState.guild.id,
-          oldChannelId,
-          "temp"
+        tempChannelToDelete = oldState.guild.channels.cache.get(
+          tempChannelCheckTemp.guildChannelId
         );
+
+        if (tempChannelToDelete.members.size === 0) {
+          tempChannelToDelete.delete("del temp channel").catch(console.error);
+
+          await tempChannelsRepository.deleteTempVoiceChannel(
+            oldState.guild.id,
+            oldChannelId,
+            "temp"
+          );
+          return;
+        }
+        
+        console.log("Es sind noch Personen im Channel");
         return;
       }
     }
