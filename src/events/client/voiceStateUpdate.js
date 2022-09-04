@@ -1,8 +1,4 @@
-const {
-  VoiceState,
-  PermissionFlagsBits,
-  ChannelType,
-} = require("discord.js");;
+const { VoiceState, PermissionFlagsBits, ChannelType } = require("discord.js");
 const tempChannelsRepository = require("../../mysql/tempChannelsRepository");
 
 module.exports = {
@@ -32,6 +28,7 @@ module.exports = {
 
     const joinToCreate = tempChannelCheck.guildChannelId;
     const newChannelName = `Einsatzraum #${member.user.username}`;
+    console.log("ich bin hier")
 
     if (oldChannel !== newChannel && newChannelId === joinToCreate) {
       const voiceChannel = await guild.channels.create({
@@ -49,6 +46,8 @@ module.exports = {
           },
         ],
       });
+      client.voiceGenerator.set(member.user.id, voiceChannel.id);
+      setTimeout(() => member.voice.setChannel(voiceChannel), 500);
       console.log(guild.id);
       console.log(voiceChannel.id);
       await tempChannelsRepository.addTempVoiceChannel(
@@ -57,8 +56,6 @@ module.exports = {
         "temp",
         "no"
       );
-      client.voiceGenerator.set(member.user.id, voiceChannel.id);
-      setTimeout(() => member.voice.setChannel(voiceChannel), 500);
     }
   },
 };
