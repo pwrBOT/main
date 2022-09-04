@@ -25,6 +25,8 @@ module.exports = {
       );
 
     if (tempChannelCheckTemp) {
+      tempChannelToDelete = guild.channels.cache.get(tempChannelCheckTemp);
+      console.log(tempChannelToDelete);
       console.log("Ich bin ein Temp Channel der gelöscht werden kann!");
       return;
     }
@@ -57,8 +59,6 @@ module.exports = {
           },
         ],
       });
-      console.log(guild.id);
-      console.log(voiceChannel.id);
       await tempChannelsRepository.addTempVoiceChannel(
         guild.id,
         voiceChannel.id,
