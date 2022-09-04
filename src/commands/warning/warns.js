@@ -70,9 +70,9 @@ module.exports = {
       interaction.deleteReply();
       client.channels.cache.get(channel).send({ embeds: [warnsembed] });
 
-      const powerbot_commandLog = require("../../mysql/powerbot_commandLog");
+      const commandLogRepository = require("../../mysql/commandLogRepository");
                                           // guild - command, user, affectedMember, reason
-      await powerbot_commandLog.logCommandUse(interaction.guild, "warns", interaction.user, member.user, "-")
+      await commandLogRepository.logCommandUse(interaction.guild, "warns", interaction.user, member.user, "-")
 
       return resolve(null);
     });

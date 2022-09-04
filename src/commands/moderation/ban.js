@@ -166,9 +166,9 @@ module.exports = {
         .catch(console.error);
       member.send({ embeds: [banembedmember] }).catch(console.error);
 
-      const powerbot_commandLog = require("../../mysql/powerbot_commandLog");
+      const commandLogRepository = require("../../mysql/commandLogRepository");
                                           // guild - command, user, affectedMember, reason
-      await powerbot_commandLog.logCommandUse(interaction.guild, "ban", interaction.user, member.user, reason)
+      await commandLogRepository.logCommandUse(interaction.guild, "ban", interaction.user, member.user, reason)
 
       return resolve(null);
     });

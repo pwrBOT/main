@@ -132,9 +132,9 @@ module.exports = {
 
         interaction.editReply({ embeds: [userembed] });
 
-        const powerbot_commandLog = require("../../mysql/powerbot_commandLog");
+        const commandLogRepository = require("../../mysql/commandLogRepository");
                                           // guild - command, user, affectedMember, reason
-        powerbot_commandLog.logCommandUse(interaction.guild, "info user", interaction.user, member.user, "-")
+        commandLogRepository.logCommandUse(interaction.guild, "info user", interaction.user, member.user, "-")
       });
     }
   },

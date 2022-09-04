@@ -134,9 +134,9 @@ module.exports = {
 
       await warnsRepository.addWarn(interaction.guild.id, member.id, reason, interaction.user.username, interaction.user.id);
 
-      const powerbot_commandLog = require("../../mysql/powerbot_commandLog");
+      const commandLogRepository = require("../../mysql/commandLogRepository");
                                           // guild - command, user, affectedMember, reason
-      await powerbot_commandLog.logCommandUse(interaction.guild, "warn", interaction.user, member.user, "-")
+      await commandLogRepository.logCommandUse(interaction.guild, "warn", interaction.user, member.user, "-")
       
       return resolve(null);
     });

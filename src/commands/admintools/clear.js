@@ -45,9 +45,9 @@ module.exports = {
         }, 3000);
     })
 
-    const powerbot_commandLog = require("../../mysql/powerbot_commandLog");
+    const commandLogRepository = require("../../mysql/commandLogRepository");
                                           // guild - command, user, affectedMember, reason
-    await powerbot_commandLog.logCommandUse(interaction.guild, "clear", interaction.user, "-", "-")
+    await commandLogRepository.logCommandUse(interaction.guild, "clear", interaction.user, "-", "-")
 
   },
 };

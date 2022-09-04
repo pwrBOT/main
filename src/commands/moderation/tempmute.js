@@ -6,7 +6,7 @@ const {
 } = require("discord.js");
 const moment = require("moment");
 const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
-const tempRepository = require("../../mysql/tempRepository");
+const tempCommandRepository = require("../../mysql/tempCommandRepository");
 
 module.exports = {
   name: "tempmute",
@@ -78,7 +78,7 @@ module.exports = {
         return resolve(null);
       }
 
-      const getTempMuteUser = await tempRepository.getTempMuteUser(member);
+      const getTempMuteUser = await tempCommandRepository.getTempMuteUser(member);
       if (getTempMuteUser) {
         interaction.editReply(
           `❌ ${member} ist bereits gemuted! ❌\nLäuft ab am ${new Date(
@@ -238,7 +238,7 @@ module.exports = {
 
       const tempEnd = unmuteDate.format();
 
-      await tempRepository.addTempCommandUser(
+      await tempCommandRepository.addTempCommandUser(
         interaction.guild.id,
         member.id,
         member.user.tag,
@@ -251,9 +251,9 @@ module.exports = {
       member.roles.add(muteRole).catch(console.error);
       member.send({ embeds: [muteembedmember] }).catch(console.error);
 
-      const powerbot_commandLog = require("../../mysql/powerbot_commandLog");
+      const commandLogRepository = require("../../mysql/commandLogRepository");
       // guild - command, user, affectedMember, reason
-      await powerbot_commandLog.logCommandUse(
+      await commandLogRepository.logCommandUse(
         interaction.guild,
         "tempmute",
         interaction.user,

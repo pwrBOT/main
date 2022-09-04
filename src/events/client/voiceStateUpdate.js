@@ -1,7 +1,7 @@
 const { VoiceState, PermissionFlagsBits, PermissionsBitField, ChannelType } = require("discord.js");
-const tempRepository = require("../../mysql/tempRepository");
+const tempCommandRepository = require("../../mysql/tempCommandRepository");
 const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
-const tempChannels = require("../../mysql/tempChannels");
+const tempChannelsRepository = require("../../mysql/tempChannelsRepositoryRepository");
 
 
 module.exports = {
@@ -21,7 +21,7 @@ module.exports = {
         const newChannel = newState.guild.channels.fetch(newChannelId);
 
 
-        const tempChannelCheck = await tempChannels.getTempVoiceChannel(guild.id, newChannelId);
+        const tempChannelCheck = await tempChannelsRepository.getTempVoiceChannel(guild.id, newChannelId, "master");
         if (!tempChannelCheck) {
             return
         }
@@ -42,11 +42,9 @@ module.exports = {
                     },
                 ],
             });
+            await tempChannelsRepository.addTempVoiceChannel(guild.id, voiceChannel.id, "temp");
             client.voiceGenerator.set(member.user.id, voiceChannel.id);
             setTimeout(() => member.voice.setChannel(voiceChannel), 500);
-        } else if (!newState.channel) {
-            if (oldState.channel === voiceCollection.get(newState.id))
-                return oldState.channel.delete();
         }
     }
 }

@@ -6,7 +6,7 @@ const {
 } = require("discord.js");
 const moment = require("moment");
 const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
-const tempRepository = require("../../mysql/tempRepository");
+const tempCommandRepository = require("../../mysql/tempCommandRepository");
 
 module.exports = {
   name: "tempban",
@@ -70,7 +70,7 @@ module.exports = {
         return resolve(null);
       }
 
-      const getTempBanUser = await tempRepository.getTempBanUser(member);
+      const getTempBanUser = await tempCommandRepository.getTempBanUser(member);
       if (getTempBanUser) {
         interaction.editReply(
           `❌ ${member} hat bereits einen Temp-Ban erhalten! ❌\nLäuft ab am ${new Date(
@@ -240,7 +240,7 @@ module.exports = {
 
       const tempEnd = unbanDate.format();
 
-      await tempRepository.addTempCommandUser(
+      await tempCommandRepository.addTempCommandUser(
         interaction.guild.id,
         member.id,
         member.user.tag,
@@ -253,9 +253,9 @@ module.exports = {
       member.ban({ deleteMessageDays: days, reason: reason }).catch(console.error);
       member.send({ embeds: [banembedmember] }).catch(console.error);
 
-      const powerbot_commandLog = require("../../mysql/powerbot_commandLog");
+      const commandLogRepository = require("../../mysql/commandLogRepository");
       // guild - command, user, affectedMember, reason
-      await powerbot_commandLog.logCommandUse(
+      await commandLogRepository.logCommandUse(
         interaction.guild,
         "tempban",
         interaction.user,

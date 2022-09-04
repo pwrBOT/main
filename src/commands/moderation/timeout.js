@@ -195,9 +195,9 @@ module.exports = {
         }
         member.send({ embeds: [embedmember] });
 
-        const powerbot_commandLog = require("../../mysql/powerbot_commandLog");
+        const commandLogRepository = require("../../mysql/commandLogRepository");
                                           // guild - command, user, affectedMember, reason
-        await powerbot_commandLog.logCommandUse(interaction.guild, "timeout add", interaction.user, member.user, "-")
+        await commandLogRepository.logCommandUse(interaction.guild, "timeout add", interaction.user, member.user, "-")
 
         return resolve(null);
       }
@@ -257,9 +257,9 @@ module.exports = {
 
         member.timeout(null).catch(console.error);
 
-        const powerbot_commandLog = require("../../mysql/powerbot_commandLog");
+        const commandLogRepository = require("../../mysql/commandLogRepository");
                                           // guild - command, user, affectedMember, reason
-        await powerbot_commandLog.logCommandUse(interaction.guild, "timeout remove", interaction.user, member.user, reason)
+        await commandLogRepository.logCommandUse(interaction.guild, "timeout remove", interaction.user, member.user, reason)
 
         return resolve(null);
       }

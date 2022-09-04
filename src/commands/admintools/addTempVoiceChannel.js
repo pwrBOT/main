@@ -5,7 +5,7 @@ const {
   EmbedBuilder,
 } = require("discord.js");
 const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
-const tempChannels = require("../../mysql/tempChannels");
+const tempChannelsRepository = require("../../mysql/tempChannelsRepository");
 
 module.exports = {
   name: "Temp-Voicechannel",
@@ -51,14 +51,14 @@ module.exports = {
         return resolve(null);
       }
 
-      const activeVC = await tempChannels.getTempVoiceChannel(interaction.guild.id, voiceChannel.id);
+      const activeVC = await tempChannelsRepository.getTempVoiceChannel(interaction.guild.id, voiceChannel.id, "master");
 
       if (activeVC) {
         interaction.editReply("Voice-Channel-ID bereits als Temp-Voice-Channel angelegt")
         return resolve(null);
       }
 
-      await tempChannels.addTempVoiceChannel(interaction.guild.id, voiceChannel.id, permission);
+      await tempChannelsRepository.addTempVoiceChannel(interaction.guild.id, voiceChannel.id, "master", permission);
       interaction.editReply("Temp-Voice-Channel erfolgreich gespeichert")
 
       return resolve(null);

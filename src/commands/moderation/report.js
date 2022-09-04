@@ -47,9 +47,9 @@ module.exports = {
       new ActionRowBuilder().addComponents(reportedUserInput)
     );
 
-    const powerbot_commandLog = require("../../mysql/powerbot_commandLog");
+    const commandLogRepository = require("../../mysql/commandLogRepository");
                                           // guild - command, user, affectedMember, reason
-    await powerbot_commandLog.logCommandUse(interaction.guild, "report", interaction.user, "-", "-")
+    await commandLogRepository.logCommandUse(interaction.guild, "report", interaction.user, "-", "-")
 
     await interaction.showModal(modal);
   },

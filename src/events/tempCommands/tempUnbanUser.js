@@ -1,10 +1,10 @@
 const { EmbedBuilder } = require("discord.js");
-const tempRepository = require("../../mysql/tempRepository");
+const tempCommandRepository = require("../../mysql/tempCommandRepository");
 const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 var client;
 
 async function userTempBanCheck() {
-  const allTempUserToDelete = await tempRepository.getAllTempBanUser();
+  const allTempUserToDelete = await tempCommandRepository.getAllTempBanUser();
 
   allTempUserToDelete.forEach((tempUserToDelete) => {
     userTempBanUnban(tempUserToDelete);
@@ -64,7 +64,7 @@ async function userTempBanUnban(tempUserToDelete) {
   }
   unbanMember.send({ embeds: [unbanembedmember] }).catch(console.error);
 
-  await tempRepository.deleteTempUser(unbanMember, unbanGuild);
+  await tempCommandRepository.deleteTempUser(unbanMember, unbanGuild);
 }
 
 async function init(_client) {
