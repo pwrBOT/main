@@ -31,8 +31,7 @@ module.exports = {
 
         console.log(tempChannelToDelete);
 
-        oldState.guild.channels
-          .delete(tempChannelToDelete)
+        tempChannelToDelete.delete('del temp channel')
           .then(console.log)
           .catch(console.error);
 
