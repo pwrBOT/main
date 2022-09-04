@@ -32,7 +32,7 @@ const getTempVoiceChannel = async (guildId, guildChannelId, type) => {
       )
       .then((result) => {
         if (result && result.length !== 0) {
-          cache.set(guildid, result[0]);
+          cache.set(guildId, result[0]);
           console.log("Temp-Channel Cache wurde geupdated");
         }
 
