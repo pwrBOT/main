@@ -34,7 +34,7 @@ module.exports = {
                 name: newChannelName,
                 type: ChannelType.GuildVoice,
                 bitrate: '25600',
-                position: 1,
+                parent: newState.channel.parent,
                 permissionOverwrites: [
                     {
                         id: member.user.id,
