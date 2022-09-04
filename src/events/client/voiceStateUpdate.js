@@ -26,9 +26,13 @@ module.exports = {
       return;
     }
 
+    if (tempChannelCheck.type === "temp") {
+        console.log("Ich bin ein Temp Channel der gelöscht werden kann!")
+        return;
+      }
+
     const joinToCreate = tempChannelCheck.guildChannelId;
     const newChannelName = `Einsatzraum #${member.user.username}`;
-    console.log("ich bin hier")
 
     if (oldChannel !== newChannel && newChannelId === joinToCreate) {
       const voiceChannel = await guild.channels.create({
@@ -46,8 +50,6 @@ module.exports = {
           },
         ],
       });
-      client.voiceGenerator.set(member.user.id, voiceChannel.id);
-      setTimeout(() => member.voice.setChannel(voiceChannel), 500);
       console.log(guild.id);
       console.log(voiceChannel.id);
       await tempChannelsRepository.addTempVoiceChannel(
@@ -56,6 +58,8 @@ module.exports = {
         "temp",
         "no"
       );
+      client.voiceGenerator.set(member.user.id, voiceChannel.id);
+      setTimeout(() => member.voice.setChannel(voiceChannel), 500);
     }
   },
 };
