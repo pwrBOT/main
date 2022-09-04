@@ -17,20 +17,20 @@ module.exports = {
     const oldChannel = oldState.guild.channels.fetch(oldChannelId);
     const newChannel = newState.guild.channels.fetch(newChannelId);
 
-    console.log(oldState);
-    console.log(newState);
-    const tempChannelCheckTemp =
-      await tempChannelsRepository.getTempVoiceChannel(
-        guild.id,
-        newChannelId,
-        "temp"
-      );
+    if (oldState) {
+      const tempChannelCheckTemp =
+        await tempChannelsRepository.getTempVoiceChannel(
+          guild.id,
+          oldChannelId,
+          "temp"
+        );
 
-    if (tempChannelCheckTemp) {
-      tempChannelToDelete = guild.channels.cache.get(tempChannelCheckTemp);
-      console.log(tempChannelToDelete);
-      console.log("Ich bin ein Temp Channel der gelöscht werden kann!");
-      return;
+      if (tempChannelCheckTemp) {
+        tempChannelToDelete = guild.channels.cache.get(tempChannelCheckTemp);
+        console.log(tempChannelToDelete);
+        console.log("Ich bin ein Temp Channel der gelöscht werden kann!");
+        return;
+      }
     }
 
     const tempChannelCheck = await tempChannelsRepository.getTempVoiceChannel(
