@@ -17,6 +17,18 @@ module.exports = {
     const oldChannel = oldState.guild.channels.fetch(oldChannelId);
     const newChannel = newState.guild.channels.fetch(newChannelId);
 
+    const tempChannelCheckTemp =
+      await tempChannelsRepository.getTempVoiceChannel(
+        guild.id,
+        newChannelId,
+        "temp"
+      );
+
+    if (tempChannelCheckTemp) {
+      console.log("Ich bin ein Temp Channel der gelöscht werden kann!");
+      return;
+    }
+
     const tempChannelCheck = await tempChannelsRepository.getTempVoiceChannel(
       guild.id,
       newChannelId,
@@ -25,11 +37,6 @@ module.exports = {
     if (!tempChannelCheck) {
       return;
     }
-
-    if (tempChannelCheck.type === "temp") {
-        console.log("Ich bin ein Temp Channel der gelöscht werden kann!")
-        return;
-      }
 
     const joinToCreate = tempChannelCheck.guildChannelId;
     const newChannelName = `Einsatzraum #${member.user.username}`;
