@@ -25,10 +25,15 @@ module.exports = {
           "temp"
         );
 
+        console.log(tempChannelCheckTemp)
+        console.log(oldState)
+
       if (tempChannelCheckTemp) {
         tempChannelToDelete =
           oldState.guild.channels.fetch(tempChannelCheckTemp);
+
         console.log(tempChannelToDelete);
+
         oldState.guild.channels
           .delete(tempChannelToDelete)
           .then(console.log)
