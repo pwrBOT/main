@@ -49,6 +49,21 @@ const addTempVoiceChannel = async (
     });
 };
 
+const deleteTempVoiceChannel = async (guildId, guildChannelId, type) => {
+    return new Promise((resolve) => {
+      mysqlHelper
+        .query(`DELETE FROM powerbot_temp_channels WHERE guildId = ? AND guildChannelId = ? AND type = ?`,[guildId, guildChannelId, type])
+        .then((result) => {
+          // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
+          resolve(result ?? null);
+        })
+        .catch(() => {
+          resolve(null);
+        });
+    });
+  };
+
 module.exports.getAllTempVoiceChannel = getAllTempVoiceChannel;
 module.exports.getTempVoiceChannel = getTempVoiceChannel;
 module.exports.addTempVoiceChannel = addTempVoiceChannel;
+module.exports.deleteTempVoiceChannel = deleteTempVoiceChannel;
