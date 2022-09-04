@@ -14,10 +14,10 @@ const getAllTempVoiceChannel = async (guildId) => {
     });
 };
 
-const getTempVoiceChannel = async (guildId, guildChannelId) => {
+const getTempVoiceChannel = async (guildId, guildChannelId, type) => {
     return new Promise((resolve) => {
         mysqlHelper
-            .query(`SELECT * FROM powerbot_temp_channels WHERE guildId = ? AND guildChannelId = ?`, [guildId, guildChannelId], 1)
+            .query(`SELECT * FROM powerbot_temp_channels WHERE guildId = ? AND guildChannelId = ? AND type = ?`, [guildId, guildChannelId, type], 1)
             .then((result) => {
                 resolve(result && result.length !== 0 ? result[0] : null);
             })
@@ -30,14 +30,14 @@ const getTempVoiceChannel = async (guildId, guildChannelId) => {
 const addTempVoiceChannel = async (
     guildId,
     guildChannelId,
-    master,
+    type,
     giveUserPermission
 ) => {
     return new Promise((resolve) => {
         mysqlHelper
             .query(
                 "INSERT INTO powerbot_temp_channels (guildId, guildChannelId, type, giveUserPermission) VALUES (?, ?, ?, ?)",
-                [guildId, guildChannelId, master, giveUserPermission]
+                [guildId, guildChannelId, type, giveUserPermission]
             )
             .then((result) => {
                 // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
