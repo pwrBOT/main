@@ -130,7 +130,10 @@ module.exports = {
       
       const modLogChannel = guildSettings.modLog;
       client.channels.cache.get(modLogChannel).send({ embeds: [warnembed] });
-      member.send({ embeds: [warnembedmember] }).catch(console.error);
+      try {
+        await member.send({ embeds: [warnembedmember] });
+      } catch (error) {
+      }
 
       await warnsRepository.addWarn(interaction.guild.id, member.id, reason, interaction.user.username, interaction.user.id);
 

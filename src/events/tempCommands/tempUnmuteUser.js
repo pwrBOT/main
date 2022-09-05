@@ -68,7 +68,10 @@ async function userTempMuteUnmute(tempUserToDelete) {
       .send({ embeds: [unbanembed] })
       .catch(console.error);
   }
-  unmuteMember.send({ embeds: [unbanembedmember] }).catch(console.error);
+  try {
+    await unmuteMember.send({ embeds: [unbanembedmember] });
+  } catch (error) {
+  }
 
   await tempCommandRepository.deleteTempUser(unmuteMember, unmuteGuild);
 }

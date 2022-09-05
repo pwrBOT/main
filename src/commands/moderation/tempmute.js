@@ -63,7 +63,7 @@ module.exports = {
         return resolve(null);
       }
 
-      if  (!guildSettings.muteRole) {
+      if (!guildSettings.muteRole) {
         interaction.editReply(
           "❌ Keine Mute-Rolle festgelegt | Mute nicht möglich ❌"
         );
@@ -78,7 +78,9 @@ module.exports = {
         return resolve(null);
       }
 
-      const getTempMuteUser = await tempCommandRepository.getTempMuteUser(member);
+      const getTempMuteUser = await tempCommandRepository.getTempMuteUser(
+        member
+      );
       if (getTempMuteUser) {
         interaction.editReply(
           `❌ ${member} ist bereits gemuted! ❌\nLäuft ab am ${new Date(
@@ -249,7 +251,11 @@ module.exports = {
         tempEnd
       );
       member.roles.add(muteRole).catch(console.error);
-      member.send({ embeds: [muteembedmember] }).catch(console.error);
+
+      try {
+        await member.send({ embeds: [muteembedmember] });
+      } catch (error) {
+      }
 
       const commandLogRepository = require("../../mysql/commandLogRepository");
       // guild - command, user, affectedMember, reason

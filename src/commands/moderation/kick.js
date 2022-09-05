@@ -151,7 +151,10 @@ module.exports = {
       }
 
       member.kick({ reason }).catch(console.error);
-      member.send({ embeds: [kickembedmember] }).catch(console.error);
+      try {
+        await member.send({ embeds: [kickembedmember] });
+      } catch (error) {
+      }
 
       const commandLogRepository = require("../../mysql/commandLogRepository");
                                           // guild - command, user, affectedMember, reason

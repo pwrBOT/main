@@ -251,7 +251,10 @@ module.exports = {
         tempEnd
       );
       member.ban({ deleteMessageDays: days, reason: reason }).catch(console.error);
-      member.send({ embeds: [banembedmember] }).catch(console.error);
+      try {
+        await member.send({ embeds: [banembedmember] });
+      } catch (error) {
+      }
 
       const commandLogRepository = require("../../mysql/commandLogRepository");
       // guild - command, user, affectedMember, reason

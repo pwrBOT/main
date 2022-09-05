@@ -62,7 +62,10 @@ async function userTempBanUnban(tempUserToDelete) {
       .send({ embeds: [unbanembed] })
       .catch(console.error);
   }
-  unbanMember.send({ embeds: [unbanembedmember] }).catch(console.error);
+  try {
+    await unbanMember.send({ embeds: [unbanembedmember] });
+  } catch (error) {
+  }
 
   await tempCommandRepository.deleteTempUser(unbanMember, unbanGuild);
 }

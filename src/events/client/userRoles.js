@@ -51,11 +51,12 @@ module.exports = {
         .setDescription(
           `Deine Rollen bei ${oldMember.guild.name} haben sich verändert`
         );
-      if ((oldMember.user.bot == true)) {
+      if (oldMember.user.bot == true) {
         return;
       }
-      oldMember.send({ embeds: [userRolesChanged] }).catch(console.error);
-      
+      try {
+        await oldMember.send({ embeds: [userRolesChanged] });
+      } catch (error) {}
     }
 
     // If the role(s) are present on the new member object but are not on the old one (i.e role(s) were added)
@@ -97,10 +98,13 @@ module.exports = {
         .setDescription(
           `Deine Rollen bei ${newMember.guild.name} haben sich verändert`
         );
-      if ((newMember.user.bot == true)) {
+      if (newMember.user.bot == true) {
         return;
       }
-      newMember.send({ embeds: [userRolesChanged] }).catch(console.error);
+      try {
+        await newMember.send({ embeds: [userRolesChanged] });
+      } catch (error) {
+      }
     }
   },
 };

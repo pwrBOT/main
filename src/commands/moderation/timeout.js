@@ -193,7 +193,10 @@ module.exports = {
             .get(modLogChannel)
             .send({ embeds: [modlogembed] });
         }
-        member.send({ embeds: [embedmember] });
+        try {
+          await member.send({ embeds: [embedmember] });
+        } catch (error) {
+        }
 
         const commandLogRepository = require("../../mysql/commandLogRepository");
                                           // guild - command, user, affectedMember, reason
@@ -246,8 +249,10 @@ module.exports = {
         } else {
           client.channels.cache.get(modLogChannel).send({ embeds: [modlogembed2] });
         }
-
-        member.send({ embeds: [embedmember2] }).catch(console.error);
+        try {
+          await member.send({ embeds: [embedmember2] });
+        } catch (error) {
+        }
         interaction.reply({
           content: `Timeout von User: ${member} entfernt ✅`,
         });
