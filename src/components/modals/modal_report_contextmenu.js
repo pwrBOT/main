@@ -3,7 +3,7 @@ const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 
 module.exports = {
   data: {
-    name: "userReport",
+    name: "userReportContextmenu",
   },
 
   async execute(interaction, client) {
@@ -12,9 +12,10 @@ module.exports = {
         ephemeral: true,
         fetchReply: true,
       });
-      const member = interaction.fields.getTextInputValue("reportedUserInput");
       const reporter = interaction.user.tag;
       const reason = interaction.fields.getTextInputValue("reportUserInput");
+      let member = interaction.targetUser;
+      console.log(interaction);
 
       const reportembed = new EmbedBuilder()
         .setTitle(`⚡️ PowerBot ⚡️ | User Report`)
@@ -39,7 +40,7 @@ module.exports = {
           },
         ]);
 
-      const newMessage = `Danke für Deine Meldung! User ${member} wurde den Moderatoren gemeldet ✅`;
+      const newMessage = `User ${member} wurde gemeldet ✅`;
       await interaction.editReply({ content: newMessage });
 
       const guildSettings = await guildSettingsRepository.getGuildSettings(
@@ -60,7 +61,7 @@ module.exports = {
           .get(modLogChannel)
           .send({ embeds: [reportembed] })
           .catch(console.error);
-          return resolve(null);
+        return resolve(null);
       }
     });
   },
