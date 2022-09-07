@@ -27,12 +27,12 @@ module.exports = {
     DBD.Dashboard = DBD.UpdatedClass();
 
     const Dashboard = new DBD.Dashboard({
-      port: 25890,
+      port: 8010,
       client: {
         id: config.powerbot_clientId,
         secret: config.powerbot_clientSecret,
       },
-      redirectUri: "http://dashboard.pwr.lol:25890/discord/callback/",
+      redirectUri: "http://dashboard.pwr.lol/discord/callback/",
       domain: "http://dashboard.pwr.lol",
       bot: client,
       supportServer: {
@@ -49,7 +49,7 @@ module.exports = {
         clientId: client.user.id,
         scopes: ["bot", "applications.commands", "guilds", "identify"],
         permissions: "1644971949303",
-        redirectUri: "http://dashboard.pwr.lol:25890/discord/callback/",
+        redirectUri: "http://dashboard.pwr.lol/discord/callback/",
       },
       theme: DarkDashboard({
         information: {
