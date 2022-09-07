@@ -33,7 +33,7 @@ module.exports = {
         secret: config.powerbot_clientSecret,
       },
       redirectUri: "http://dashboard.pwr.lol:25890/discord/callback/",
-      domain: "http://dashboard.pwr.lol/",
+      domain: "http://dashboard.pwr.lol",
       bot: client,
       supportServer: {
         slash: "/support",
