@@ -12,9 +12,12 @@ module.exports = {
         ephemeral: true,
         fetchReply: true,
       });
-      const member = interaction.fields.getTextInputValue("reportedUserInput");
+      const memberName = interaction.fields.getTextInputValue("reportedUserInput");
+      const memberId = interaction.fields.getTextInputValue("reportedUserId");
+      const member = client.users.cache.get(memberId);
       const reporter = interaction.user.tag;
       const reason = interaction.fields.getTextInputValue("reportUserInput");
+
 
       const reportembed = new EmbedBuilder()
         .setTitle(`⚡️ PowerBot ⚡️ | User Report`)

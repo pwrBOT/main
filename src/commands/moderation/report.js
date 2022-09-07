@@ -30,7 +30,7 @@ module.exports = {
       .setTitle(`User ${member.user.tag} melden!`);
 
     const textInput = new TextInputBuilder()
-      .setCustomId("reportUserInput")
+      .setCustomId("userReport")
       .setLabel("Warum möchtest du den User melden?")
       .setRequired(true)
       .setStyle(TextInputStyle.Paragraph);
@@ -42,9 +42,17 @@ module.exports = {
       .setRequired(true)
       .setStyle(TextInputStyle.Short);
 
+      const reportedUserId = new TextInputBuilder()
+      .setCustomId("reportedUserId")
+      .setLabel("User der gemeldet wird:")
+      .setValue(`${member.user.id}`)
+      .setRequired(true)
+      .setStyle(TextInputStyle.Short);
+
     modal.addComponents(
       new ActionRowBuilder().addComponents(textInput),
-      new ActionRowBuilder().addComponents(reportedUserInput)
+      new ActionRowBuilder().addComponents(reportedUserInput),
+      new ActionRowBuilder().addComponents(reportedUserId)
     );
 
     const commandLogRepository = require("../../mysql/commandLogRepository");
