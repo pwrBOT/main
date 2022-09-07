@@ -18,7 +18,7 @@ module.exports = {
     const member = options.getMember("user");
 
     const modal = new ModalBuilder()
-      .setCustomId("userReport")
+      .setCustomId("userReportContextmenu")
       .setTitle(`User ${member.user.tag} melden!`);
 
     const textInput = new TextInputBuilder()
