@@ -57,7 +57,7 @@ module.exports = {
 
     const commandLogRepository = require("../../mysql/commandLogRepository");
                                           // guild - command, user, affectedMember, reason
-    await commandLogRepository.logCommandUse(interaction.guild, "report", interaction.user, "-", "-")
+    await commandLogRepository.logCommandUse(interaction.guild, "report/slashcommand", interaction.user, "-", "-")
 
     await interaction.showModal(modal);
   },

@@ -51,7 +51,7 @@ module.exports = {
     // guild - command, user, affectedMember, reason
     await commandLogRepository.logCommandUse(
       interaction.guild,
-      "report",
+      "report/app",
       interaction.user,
       "-",
       "-"
