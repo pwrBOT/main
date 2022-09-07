@@ -37,14 +37,14 @@ module.exports = {
 
     const reportedUserInput = new TextInputBuilder()
       .setCustomId("reportedUserInput")
-      .setLabel("User der gemeldet wird (NICHT VERÄNDERN):")
+      .setLabel("User der gemeldet wird:")
       .setValue(`${member.user.tag}`)
       .setRequired(true)
       .setStyle(TextInputStyle.Short);
 
       const reportedUserId = new TextInputBuilder()
       .setCustomId("reportedUserId")
-      .setLabel("ID des Users der gemeldet wird (NICHT VERÄNDERN):")
+      .setLabel("ID des Users der gemeldet wird:")
       .setValue(`${member.user.id}`)
       .setRequired(true)
       .setStyle(TextInputStyle.Short);
