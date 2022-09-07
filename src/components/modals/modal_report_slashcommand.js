@@ -3,7 +3,7 @@ const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 
 module.exports = {
   data: {
-    name: "userReport",
+    name: "userReportSlashCommand",
   },
 
   async execute(interaction, client) {
@@ -14,14 +14,7 @@ module.exports = {
       });
       const reporter = interaction.user.tag;
       const reason = interaction.fields.getTextInputValue("reportUserInput");
-      let member = "";
-      if (!interaction.targetUser){
-        member = options.getMember("user");
-        console.log(member)
-      } else {
-        member = interaction.targetUser;
-        console.log(member)
-      }
+      let member = options.getMember("user");
 
       const reportembed = new EmbedBuilder()
         .setTitle(`⚡️ PowerBot ⚡️ | User Report`)
@@ -67,7 +60,7 @@ module.exports = {
           .get(modLogChannel)
           .send({ embeds: [reportembed] })
           .catch(console.error);
-          return resolve(null);
+        return resolve(null);
       }
     });
   },

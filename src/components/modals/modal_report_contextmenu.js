@@ -15,7 +15,7 @@ module.exports = {
       const reporter = interaction.user.tag;
       const reason = interaction.fields.getTextInputValue("reportUserInput");
       let member = interaction.targetUser;
-      console.log(member);
+      console.log(interaction);
 
       const reportembed = new EmbedBuilder()
         .setTitle(`⚡️ PowerBot ⚡️ | User Report`)
