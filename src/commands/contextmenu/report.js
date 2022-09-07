@@ -35,8 +35,7 @@ module.exports = {
       .setStyle(TextInputStyle.Short);
 
     modal.addComponents(
-      new ActionRowBuilder().addComponents(textInput),
-      new ActionRowBuilder().addComponents(reportedUserInput)
+      new ActionRowBuilder().addComponents(textInput)
     );
 
     const commandLogRepository = require("../../mysql/commandLogRepository");
