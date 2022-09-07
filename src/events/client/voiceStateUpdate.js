@@ -57,20 +57,14 @@ module.exports = {
     const newChannelName = `${tempChannelCheck.tempChannelName} #${member.user.username}`;
 
     if (oldChannel !== newChannel && newChannelId === joinToCreate) {
+      const mainPermissions = newChannel.permissionOverwrites
+      console.log(mainPermissions)
       const voiceChannel = await guild.channels.create({
         name: newChannelName,
         type: ChannelType.GuildVoice,
         bitrate: 256000,
         parent: newState.channel.parent,
-        permissionOverwrites: [
-          {
-            id: member.user.id,
-            allow: [
-              PermissionFlagsBits.ViewChannel,
-              PermissionFlagsBits.Connect,
-            ],
-          },
-        ],
+        permissionOverwrites: mainPermissions,
       });
       await tempChannelsRepository.addTempVoiceChannel(
         guild.id,
