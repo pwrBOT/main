@@ -14,7 +14,13 @@ module.exports = {
       });
       const reporter = interaction.user.tag;
       const reason = interaction.fields.getTextInputValue("reportUserInput");
-      const member = options.getMember("user");
+      let member = "";
+      if (!options.getMember("user")){
+        member = interaction.targetUser;
+        console.log(member)
+      } else {
+        member = options.getMember("user");
+      }
 
       const reportembed = new EmbedBuilder()
         .setTitle(`⚡️ PowerBot ⚡️ | User Report`)
