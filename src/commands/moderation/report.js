@@ -26,25 +26,25 @@ module.exports = {
     const member = options.getMember("user");
 
     const modal = new ModalBuilder()
-      .setCustomId("userReportSlashCommand")
+      .setCustomId("userReport")
       .setTitle(`User ${member.user.tag} melden!`);
 
     const textInput = new TextInputBuilder()
-      .setCustomId("userReport")
+      .setCustomId("reportUserInput")
       .setLabel("Warum möchtest du den User melden?")
       .setRequired(true)
       .setStyle(TextInputStyle.Paragraph);
 
     const reportedUserInput = new TextInputBuilder()
       .setCustomId("reportedUserInput")
-      .setLabel("User der gemeldet wird:")
+      .setLabel("User der gemeldet wird (NICHT VERÄNDERN):")
       .setValue(`${member.user.tag}`)
       .setRequired(true)
       .setStyle(TextInputStyle.Short);
 
       const reportedUserId = new TextInputBuilder()
       .setCustomId("reportedUserId")
-      .setLabel("User der gemeldet wird:")
+      .setLabel("ID des Users der gemeldet wird (NICHT VERÄNDERN):")
       .setValue(`${member.user.id}`)
       .setRequired(true)
       .setStyle(TextInputStyle.Short);
