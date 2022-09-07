@@ -13,7 +13,7 @@ module.exports = {
   description: "User können andere User melden. Nachricht kommt in den Bot-Log Channel, sofern definiert --> Bot Setup ",
   data: new SlashCommandBuilder()
     .setName(`report`)
-    .setDescription(`User melden`)
+    .setDescription(`User melden!`)
     .addUserOption((option) =>
       option
         .setName("user")

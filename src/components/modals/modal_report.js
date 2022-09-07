@@ -39,7 +39,7 @@ module.exports = {
           },
         ]);
 
-      const newMessage = `User ${member} wurde gemeldet ✅`;
+      const newMessage = `Danke für Deine Meldung! User ${member} wurde den Moderatoren gemeldet ✅`;
       await interaction.editReply({ content: newMessage });
 
       const guildSettings = await guildSettingsRepository.getGuildSettings(

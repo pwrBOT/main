@@ -10,7 +10,7 @@ const {
 
 module.exports = {
   data: new ContextMenuCommandBuilder()
-    .setName("User Report")
+    .setName("User melden")
     .setType(ApplicationCommandType.User)
     .setDefaultMemberPermissions(PermissionFlagsBits.ViewChannel),
   async execute(interaction, client) {
