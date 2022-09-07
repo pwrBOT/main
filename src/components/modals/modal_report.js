@@ -8,6 +8,10 @@ module.exports = {
 
   async execute(interaction, client) {
     return new Promise(async (resolve) => {
+      const message = await interaction.deferReply({
+        ephemeral: true,
+        fetchReply: true,
+      });
       const member = interaction.fields.getTextInputValue("reportedUserInput");
       const reporter = interaction.user.tag;
       const reason = interaction.fields.getTextInputValue("reportUserInput");
@@ -36,10 +40,7 @@ module.exports = {
         ]);
 
       const newMessage = `User ${member} wurde gemeldet ✅`;
-      await interaction.reply({ content: newMessage });
-      setTimeout(function () {
-        interaction.deleteReply();
-      }, 3000);
+      await interaction.editReply({ content: newMessage });
 
       const guildSettings = await guildSettingsRepository.getGuildSettings(
         interaction.guild,
@@ -51,12 +52,9 @@ module.exports = {
 
       const modLogChannel = guildSettings.modLog;
       if (modLogChannel === undefined) {
-        interaction.reply(
-          `Mod-Log Channel nicht gefunden! Bot Einrichtung abschließen`
+        interaction.editReply(
+          `Beschwerde kann nicht übermittelt werden. Bitte Admins per DM kontaktieren!`
         );
-        setTimeout(function () {
-          interaction.deleteReply();
-        }, 3000);
       } else {
         client.channels.cache
           .get(modLogChannel)
