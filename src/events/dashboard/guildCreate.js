@@ -1,6 +1,7 @@
 const { EmbedBuilder } = require("discord.js");
 const chalk = require("chalk");
 const guildsRepository = require("../../mysql/guildsRepository");
+const usersRepository = require("../../mysql/usersRepository");
 
 
 module.exports = async function guildCreate(guild) {
@@ -13,9 +14,15 @@ module.exports = async function guildCreate(guild) {
         )
       );
       const addGuild = await guildsRepository.addGuild(guild);
+      await usersRepository.createUserTable(guild.id);
       console.log(
         chalk.blue(
           `[MYSQL DATABASE] Guild: ${guild.name}(${guild.id}) Settings erfolgreich angelegt!`
+        )
+      );
+      console.log(
+        chalk.blue(
+          `[MYSQL DATABASE] Guild: ${guild.name}(${guild.id}) User Tabelle erfolgreich angelegt!`
         )
       );
     }
