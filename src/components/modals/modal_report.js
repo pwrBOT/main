@@ -15,11 +15,12 @@ module.exports = {
       const reporter = interaction.user.tag;
       const reason = interaction.fields.getTextInputValue("reportUserInput");
       let member = "";
-      if (!options.getMember("user")){
-        member = interaction.targetUser;
+      if (!interaction.targetUser){
+        member = options.getMember("user");
         console.log(member)
       } else {
-        member = options.getMember("user");
+        member = interaction.targetUser;
+        console.log(member)
       }
 
       const reportembed = new EmbedBuilder()
