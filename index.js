@@ -6,7 +6,6 @@ const {
 } = require("discord.js");
 const config = require("./config.json");
 const fs = require("fs");
-const addUser = require("./src/events/messageCreate/addUser");
 const getXp = require("./src/events/messageCreate/getXp");
 const tempUnbanUser = require("./src/events/tempCommands/tempUnbanUser");
 const tempUnmuteUser = require("./src/events/tempCommands/tempUnmuteUser");
@@ -70,7 +69,6 @@ client.login(TOKEN);
 
 
 client.on("messageCreate", async (message) => {
-  addUser(message);
   getXp(message);
 });
 
