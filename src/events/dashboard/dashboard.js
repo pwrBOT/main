@@ -3,6 +3,7 @@ const DarkDashboard = require("dbd-dark-dashboard");
 const DBD = require("discord-dashboard");
 const config = require(`../../../config.json`);
 const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
+const embedsRepository = require("../../mysql/embedsRepository");
 
 module.exports = {
   name: "ready",
@@ -13,6 +14,7 @@ module.exports = {
     let warning = [];
     let admintools = [];
 
+    const { user } = client;
     const information = client.commands.filter((x) => x.category === "info");
     const mod = client.commands.filter((x) => x.category === "moderation");
     const warnsystem = client.commands.filter((x) => x.category === "warning");
@@ -428,6 +430,50 @@ module.exports = {
             },
             /// ########## MISC SETTINGS ########## \\\
             {
+              optionId: "embedinfo",
+              optionName: "",
+              optionDescription:
+                "Moderations Info-Text für User (z.B.: Bei Fragen wende dich an... / Server-Rejoin Link... / ...). Wird beim User Embed dran gehängt:",
+              optionType: DBD.formTypes.textarea(
+                "Bei Fragen wende dich an die Communityleitung!",
+                1,
+                200,
+                false,
+                false
+              ),
+              getActualSet: async ({ guild }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+                if (data) return data.embedInfo;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "embedInfo";
+                  await guildSettingsRepository.updateChannel(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "embedInfo";
+                  await guildSettingsRepository.updateChannel(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
               optionId: "language",
               optionName: "",
               optionDescription: "Bot Sprache:",
@@ -478,36 +524,164 @@ module.exports = {
           categoryOptionsList: [
             {
               optionId: "welcomeMessage",
-              optionName: "",
-              optionDescription: "Willkommensnachricht ein/aus:",
+              optionName: "Willkommensnachricht DM:",
+              optionDescription: "Willkommensnachricht DM ein/aus:",
               optionType: DBD.formTypes.switch(false),
+              themeOptions: {
+                minimalbutton: {
+                  first: true,
+                },
+              },
               getActualSet: async ({ guild }) => {
-                let data = await guildSettingsRepository.getGuildSettings(
-                  guild
+                let data = await embedsRepository.getEmbed(
+                  guild,
+                  "welcomeMessage"
                 );
-                if (data) return data.welcomeMessage;
-                else return null;
+                if (data) return data.active;
+                else return false;
               },
               setNew: async ({ guild, newData }) => {
-                let data = await guildSettingsRepository.getGuildSettings(
-                  guild
+                let data = await embedsRepository.getEmbed(
+                  guild,
+                  "welcomeMessage"
                 );
 
                 if (!newData) newData = null;
 
                 if (!data) {
-                  const column = "welcomeMessage";
-                  await guildSettingsRepository.updateChannel(
+                  const column = "active";
+                  await embedsRepository.addEmbed(
                     guild,
+                    "welcomeMessage",
+                    newData,
+                    false,
+                    null,
+                    false,
+                    false
+                  );
+                } else {
+                  const column = "active";
+                  await embedsRepository.updateEmbed(
                     column,
+                    newData,
+                    guild,
+                    "welcomeMessage"
+                  );
+                }
+                return;
+              },
+            },
+            {
+              optionId: "welcomeEmbed",
+              optionName: "",
+              optionDescription: "Willkommens-Embed:",
+              optionType: DBD.formTypes.switch(false),
+              themeOptions: {
+                minimalbutton: {
+                  last: true,
+                },
+              },
+              getActualSet: async ({ guild }) => {
+                let data = await embedsRepository.getEmbed(
+                  guild,
+                  "welcomeMessage"
+                );
+                if (data) return data.embed;
+                else return false;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await embedsRepository.getEmbed(
+                  guild,
+                  "welcomeMessage"
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "embed";
+                  await embedsRepository.addEmbed(
+                    guild,
+                    "welcomeMessage",
+                    false,
+                    false,
+                    null,
+                    false,
                     newData
                   );
                 } else {
-                  const column = "welcomeMessage";
-                  await guildSettingsRepository.updateChannel(
-                    guild,
+                  const column = "embed";
+                  await embedsRepository.updateEmbed(
                     column,
-                    newData
+                    newData,
+                    guild,
+                    "welcomeMessage"
+                  );
+                }
+                return;
+              },
+            },
+
+            {
+              optionId: "welcomeMessagedm",
+              optionName: "",
+              optionDescription: "",
+              optionType: DBD.formTypes.embedBuilder({
+                username: user.username,
+                avatarURL: user.avatarURL(),
+                defaultJson: {
+                  embed: {
+                    title: `⚡️ Willkommen bei PowerBot ⚡️`,
+                    description: `Schön, dass du zu uns gefunden hast.\nAlle Infos zum Start bekommst du im Channel: #Welcome\n\nBei Fragen kannst du dich jederzeit an unsere Supporter wenden.`,
+                    color: "GREEN",
+                    timestamp: Date.now(),
+                    footer: {
+                      text: `powered by Powerbot`,
+                      icon_url: `${user.displayAvatarURL()}`,
+                    },
+                  },
+                },
+              }),
+
+              getActualSet: async ({ guild }) => {
+                let data = await embedsRepository.getEmbed(
+                  guild,
+                  "welcomeMessage"
+                );
+                if (!data) {
+                  return null;
+                } else {
+                  if (data.messageContent)
+                    return JSON.parse(data.messageContent);
+                  else return null;
+                }
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await embedsRepository.getEmbed(
+                  guild,
+                  "welcomeMessage"
+                );
+                newDataString = JSON.stringify(newData);
+
+                if (!newData) newData = false;
+
+                if (!data) {
+                  const column = "messageContent";
+                  await embedsRepository.addEmbed(
+                    guild,
+                    "welcomeMessage",
+                    false,
+                    false,
+                    newDataString,
+                    false,
+                    false
+                  );
+                } else {
+                  const column = "messageContent";
+                  await embedsRepository.updateEmbed(
+                    column,
+                    newDataString,
+                    guild,
+                    "welcomeMessage"
                   );
                 }
                 return;

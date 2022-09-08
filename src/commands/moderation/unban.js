@@ -43,6 +43,14 @@ module.exports = {
         return resolve(null);
       }
 
+      const guildSettings = await guildSettingsRepository.getGuildSettings(
+        interaction.guild,
+        1
+      );
+      if (!guildSettings) {
+        return resolve(null);
+      }
+
       const banembed = new EmbedBuilder()
         .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
         .setDescription(`User: ${client.users.cache.get(member.username)}#${client.users.cache.get(member.discriminator)} wurde entbannt`)
@@ -91,7 +99,7 @@ module.exports = {
           },
           {
             name: `Information:`,
-            value: `Bei Fragen wende dich bitte an die Projektleitung\n https://emergency-luedenscheid.de \n\n\nServer Join Link: https://discord.gg/QfDNMCxzsN`,
+            value: `${guildSettings.embedInfo}`,
             inline: false,
           },
         ]);
@@ -101,14 +109,6 @@ module.exports = {
       setTimeout(function () {
         interaction.deleteReply();
       }, 3000);
-
-      const guildSettings = await guildSettingsRepository.getGuildSettings(
-        interaction.guild,
-        1
-      );
-      if (!guildSettings) {
-        return resolve(null);
-      }
 
       const modLogChannel = guildSettings.modLog;
       if (modLogChannel === undefined) {

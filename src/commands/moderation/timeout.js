@@ -109,6 +109,14 @@ module.exports = {
               }, 3000)
             );
 
+        const guildSettings = await guildSettingsRepository.getGuildSettings(
+          interaction.guild,
+          1
+        );
+        if (!guildSettings) {
+          return resolve(null);
+        }
+
         const modlogembed = new EmbedBuilder()
           .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
           .setDescription(
@@ -159,7 +167,7 @@ module.exports = {
             },
             {
               name: `Information:`,
-              value: `Bei Fragen wende dich bitte an die Projektleitung`,
+              value: `${guildSettings.embedInfo}`,
               inline: false,
             },
           ]);
@@ -171,14 +179,6 @@ module.exports = {
         setTimeout(function () {
           interaction.deleteReply();
         }, 3000);
-
-        const guildSettings = await guildSettingsRepository.getGuildSettings(
-          interaction.guild,
-          1
-        );
-        if (!guildSettings) {
-          return resolve(null);
-        }
 
         const modLogChannel = guildSettings.modLog;
         if (modLogChannel === undefined) {
@@ -195,12 +195,17 @@ module.exports = {
         }
         try {
           await member.send({ embeds: [embedmember] });
-        } catch (error) {
-        }
+        } catch (error) {}
 
         const commandLogRepository = require("../../mysql/commandLogRepository");
-                                          // guild - command, user, affectedMember, reason
-        await commandLogRepository.logCommandUse(interaction.guild, "timeout add", interaction.user, member.user, "-")
+        // guild - command, user, affectedMember, reason
+        await commandLogRepository.logCommandUse(
+          interaction.guild,
+          "timeout add",
+          interaction.user,
+          member.user,
+          "-"
+        );
 
         return resolve(null);
       }
@@ -247,12 +252,13 @@ module.exports = {
             interaction.deleteReply();
           }, 3000);
         } else {
-          client.channels.cache.get(modLogChannel).send({ embeds: [modlogembed2] });
+          client.channels.cache
+            .get(modLogChannel)
+            .send({ embeds: [modlogembed2] });
         }
         try {
           await member.send({ embeds: [embedmember2] });
-        } catch (error) {
-        }
+        } catch (error) {}
         interaction.reply({
           content: `Timeout von User: ${member} entfernt ✅`,
         });
@@ -263,8 +269,14 @@ module.exports = {
         member.timeout(null).catch(console.error);
 
         const commandLogRepository = require("../../mysql/commandLogRepository");
-                                          // guild - command, user, affectedMember, reason
-        await commandLogRepository.logCommandUse(interaction.guild, "timeout remove", interaction.user, member.user, reason)
+        // guild - command, user, affectedMember, reason
+        await commandLogRepository.logCommandUse(
+          interaction.guild,
+          "timeout remove",
+          interaction.user,
+          member.user,
+          reason
+        );
 
         return resolve(null);
       }

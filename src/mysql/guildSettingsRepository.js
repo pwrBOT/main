@@ -48,12 +48,14 @@ const addGuild = async (
   teamRole,
   modRole,
   welcomechannel,
+  embedInfo,
   language
 ) => {
   return new Promise((resolve) => {
+    
     mysqlHelper
       .query(
-        "INSERT INTO powerbot_guilds (guildId, guildName, botLog, modLog, botMaster, teamRole, modRole, welcomechannel, language) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO powerbot_guilds (guildId, guildName, botLog, modLog, botMaster, teamRole, modRole, welcomechannel, embedInfo, language) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
           guildId,
           guildName,
@@ -63,6 +65,7 @@ const addGuild = async (
           teamRole.id,
           modRole.id,
           welcomechannel.id,
+          embedInfo,
           language,
         ]
       )
@@ -89,13 +92,14 @@ const updateGuild = async (
   teamRole,
   modRole,
   welcomechannel,
+  embedInfo,
   language
 ) => {
   return new Promise((resolve) => {
     cache.delete(guildId);
     mysqlHelper
       .query(
-        "UPDATE powerbot_guilds SET guildId=?, guildName=?, botLog=?, modLog=?, botMaster=?, teamRole=?, modRole=?, welcomechannel=?, language=? WHERE guildId = ?",
+        "UPDATE powerbot_guilds SET guildId=?, guildName=?, botLog=?, modLog=?, botMaster=?, teamRole=?, modRole=?, welcomechannel=?, language=?, embedInfo=? WHERE guildId = ?",
         [
           guildId,
           guildName,
@@ -106,6 +110,7 @@ const updateGuild = async (
           modRole.id,
           welcomechannel.id,
           language,
+          embedInfo,
           guildId,
         ],
         1

@@ -212,7 +212,7 @@ module.exports = {
           },
           {
             name: `Information:`,
-            value: `Bei Fragen wende dich bitte an die Projektleitung!`,
+            value: `${guildSettings.embedInfo}`,
             inline: false,
           },
         ]);

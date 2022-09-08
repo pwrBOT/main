@@ -70,6 +70,14 @@ module.exports = {
         return resolve(null);
       }
 
+      const guildSettings = await guildSettingsRepository.getGuildSettings(
+        interaction.guild,
+        1
+      );
+      if (!guildSettings) {
+        return resolve(null);
+      }
+
       const kickembed = new EmbedBuilder()
         .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
         .setDescription(`User: ${member} wurde vom Server gekickt`)
@@ -116,7 +124,7 @@ module.exports = {
           },
           {
             name: `Information:`,
-            value: `Bei Fragen wende dich bitte an die Projektleitung\n https://emergency-luedenscheid.de \n\n\nServer Join Link: https://discord.gg/QfDNMCxzsN`,
+            value: `${guildSettings.embedInfo}`,
             inline: false,
           },
         ]);
@@ -126,14 +134,6 @@ module.exports = {
       setTimeout(function () {
         interaction.deleteReply();
       }, 3000);
-
-      const guildSettings = await guildSettingsRepository.getGuildSettings(
-        interaction.guild,
-        1
-      );
-      if (!guildSettings) {
-        return resolve(null);
-      }
 
       const modLogChannel = guildSettings.modLog;
       if (modLogChannel === undefined) {
@@ -153,12 +153,17 @@ module.exports = {
       member.kick({ reason }).catch(console.error);
       try {
         await member.send({ embeds: [kickembedmember] });
-      } catch (error) {
-      }
+      } catch (error) {}
 
       const commandLogRepository = require("../../mysql/commandLogRepository");
-                                          // guild - command, user, affectedMember, reason
-      await commandLogRepository.logCommandUse(interaction.guild, "kick", interaction.user, member.user, reason)
+      // guild - command, user, affectedMember, reason
+      await commandLogRepository.logCommandUse(
+        interaction.guild,
+        "kick",
+        interaction.user,
+        member.user,
+        reason
+      );
 
       return resolve(null);
     });

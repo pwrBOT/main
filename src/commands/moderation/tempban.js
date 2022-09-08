@@ -114,6 +114,14 @@ module.exports = {
         return resolve(null);
       }
 
+      const guildSettings = await guildSettingsRepository.getGuildSettings(
+        interaction.guild,
+        1
+      );
+      if (!guildSettings) {
+        return resolve(null);
+      }
+
       var unbanDate = "";
       if (length === "12 Stunden") {
         unbanDate = moment(new Date()).add(12, "hours");
@@ -204,7 +212,7 @@ module.exports = {
           },
           {
             name: `Information:`,
-            value: `Bei Fragen wende dich bitte an die Projektleitung!`,
+            value: `${guildSettings.embedInfo}`,
             inline: false,
           },
         ]);
@@ -214,14 +222,6 @@ module.exports = {
       setTimeout(function () {
         interaction.deleteReply();
       }, 3000);
-
-      const guildSettings = await guildSettingsRepository.getGuildSettings(
-        interaction.guild,
-        1
-      );
-      if (!guildSettings) {
-        return resolve(null);
-      }
 
       const modLogChannel = guildSettings.modLog;
       if (modLogChannel === undefined) {
@@ -250,11 +250,12 @@ module.exports = {
         "tempban",
         tempEnd
       );
-      member.ban({ deleteMessageDays: days, reason: reason }).catch(console.error);
+      member
+        .ban({ deleteMessageDays: days, reason: reason })
+        .catch(console.error);
       try {
         await member.send({ embeds: [banembedmember] });
-      } catch (error) {
-      }
+      } catch (error) {}
 
       const commandLogRepository = require("../../mysql/commandLogRepository");
       // guild - command, user, affectedMember, reason

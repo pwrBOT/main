@@ -56,6 +56,12 @@ module.exports = {
         )
         .addStringOption((option) =>
           option
+            .setName("embedinfo")
+            .setDescription("Embed Beschreibung festlegen")
+            .setRequired(true)
+        )
+        .addStringOption((option) =>
+          option
             .setName("language")
             .setDescription("Bot-Sprache festlegen")
             .addChoices(
@@ -80,6 +86,7 @@ module.exports = {
       const botLog = options.getChannel("botlog");
       const modLog = options.getChannel("modlog");
       const welcomechannel = options.getChannel("welcomechannel");
+      const embedInfo = options.getString("embedinfo");
       const language = options.getString("language");
 
       // #################### SETUP ###################### \\
@@ -125,6 +132,11 @@ module.exports = {
               inline: true,
             },
             {
+              name: `Embed Information:`,
+              value: `${embedInfo}`,
+              inline: true,
+            },
+            {
               name: `Bot Sprache:`,
               value: `${language}`,
               inline: true,
@@ -143,6 +155,7 @@ module.exports = {
             teamRole,
             modRole,
             welcomechannel,
+            embedInfo,
             language,
           );
 
@@ -166,6 +179,7 @@ module.exports = {
           teamRole,
           modRole,
           welcomechannel,
+          embedInfo,
           language
         );
 
@@ -252,6 +266,11 @@ module.exports = {
               value: `${guild.channels.cache.get(
                 guildSettings.welcomechannel
               )}`,
+              inline: false,
+            },
+            {
+              name: `💬 Embed Information:`,
+              value: `${guildSettings.embedInfo}`,
               inline: false,
             },
             {
