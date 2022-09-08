@@ -35,10 +35,11 @@ const addUser = async (guildId, message, userAdd) => {
     const tabelle = `${guildId}_users`;
     let userAddDate = "";
     if (!userAdd) {
-      userAddDate = Date.now();
+      userAddDate = new Date(Date.now());
     } else {
       userAddDate = new Date(userAdd);
     }
+
     mysqlHelper
       .query(
         `INSERT INTO ${tabelle} (userId, userName, userAdd) VALUES ( ?, ?, ?)`,
