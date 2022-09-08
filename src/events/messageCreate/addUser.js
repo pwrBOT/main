@@ -7,7 +7,6 @@ module.exports = async function messageCreate(message) {
     if (message.guildId == null) {
       return resolve(null);
     }
-
     await usersRepository.createUserTable(guildId);
 
     const getUser = await usersRepository.getUser(
@@ -20,7 +19,7 @@ module.exports = async function messageCreate(message) {
           `[MYSQL DATABASE] UserId: ${message.author.id} bei Guild: ${guildId} nicht gefunden. User wird angelegt...`
         )
       );
-      await usersRepository.addUser(guildId, message);
+      await usersRepository.addUser(guildId, message.author);
       console.log(
         chalk.blue(
           `[MYSQL DATABASE] User (${message.author.username}#${message.author.discriminator} | ID: ${message.author.id}) bei Guild: ${guildId} erfolgreich angelegt!`

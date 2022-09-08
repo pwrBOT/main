@@ -1,4 +1,5 @@
 const mysqlHelper = require("./mysqlHelper");
+const moment = require("moment");
 
 const getUser = async (memberId, guildId) => {
   return new Promise((resolve) => {
@@ -27,17 +28,22 @@ const getUsers = async (guild) => {
   });
 };
 
-const addUser = async (guildId, message) => {
+const addUser = async (guildId, message, userAdd) => {
   return new Promise((resolve) => {
-    const userId = message.author.id;
-    const userName = `${message.author.username}#${message.author.discriminator}`;
+    const userId = message.id;
+    const userName = `${message.username}#${message.discriminator}`;
     const tabelle = `${guildId}_users`;
-
+    let userAddDate = "";
+    if (!userAdd) {
+      userAddDate = Date.now();
+    } else {
+      userAddDate = new Date(userAdd);
+    }
     mysqlHelper
-      .query(`INSERT INTO ${tabelle} (userId, userName) VALUES ( ?, ?)`, [
-        userId,
-        userName,
-      ])
+      .query(
+        `INSERT INTO ${tabelle} (userId, userName, userAdd) VALUES ( ?, ?, ?)`,
+        [userId, userName, userAddDate]
+      )
       .then((result) => {
         resolve(null);
       })
@@ -53,10 +59,7 @@ const addUserXP = async (guildId, message, newXP) => {
     const tabelle = `${guildId}_users`;
 
     mysqlHelper
-      .query(`UPDATE ${tabelle} SET xP=? WHERE userId = ?`, [
-        newXP,
-        userId
-      ])
+      .query(`UPDATE ${tabelle} SET xP=? WHERE userId = ?`, [newXP, userId])
       .then((result) => {
         resolve(null);
       })
@@ -86,7 +89,7 @@ const createUserTable = async (guildId) => {
   return new Promise((resolve) => {
     mysqlHelper
       .query(
-        `CREATE TABLE IF NOT EXISTS mbr_hosting_powerbot. ${tabelle} ( ID INT NOT NULL AUTO_INCREMENT , userId TEXT NOT NULL , userName TEXT NOT NULL , userAdd TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , xP BIGINT NOT NULL , Level INT NOT NULL , PRIMARY KEY (ID)) ENGINE = InnoDB`,
+        `CREATE TABLE IF NOT EXISTS mbr_hosting_powerbot. ${tabelle} ( ID INT NOT NULL AUTO_INCREMENT , userId TEXT NOT NULL , userName TEXT NOT NULL , userAdd DATETIME NOT NULL , xP BIGINT NOT NULL , Level INT NOT NULL , PRIMARY KEY (ID)) ENGINE = InnoDB`,
         [tabelle]
       )
       .then((result) => {

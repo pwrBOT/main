@@ -1,19 +1,18 @@
-const {
-  EmbedBuilder,
-  ActivityType,
-} = require("discord.js");
+const { EmbedBuilder, ActivityType } = require("discord.js");
 const config = require(`../../../config.json`);
+const usersRepository = require("../../mysql/usersRepository");
+const chalk = require("chalk");
 
 module.exports = {
   name: "ready",
   once: true,
   async execute(client) {
-    var botGuilds ="";
-    const allBotGuilds = client.guilds.cache.map(guild => guild)
+    var botGuilds = "";
+    const allBotGuilds = client.guilds.cache.map((guild) => guild);
     allBotGuilds.forEach((guilds) => {
       const date = new Date(guilds.joinedTimestamp).toLocaleDateString("de-DE");
-      botGuilds += `${guilds.name} (${guilds.id})\nAm Server seit: ${date}\n\n`
-    })    
+      botGuilds += `${guilds.name} (${guilds.id})\nAm Server seit: ${date}\n\n`;
+    });
     const embed = new EmbedBuilder()
       .setTitle(`⚡️ PowerBot ⚡️ | Status: 🟢`)
       .setDescription(`Ich bin da, wer noch?`)
@@ -37,12 +36,17 @@ module.exports = {
         },
       ]);
 
-    client.user.setPresence({ activities: [{ name: `Danny`, type: ActivityType.Listening }], status: 'online'});
+    client.user.setPresence({
+      activities: [{ name: `Danny`, type: ActivityType.Listening }],
+      status: "online",
+    });
     client.user.setUsername("PowerBot [DEV]").catch(console.error);
 
     const channel = client.channels.cache.get(config.powerbot_status_channel);
     channel.send({ embeds: [embed] });
 
-    console.log(`\x1b[32mOnline! ${client.user.tag} is now logged in and online!\x1b[0m`);
+    console.log(
+      `\x1b[32mOnline! ${client.user.tag} is now logged in and online!\x1b[0m`
+    );
   },
 };

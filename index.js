@@ -8,7 +8,6 @@ const config = require("./config.json");
 const fs = require("fs");
 const addUser = require("./src/events/messageCreate/addUser");
 const getXp = require("./src/events/messageCreate/getXp");
-const guildCreate = require("./src/events/dashboard/guildCreate");
 const tempUnbanUser = require("./src/events/tempCommands/tempUnbanUser");
 const tempUnmuteUser = require("./src/events/tempCommands/tempUnmuteUser");
 
@@ -68,9 +67,7 @@ client.handleComponents();
 client.login(TOKEN);
 
 // CLIENT ON EVENTS
-client.on("guildCreate", async (guild) => {
-  guildCreate(guild);
-});
+
 
 client.on("messageCreate", async (message) => {
   addUser(message);
@@ -81,6 +78,7 @@ client.on("ready", async () => {
   tempUnbanUser.init(client);
   tempUnmuteUser.init(client);
 });
+
 
 
 // Discord Together
