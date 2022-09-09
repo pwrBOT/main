@@ -29,33 +29,33 @@ module.exports = {
         );
       }
 
-    await guild.members.fetch().then(async (members) => {
-      const sorting = (a, b) => {
-        return a.joinedTimestamp - b.joinedTimestamp;
-      };
-      const sortedMembers = await members.sort(sorting)
+      await guild.members.fetch().then(async (members) => {
+        const sorting = (a, b) => {
+          return a.joinedTimestamp - b.joinedTimestamp;
+        };
+        const sortedMembers = await members.sort(sorting);
 
-      sortedMembers.forEach(async (member) => {
-        const getUser = await usersRepository.getUser(
-          member.user.id,
-          member.guild.id
-        );
-        if (getUser) {
-          return;
-        } else {
-          await usersRepository.addUser(
-            member.guild.id,
-            member.user,
-            member.joinedTimestamp
+        sortedMembers.forEach(async (member) => {
+          const getUser = await usersRepository.getUser(
+            member.user.id,
+            member.guild.id
           );
-        }
-      }),
-        console.log(
-          chalk.blue(
-            `[MYSQL DATABASE] Alle vorhandenen User von Guild: ${guild.name}(${guild.id}) in User Tabelle importiert.`
-          )
-        );
-    });
+          if (getUser) {
+            return;
+          } else {
+            await usersRepository.addUser(
+              member.guild.id,
+              member.user,
+              member.joinedTimestamp
+            );
+          }
+        }),
+          console.log(
+            chalk.blue(
+              `[MYSQL DATABASE] Alle vorhandenen User von Guild: ${guild.name}(${guild.id}) in User Tabelle importiert.`
+            )
+          );
+      });
 
       const newGuildEmbed = new EmbedBuilder()
         .setTitle(`⚡️ Welcome to PowerBot ⚡️`)

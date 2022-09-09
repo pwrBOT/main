@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require(`discord.js`);
-const canvasWelcome = require("../../components/canvas/canvasWelcome");
+const canvasWelcome = require("../../components/canvas/canvasUserbanner");
 
 module.exports = {
   data: new SlashCommandBuilder()

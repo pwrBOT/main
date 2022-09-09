@@ -3,6 +3,7 @@ const {
   PermissionFlagsBits,
   EmbedBuilder,
 } = require(`discord.js`);
+const warnsRepository = require("../../mysql/warnsRepository");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -22,40 +23,43 @@ module.exports = {
     ),
 
   async execute(interaction, client) {
-    const message = await interaction.deferReply({
-      ephemeral: true,
-      fetchReply: true,
-    });
+    return new Promise(async (resolve) => {
+      const message = await interaction.deferReply({
+        ephemeral: true,
+        fetchReply: true,
+      });
 
-    if (interaction.options.getSubcommand() === "user") {
-      const pwrDB = require("../../mysql/createConnection");
-      const { options, guild } = interaction;
-      const member = options.getMember("user");
-      if (!member) {
-        return interaction.editReply(
-          "❌ Der User ist nicht mehr auf dem Server ❌"
-        );
-      }
-
-      var userId = member.id;
-      var guildId = guild.id;
-
-      var sqlshowwarns = `SELECT * FROM powerbot_warns WHERE userId = ${userId} AND guildId = ${guildId} ORDER BY userId DESC LIMIT 10`;
-      pwrDB.query(sqlshowwarns, function (error, results) {
-        if (error) throw error;
-        var warns = "";
-        if (results.length === 0) {
-          warns = "Keine Verwarnungen vorhanden!";
+      if (interaction.options.getSubcommand() === "user") {
+        const { options, guild } = interaction;
+        const member = options.getMember("user");
+        if (!member) {
+          interaction.editReply("❌ Der User ist nicht mehr auf dem Server ❌");
+          return resolve(null);
         }
-        results.forEach((el) => {
-          warns += `${new Date(el.warnAdd).toLocaleDateString(
-            "de-DE"
-          )} • ${new Date(el.warnAdd).toLocaleTimeString("de-DE", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}h:\u00A0\u00A0\u00A0\u00A0${el.warnReason}\n`;
-        });
-        
+
+        let userId = member.id;
+        let guildId = guild.id;
+        let warnsText = "";
+
+        let warns = await warnsRepository.getWarns(member, 10);
+
+        if (!warns) {
+          return resolve(null);
+        }
+
+        if (warns.length === 0) {
+          warnsText = `Der User hat keine Verwarnungen!`;
+        } else {
+          warns.forEach((warn) => {
+            const date = new Date(warn.warnAdd).toLocaleDateString("de-DE");
+            const time = new Date(warn.warnAdd).toLocaleTimeString("de-DE", {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+            const spacer = `\u00A0\u00A0\u00A0\u00A0`;
+            warnsText += `${date}  •  ${time}h:${spacer}${warn.warnReason}\n`;
+          });
+        }
 
         const userembed = new EmbedBuilder()
           .setTitle(`⚡️ PowerBot | User Info ⚡️`)
@@ -115,7 +119,10 @@ module.exports = {
             },
             {
               name: `Rollen:`,
-              value: `${member.roles.cache.map(r => r).join(" ").replace("everyone", " " || "None")}`,
+              value: `${member.roles.cache
+                .map((r) => r)
+                .join(" ")
+                .replace("everyone", " " || "None")}`,
               inline: true,
             },
             {
@@ -125,7 +132,7 @@ module.exports = {
             },
             {
               name: `Verwarnungen:`,
-              value: `${warns}`,
+              value: `${warnsText}`,
               inline: false,
             },
           ]);
@@ -133,9 +140,17 @@ module.exports = {
         interaction.editReply({ embeds: [userembed] });
 
         const commandLogRepository = require("../../mysql/commandLogRepository");
-                                          // guild - command, user, affectedMember, reason
-        commandLogRepository.logCommandUse(interaction.guild, "info user", interaction.user, member.user, "-")
-      });
-    }
+        // guild - command, user, affectedMember, reason
+        commandLogRepository.logCommandUse(
+          interaction.guild,
+          "info user",
+          interaction.user,
+          member.user,
+          "-"
+        );
+
+        return resolve(null);
+      }
+    });
   },
 };
