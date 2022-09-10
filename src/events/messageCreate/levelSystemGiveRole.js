@@ -1,9 +1,10 @@
+const { EmbedBuilder } = require("discord.js");
 const usersRepository = require("../../mysql/usersRepository");
 const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 
 module.exports = async function messageCreate(message) {
   return new Promise(async (resolve) => {
-    const { guild, member, author } = message;
+    const { client, guild, member, author } = message;
 
     if (guild == null) {
       return resolve(null);
@@ -31,6 +32,7 @@ module.exports = async function messageCreate(message) {
       return resolve(null);
     }
 
+    /** 
     if (!guildData.teamRole) {
     } else {
       let teamRole = guildData.teamRole;
@@ -38,6 +40,7 @@ module.exports = async function messageCreate(message) {
         return resolve(null);
       }
     }
+    */
 
     const getUser = await usersRepository.getUser(author.id, guild.id);
 
@@ -97,6 +100,32 @@ module.exports = async function messageCreate(message) {
       } else {
         let newRole = guild.roles.cache.get(newRoleId);
         await member.roles.add(newRole).catch(console.error);
+        const rankChannel = guildData.rankChannel;
+        if (rankChannel === undefined) {
+        } else {
+          const embedBefoerderung = new EmbedBuilder()
+            .setTitle(`⚡️ PowerBot | Level-System ⚡️`)
+            .setDescription(`${member} wurde zum ${newRole.name} befördert!`)
+            .setColor(0xf1c232)
+            .setTimestamp(Date.now())
+            .setFooter({
+              iconURL: client.user.displayAvatarURL(),
+              text: `powered by Powerbot`,
+            });
+
+          await client.channels.cache
+            .get(rankChannel)
+            .send({ embeds: [embedBefoerderung] })
+            .catch(console.error);
+
+          await client.channels.cache
+            .get(rankChannel)
+            .send(`${member}`)
+            .catch(console.error);
+          setTimeout(function () {
+            client.channels.cache.get(rankChannel).bulkDelete(1, true);
+          }, 100);
+        }
       }
     }
 
