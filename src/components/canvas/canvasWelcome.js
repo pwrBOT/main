@@ -4,6 +4,25 @@ const { request } = require("undici");
 const usersRepository = require("../../mysql/usersRepository");
 const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 
+const { join } = require("path");
+const { GlobalFonts } = require("@napi-rs/canvas");
+GlobalFonts.registerFromPath(
+  join(__dirname, ".", "fonts", "Roboto-Light.ttf"),
+  "Roboto Light"
+);
+GlobalFonts.registerFromPath(
+  join(__dirname, ".", "fonts", "Roboto-Regular.ttf"),
+  "Roboto Regular"
+);
+GlobalFonts.registerFromPath(
+  join(__dirname, ".", "fonts", "Roboto-Bold.ttf"),
+  "Roboto Bold"
+);
+GlobalFonts.registerFromPath(
+  join(__dirname, ".", "fonts", "Doctor Glitch.otf"),
+  "Doctor Glitch"
+);
+
 const av = {
   size: 512,
   x: 50,
@@ -44,7 +63,7 @@ const generateImage = async (interaction, member, guild) => {
       const context = canvas.getContext("2d");
       let fontSize = 50;
       do {
-        context.font = `${(fontSize -= 9)}px sans-serif`;
+        context.font = `${(fontSize -= 9)}px Doctor Glitch`;
       } while (context.measureText(text).width > canvas.width - 400);
       return context.font;
     };
@@ -60,7 +79,7 @@ const generateImage = async (interaction, member, guild) => {
     context.font = userName(canvas, memberDisplayName);
     context.fillText(`Herzlich Willkommen @${memberDisplayName}`, 350, 270);
 
-    context.font = "20px sans-serif";
+    context.font = "20px Roboto Bold";
     context.fillText(`Du bist Member #${user.ID}`, 350, 300);
 
     // Pick up the pen

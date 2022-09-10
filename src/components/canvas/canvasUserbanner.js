@@ -4,6 +4,25 @@ const { request } = require("undici");
 const usersRepository = require("../../mysql/usersRepository");
 const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 
+const { join } = require("path");
+const { GlobalFonts } = require("@napi-rs/canvas");
+GlobalFonts.registerFromPath(
+  join(__dirname, ".", "fonts", "Roboto-Light.ttf"),
+  "Roboto Light"
+);
+GlobalFonts.registerFromPath(
+  join(__dirname, ".", "fonts", "Roboto-Regular.ttf"),
+  "Roboto Regular"
+);
+GlobalFonts.registerFromPath(
+  join(__dirname, ".", "fonts", "Roboto-Bold.ttf"),
+  "Roboto Bold"
+);
+GlobalFonts.registerFromPath(
+  join(__dirname, ".", "fonts", "Doctor Glitch.otf"),
+  "Doctor Glitch"
+);
+
 const av = {
   size: 512,
   x: 50,
@@ -24,8 +43,8 @@ const generateImage = async (interaction, member, guild) => {
     if (guildSettings.rankcard) {
       backgroundImg = `./src/components/canvas/img/welcome/${guildSettings.rankcard}`;
     } else {
-      backgroundImg = "./src/components/canvas/img/welcome/powerbot_rankcard.jpg";
-        
+      backgroundImg =
+        "./src/components/canvas/img/welcome/powerbot_rankcard.jpg";
     }
 
     let currentUserXp = user.xP;
@@ -72,7 +91,11 @@ const generateImage = async (interaction, member, guild) => {
     context.drawImage(background, 0, 0, canvas.width, canvas.height);
 
     const { body } = await request(
-      member.displayAvatarURL({ extension: "png", size: av.size, dynamic: false})
+      member.displayAvatarURL({
+        extension: "png",
+        size: av.size,
+        dynamic: false,
+      })
     );
     const avatar = await Canvas.loadImage(await body.arrayBuffer());
 
@@ -80,7 +103,7 @@ const generateImage = async (interaction, member, guild) => {
       const context = canvas.getContext("2d");
       let fontSize = 50;
       do {
-        context.font = `${(fontSize -= 10)}px sans-serif`;
+        context.font = `${(fontSize -= 10)}px Doctor Glitch`;
       } while (context.measureText(text).width > canvas.width - 300);
       return context.font;
     };
@@ -90,24 +113,28 @@ const generateImage = async (interaction, member, guild) => {
 
     context.fillStyle = "#ffffff";
 
-    const memberDisplayName = `${member.username}#${member.discriminator}`;
+    const memberDisplayName = `${member.username} ${member.discriminator}`;
     context.font = userName(canvas, memberDisplayName);
-    context.fillText(`${memberDisplayName}`, 200, 70);
+    context.fillText(`${memberDisplayName}`, 200, 80);
 
-    context.font = "20px sans-serif";
+    context.font = "20px Roboto Regular";
     context.fillText(`Server: ${guild.name}`, 200, 120);
 
-    context.font = "20px sans-serif";
+    context.font = "20px Roboto Regular";
     context.fillText(
       `Rolle: ${interaction.member.roles.highest.name}`,
       200,
       145
     );
 
-    context.font = "20px sans-serif";
-    context.fillText(`Level: ${currentLevel} | XP: ${currentUserXp} / ${nextLevelXP}`, 200, 190);
+    context.font = "20px Roboto Light";
+    context.fillText(
+      `Level: ${currentLevel}    |    XP: ${currentUserXp} / ${nextLevelXP}`,
+      200,
+      185
+    );
 
-    context.font = "15px sans-serif";
+    context.font = "18px Roboto Bold";
     context.textAlign = "center";
     context.fillText(`Member #${user.ID}`, 100, 210);
 

@@ -13,6 +13,7 @@
   "dependencies": {
     "@napi-rs/canvas": "^0.1.28",
     "ascii-table": "^0.0.9",
+    "canvas": "^2.10.1",
     "chalk": "^4.1.0",
     "dbd-dark-dashboard": "^1.6.591",
     "discord-dashboard": "^2.3.40",

@@ -19,7 +19,7 @@ module.exports = async function messageCreate(message) {
     if (!currentXP) {
       currentXP = 0;
     }
-    let XP = Math.floor(Math.random() * (15 - 5 + 1)) + 5;
+    let XP = Math.floor(Math.random() * (10 - 3 + 1)) + 3;
     var newXP = currentXP + XP;
 
     await usersRepository.addUserXP(guildId, message, newXP);

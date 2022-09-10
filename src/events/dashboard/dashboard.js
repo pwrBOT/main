@@ -701,6 +701,11 @@ module.exports = {
               optionName: "",
               optionDescription: "Level Auto-Roles an/aus:",
               optionType: DBD.formTypes.switch(false),
+              themeOptions: {
+                minimalbutton: {
+                  first: true,
+                },
+              },
               getActualSet: async ({ guild }) => {
                 let data = await guildSettingsRepository.getGuildSettings(
                   guild
@@ -724,6 +729,48 @@ module.exports = {
                   );
                 } else {
                   const column = "levelRolesActive";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
+              optionId: "autolevelRoleTeam",
+              optionName: "",
+              optionDescription: "Level-Rolle bei Teammitgliedern an/aus:",
+              optionType: DBD.formTypes.switch(false),
+              themeOptions: {
+                minimalbutton: {
+                  last: true,
+                },
+              },
+              getActualSet: async ({ guild }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+                if (data) return data.levelRolesTeam;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "levelRolesTeam";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "levelRolesTeam";
                   await guildSettingsRepository.updateLevelRole(
                     guild,
                     column,

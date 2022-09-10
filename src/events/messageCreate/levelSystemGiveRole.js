@@ -32,15 +32,9 @@ module.exports = async function messageCreate(message) {
       return resolve(null);
     }
 
-    /** 
-    if (!guildData.teamRole) {
-    } else {
-      let teamRole = guildData.teamRole;
-      if (member.roles.cache.get(teamRole)) {
-        return resolve(null);
-      }
+    if (!guildData.guildData == 0) {
+      return resolve(null);
     }
-    */
 
     const getUser = await usersRepository.getUser(author.id, guild.id);
 
