@@ -47,6 +47,10 @@ module.exports = async function messageCreate(message) {
     let newRoleId = "";
     let oldRoleId = "";
 
+    if (currentUserXp < 100) {
+      return resolve(null);
+    }
+
     if (currentUserXp < 1000) {
       currentLevel = "level1";
       newRoleId = guildData.level1;

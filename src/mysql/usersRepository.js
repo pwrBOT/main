@@ -54,13 +54,13 @@ const addUser = async (guildId, message, userAdd) => {
   });
 };
 
-const addUserXP = async (guildId, message, newXP) => {
+const addUserXP = async (guildId, message, newXP, newLevel) => {
   return new Promise((resolve) => {
     const userId = message.author.id;
     const tabelle = `${guildId}_users`;
 
     mysqlHelper
-      .query(`UPDATE ${tabelle} SET xP=? WHERE userId = ?`, [newXP, userId])
+      .query(`UPDATE ${tabelle} SET xP=?, Level=? WHERE userId = ?`, [newXP, newLevel, userId])
       .then((result) => {
         resolve(null);
       })
