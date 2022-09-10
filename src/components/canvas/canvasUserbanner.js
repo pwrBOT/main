@@ -51,7 +51,10 @@ const generateImage = async (interaction, member, guild) => {
     let currentLevel = "";
     let nextLevelXP = "";
 
-    if (currentUserXp < 1000) {
+    if (currentUserXp < 100) {
+      currentLevel = 0;
+      nextLevelXP = 100;
+    } else if (currentUserXp < 1000) {
       currentLevel = 1;
       nextLevelXP = 1000;
     } else if (currentUserXp < 2000) {
