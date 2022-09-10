@@ -7,6 +7,7 @@ const {
 const config = require("./config.json");
 const fs = require("fs");
 const getXp = require("./src/events/messageCreate/getXp");
+const levelSystemGiveRole = require("./src/events/messageCreate/levelSystemGiveRole");
 const tempUnbanUser = require("./src/events/tempCommands/tempUnbanUser");
 const tempUnmuteUser = require("./src/events/tempCommands/tempUnmuteUser");
 
@@ -70,6 +71,7 @@ client.login(TOKEN);
 
 client.on("messageCreate", async (message) => {
   getXp(message);
+  levelSystemGiveRole(message);
 });
 
 client.on("ready", async () => {

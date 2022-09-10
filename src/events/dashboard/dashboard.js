@@ -690,6 +690,430 @@ module.exports = {
           ],
         },
         /// ################ AUTO MESSAGES END ################ \\\
+        /// ################## LEVEL SYSTEM ################## \\\
+        {
+          categoryId: "levelsystem",
+          categoryName: "Level System",
+          categoryDescription:
+            "-",
+          categoryOptionsList: [
+            /// ########## ROLE SETTINGS ########## \\\
+            {
+              optionId: "levelAutoRoleActive",
+              optionName: "",
+              optionDescription: "Level Auto-Roles an/aus:",
+              optionType: DBD.formTypes.switch(false),
+              themeOptions: {
+                minimalbutton: {
+                  last: true,
+                },
+              },
+              getActualSet: async ({ guild }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+                if (data) return data.levelRolesActive;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "levelRolesActive";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "levelRolesActive";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
+              optionId: "level1",
+              optionName: "",
+              optionDescription: "Rolle Level 1:",
+              optionType: DBD.formTypes.rolesSelect(false),
+              getActualSet: async ({ guild }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+                if (data) return data.level1;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "level1";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "level1";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
+              optionId: "level2",
+              optionName: "",
+              optionDescription: "Rolle Level 2:",
+              optionType: DBD.formTypes.rolesSelect(false),
+              getActualSet: async ({ guild }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+                if (data) return data.level2;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "level2";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "level2";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
+              optionId: "level3",
+              optionName: "",
+              optionDescription: "Rolle Level 3:",
+              optionType: DBD.formTypes.rolesSelect(false),
+              getActualSet: async ({ guild }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+                if (data) return data.level3;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "level3";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "level3";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
+              optionId: "level4",
+              optionName: "",
+              optionDescription: "Rolle Level 4:",
+              optionType: DBD.formTypes.rolesSelect(false),
+              getActualSet: async ({ guild }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+                if (data) return data.level4;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "level4";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "level4";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
+              optionId: "level5",
+              optionName: "",
+              optionDescription: "Rolle Level 5:",
+              optionType: DBD.formTypes.rolesSelect(false),
+              getActualSet: async ({ guild }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+                if (data) return data.level5;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "level5";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "level5";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
+              optionId: "level6",
+              optionName: "",
+              optionDescription: "Rolle Level 6:",
+              optionType: DBD.formTypes.rolesSelect(false),
+              getActualSet: async ({ guild }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+                if (data) return data.level6;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "level6";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "level6";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
+              optionId: "level7",
+              optionName: "",
+              optionDescription: "Rolle Level 7:",
+              optionType: DBD.formTypes.rolesSelect(false),
+              getActualSet: async ({ guild }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+                if (data) return data.level7;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "level7";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "level7";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
+              optionId: "level8",
+              optionName: "",
+              optionDescription: "Rolle Level 8:",
+              optionType: DBD.formTypes.rolesSelect(false),
+              getActualSet: async ({ guild }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+                if (data) return data.level8;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "level8";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "level8";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
+              optionId: "level9",
+              optionName: "",
+              optionDescription: "Rolle Level 9:",
+              optionType: DBD.formTypes.rolesSelect(false),
+              getActualSet: async ({ guild }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+                if (data) return data.level9;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "level9";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "level9";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
+              optionId: "level10",
+              optionName: "",
+              optionDescription: "Rolle Level 10:",
+              optionType: DBD.formTypes.rolesSelect(false),
+              getActualSet: async ({ guild }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+                if (data) return data.level10;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildSettingsRepository.getGuildSettings(
+                  guild
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "level10";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "level10";
+                  await guildSettingsRepository.updateLevelRole(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+
+          ],
+        },
+        /// ################ LEVEL SYSTEM END ################ \\\
       ],
     });
     Dashboard.init();
