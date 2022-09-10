@@ -4,6 +4,7 @@ const {
   EmbedBuilder,
 } = require(`discord.js`);
 const warnsRepository = require("../../mysql/warnsRepository");
+const usersRepository = require("../../mysql/usersRepository");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -39,8 +40,9 @@ module.exports = {
 
         let userId = member.id;
         let guildId = guild.id;
-        let warnsText = "";
+        let user = await usersRepository.getUser(userId, guildId)
 
+        let warnsText = "";
         let warns = await warnsRepository.getWarns(member, 10);
 
         if (!warns) {
@@ -118,16 +120,16 @@ module.exports = {
               inline: true,
             },
             {
+              name: `XP:`,
+              value: `${user.xP}`,
+              inline: true,
+            },
+            {
               name: `Rollen:`,
               value: `${member.roles.cache
                 .map((r) => r)
                 .join(" ")
                 .replace("everyone", " " || "None")}`,
-              inline: true,
-            },
-            {
-              name: `\u200B`,
-              value: `\u200B`,
               inline: true,
             },
             {
