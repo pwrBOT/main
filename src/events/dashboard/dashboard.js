@@ -143,8 +143,14 @@ module.exports = {
             list: moderation,
           },
           {
-            category: `Info`,
-            subTitle: `Info Commands`,
+            category: `Warn-System`,
+            subTitle: `Zur Moderation von Usern`,
+            aliasesDisabled: true,
+            list: warning,
+          },
+          {
+            category: `Allgemeines`,
+            subTitle: `Allgemeine Commands`,
             aliasesDisabled: true,
             list: info,
           },

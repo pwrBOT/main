@@ -9,6 +9,9 @@ const warnsRepository = require("../../mysql/warnsRepository");
 const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 
 module.exports = {
+  name: "warn",
+  category: "warning",
+  description: "Einen User verwarnen",
   data: new SlashCommandBuilder()
     .setName(`warn`)
     .setDescription(`User verwarnen`)

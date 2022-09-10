@@ -7,6 +7,9 @@ const warnsRepository = require("../../mysql/warnsRepository");
 const usersRepository = require("../../mysql/usersRepository");
 
 module.exports = {
+  name: "userinfo",
+  category: "admintools",
+  description: "Informationen über einen User anzeigen",
   data: new SlashCommandBuilder()
     .setName(`info`)
     .setDescription(`Informationen ausgeben lassen`)

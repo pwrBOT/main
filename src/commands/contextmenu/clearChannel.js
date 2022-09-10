@@ -14,7 +14,6 @@ module.exports = {
 
     const {options, channel } = interaction;
 
-    const amount = options.getNumber("amount");
     const messages = await channel.messages.fetch();
 
     const responseembed = new EmbedBuilder()
@@ -25,7 +24,7 @@ module.exports = {
       text: `powered by Powerbot`,
     });
 
-    await channel.bulkDelete(amount, true).then(messages => {
+    await channel.bulkDelete(100, true).then(messages => {
       responseembed.setDescription(`${messages.size} Nachrichten gelöscht ✅`);
       interaction.reply({embeds: [responseembed]});
       setTimeout(function () {

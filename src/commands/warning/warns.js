@@ -6,6 +6,9 @@ const {
 const warnsRepository = require("../../mysql/warnsRepository");
 
 module.exports = {
+  name: "warns",
+  category: "warning",
+  description: "Warns eines Users anzeigen lassen",
   data: new SlashCommandBuilder()
     .setName(`warns`)
     .setDescription(`Alle Warns eines Users anzeigen`)

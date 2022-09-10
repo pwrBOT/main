@@ -2,6 +2,9 @@ const { SlashCommandBuilder } = require(`discord.js`);
 const canvasWelcome = require("../../components/canvas/canvasUserbanner");
 
 module.exports = {
+  name: "userbanner",
+  category: "info",
+  description: "Banner mit eigenen Informationen generieren.",
   data: new SlashCommandBuilder()
     .setName(`userbanner`)
     .setDescription(`Userbanner anzeigen`),

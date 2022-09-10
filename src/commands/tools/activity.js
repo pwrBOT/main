@@ -7,7 +7,7 @@ const {
 
 module.exports = {
   name: "Activitys",
-  category: "tools",
+  category: "info",
   description: "Gemeinsam Aktivtäten ausführen (YouTube schauen, ...)",
   data: new SlashCommandBuilder()
     .setName(`activity`)
