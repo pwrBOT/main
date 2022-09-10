@@ -163,9 +163,54 @@ const updateLevelRole = async (guild, column, newData) => {
   });
 };
 
+const getLevelSettings = async () => {
+  return new Promise((resolve) => {
+    mysqlHelper
+      .query('SELECT * FROM powerbot_levels',)
+      .then( (result) => {
+        // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
+        resolve(result ?? null);
+      })
+      .catch(() => {
+        resolve(null);
+      });
+  });
+}
+
+const getLevel = async (xP) => {
+  return new Promise((resolve) => {
+    mysqlHelper
+      .query('SELECT * FROM powerbot_levels WHERE xP = ?', [xP])
+      .then( (result) => {
+        // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
+        resolve(result ?? null);
+      })
+      .catch(() => {
+        resolve(null);
+      });
+  });
+}
+
+const getLevelXP = async (level) => {
+  return new Promise((resolve) => {
+    mysqlHelper
+      .query('SELECT * FROM powerbot_levels WHERE level = ?', [level])
+      .then( (result) => {
+        // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
+        resolve(result ?? null);
+      })
+      .catch(() => {
+        resolve(null);
+      });
+  });
+}
+
 module.exports.getGuildSettings = getGuildSettings;
 module.exports.getAllGuildSettings = getAllGuildSettings;
 module.exports.addGuild = addGuild;
 module.exports.updateGuild = updateGuild;
 module.exports.updateChannel = updateChannel;
 module.exports.updateLevelRole = updateLevelRole;
+module.exports.getLevelSettings = getLevelSettings;
+module.exports.getLevel = getLevel;
+module.exports.getLevelXP = getLevelXP;

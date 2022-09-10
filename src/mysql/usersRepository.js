@@ -103,9 +103,26 @@ const createUserTable = async (guildId) => {
   });
 };
 
+const importUserXp = async (xpImport, username) => {
+  return new Promise((resolve) => {
+    mysqlHelper
+      .query(`UPDATE 396282694906150913_users SET xP=? WHERE userName LIKE ?`, [
+        xpImport,
+        username,
+      ])
+      .then((result) => {
+        resolve(null);
+      })
+      .catch(() => {
+        resolve(null);
+      });
+  });
+};
+
 module.exports.getUser = getUser;
 module.exports.getUsers = getUsers;
 module.exports.addUser = addUser;
 module.exports.addUserXP = addUserXP;
 module.exports.getUserTable = getUserTable;
 module.exports.createUserTable = createUserTable;
+module.exports.importUserXp = importUserXp;

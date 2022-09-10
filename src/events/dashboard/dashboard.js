@@ -694,20 +694,13 @@ module.exports = {
         {
           categoryId: "levelsystem",
           categoryName: "Level System",
-          categoryDescription:
-            "-",
+          categoryDescription: "Vergib Besondere Rollen an aktive User",
           categoryOptionsList: [
-            /// ########## ROLE SETTINGS ########## \\\
             {
-              optionId: "levelAutoRoleActive",
+              optionId: "autolevelRole",
               optionName: "",
               optionDescription: "Level Auto-Roles an/aus:",
               optionType: DBD.formTypes.switch(false),
-              themeOptions: {
-                minimalbutton: {
-                  last: true,
-                },
-              },
               getActualSet: async ({ guild }) => {
                 let data = await guildSettingsRepository.getGuildSettings(
                   guild
@@ -741,7 +734,7 @@ module.exports = {
               },
             },
             {
-              optionId: "level1",
+              optionId: "levelone",
               optionName: "",
               optionDescription: "Rolle Level 1:",
               optionType: DBD.formTypes.rolesSelect(false),
@@ -778,7 +771,7 @@ module.exports = {
               },
             },
             {
-              optionId: "level2",
+              optionId: "leveltwo",
               optionName: "",
               optionDescription: "Rolle Level 2:",
               optionType: DBD.formTypes.rolesSelect(false),
@@ -815,7 +808,7 @@ module.exports = {
               },
             },
             {
-              optionId: "level3",
+              optionId: "levelthree",
               optionName: "",
               optionDescription: "Rolle Level 3:",
               optionType: DBD.formTypes.rolesSelect(false),
@@ -852,7 +845,7 @@ module.exports = {
               },
             },
             {
-              optionId: "level4",
+              optionId: "levelfour",
               optionName: "",
               optionDescription: "Rolle Level 4:",
               optionType: DBD.formTypes.rolesSelect(false),
@@ -889,7 +882,7 @@ module.exports = {
               },
             },
             {
-              optionId: "level5",
+              optionId: "levelfive",
               optionName: "",
               optionDescription: "Rolle Level 5:",
               optionType: DBD.formTypes.rolesSelect(false),
@@ -926,7 +919,7 @@ module.exports = {
               },
             },
             {
-              optionId: "level6",
+              optionId: "levelsix",
               optionName: "",
               optionDescription: "Rolle Level 6:",
               optionType: DBD.formTypes.rolesSelect(false),
@@ -963,7 +956,7 @@ module.exports = {
               },
             },
             {
-              optionId: "level7",
+              optionId: "levelseven",
               optionName: "",
               optionDescription: "Rolle Level 7:",
               optionType: DBD.formTypes.rolesSelect(false),
@@ -1000,7 +993,7 @@ module.exports = {
               },
             },
             {
-              optionId: "level8",
+              optionId: "leveleight",
               optionName: "",
               optionDescription: "Rolle Level 8:",
               optionType: DBD.formTypes.rolesSelect(false),
@@ -1037,7 +1030,7 @@ module.exports = {
               },
             },
             {
-              optionId: "level9",
+              optionId: "levelnine",
               optionName: "",
               optionDescription: "Rolle Level 9:",
               optionType: DBD.formTypes.rolesSelect(false),
@@ -1074,7 +1067,7 @@ module.exports = {
               },
             },
             {
-              optionId: "level10",
+              optionId: "levelten",
               optionName: "",
               optionDescription: "Rolle Level 10:",
               optionType: DBD.formTypes.rolesSelect(false),
@@ -1110,7 +1103,6 @@ module.exports = {
                 return;
               },
             },
-
           ],
         },
         /// ################ LEVEL SYSTEM END ################ \\\
