@@ -79,7 +79,7 @@ module.exports = {
           },
           {
             name: `3️⃣ Schritt 3:`,
-            value: `Richte den Bot mit "/bot setup" ein!\n`,
+            value: `Richte den Bot beim Dashboard (https://dashboard.pwr.lol/) ein!\n`,
             inline: false,
           },
           {
