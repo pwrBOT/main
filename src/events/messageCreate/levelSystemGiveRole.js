@@ -95,6 +95,7 @@ module.exports = async function messageCreate(message) {
     }
 
     if (!newRoleId) {
+      return resolve(null);
     } else {
       if (member.roles.cache.get(newRoleId)) {
       } else {
@@ -130,12 +131,18 @@ module.exports = async function messageCreate(message) {
     }
 
     if (!oldRoleId) {
+      return resolve(null);
+    }
+
+    if (oldRoleId === newRoleId) {
+      return resolve(null);
+    }
+
+    if (member.roles.cache.get(oldRoleId)) {
+      let oldRole = guild.roles.cache.get(oldRoleId);
+      await member.roles.remove(oldRole).catch(console.error);
     } else {
-      if (member.roles.cache.get(oldRoleId)) {
-        let oldRole = guild.roles.cache.get(oldRoleId);
-        await member.roles.remove(oldRole).catch(console.error);
-      } else {
-      }
+      return resolve(null);
     }
 
     return resolve(null);
