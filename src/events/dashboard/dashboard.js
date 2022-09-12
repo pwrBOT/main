@@ -4,6 +4,7 @@ const DBD = require("discord-dashboard");
 const config = require(`../../../config.json`);
 const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 const embedsRepository = require("../../mysql/embedsRepository");
+const autoModRepository = require("../../mysql/autoModRepository");
 
 module.exports = {
   name: "ready",
@@ -525,7 +526,7 @@ module.exports = {
         /// ################## AUTO MESSAGES ################## \\\
         {
           categoryId: "automessages",
-          categoryName: "Automatische Bot-Nachrichten",
+          categoryName: "Automatische Bot-Nachrichten (SOON)",
           categoryDescription: "Schalte automatische Nachrichten an / aus",
           categoryOptionsList: [
             {
@@ -1159,6 +1160,222 @@ module.exports = {
           ],
         },
         /// ################ LEVEL SYSTEM END ################ \\\
+        /// ################## AUTO MOD SYSTEM ################## \\\
+        {
+          categoryId: "autmodsystem",
+          categoryName: "Auto Moderation (SOON)",
+          categoryDescription:
+            "Einstellungen für die automatische Moderation von Usern.",
+          categoryOptionsList: [
+            {
+              optionType: "spacer",
+              title: "Automatische Moderation",
+              description: "### soon ###",
+            },
+            {
+              optionType: "spacer",
+              title: "Warn System | Auto Mod",
+              description: "",
+            },
+            {
+              optionId: "autoModWarnings",
+              optionName: "",
+              optionDescription: "Auto-Moderation bei Warns an/aus:",
+              optionType: DBD.formTypes.switch(false),
+              getActualSet: async ({ guild }) => {
+                let data = await autoModRepository.getGuildAutoModSettings(
+                  guild
+                );
+                if (data) return data.autoModWarnings;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await autoModRepository.getGuildAutoModSettings(
+                  guild
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "autoModWarnings";
+                  await autoModRepository.updateAutoModSettingsDashboard(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "autoModWarnings";
+                  await autoModRepository.updateAutoModSettingsDashboard(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
+              optionType: "spacer",
+              title: "",
+              description: "Warn Sanktion 01:",
+            },
+            {
+              optionId: "warnsCount01",
+              optionName: "",
+              optionDescription: "",
+              optionType: DBD.formTypes.select(
+                {
+                  "Anzahl der Warns auswählen": "0",
+                  "User soll bei 1 Warn": "1",
+                  "User soll bei 2 Warns": "2",
+                  "User soll bei 3 Warns": "3",
+                  "User soll bei 4 Warns": "4",
+                  "User soll bei 5 Warns": "5",
+                  "User soll bei 6 Warns": "6",
+                  "User soll bei 7 Warns": "7",
+                  "User soll bei 8 Warns": "8",
+                  "User soll bei 9 Warns": "9",
+                  "User soll bei 10 Warns": "10",
+                },
+                false
+              ),
+              getActualSet: async ({ guild }) => {
+                let data = await autoModRepository.getGuildAutoModSettings(
+                  guild
+                );
+                if (data) return data.warnsCount01;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await autoModRepository.getGuildAutoModSettings(
+                  guild
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "warnsCount01";
+                  await autoModRepository.updateAutoModSettingsDashboard(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "warnsCount01";
+                  await autoModRepository.updateAutoModSettingsDashboard(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
+              optionId: "duration01",
+              optionName: "",
+              optionDescription: "",
+              optionType: DBD.formTypes.select(
+                {
+                  "Zeitraum auswählen": "0",
+                  "6 Stunden": "6h",
+                  "12 Stunden": "12h",
+                  "24 Stunden": "24h",
+                  "1 Woche": "1w",
+                  "2 Wochen": "2w",
+                  "4 Wochen": "4w",
+                  "1 Monat": "1m",
+                  "2 Monate": "2m",
+                  "4 Monate": "4m",
+                  "**dauerhaft**": "dauerhaft",
+                },
+                false
+              ),
+              getActualSet: async ({ guild }) => {
+                let data = await autoModRepository.getGuildAutoModSettings(
+                  guild
+                );
+                if (data) return data.duration01;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await autoModRepository.getGuildAutoModSettings(
+                  guild
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "duration01";
+                  await autoModRepository.updateAutoModSettingsDashboard(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "duration01";
+                  await autoModRepository.updateAutoModSettingsDashboard(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
+              optionId: "sanctionType01",
+              optionName: "",
+              optionDescription: "",
+              optionType: DBD.formTypes.select(
+                {
+                  "Sanktion auswählen": "0",
+                  "getimeouted werden!": "timeout",
+                  "temporär gebannt werden!": "tempban",
+                  "gebannt werden!": "ban",
+                },
+                false
+              ),
+              getActualSet: async ({ guild }) => {
+                let data = await autoModRepository.getGuildAutoModSettings(
+                  guild
+                );
+                if (data) return data.sanctionType01;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await autoModRepository.getGuildAutoModSettings(
+                  guild
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "sanctionType01";
+                  await autoModRepository.updateAutoModSettingsDashboard(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "sanctionType01";
+                  await autoModRepository.updateAutoModSettingsDashboard(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
+              optionType: "spacer",
+              title: "",
+              description: "Warn Sanktion 02:",
+            },
+          ],
+        },
+        /// ################ AUTO MOD SYSTEM END ################ \\\
       ],
     });
     Dashboard.init();

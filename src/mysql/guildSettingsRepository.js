@@ -163,6 +163,23 @@ const updateLevelRole = async (guild, column, newData) => {
   });
 };
 
+const updateGuildSettingsDashboard = async (guild, column, newData) => {
+  return new Promise((resolve) => {
+    cache.delete(guild.id)
+    mysqlHelper
+      .query(`UPDATE powerbot_guilds SET ${column}=? WHERE guildId = ?`, [
+        newData,
+        guild.id,
+      ])
+      .then((result) => {
+        resolve(null);
+      })
+      .catch(() => {
+        resolve(null);
+      });
+  });
+};
+
 const getLevelSettings = async () => {
   return new Promise((resolve) => {
     mysqlHelper
@@ -212,5 +229,6 @@ module.exports.updateGuild = updateGuild;
 module.exports.updateChannel = updateChannel;
 module.exports.updateLevelRole = updateLevelRole;
 module.exports.getLevelSettings = getLevelSettings;
+module.exports.updateGuildSettingsDashboard = updateGuildSettingsDashboard;
 module.exports.getLevel = getLevel;
 module.exports.getLevelXP = getLevelXP;

@@ -2,6 +2,7 @@ const { EmbedBuilder } = require("discord.js");
 const chalk = require("chalk");
 const guildsRepository = require("../../mysql/guildsRepository");
 const usersRepository = require("../../mysql/usersRepository");
+const autoModRepository = require("../../mysql/autoModRepository");
 
 module.exports = {
   name: "guildCreate",
@@ -9,22 +10,48 @@ module.exports = {
   async execute(guild) {
     return new Promise(async (resolve) => {
       const getGuild = await guildsRepository.getGuild(guild);
+
       if (getGuild.length === 0) {
         console.log(
           chalk.yellow(
             `[MYSQL DATABASE] Guild: ${guild.name}(${guild.id}) nicht gefunden. Guild wird angelegt...`
           )
         );
-        const addGuild = await guildsRepository.addGuild(guild);
-        await usersRepository.createUserTable(guild.id);
+        await guildsRepository.addGuild(guild);
         console.log(
           chalk.blue(
             `[MYSQL DATABASE] Guild: ${guild.name}(${guild.id}) Settings erfolgreich angelegt!`
           )
         );
+      }
+
+      const getUserTable = await usersRepository.getUserTable(guild.id);
+      if (getUserTable.length === 0) {
+        console.log(
+          chalk.yellow(
+            `[MYSQL DATABASE] User Tabelle von Guild: ${guild.name}(${guild.id}) nicht gefunden. Guild User Tabelle wird angelegt...`
+          )
+        );
+        await usersRepository.createUserTable(guild.id);
         console.log(
           chalk.blue(
             `[MYSQL DATABASE] Guild: ${guild.name}(${guild.id}) User Tabelle erfolgreich angelegt!`
+          )
+        );
+      }
+
+      const getAutoModGuildSettings =
+        await autoModRepository.getGuildAutoModSettings(guild);
+      if (getAutoModGuildSettings.length === 0) {
+        console.log(
+          chalk.yellow(
+            `[MYSQL DATABASE] Guild: ${guild.name}(${guild.id}) in AutoMod Tabelle nicht gefunden. Guild wird hinzugefügt...`
+          )
+        );
+        await autoModRepository.addAutoModSettingsGuild(guild.id);
+        console.log(
+          chalk.blue(
+            `[MYSQL DATABASE] Guild: ${guild.name}(${guild.id}) bei AutoMod Tabelle erfolgreich angelegt!`
           )
         );
       }
