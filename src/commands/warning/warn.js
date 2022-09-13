@@ -128,11 +128,10 @@ module.exports = {
         1
       );
       if (!guildSettings) {
-        return resolve(null);
-      }
-
+      } else {
       const modLogChannel = guildSettings.modLog;
       client.channels.cache.get(modLogChannel).send({ embeds: [warnembed] });
+      }
       try {
         await member.send({ embeds: [warnembedmember] });
       } catch (error) {}
@@ -900,7 +899,6 @@ module.exports = {
         }
       }
       // ##########################  AUTO WARN MOD END  ########################## \\
-
       return resolve(null);
     });
   },
