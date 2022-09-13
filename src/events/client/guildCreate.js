@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require("discord.js");
 const chalk = require("chalk");
+const config = require("../../../config.json");
 const guildsRepository = require("../../mysql/guildsRepository");
 const usersRepository = require("../../mysql/usersRepository");
 const autoModRepository = require("../../mysql/autoModRepository");
@@ -10,6 +11,7 @@ module.exports = {
   async execute(guild) {
     return new Promise(async (resolve) => {
       const getGuild = await guildsRepository.getGuild(guild);
+      const guildOwner = guild.members.cache.get(guild.ownerId);
 
       if (getGuild.length === 0) {
         console.log(
@@ -133,8 +135,59 @@ module.exports = {
         .setFooter({
           text: `powered by PowerBot`,
         });
-      const guildOwner = guild.members.cache.get(guild.ownerId);
-      guildOwner.send({ embeds: [newGuildEmbed] });
+      try {
+        await guildOwner.send({ embeds: [newGuildEmbed] });
+      } catch (error) {}
+
+      const newGuildLogEmbed = new EmbedBuilder()
+        .setTitle(`⚡️ PowerBot | New Guild ⚡️`)
+        .setDescription(
+          `PowerBot wurde bei einem neuen Discordserver hinzugefügt`
+        )
+        .setColor(0x51ff00)
+        .setTimestamp(Date.now())
+        .setFooter({
+          iconURL: client.user.displayAvatarURL(),
+          text: `powered by Powerbot`,
+        })
+        .setThumbnail(guild.iconURL())
+        .addFields([
+          {
+            name: `Guild Name:`,
+            value: `${guild.name}`,
+            inline: true,
+          },
+          {
+            name: `Guild Owner:`,
+            value: `${guildOwner.user.tag}\n${guildOwner.user.id}`,
+            inline: true,
+          },
+          {
+            name: `Guild erstellt:`,
+            value: `${new Date(guild.createdTimestamp).toLocaleDateString(
+              "de-DE"
+            )} | ${new Date(guild.createdTimestamp).toLocaleTimeString(
+              "de-DE"
+            )}`,
+            inline: true,
+          },
+          {
+            name: `Anzahl der Mitglieder:`,
+            value: `${guild.members.cache.size}`,
+            inline: true,
+          },
+          {
+            name: `\u200B`,
+            value: `\u200B`,
+            inline: true,
+          },
+        ]);
+
+      const powerbotGuildLogChannelId = config.powerbot_guildlog_channel;
+      client.channels.cache
+        .get(powerbotGuildLogChannelId)
+        .send({ embeds: [newGuildLogEmbed] });
+
       return resolve(null);
     });
   },
