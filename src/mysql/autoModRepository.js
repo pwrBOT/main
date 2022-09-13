@@ -4,8 +4,9 @@ const getGuildAutoModSettings = async (guild) => {
   return new Promise((resolve) => {
     mysqlHelper
       .query("SELECT * FROM powerbot_automod WHERE guildId = ?", [guild.id], 1)
-      .then( (result) => {
-        resolve(result ?? null);
+      .then((result) => {
+        // GIBT DEN ERSTEN WERT DES ARRAYS ZURÜCK
+        resolve(result && result.length !== 0 ? result[0] : null);
       })
       .catch(() => {
         resolve(null);

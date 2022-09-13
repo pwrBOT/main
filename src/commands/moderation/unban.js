@@ -35,6 +35,7 @@ module.exports = {
       const member = options.getString("userid");
       const reason = options.getString("reason") || "Kein Grund angegeben";
       const servername = guild.name;
+      const memberData = client.users.cache.get(member);
 
       if (member.manageable === false) {
         interaction.editReply(
@@ -53,10 +54,12 @@ module.exports = {
 
       const banembed = new EmbedBuilder()
         .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
-        .setDescription(`User: ${client.users.cache.get(member.username)}#${client.users.cache.get(member.discriminator)} wurde entbannt`)
+        .setDescription(
+          `User: ${memberData.username}#${memberData.discriminator} wurde entbannt`
+        )
         .setColor(0x51ff00)
         .setTimestamp(Date.now())
-        .setThumbnail(member.displayAvatarURL())
+        .setThumbnail(memberData.displayAvatarURL())
         .setFooter({
           iconURL: client.user.displayAvatarURL(),
           text: `powered by Powerbot`,
@@ -76,9 +79,7 @@ module.exports = {
 
       const banembedmember = new EmbedBuilder()
         .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
-        .setDescription(
-          `Du wurdest entbannt!\n\nServer: "${servername}"\n`
-        )
+        .setDescription(`Du wurdest entbannt!\n\nServer: "${servername}"\n`)
         .setColor(0x51ff00)
         .setTimestamp(Date.now())
         .setThumbnail(guild.iconURL())
@@ -130,11 +131,16 @@ module.exports = {
         .send({ embeds: [banembedmember] })
         .catch(console.error);
 
-
       const commandLogRepository = require("../../mysql/commandLogRepository");
-        // guild - command, user, affectedMember, reason
-      await commandLogRepository.logCommandUse(interaction.guild, "unban", interaction.user, member.user, reason)
-        
+      // guild - command, user, affectedMember, reason
+      await commandLogRepository.logCommandUse(
+        interaction.guild,
+        "unban",
+        interaction.user,
+        memberData,
+        reason
+      );
+
       return resolve(null);
     });
   },
