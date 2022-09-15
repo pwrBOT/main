@@ -119,6 +119,21 @@ const importUserXp = async (xpImport, username) => {
   });
 };
 
+const giveUserXP = async (guildId, userId, newXP, newLevel) => {
+  return new Promise((resolve) => {
+    const tabelle = `${guildId}_users`;
+
+    mysqlHelper
+      .query(`UPDATE ${tabelle} SET xP=?, Level=? WHERE userId = ?`, [newXP, newLevel, userId])
+      .then((result) => {
+        resolve(null);
+      })
+      .catch(() => {
+        resolve(null);
+      });
+  });
+};
+
 module.exports.getUser = getUser;
 module.exports.getUsers = getUsers;
 module.exports.addUser = addUser;
@@ -126,3 +141,4 @@ module.exports.addUserXP = addUserXP;
 module.exports.getUserTable = getUserTable;
 module.exports.createUserTable = createUserTable;
 module.exports.importUserXp = importUserXp;
+module.exports.giveUserXP = giveUserXP;
