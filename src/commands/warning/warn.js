@@ -37,11 +37,6 @@ module.exports = {
         interaction.options.getString("reason") || "Kein Grund angegeben";
       const servername = interaction.guild.name;
 
-      if (member.id === interaction.user.id)
-        return interaction.editReply(
-          "❌ Du kannst dich nicht selber verwarnen! ❌"
-        );
-
       if (member.id === interaction.user.id) {
         interaction.editReply("❌ Du kannst dich nicht selber verwarnen! ❌");
         return resolve(null);
