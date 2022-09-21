@@ -734,6 +734,12 @@ module.exports = {
           categoryDescription: "Vergib Besondere Rollen an aktive User",
           categoryOptionsList: [
             {
+              optionType: "spacer",
+              title: "XP / Level System",
+              description:
+                "XP pro Nachricht minimal: 10 <br> XP pro Nachricht maximal: 30 <br><br> Level 1: 100XP || Level 10: 8200XP || Level 25: 57700XP || Level 50: 240200XP  || Level 75: 547700XP  || Level 100: 980200XP <br> Berechnung LevelUp = Level * Level * 100 + 100",
+            },
+            {
               optionId: "levelRolesActive",
               optionName: "",
               optionDescription: "Level Auto-Roles an/aus:",
@@ -812,9 +818,9 @@ module.exports = {
               },
             },
             {
-              optionType: 'spacer',
+              optionType: "spacer",
               title: "ROLLENBELOHNUNG 1:",
-              description: ""
+              description: "",
             },
             {
               optionId: "LevelUp1",
@@ -885,9 +891,9 @@ module.exports = {
               },
             },
             {
-              optionType: 'spacer',
+              optionType: "spacer",
               title: "ROLLENBELOHNUNG 2:",
-              description: ""
+              description: "",
             },
             {
               optionId: "LevelUp2",
@@ -958,9 +964,9 @@ module.exports = {
               },
             },
             {
-              optionType: 'spacer',
+              optionType: "spacer",
               title: "ROLLENBELOHNUNG 3:",
-              description: ""
+              description: "",
             },
             {
               optionId: "LevelUp3",
@@ -1031,9 +1037,9 @@ module.exports = {
               },
             },
             {
-              optionType: 'spacer',
+              optionType: "spacer",
               title: "ROLLENBELOHNUNG 4:",
-              description: ""
+              description: "",
             },
             {
               optionId: "LevelUp4",
@@ -1104,9 +1110,9 @@ module.exports = {
               },
             },
             {
-              optionType: 'spacer',
+              optionType: "spacer",
               title: "ROLLENBELOHNUNG 5:",
-              description: ""
+              description: "",
             },
             {
               optionId: "LevelUp5",
@@ -1177,9 +1183,9 @@ module.exports = {
               },
             },
             {
-              optionType: 'spacer',
+              optionType: "spacer",
               title: "ROLLENBELOHNUNG 6:",
-              description: ""
+              description: "",
             },
             {
               optionId: "LevelUp6",
@@ -1250,9 +1256,9 @@ module.exports = {
               },
             },
             {
-              optionType: 'spacer',
+              optionType: "spacer",
               title: "ROLLENBELOHNUNG 7:",
-              description: ""
+              description: "",
             },
             {
               optionId: "LevelUp7",
@@ -1323,9 +1329,9 @@ module.exports = {
               },
             },
             {
-              optionType: 'spacer',
+              optionType: "spacer",
               title: "ROLLENBELOHNUNG 8:",
-              description: ""
+              description: "",
             },
             {
               optionId: "LevelUp8",
@@ -1396,9 +1402,9 @@ module.exports = {
               },
             },
             {
-              optionType: 'spacer',
+              optionType: "spacer",
               title: "ROLLENBELOHNUNG 9:",
-              description: ""
+              description: "",
             },
             {
               optionId: "LevelUp9",
@@ -1469,9 +1475,9 @@ module.exports = {
               },
             },
             {
-              optionType: 'spacer',
+              optionType: "spacer",
               title: "ROLLENBELOHNUNG 10:",
-              description: ""
+              description: "",
             },
             {
               optionId: "LevelUp10",
