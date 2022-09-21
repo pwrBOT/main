@@ -48,10 +48,6 @@ module.exports = {
       const channel = client.channels.cache.get(config.powerbot_status_channel);
       channel.send({ embeds: [embed] });
 
-      console.log(
-        `\x1b[32mOnline! ${client.user.tag} is now logged in and online!\x1b[0m`
-      );
-
       //// ##################### TABLE CHECK ##################### \\\\
 
       await allBotGuilds.forEach(async (guilds) => {
@@ -74,7 +70,7 @@ module.exports = {
         }
         {
           console.log(
-            chalk.green(
+            chalk.blue(
               `[MYSQL DATABASE] User Tabelle für Guild: ${data.name}(${data.id}) gefunden.`
             )
           );
@@ -98,7 +94,7 @@ module.exports = {
           );
         } else {
           console.log(
-            chalk.green(
+            chalk.blue(
               `[MYSQL DATABASE] Guild: ${data.name}(${data.id}) in AutoMod Tabelle gefunden.`
             )
           );
@@ -121,7 +117,7 @@ module.exports = {
           );
         } else {
           console.log(
-            chalk.green(
+            chalk.blue(
               `[MYSQL DATABASE] Guild: ${data.name}(${data.id}) in Level Settings Tabelle gefunden.`
             )
           );
@@ -129,6 +125,9 @@ module.exports = {
       });
       //// ##################### TABLE CHECK END ##################### \\\\
 
+      console.log(
+        `\x1b[32mOnline! ${client.user.tag} is now logged in and online!\x1b[0m`
+      );
       return resolve(null);
     });
   },
