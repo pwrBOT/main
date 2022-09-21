@@ -10,13 +10,13 @@ module.exports = async function messageCreate(message) {
       return resolve(null);
     }
 
-    let guildData = await levelsRepository.getlevelSettings(guild);
+    let levelSettings = await levelsRepository.getlevelSettings(guild);
 
-    if (guildData == null) {
+    if (levelSettings == null) {
       return resolve(null);
     }
 
-    if (guildData.levelRolesActive === 0) {
+    if (levelSettings.levelRolesActive === 0) {
       return resolve(null);
     }
 
@@ -38,8 +38,8 @@ module.exports = async function messageCreate(message) {
       return resolve(null);
     }
 
-    let currentUserXp = getUser.xP;
-    let currentLevel = "";
+    let currentUserXp = await getUser.xP;
+    let currentLevel = await getUser.Level;
     let newRoleId = "";
     let oldRoleId = "";
 
@@ -47,45 +47,61 @@ module.exports = async function messageCreate(message) {
       return resolve(null);
     }
 
-    if (currentUserXp < 1000) {
-      currentLevel = "level1";
-      newRoleId = guildData.level1;
-    } else if (currentUserXp < 2000) {
-      currentLevel = "level2";
-      oldRoleId = guildData.level1;
-      newRoleId = guildData.level2;
-    } else if (currentUserXp < 4000) {
-      currentLevel = "level3";
-      oldRoleId = guildData.level2;
-      newRoleId = guildData.level3;
-    } else if (currentUserXp < 6000) {
-      currentLevel = "level4";
-      oldRoleId = guildData.level3;
-      newRoleId = guildData.level4;
-    } else if (currentUserXp < 10000) {
-      currentLevel = "level5";
-      oldRoleId = guildData.level4;
-      newRoleId = guildData.level5;
-    } else if (currentUserXp < 15000) {
-      currentLevel = "level6";
-      oldRoleId = guildData.level5;
-      newRoleId = guildData.level6;
-    } else if (currentUserXp < 20000) {
-      currentLevel = "level7";
-      oldRoleId = guildData.level6;
-      newRoleId = guildData.level7;
-    } else if (currentUserXp < 30000) {
-      currentLevel = "level8";
-      oldRoleId = guildData.level7;
-      newRoleId = guildData.level8;
-    } else if (currentUserXp < 50000) {
-      currentLevel = "level9";
-      oldRoleId = guildData.level8;
-      newRoleId = guildData.level9;
+    if (currentLevel === levelSettings.LevelUp1) {
+      newRoleId = levelSettings.level1;
+    } else if (
+      currentLevel >= levelSettings.LevelUp2 &&
+      currentLevel < levelSettings.LevelUp3
+    ) {
+      oldRoleId = levelSettings.level1;
+      newRoleId = levelSettings.level2;
+    } else if (
+      currentLevel >= levelSettings.LevelUp3 &&
+      currentLevel < levelSettings.LevelUp4
+    ) {
+      oldRoleId = levelSettings.level2;
+      newRoleId = levelSettings.level3;
+    } else if (
+      currentLevel >= levelSettings.LevelUp4 &&
+      currentLevel < levelSettings.LevelUp5
+    ) {
+      oldRoleId = levelSettings.level3;
+      newRoleId = levelSettings.level4;
+    } else if (
+      currentLevel >= levelSettings.LevelUp5 &&
+      currentLevel < levelSettings.LevelUp6
+    ) {
+      oldRoleId = levelSettings.level4;
+      newRoleId = levelSettings.level5;
+    } else if (
+      currentLevel >= levelSettings.LevelUp6 &&
+      currentLevel < levelSettings.LevelUp7
+    ) {
+      oldRoleId = levelSettings.level5;
+      newRoleId = levelSettings.level6;
+    } else if (
+      currentLevel >= levelSettings.LevelUp7 &&
+      currentLevel < levelSettings.LevelUp8
+    ) {
+      oldRoleId = levelSettings.level6;
+      newRoleId = levelSettings.level7;
+    } else if (
+      currentLevel >= levelSettings.LevelUp8 &&
+      currentLevel < levelSettings.LevelUp9
+    ) {
+      oldRoleId = levelSettings.level7;
+      newRoleId = levelSettings.level8;
+    } else if (
+      currentLevel >= levelSettings.LevelUp9 &&
+      currentLevel < levelSettings.LevelUp10
+    ) {
+      oldRoleId = levelSettings.level8;
+      newRoleId = levelSettings.level9;
+    } else if (currentLevel >= levelSettings.LevelUp10) {
+      oldRoleId = levelSettings.level9;
+      newRoleId = levelSettings.level10;
     } else {
-      currentLevel = "level10";
-      oldRoleId = guildData.level9;
-      newRoleId = guildData.level10;
+      return resolve(null);
     }
 
     if (!newRoleId) {
@@ -95,7 +111,7 @@ module.exports = async function messageCreate(message) {
       } else {
         let newRole = guild.roles.cache.get(newRoleId);
         await member.roles.add(newRole).catch(console.error);
-        const rankChannel = guildData.rankChannel;
+        const rankChannel = levelSettings.rankChannel;
         if (rankChannel === undefined) {
         } else {
           const embedBefoerderung = new EmbedBuilder()

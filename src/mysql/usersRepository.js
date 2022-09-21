@@ -41,13 +41,29 @@ const addUser = async (guildId, message, userAdd) => {
   });
 };
 
-const addUserXP = async (guildId, message, newXP, newLevel) => {
+const addUserXP = async (guildId, message, newXP) => {
   return new Promise((resolve) => {
     const userId = message.author.id;
     const tabelle = `${guildId}_users`;
 
     mysqlHelper
-      .query(`UPDATE ${tabelle} SET xP=?, Level=? WHERE userId = ?`, [newXP, newLevel, userId])
+      .query(`UPDATE ${tabelle} SET xP=? WHERE userId = ?`, [newXP, userId])
+      .then((result) => {
+        resolve(null);
+      })
+      .catch(() => {
+        resolve(null);
+      });
+  });
+};
+
+const addUserLevel = async (guildId, message, newLevel) => {
+  return new Promise((resolve) => {
+    const userId = message.author.id;
+    const tabelle = `${guildId}_users`;
+
+    mysqlHelper
+      .query(`UPDATE ${tabelle} SET Level=? WHERE userId = ?`, [newLevel, userId])
       .then((result) => {
         resolve(null);
       })
@@ -124,6 +140,7 @@ const giveUserXP = async (guildId, userId, newXP, newLevel) => {
 module.exports.getUser = getUser;
 module.exports.addUser = addUser;
 module.exports.addUserXP = addUserXP;
+module.exports.addUserLevel = addUserLevel;
 module.exports.getUserTable = getUserTable;
 module.exports.createUserTable = createUserTable;
 module.exports.importUserXp = importUserXp;

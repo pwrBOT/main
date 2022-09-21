@@ -812,9 +812,48 @@ module.exports = {
               },
             },
             {
+              optionType: 'spacer',
+              title: "ROLLENBELOHNUNG 1:",
+              description: ""
+            },
+            {
+              optionId: "LevelUp1",
+              optionName: "",
+              optionDescription: "Rollenbelohnung mit Level:",
+              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              getActualSet: async ({ guild }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (data) return data.LevelUp1;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "LevelUp1";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "LevelUp1";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
               optionId: "level1",
               optionName: "",
-              optionDescription: "Rolle Level 1:",
+              optionDescription: "Rolle:",
               optionType: DBD.formTypes.rolesSelect(false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);
@@ -846,9 +885,48 @@ module.exports = {
               },
             },
             {
+              optionType: 'spacer',
+              title: "ROLLENBELOHNUNG 2:",
+              description: ""
+            },
+            {
+              optionId: "LevelUp2",
+              optionName: "",
+              optionDescription: "Rollenbelohnung mit Level:",
+              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              getActualSet: async ({ guild }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (data) return data.LevelUp2;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "LevelUp2";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "LevelUp2";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
               optionId: "level2",
               optionName: "",
-              optionDescription: "Rolle Level 2:",
+              optionDescription: "Rolle:",
               optionType: DBD.formTypes.rolesSelect(false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);
@@ -880,9 +958,48 @@ module.exports = {
               },
             },
             {
+              optionType: 'spacer',
+              title: "ROLLENBELOHNUNG 3:",
+              description: ""
+            },
+            {
+              optionId: "LevelUp3",
+              optionName: "",
+              optionDescription: "Rollenbelohnung mit Level:",
+              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              getActualSet: async ({ guild }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (data) return data.LevelUp3;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "LevelUp3";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "LevelUp3";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
               optionId: "level3",
               optionName: "",
-              optionDescription: "Rolle Level 3:",
+              optionDescription: "Rolle:",
               optionType: DBD.formTypes.rolesSelect(false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);
@@ -914,9 +1031,48 @@ module.exports = {
               },
             },
             {
+              optionType: 'spacer',
+              title: "ROLLENBELOHNUNG 4:",
+              description: ""
+            },
+            {
+              optionId: "LevelUp4",
+              optionName: "",
+              optionDescription: "Rollenbelohnung mit Level:",
+              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              getActualSet: async ({ guild }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (data) return data.LevelUp4;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "LevelUp4";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "LevelUp4";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
               optionId: "level4",
               optionName: "",
-              optionDescription: "Rolle Level 4:",
+              optionDescription: "Rolle:",
               optionType: DBD.formTypes.rolesSelect(false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);
@@ -948,9 +1104,48 @@ module.exports = {
               },
             },
             {
+              optionType: 'spacer',
+              title: "ROLLENBELOHNUNG 5:",
+              description: ""
+            },
+            {
+              optionId: "LevelUp5",
+              optionName: "",
+              optionDescription: "Rollenbelohnung mit Level:",
+              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              getActualSet: async ({ guild }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (data) return data.LevelUp5;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "LevelUp5";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "LevelUp5";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
               optionId: "level5",
               optionName: "",
-              optionDescription: "Rolle Level 5:",
+              optionDescription: "Rolle:",
               optionType: DBD.formTypes.rolesSelect(false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);
@@ -982,9 +1177,48 @@ module.exports = {
               },
             },
             {
+              optionType: 'spacer',
+              title: "ROLLENBELOHNUNG 6:",
+              description: ""
+            },
+            {
+              optionId: "LevelUp6",
+              optionName: "",
+              optionDescription: "Rollenbelohnung mit Level:",
+              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              getActualSet: async ({ guild }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (data) return data.LevelUp6;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "LevelUp6";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "LevelUp6";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
               optionId: "level6",
               optionName: "",
-              optionDescription: "Rolle Level 6:",
+              optionDescription: "Rolle:",
               optionType: DBD.formTypes.rolesSelect(false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);
@@ -1016,9 +1250,48 @@ module.exports = {
               },
             },
             {
+              optionType: 'spacer',
+              title: "ROLLENBELOHNUNG 7:",
+              description: ""
+            },
+            {
+              optionId: "LevelUp7",
+              optionName: "",
+              optionDescription: "Rollenbelohnung mit Level:",
+              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              getActualSet: async ({ guild }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (data) return data.LevelUp7;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "LevelUp7";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "LevelUp7";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
               optionId: "level7",
               optionName: "",
-              optionDescription: "Rolle Level 7:",
+              optionDescription: "Rolle:",
               optionType: DBD.formTypes.rolesSelect(false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);
@@ -1050,9 +1323,48 @@ module.exports = {
               },
             },
             {
+              optionType: 'spacer',
+              title: "ROLLENBELOHNUNG 8:",
+              description: ""
+            },
+            {
+              optionId: "LevelUp8",
+              optionName: "",
+              optionDescription: "Rollenbelohnung mit Level:",
+              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              getActualSet: async ({ guild }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (data) return data.LevelUp8;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "LevelUp8";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "LevelUp8";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
               optionId: "level8",
               optionName: "",
-              optionDescription: "Rolle Level 8:",
+              optionDescription: "Rolle:",
               optionType: DBD.formTypes.rolesSelect(false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);
@@ -1084,9 +1396,48 @@ module.exports = {
               },
             },
             {
+              optionType: 'spacer',
+              title: "ROLLENBELOHNUNG 9:",
+              description: ""
+            },
+            {
+              optionId: "LevelUp9",
+              optionName: "",
+              optionDescription: "Rollenbelohnung mit Level:",
+              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              getActualSet: async ({ guild }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (data) return data.LevelUp9;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "LevelUp9";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "LevelUp9";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
               optionId: "level9",
               optionName: "",
-              optionDescription: "Rolle Level 9:",
+              optionDescription: "Rolle:",
               optionType: DBD.formTypes.rolesSelect(false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);
@@ -1118,9 +1469,48 @@ module.exports = {
               },
             },
             {
+              optionType: 'spacer',
+              title: "ROLLENBELOHNUNG 10:",
+              description: ""
+            },
+            {
+              optionId: "LevelUp10",
+              optionName: "",
+              optionDescription: "Rollenbelohnung mit Level:",
+              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              getActualSet: async ({ guild }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (data) return data.LevelUp10;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "LevelUp10";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "LevelUp10";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
               optionId: "level10",
               optionName: "",
-              optionDescription: "Rolle Level 10:",
+              optionDescription: "Rolle:",
               optionType: DBD.formTypes.rolesSelect(false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);

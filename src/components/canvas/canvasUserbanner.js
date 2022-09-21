@@ -52,43 +52,8 @@ const generateImage = async (interaction, member, guild) => {
     }
 
     let currentUserXp = user.xP;
-    let currentLevel = "";
-    let nextLevelXP = "";
-
-    if (currentUserXp < 100) {
-      currentLevel = 0;
-      nextLevelXP = 100;
-    } else if (currentUserXp < 1000) {
-      currentLevel = 1;
-      nextLevelXP = 1000;
-    } else if (currentUserXp < 2000) {
-      currentLevel = 2;
-      nextLevelXP = 2000;
-    } else if (currentUserXp < 4000) {
-      currentLevel = 3;
-      nextLevelXP = 4000;
-    } else if (currentUserXp < 6000) {
-      currentLevel = 4;
-      nextLevelXP = 6000;
-    } else if (currentUserXp < 10000) {
-      currentLevel = 5;
-      nextLevelXP = 10000;
-    } else if (currentUserXp < 15000) {
-      currentLevel = 6;
-      nextLevelXP = 15000;
-    } else if (currentUserXp < 20000) {
-      currentLevel = 7;
-      nextLevelXP = 20000;
-    } else if (currentUserXp < 30000) {
-      currentLevel = 8;
-      nextLevelXP = 30000;
-    } else if (currentUserXp < 50000) {
-      currentLevel = 9;
-      nextLevelXP = 50000;
-    } else {
-      currentLevel = 10;
-      nextLevelXP = 100000;
-    }
+    let currentLevel = user.Level;
+    let nextLevelXP = user.Level * user.Level * 100 + 100;
 
     const canvas = Canvas.createCanvas(700, 250);
     const context = canvas.getContext("2d");
