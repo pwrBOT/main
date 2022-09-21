@@ -2,7 +2,7 @@ const Canvas = require("@napi-rs/canvas");
 const { AttachmentBuilder } = require("discord.js");
 const { request } = require("undici");
 const usersRepository = require("../../mysql/usersRepository");
-const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
+const guildsRepository = require("../../mysql/guildsRepository");
 
 const { join } = require("path");
 const { GlobalFonts } = require("@napi-rs/canvas");
@@ -39,9 +39,13 @@ const generateImage = async (interaction, member, guild) => {
       return resolve(null);
     }
     var backgroundImg = "";
-    const guildSettings = await guildSettingsRepository.getGuildSettings(guild);
-    if (guildSettings.rankcard) {
-      backgroundImg = `./src/components/canvas/img/welcome/${guildSettings.rankcard}`;
+  
+    const rankcard = await guildsRepository.getGuildSetting(
+      guild,
+      "rankcard"
+    );
+    if (rankcard) {
+      backgroundImg = `./src/components/canvas/img/welcome/${rankcard.value}`;
     } else {
       backgroundImg =
         "./src/components/canvas/img/welcome/powerbot_rankcard.jpg";

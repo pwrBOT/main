@@ -3,7 +3,7 @@ const {
   PermissionFlagsBits,
   EmbedBuilder,
 } = require("discord.js");
-const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
+
 const usersRepository = require("../../mysql/usersRepository");
 
 module.exports = {
@@ -87,11 +87,18 @@ module.exports = {
         } else {
           newLevel = 10;
         }
-        await usersRepository.giveUserXP(guild.id, member.user.id, newXP, newLevel);
+        await usersRepository.giveUserXP(
+          guild.id,
+          member.user.id,
+          newXP,
+          newLevel
+        );
 
         const xPembed = new EmbedBuilder()
           .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
-          .setDescription(`${member} hat ${xP} XP erhalten.\nModerator: ${user.tag}`)
+          .setDescription(
+            `${member} hat ${xP} XP erhalten.\nModerator: ${user.tag}`
+          )
           .setColor(0xffd800)
           .setTimestamp(Date.now())
           .setFooter({
@@ -101,21 +108,8 @@ module.exports = {
 
         await interaction.editReply({ embeds: [xPembed] });
 
-        const guildSettings = await guildSettingsRepository.getGuildSettings(
-          interaction.guild,
-          1
-        );
-        if (!guildSettings) {
-        } else {
-          const modLogChannel = guildSettings.modLog;
-          if (modLogChannel === undefined) {
-          } else {
-            client.channels.cache
-              .get(modLogChannel)
-              .send({ embeds: [xPembed] })
-              .catch(console.error);
-          }
-        }
+        const LoggingChannels = require("../../mysql/loggingChannelsRepository");
+        await LoggingChannels.logChannel(interaction.guild, "botLog", xPembed);
 
         const commandLogRepository = require("../../mysql/commandLogRepository");
         // guild - command, user, affectedMember, reason

@@ -5,7 +5,6 @@ const {
   PermissionsBitField,
 } = require("discord.js");
 const ms = require("ms");
-const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 
 module.exports = {
   name: "timeout",
@@ -109,12 +108,13 @@ module.exports = {
               }, 3000)
             );
 
-        const guildSettings = await guildSettingsRepository.getGuildSettings(
-          interaction.guild,
-          1
+        const guildsRepository = require("../../mysql/guildsRepository");
+        const embedInfo = await guildsRepository.getGuildSetting(
+          guild,
+          "embedinfo"
         );
-        if (!guildSettings) {
-          return resolve(null);
+        if (!embedInfo) {
+          embedInfo = "Bei Fragen wende dich an die Communityleitung!";
         }
 
         const modlogembed = new EmbedBuilder()
@@ -167,7 +167,7 @@ module.exports = {
             },
             {
               name: `Information:`,
-              value: `${guildSettings.embedInfo}`,
+              value: `${embedInfo}`,
               inline: false,
             },
           ]);
@@ -180,19 +180,9 @@ module.exports = {
           interaction.deleteReply();
         }, 3000);
 
-        const modLogChannel = guildSettings.modLog;
-        if (modLogChannel === undefined) {
-          interaction.reply(
-            `Mod-Log Channel nicht gefunden! Bot Einrichtung abschließen`
-          );
-          setTimeout(function () {
-            interaction.deleteReply();
-          }, 3000);
-        } else {
-          client.channels.cache
-            .get(modLogChannel)
-            .send({ embeds: [modlogembed] });
-        }
+        const logChannel = require("../../mysql/loggingChannelsRepository");
+        await logChannel.logChannel(interaction.guild, "modLog", modlogembed);
+
         try {
           await member.send({ embeds: [embedmember] });
         } catch (error) {}
@@ -235,27 +225,8 @@ module.exports = {
             text: `powered by Powerbot`,
           });
 
-        const guildSettings = await guildSettingsRepository.getGuildSettings(
-          interaction.guild,
-          1
-        );
-        if (!guildSettings) {
-          return resolve(null);
-        }
-
-        const modLogChannel = guildSettings.modLog;
-        if (modLogChannel === undefined) {
-          interaction.reply(
-            `Mod-Log Channel nicht gefunden! Bot Einrichtung abschließen`
-          );
-          setTimeout(function () {
-            interaction.deleteReply();
-          }, 3000);
-        } else {
-          client.channels.cache
-            .get(modLogChannel)
-            .send({ embeds: [modlogembed2] });
-        }
+          const logChannel = require("../../mysql/loggingChannelsRepository");
+          await logChannel.logChannel(interaction.guild, "modLog", modlogembed2);
         try {
           await member.send({ embeds: [embedmember2] });
         } catch (error) {}

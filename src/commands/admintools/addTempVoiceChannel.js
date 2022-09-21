@@ -4,7 +4,6 @@ const {
   PermissionsBitField,
   EmbedBuilder,
 } = require("discord.js");
-const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 const tempChannelsRepository = require("../../mysql/tempChannelsRepository");
 
 module.exports = {

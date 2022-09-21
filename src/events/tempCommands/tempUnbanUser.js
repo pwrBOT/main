@@ -1,6 +1,5 @@
 const { EmbedBuilder } = require("discord.js");
 const tempCommandRepository = require("../../mysql/tempCommandRepository");
-const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 var client;
 
 async function userTempBanCheck() {
@@ -45,23 +44,8 @@ async function userTempBanUnban(tempUserToDelete) {
       text: `powered by Powerbot`,
     });
 
-  const guildSettings = await guildSettingsRepository.getGuildSettings(
-    unbanGuild,
-    1
-  );
-  if (!guildSettings) {
-    return resolve(null);
-  }
-
-  const modLogChannel = guildSettings.modLog;
-  if (modLogChannel === undefined) {
-    console.log(`Kein ModLog Channel bei ${unbanGuild.name} vorhanden`);
-  } else {
-    client.channels.cache
-      .get(modLogChannel)
-      .send({ embeds: [unbanembed] })
-      .catch(console.error);
-  }
+    const logChannel = require("../../mysql/loggingChannelsRepository");
+    await logChannel.logChannel(unbanGuild, "modLog", unbanembed);
   try {
     await unbanMember.send({ embeds: [unbanembedmember] });
   } catch (error) {

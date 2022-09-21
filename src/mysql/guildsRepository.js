@@ -1,32 +1,82 @@
 const mysqlHelper = require("./mysqlHelper");
 
-const getGuild = async (guild, limit=-1) => {
+const getGuildSetting = async (guild, property) => {
   return new Promise((resolve) => {
     mysqlHelper
-      .query('SELECT * FROM powerbot_guilds WHERE guildId = ?', [guild.id])
-      .then( (result) => {
-        // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
-        resolve(result ?? null);
+      .query(
+        "SELECT * FROM powerbot_guildsettings WHERE guildId = ? AND property = ?",
+        [guild.id, property], 1
+      )
+      .then((result) => {
+        resolve(result && result.length !== 0 ? result[0] : null);
       })
       .catch(() => {
         resolve(null);
       });
   });
-}
+};
 
-const addGuild = async (guild) => {
+const getGuildSettings = async (guild) => {
   return new Promise((resolve) => {
     mysqlHelper
-      .query('INSERT INTO powerbot_guilds (guildId, guildName) VALUES (?, ?)', [guild.id, guild.name])
-      .then( (result) => {
-        // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
+      .query(
+        "SELECT * FROM powerbot_guildsettings WHERE guildId = ?",
+        [guild.id])
+        .then((result) => {
+          // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
+          resolve(result ?? null);
+        })
+      .catch(() => {
+        resolve(null);
+      });
+  });
+};
+
+const insertGuildSetting = async (guild, property, value) => {
+  return new Promise(async (resolve) => {
+
+    if (!value) {
+      value = "";
+    }
+
+    mysqlHelper
+      .query(
+        "INSERT INTO powerbot_guildsettings (guildId, property, value) VALUES (?, ?, ?)", [
+        guild.id,
+        property,
+        value,
+      ])
+      .then((result) => {
         resolve(null);
       })
       .catch(() => {
         resolve(null);
       });
   });
-}
+};
 
-module.exports.getGuild = getGuild;
-module.exports.addGuild = addGuild;
+const updateGuildSetting = async (guild, property, value) => {
+  return new Promise(async (resolve) => {
+
+    if (!value) {
+      value = "";
+    }
+
+    mysqlHelper
+      .query(
+        "UPDATE powerbot_guildsettings SET value=? WHERE guildId = ? AND property = ?",
+        [value, guild.id, property]
+      )
+      .then((result) => {
+        resolve(null);
+      })
+      .catch(() => {
+        resolve(null);
+      });
+  });
+};
+
+module.exports.getGuildSetting = getGuildSetting;
+module.exports.getGuildSettings = getGuildSettings;
+module.exports.insertGuildSetting = insertGuildSetting;
+module.exports.updateGuildSetting = updateGuildSetting;

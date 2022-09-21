@@ -52,38 +52,84 @@ module.exports = {
         `\x1b[32mOnline! ${client.user.tag} is now logged in and online!\x1b[0m`
       );
 
-      return resolve(null);
+      //// ##################### TABLE CHECK ##################### \\\\
 
-      /** 
-    newGuild = client.guilds.cache.get(config.powerbot_ldsguildID);
-    await newGuild.members.fetch().then(async (members) => {
-      const sorting = (a, b) => {
-        return a.joinedTimestamp - b.joinedTimestamp;
-      };
-      const sortedMembers = await members.sort(sorting)
-
-      sortedMembers.forEach(async (member) => {
-        const getUser = await usersRepository.getUser(
-          member.user.id,
-          member.guild.id
-        );
-        if (getUser) {
-          return;
-        } else {
-          await usersRepository.addUser(
-            member.guild.id,
-            member.user,
-            member.joinedTimestamp
+      await allBotGuilds.forEach(async (guilds) => {
+        //// CHECK / CREATE USER TABLE
+        let data = client.guilds.cache.get(guilds.id);
+        const usersRepository = require("../../mysql/usersRepository");
+        const getUserTable = await usersRepository.getUserTable(data.id);
+        if (getUserTable.length === 0) {
+          console.log(
+            chalk.yellow(
+              `[MYSQL DATABASE] User Tabelle von Guild: ${data.name}(${data.id}) nicht gefunden. Guild User Tabelle wird angelegt...`
+            )
+          );
+          await usersRepository.createUserTable(data.id);
+          console.log(
+            chalk.blue(
+              `[MYSQL DATABASE] Guild: ${data.name}(${data.id}) User Tabelle erfolgreich angelegt!`
+            )
           );
         }
-      }),
-        console.log(
-          chalk.blue(
-            `[MYSQL DATABASE] Alle vorhandenen User von Guild: ${newGuild.name}(${newGuild.id}) in User Tabelle importiert.`
-          )
-        );
-    });
-    */
+        {
+          console.log(
+            chalk.green(
+              `[MYSQL DATABASE] User Tabelle für Guild: ${data.name}(${data.id}) gefunden.`
+            )
+          );
+        }
+
+        //// CHECK / ADD GUILD-ID TO AUTO-MOD TABLE
+        const autoModRepository = require("../../mysql/autoModRepository");
+        const getAutoModGuildSettings =
+        await autoModRepository.getGuildAutoModSettings(data);
+        if (getAutoModGuildSettings.length === 0) {
+          console.log(
+            chalk.yellow(
+              `[MYSQL DATABASE] Guild: ${data.name}(${data.id}) in AutoMod Tabelle nicht gefunden. Guild wird hinzugefügt...`
+            )
+          );
+          await autoModRepository.addAutoModSettingsGuild(data.id);
+          console.log(
+            chalk.blue(
+              `[MYSQL DATABASE] Guild: ${data.name}(${data.id}) bei AutoMod Tabelle erfolgreich angelegt!`
+            )
+          );
+        } else {
+          console.log(
+            chalk.green(
+              `[MYSQL DATABASE] Guild: ${data.name}(${data.id}) in AutoMod Tabelle gefunden.`
+            )
+          );
+        }
+
+        //// CHECK / ADD GUILD-ID TO AUTO-MOD TABLE
+        const levelsRepository = require("../../mysql/levelsRepository");
+        const getlevelSettings = await levelsRepository.getlevelSettings(data);
+        if (!getlevelSettings) {
+          console.log(
+            chalk.yellow(
+              `[MYSQL DATABASE] Guild: ${data.name}(${data.id}) in Level Settings Tabelle nicht gefunden. Guild wird hinzugefügt...`
+            )
+          );
+          await levelsRepository.addlevelSettings(data.id);
+          console.log(
+            chalk.blue(
+              `[MYSQL DATABASE] Guild: ${data.name}(${data.id}) bei Level Settings Tabelle erfolgreich angelegt!`
+            )
+          );
+        } else {
+          console.log(
+            chalk.green(
+              `[MYSQL DATABASE] Guild: ${data.name}(${data.id}) in Level Settings Tabelle gefunden.`
+            )
+          );
+        }
+      });
+      //// ##################### TABLE CHECK END ##################### \\\\
+
+      return resolve(null);
     });
   },
 };

@@ -4,7 +4,6 @@ const {
   EmbedBuilder,
 } = require("discord.js");
 const warnsRepository = require("../../mysql/warnsRepository");
-const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 
 module.exports = {
   name: "warns",
@@ -154,17 +153,8 @@ module.exports = {
           member.user.id
         );
 
-        const guildSettings = await guildSettingsRepository.getGuildSettings(
-          interaction.guild,
-          1
-        );
-        if (!guildSettings) {
-        } else {
-          const modLogChannel = guildSettings.modLog;
-          client.channels.cache
-            .get(modLogChannel)
-            .send({ embeds: [delWarnembed] });
-        }
+        const logChannel = require("../../mysql/loggingChannelsRepository");
+        await logChannel.logChannel(interaction.guild, "modLog", delWarnembed);
         interaction.reply({ embeds: [delWarnembed] });
         setTimeout(function () {
           interaction.deleteReply();
@@ -228,17 +218,8 @@ module.exports = {
 
         await warnsRepository.delAllWarns(interaction.guild.id, member.user.id);
 
-        const guildSettings = await guildSettingsRepository.getGuildSettings(
-          interaction.guild,
-          1
-        );
-        if (!guildSettings) {
-        } else {
-          const modLogChannel = guildSettings.modLog;
-          client.channels.cache
-            .get(modLogChannel)
-            .send({ embeds: [delWarnsembed] });
-        }
+        const logChannel = require("../../mysql/loggingChannelsRepository");
+        await logChannel.logChannel(interaction.guild, "modLog", delWarnsembed);
         interaction.reply({ embeds: [delWarnsembed] });
         setTimeout(function () {
           interaction.deleteReply();

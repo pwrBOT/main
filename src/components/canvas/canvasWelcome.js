@@ -2,7 +2,7 @@ const Canvas = require("@napi-rs/canvas");
 const { AttachmentBuilder } = require("discord.js");
 const { request } = require("undici");
 const usersRepository = require("../../mysql/usersRepository");
-const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
+const guildsRepository = require("../../mysql/guildsRepository");
 
 const { join } = require("path");
 const { GlobalFonts } = require("@napi-rs/canvas");
@@ -39,12 +39,12 @@ const generateImage = async (interaction, member, guild) => {
       return resolve(null);
     }
     var backgroundImg = "";
-    const guildSettings = await guildSettingsRepository.getGuildSettings(guild);
-    if (guildSettings.rankcard) {
-      backgroundImg = `./src/components/canvas/img/welcome/${guildSettings.rankcard}`;
+    const rankcard = await guildsRepository.getGuildSetting(guild, "embedinfo");
+    if (rankcard) {
+      backgroundImg = `./src/components/canvas/img/welcome/${rankcard.value}`;
     } else {
-      backgroundImg = "./src/components/canvas/img/welcome/powerbot_rankcard.jpg";
-        
+      backgroundImg =
+        "./src/components/canvas/img/welcome/powerbot_rankcard.jpg";
     }
 
     const canvas = Canvas.createCanvas(700, 350);
@@ -55,7 +55,11 @@ const generateImage = async (interaction, member, guild) => {
     context.drawImage(background, 0, 0, canvas.width, canvas.height);
 
     const { body } = await request(
-      member.displayAvatarURL({ extension: "png", size: av.size, dynamic: false})
+      member.displayAvatarURL({
+        extension: "png",
+        size: av.size,
+        dynamic: false,
+      })
     );
     const avatar = await Canvas.loadImage(await body.arrayBuffer());
 
@@ -74,7 +78,7 @@ const generateImage = async (interaction, member, guild) => {
     context.fillStyle = "#ffffff";
 
     const memberDisplayName = `${member.username}#${member.discriminator}`;
-    
+
     context.textAlign = "center";
     context.font = userName(canvas, memberDisplayName);
     context.fillText(`Herzlich Willkommen @${memberDisplayName}`, 350, 270);

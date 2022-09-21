@@ -6,7 +6,6 @@ const {
   Guild,
 } = require("discord.js");
 const warnsRepository = require("../../mysql/warnsRepository");
-const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 
 module.exports = {
   name: "warn",
@@ -112,21 +111,14 @@ module.exports = {
           },
         ]);
 
-      const newMessage = `User ${member} wurde verwarnt ✅\nGrund: ${reason}`;
       await interaction.editReply({ embeds: [warnembed] });
       setTimeout(function () {
         interaction.deleteReply();
       }, 5000);
 
-      const guildSettings = await guildSettingsRepository.getGuildSettings(
-        interaction.guild,
-        1
-      );
-      if (!guildSettings) {
-      } else {
-      const modLogChannel = guildSettings.modLog;
-      client.channels.cache.get(modLogChannel).send({ embeds: [warnembed] });
-      }
+      const logChannel = require("../../mysql/loggingChannelsRepository");
+      await logChannel.logChannel(interaction.guild, "modLog", warnembed);
+
       try {
         await member.send({ embeds: [warnembedmember] });
       } catch (error) {}
@@ -176,6 +168,15 @@ module.exports = {
 
       if (member.id === interaction.user.id) {
         return resolve(null);
+      }
+
+      const guildsRepository = require("../../mysql/guildsRepository");
+      const embedInfo = await guildsRepository.getGuildSetting(
+        guild,
+        "embedinfo"
+      );
+      if (!embedInfo) {
+        embedInfo = "Bei Fragen wende dich an die Communityleitung!";
       }
 
       const moment = require("moment");
@@ -239,7 +240,7 @@ module.exports = {
                 },
                 {
                   name: `Information:`,
-                  value: `${guildSettings.embedInfo}`,
+                  value: `${embedInfo}`,
                   inline: false,
                 },
               ]);
@@ -295,7 +296,7 @@ module.exports = {
                 },
                 {
                   name: `Information:`,
-                  value: `${guildSettings.embedInfo}`,
+                  value: `${embedInfo}`,
                   inline: false,
                 },
               ]);
@@ -394,7 +395,7 @@ module.exports = {
                 },
                 {
                   name: `Information:`,
-                  value: `${guildSettings.embedInfo}`,
+                  value: `${embedInfo}`,
                   inline: false,
                 },
               ]);
@@ -472,7 +473,7 @@ module.exports = {
                 },
                 {
                   name: `Information:`,
-                  value: `${guildSettings.embedInfo}`,
+                  value: `${embedInfo}`,
                   inline: false,
                 },
               ]);
@@ -528,7 +529,7 @@ module.exports = {
                 },
                 {
                   name: `Information:`,
-                  value: `${guildSettings.embedInfo}`,
+                  value: `${embedInfo}`,
                   inline: false,
                 },
               ]);
@@ -627,7 +628,7 @@ module.exports = {
                 },
                 {
                   name: `Information:`,
-                  value: `${guildSettings.embedInfo}`,
+                  value: `${embedInfo}`,
                   inline: false,
                 },
               ]);
@@ -705,7 +706,7 @@ module.exports = {
                 },
                 {
                   name: `Information:`,
-                  value: `${guildSettings.embedInfo}`,
+                  value: `${embedInfo}`,
                   inline: false,
                 },
               ]);
@@ -761,7 +762,7 @@ module.exports = {
                 },
                 {
                   name: `Information:`,
-                  value: `${guildSettings.embedInfo}`,
+                  value: `${embedInfo}`,
                   inline: false,
                 },
               ]);
@@ -860,7 +861,7 @@ module.exports = {
                 },
                 {
                   name: `Information:`,
-                  value: `${guildSettings.embedInfo}`,
+                  value: `${embedInfo}`,
                   inline: false,
                 },
               ]);

@@ -1,6 +1,6 @@
 const { EmbedBuilder } = require("discord.js");
 const usersRepository = require("../../mysql/usersRepository");
-const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
+const levelsRepository = require("../../mysql/levelsRepository");
 
 module.exports = async function messageCreate(message) {
   return new Promise(async (resolve) => {
@@ -10,17 +10,17 @@ module.exports = async function messageCreate(message) {
       return resolve(null);
     }
 
-    let guildData = await guildSettingsRepository.getGuildSettings(guild);
+    let guildData = await levelsRepository.getlevelSettings(guild);
 
     if (guildData == null) {
       return resolve(null);
     }
 
-    if (author.bot == true) {
+    if (guildData.levelRolesActive === 0) {
       return resolve(null);
     }
 
-    if (guildData.levelRolesActive === 0) {
+    if (author.bot == true) {
       return resolve(null);
     }
 
@@ -29,10 +29,6 @@ module.exports = async function messageCreate(message) {
     }
 
     if (guild.id == null) {
-      return resolve(null);
-    }
-
-    if (!guildData.guildData == 0) {
       return resolve(null);
     }
 

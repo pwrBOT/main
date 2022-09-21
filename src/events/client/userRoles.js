@@ -1,5 +1,4 @@
 const { EmbedBuilder } = require("discord.js");
-const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 
 module.exports = {
   name: "guildMemberUpdate",
@@ -29,24 +28,13 @@ module.exports = {
             },
           ]);
 
-        const guildSettings = await guildSettingsRepository.getGuildSettings(
+        const logChannel = require("../../mysql/loggingChannelsRepository");
+        await logChannel.logChannel(
           oldMember.guild,
-          1
+          "botLog",
+          userRolesChanged
         );
-        if (!guildSettings) {
-          return resolve(null);
-        }
 
-        const modLogChannel = guildSettings.botLog;
-        if (!modLogChannel) {
-          console.log(
-            `Kein ModLog Channel bei ${oldMember.guild.name} definiert!`
-          );
-        } else {
-          client.channels.cache
-            .get(modLogChannel)
-            .send({ embeds: [userRolesChanged] });
-        }
         userRolesChanged
           .setThumbnail(oldMember.guild.iconURL())
           .setDescription(
@@ -77,24 +65,13 @@ module.exports = {
             },
           ]);
 
-        const guildSettings = await guildSettingsRepository.getGuildSettings(
+        const logChannel = require("../../mysql/loggingChannelsRepository");
+        await logChannel.logChannel(
           newMember.guild,
-          1
+          "botLog",
+          userRolesChanged
         );
-        if (!guildSettings) {
-          return resolve(null);
-        }
 
-        const modLogChannel = guildSettings.botLog;
-        if (!modLogChannel) {
-          console.log(
-            `Kein ModLog Channel bei ${newMember.guild.name} definiert!`
-          );
-        } else {
-          client.channels.cache
-            .get(modLogChannel)
-            .send({ embeds: [userRolesChanged] });
-        }
         userRolesChanged
           .setThumbnail(oldMember.guild.iconURL())
           .setDescription(

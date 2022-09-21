@@ -1,32 +1,16 @@
 const { EmbedBuilder } = require("discord.js");
 const chalk = require("chalk");
 const config = require("../../../config.json");
-const guildsRepository = require("../../mysql/guildsRepository");
-const usersRepository = require("../../mysql/usersRepository");
-const autoModRepository = require("../../mysql/autoModRepository");
 
 module.exports = {
   name: "guildCreate",
 
   async execute(guild) {
     return new Promise(async (resolve) => {
-      const getGuild = await guildsRepository.getGuild(guild);
-      const guildOwner = guild.members.cache.get(guild.ownerId);
 
-      if (getGuild.length === 0) {
-        console.log(
-          chalk.yellow(
-            `[MYSQL DATABASE] Guild: ${guild.name}(${guild.id}) nicht gefunden. Guild wird angelegt...`
-          )
-        );
-        await guildsRepository.addGuild(guild);
-        console.log(
-          chalk.blue(
-            `[MYSQL DATABASE] Guild: ${guild.name}(${guild.id}) Settings erfolgreich angelegt!`
-          )
-        );
-      }
-
+      //// ##################### TABLE CHECK ##################### \\\\
+      //// CHECK / CREATE USER TABLE
+      const usersRepository = require("../../mysql/usersRepository");
       const getUserTable = await usersRepository.getUserTable(guild.id);
       if (getUserTable.length === 0) {
         console.log(
@@ -42,6 +26,8 @@ module.exports = {
         );
       }
 
+      //// CHECK / ADD GUILD-ID TO AUTO-MOD TABLE
+      const autoModRepository = require("../../mysql/autoModRepository");
       const getAutoModGuildSettings =
         await autoModRepository.getGuildAutoModSettings(guild);
       if (getAutoModGuildSettings.length === 0) {
@@ -58,6 +44,25 @@ module.exports = {
         );
       }
 
+      //// CHECK / ADD GUILD-ID TO AUTO-MOD TABLE
+      const levelsRepository = require("../../mysql/levelsRepository");
+      const getlevelSettings = await levelsRepository.getlevelSettings(guild);
+      if (!getlevelSettings) {
+        console.log(
+          chalk.yellow(
+            `[MYSQL DATABASE] Guild: ${guild.name}(${guild.id}) in Level Settings Tabelle nicht gefunden. Guild wird hinzugefügt...`
+          )
+        );
+        await levelsRepository.addlevelSettings(guild.id);
+        console.log(
+          chalk.blue(
+            `[MYSQL DATABASE] Guild: ${guild.name}(${guild.id}) bei Level Settings Tabelle erfolgreich angelegt!`
+          )
+        );
+      }
+      //// ##################### TABLE CHECK END ##################### \\\\
+
+      //// ##################### IMPORT GUILD USER TO DB ##################### \\\\
       await guild.members.fetch().then(async (members) => {
         const sorting = (a, b) => {
           return a.joinedTimestamp - b.joinedTimestamp;
@@ -85,6 +90,8 @@ module.exports = {
             )
           );
       });
+
+      //// ##################### IMPORT GUILD USER TO DB END ##################### \\\\
 
       const newGuildEmbed = new EmbedBuilder()
         .setTitle(`⚡️ Welcome to PowerBot ⚡️`)

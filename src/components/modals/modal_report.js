@@ -1,5 +1,4 @@
 const { EmbedBuilder } = require("discord.js");
-const guildSettingsRepository = require("../../mysql/guildSettingsRepository");
 
 module.exports = {
   data: {
@@ -12,12 +11,12 @@ module.exports = {
         ephemeral: true,
         fetchReply: true,
       });
-      const memberName = interaction.fields.getTextInputValue("reportedUserInput");
+      const memberName =
+        interaction.fields.getTextInputValue("reportedUserInput");
       const memberId = interaction.fields.getTextInputValue("reportedUserId");
       const member = client.users.cache.get(memberId);
       const reporter = interaction.user.tag;
       const reason = interaction.fields.getTextInputValue("reportUserInput");
-
 
       const reportembed = new EmbedBuilder()
         .setTitle(`⚡️ PowerBot ⚡️ | User Report`)
@@ -42,29 +41,12 @@ module.exports = {
           },
         ]);
 
-      const newMessage = `Danke für Deine Meldung! User ${member} wurde den Moderatoren gemeldet ✅`;
-      await interaction.editReply({ content: newMessage });
+      await interaction.editReply(`Danke für Deine Meldung! User ${member} wurde den Moderatoren gemeldet ✅`);
+      
+      const logChannel = require("../../mysql/loggingChannelsRepository");
+      await logChannel.logChannel(interaction.guild, "modLog", reportembed);
 
-      const guildSettings = await guildSettingsRepository.getGuildSettings(
-        interaction.guild,
-        1
-      );
-      if (!guildSettings) {
-        return resolve(null);
-      }
-
-      const modLogChannel = guildSettings.modLog;
-      if (modLogChannel === undefined) {
-        interaction.editReply(
-          `Beschwerde kann nicht übermittelt werden. Bitte Admins per DM kontaktieren!`
-        );
-      } else {
-        client.channels.cache
-          .get(modLogChannel)
-          .send({ embeds: [reportembed] })
-          .catch(console.error);
-          return resolve(null);
-      }
+      return resolve(null);
     });
   },
 };
