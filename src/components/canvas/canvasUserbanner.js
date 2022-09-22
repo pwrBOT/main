@@ -85,25 +85,27 @@ const generateImage = async (interaction, member, guild) => {
 
     context.fillStyle = "#ffffff";
 
-    const memberDisplayName = `${member.username} ${member.discriminator}`;
+    const memberDisplayName = `${member.username}`;
     context.font = userName(canvas, memberDisplayName);
-    context.fillText(`${memberDisplayName}`, 200, 80);
+    context.fillText(`${memberDisplayName}`, 200, 90);
 
-    context.font = "20px Roboto Regular";
-    context.fillText(`Server: ${guild.name}`, 200, 120);
+    context.font = "18px Roboto Regular";
+    context.fillText(`Rang:    ${interaction.member.roles.highest.name}`, 200, 125);
 
-    context.font = "20px Roboto Regular";
+    context.font = "18px Roboto Regular";
     context.fillText(
-      `Rolle: ${interaction.member.roles.highest.name}`,
+      `Server:  ${guild.name}`,
       200,
       145
     );
 
-    context.font = "20px Roboto Light";
+    context.font = "18px Roboto Regular";
     context.fillText(
-      `Level: ${currentLevel}    |    XP: ${currentUserXp} / ${nextLevelXP}`,
+      `Auf dem Server seit: ${new Date(interaction.member.joinedTimestamp).toLocaleDateString(
+        "de-DE"
+      )}`,
       200,
-      185
+      165
     );
 
     context.font = "18px Roboto Bold";
@@ -111,6 +113,35 @@ const generateImage = async (interaction, member, guild) => {
     context.fillText(`Member #${user.ID}`, 100, 210);
 
     context.textAlign = "left";
+
+    // XP Bar
+    context.lineJoin = "round";
+    context.lineWidth = 30;
+
+    // Empty Bar
+    context.strokeStyle = "black";
+    context.strokeRect(215,205, 350, 0);
+
+    // Bar Filled
+    context.strokeStyle = "#a7b9d7";
+    context.strokeRect(215,205, 350 * currentUserXp / nextLevelXP ,0);
+    
+    context.font = "18px Roboto Regular";
+    context.fillStyle = "#444444";
+    context.fillText(
+      `XP: ${currentUserXp} / ${nextLevelXP}`,
+      300,
+      211
+    );
+    
+    context.fillStyle = "#ffffff";
+    context.font = "12px Roboto Regular";
+    context.fillText(
+      `LEVEL: ${currentLevel}`,
+      500,
+      185
+    );
+
     // Pick up the pen
     context.beginPath();
     // Start the arc to form a circle

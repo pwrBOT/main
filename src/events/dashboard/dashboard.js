@@ -818,6 +818,43 @@ module.exports = {
               },
             },
             {
+              optionId: "rankChannel",
+              optionName: "",
+              optionDescription: "Rank / Level Channel:",
+              optionType: DBD.formTypes.channelsSelect(
+                false,
+                (channelTypes = [ChannelType.GuildText])
+              ),
+              getActualSet: async ({ guild }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (data) return data.rankChannel;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "rankChannel";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "rankChannel";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
               optionType: "spacer",
               title: "ROLLENBELOHNUNG 1:",
               description: "",

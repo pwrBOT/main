@@ -111,7 +111,9 @@ module.exports = async function messageCreate(message) {
       } else {
         let newRole = guild.roles.cache.get(newRoleId);
         await member.roles.add(newRole).catch(console.error);
+
         const rankChannel = levelSettings.rankChannel;
+
         if (rankChannel === undefined) {
         } else {
           const embedBefoerderung = new EmbedBuilder()
