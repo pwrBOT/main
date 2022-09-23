@@ -38,17 +38,17 @@ module.exports = (client) => {
       });
 
       // DEPLOY COMMANDS TO SPECIFIC GUILDS --> ATTENTION! COMMANDS ARE DOUBLED --> ONLY FOR DEV
-      console.log("\x1b[33mÜbertrage Commands zu Test-Guild: PowerBot\x1b[0m");
-      await rest.put(Routes.applicationGuildCommands(clientId, pwrguildID), {
-        body: client.commandArray,
-      });
-      console.log("\x1b[33mÜbertrage Commands zu Test-Guild: Lüdenscheid\x1b[0m");
-      await rest.put(Routes.applicationGuildCommands(clientId, ldsguildID), {
-        body: client.commandArray,
-      });
-      console.log("\x1b[33mÜbertrage Commands zu Test-Guild: Miami-Blue Records\x1b[0m");
-      await rest.put(Routes.applicationGuildCommands(clientId, mbrguildID), {
-        body: client.commandArray,
+      const testGuilds = config.whitelist_testGuilds;
+      testGuilds.forEach(async (guildId) => {
+        let testGuild = guildId;
+        const guild = client.guilds.fetch(testGuild);
+
+        console.log(
+          `\x1b[33mÜbertrage Commands zu Test-Guild: ${testGuild}\x1b[0m`
+        );
+        await rest.put(Routes.applicationGuildCommands(clientId, testGuild), {
+          body: client.commandArray,
+        });
       });
 
       console.log("\x1b[32mAlle commands erfolgreich übertragen!\x1b[0m");

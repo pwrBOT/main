@@ -8,6 +8,39 @@ module.exports = {
   async execute(guild) {
     return new Promise(async (resolve) => {
 
+      /// CHECK IF GUILD IS BLOCKED \\\
+      const guildOwner = await guild.fetchOwner();
+      const guildsWhitelist = config.whitelist_testGuilds;
+      const guildsBlacklist = config.blacklist_Guilds;
+      const newGuildId = guild.id;
+
+      if (!guildsWhitelist.includes(newGuildId)) {
+        console.log(
+          chalk.red(
+            `WHITELIST CHECK NEGATIV | GUILD: ${guild.name}(${guild.id})`
+          )
+        );
+
+        try {
+          await guildOwner.send(`Dein Discord Server ist nicht Teil der Whitelist. Du kannst den Bot nicht nutzen. Sry ;)`);
+        } catch (error) {}
+        await guild.leave().catch(console.error);
+        return resolve(null);
+      }
+
+      if (guildsBlacklist.includes(newGuildId)) {
+        console.log(
+          chalk.red(
+            `BLACKLIST CHECK POSITIV | GUILD: ${guild.name}(${guild.id})`
+          )
+        );
+        try {
+          await guildOwner.send(`Dein Discord Server ist auf der Blacklist gelandet. Du kannst den Bot nicht mehr nutzen!`);
+        } catch (error) {}
+        await guild.leave().catch(console.error);
+        return resolve(null);
+      }
+
       //// ##################### TABLE CHECK ##################### \\\\
       //// CHECK / CREATE USER TABLE
       const usersRepository = require("../../mysql/usersRepository");

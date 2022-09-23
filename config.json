@@ -1,4 +1,7 @@
 {
+  "whitelist_testGuilds": ["994975619521712219", "396282694906150913", "539519507597885440"],
+  "blacklist_Guilds": [],
+  
   "powerbot_token": "ODE1NjIxMTE1NzY5OTEzMzY0.GrbI_D.z3D1Q07OPhZMv7bAG0WO52mrs21T2UbbbWW0Pc",
   "powerbot_clientId": "815621115769913364",
   "powerbot_clientSecret": "_GcIlgPYoMzYKb97Hfa_vKHtE2a9i-pD",
