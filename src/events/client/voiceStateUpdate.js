@@ -1,5 +1,6 @@
 const { VoiceState, PermissionFlagsBits, ChannelType } = require("discord.js");
 const tempChannelsRepository = require("../../mysql/tempChannelsRepository");
+const usersRepository = require("../../mysql/usersRepository");
 
 module.exports = {
   name: "voiceStateUpdate",
@@ -62,7 +63,7 @@ module.exports = {
         const voiceChannel = await guild.channels.create({
           name: newChannelName,
           type: ChannelType.GuildVoice,
-          bitrate: 256000,
+          bitrate: 384000,
           parent: newState.channel.parent,
         });
         await tempChannelsRepository.addTempVoiceChannel(
@@ -75,6 +76,7 @@ module.exports = {
         );
         client.voiceGenerator.set(member.user.id, voiceChannel.id);
         setTimeout(() => member.voice.setChannel(voiceChannel), 250);
+        
         return resolve(null);
       }
     });

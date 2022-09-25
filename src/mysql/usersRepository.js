@@ -41,9 +41,9 @@ const addUser = async (guildId, message, userAdd) => {
   });
 };
 
-const addUserXP = async (guildId, message, newXP) => {
+const addUserXP = async (guildId, user, newXP) => {
   return new Promise((resolve) => {
-    const userId = message.author.id;
+    const userId = user.id;
     const tabelle = `${guildId}_users`;
 
     mysqlHelper
@@ -57,9 +57,9 @@ const addUserXP = async (guildId, message, newXP) => {
   });
 };
 
-const addUserLevel = async (guildId, message, newLevel) => {
+const addUserLevel = async (guildId, user, newLevel) => {
   return new Promise((resolve) => {
-    const userId = message.author.id;
+    const userId = user.id;
     const tabelle = `${guildId}_users`;
 
     mysqlHelper

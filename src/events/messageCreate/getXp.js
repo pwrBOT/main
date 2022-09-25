@@ -3,6 +3,7 @@ const usersRepository = require("../../mysql/usersRepository");
 module.exports = async function messageCreate(message) {
   return new Promise(async (resolve) => {
     const guildId = message.guildId;
+    
     if (message.guildId == null) {
       return resolve(null);
     }
@@ -21,13 +22,13 @@ module.exports = async function messageCreate(message) {
     }
     let XP = Math.floor(Math.random() * (30 - 10 + 1)) + 10;
     var newXP = currentXP + XP;
-    await usersRepository.addUserXP(guildId, message, newXP);
+    await usersRepository.addUserXP(guildId, message.author, newXP);
 
     const requiredXP = getUser.Level * getUser.Level * 100 + 100;
 
     if (newXP >= requiredXP) {
       let newLevel = (getUser.Level += 1);
-      await usersRepository.addUserLevel(guildId, message, newLevel);
+      await usersRepository.addUserLevel(guildId, message.author, newLevel);
     }
 
     return resolve(null);
