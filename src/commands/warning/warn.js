@@ -117,7 +117,7 @@ module.exports = {
       }, 5000);
 
       const logChannel = require("../../mysql/loggingChannelsRepository");
-      await logChannel.logChannel(interaction.guild, "modLog", warnembed);
+      const modLogChannel = await logChannel.logChannel(interaction.guild, "modLog", warnembed);
 
       try {
         await member.send({ embeds: [warnembedmember] });
@@ -172,7 +172,7 @@ module.exports = {
 
       const guildsRepository = require("../../mysql/guildsRepository");
       const embedInfo = await guildsRepository.getGuildSetting(
-        guild,
+        interaction.guild,
         "embedinfo"
       );
       if (!embedInfo) {

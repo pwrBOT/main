@@ -15,6 +15,20 @@ const getUser = async (memberId, guildId) => {
   });
 };
 
+const getUsers = async (guildId) => {
+  return new Promise((resolve) => {
+    mysqlHelper
+      .query(`SELECT * FROM ${guildId}_users`)
+      .then( (result) => {
+        // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
+        resolve(result ?? null);
+      })
+      .catch(() => {
+        resolve(null);
+      });
+  });
+};
+
 const addUser = async (guildId, message, userAdd) => {
   return new Promise((resolve) => {
     const userId = message.id;
@@ -138,6 +152,7 @@ const giveUserXP = async (guildId, userId, newXP, newLevel) => {
 };
 
 module.exports.getUser = getUser;
+module.exports.getUsers = getUsers;
 module.exports.addUser = addUser;
 module.exports.addUserXP = addUserXP;
 module.exports.addUserLevel = addUserLevel;

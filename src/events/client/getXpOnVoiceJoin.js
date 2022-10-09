@@ -42,9 +42,6 @@ module.exports = {
           let newLevel = (getUser.Level += 1);
           await usersRepository.addUserLevel(guildId, member.user, newLevel);
         }
-        console.log(
-          `VOICE XP | ${member.user.username} --> ${currentXP}+${XP}=${newXP}`
-        );
 
         return resolve(null);
       }

@@ -5,6 +5,10 @@ var client;
 async function userTempBanCheck() {
   const allTempUserToDelete = await tempCommandRepository.getAllTempBanUser();
 
+  if (!allTempUserToDelete) {
+    return;
+  }
+
   allTempUserToDelete.forEach((tempUserToDelete) => {
     userTempBanUnban(tempUserToDelete);
   });
@@ -22,7 +26,9 @@ async function userTempBanUnban(tempUserToDelete) {
   );
   const unbanembed = new EmbedBuilder()
     .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
-    .setDescription(`User: ${unbanMember.tag} wurde automatisch entbannt.\n\nBan-Grund: ${tempUserToDelete.warnReason}\nModerator: ${tempUserToDelete.warnModName}`)
+    .setDescription(
+      `User: ${unbanMember.tag} wurde automatisch entbannt.\n\nBan-Grund: ${tempUserToDelete.warnReason}\nModerator: ${tempUserToDelete.warnModName}`
+    )
     .setColor(0x51ff00)
     .setTimestamp(Date.now())
     .setThumbnail(unbanMember.displayAvatarURL())
@@ -44,12 +50,11 @@ async function userTempBanUnban(tempUserToDelete) {
       text: `powered by Powerbot`,
     });
 
-    const logChannel = require("../../mysql/loggingChannelsRepository");
-    await logChannel.logChannel(unbanGuild, "modLog", unbanembed);
+  const logChannel = require("../../mysql/loggingChannelsRepository");
+  await logChannel.logChannel(unbanGuild, "modLog", unbanembed);
   try {
     await unbanMember.send({ embeds: [unbanembedmember] });
-  } catch (error) {
-  }
+  } catch (error) {}
 
   await tempCommandRepository.deleteTempUser(unbanMember, unbanGuild);
 }
