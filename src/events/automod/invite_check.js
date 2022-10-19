@@ -33,8 +33,9 @@ module.exports = {
         }
 
         try {
-            await message.delete();
-          } catch (error) {}
+          await message.delete();
+          return resolve(null);
+        } catch (error) {}
       }
 
       async function autoModWarnMember() {
@@ -124,22 +125,22 @@ module.exports = {
         } catch (error) {}
 
         await warnsRepository.addWarn(
-            message.guild.id,
-            message.member.id,
-            "Eigen- / Fremdwerbung",
-            message.client.user.tag,
-            message.client.user.id
-          );
-    
-          const commandLogRepository = require("../../mysql/commandLogRepository");
-          // guild - command, user, affectedMember, reason
-          await commandLogRepository.logCommandUse(
-            message.guild,
-            "Auto-Mod Warn | Invite",
-            message.client.user,
-            message.member.user,
-            "-"
-          );
+          message.guild.id,
+          message.member.id,
+          "Eigen- / Fremdwerbung",
+          message.client.user.tag,
+          message.client.user.id
+        );
+
+        const commandLogRepository = require("../../mysql/commandLogRepository");
+        // guild - command, user, affectedMember, reason
+        await commandLogRepository.logCommandUse(
+          message.guild,
+          "Auto-Mod Warn | Invite",
+          message.client.user,
+          message.member.user,
+          "-"
+        );
       }
 
       // ####################    CHECK     ################## \\
@@ -151,19 +152,27 @@ module.exports = {
         }
 
         const inviteCode = await message.content.split(link)[1].split(" ")[0];
-        const isGuildInvite = await message.guild.invites.cache.has(inviteCode);
+        
+        let isGuildInvite = ""
+        try {
+        isGuildInvite = await message.guild.invites
+          .fetch({ code: `${inviteCode}`})
+        } catch (error) {
+          isGuildInvite = false}
 
         if (!isGuildInvite) {
           try {
             const vanity = await message.guild.fetchVanityData();
             if (code !== vanity?.code) {
+              console.log("Nachricht wäre gelöscht worden");
               deleteMessage();
-              autoModWarnMember();
+              //* autoModWarnMember();
               return resolve(null);
             }
           } catch (err) {
+            console.log("Nachricht wäre gelöscht worden");
             deleteMessage();
-            autoModWarnMember();
+            //* autoModWarnMember();
             return resolve(null);
           }
         }
