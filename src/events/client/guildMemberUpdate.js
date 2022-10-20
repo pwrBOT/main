@@ -121,18 +121,12 @@ module.exports = {
           .addFields([
             {
               name: `Avatar alt:`,
-              value: `[LINK](${oldMember.displayAvatarURL({
-                size: "2048",
-                dynamic: false,
-              })})`,
+              value: `[LINK](${oldMember.displayAvatarURL()})`,
               inline: true,
             },
             {
               name: `Avatar neu:`,
-              value: `[LINK](${newMember.displayAvatarURL({
-                size: "2048",
-                dynamic: false,
-              })})`,
+              value: `[LINK](${newMember.displayAvatarURL()})`,
               inline: true,
             },
           ]);
