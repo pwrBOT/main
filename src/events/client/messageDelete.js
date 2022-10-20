@@ -13,13 +13,11 @@ module.exports = {
       let embedMessage = "";
 
       if (message.author == null) {
-        embedMessage = `Nachricht in ${message.channel} gelöscht!\nID: ${message.id}`;
-      }
-
-      if (message.content == null) {
-        embedMessage = `Nachricht in ${message.channel} gelöscht!\nID: ${message.id}`;
+        return resolve(null);
+      } else if (message.content == null) {
+        return resolve(null);
       } else if (message.content.length === 0) {
-        embedMessage = `Nachricht von ${message.author} in ${message.channel} gelöscht!\nID: ${message.id}`;
+        return resolve(null);
       } else {
         embedMessage = `Nachricht von ${message.author} in ${message.channel} gelöscht!\n\nNachricht: ${message.content}\nID: ${message.id}`;
       }

@@ -2,18 +2,33 @@ const { EmbedBuilder } = require("discord.js");
 const chalk = require("chalk");
 const config = require("../../../config.json");
 const warnsRepository = require("../../mysql/warnsRepository");
+const guildSettings = require("../../mysql/guildsRepository");
 
 module.exports = {
   name: "messageCreate",
 
   async execute(message) {
     return new Promise(async (resolve) => {
+      const autoModInvites = await guildSettings.getGuildSetting(
+        message.guild,
+        "autoModInvites"
+      );
+
+      if (!autoModInvites) {
+        console.log(chalk.yellow(`AUTO MOD INVITE | KEINE SETTINGS`));
+        return resolve(null);
+      }
+
+      if (autoModInvites.value.length === 0) {
+        console.log(chalk.yellow(`AUTO MOD INVITE | SYSTEM DEAKTIVIERT`));
+        return resolve(null);
+      }
+
       if (!message) {
         return resolve(null);
       }
 
       async function deleteMessage() {
-        const guildSettings = require("../../mysql/guildsRepository");
         const teamRoleId = await guildSettings.getGuildSetting(
           message.guild,
           "teamRole"
@@ -59,7 +74,6 @@ module.exports = {
       }
 
       async function autoModWarnMember() {
-        const guildSettings = require("../../mysql/guildsRepository");
         const teamRoleId = await guildSettings.getGuildSetting(
           message.guild,
           "teamRole"

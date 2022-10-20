@@ -1600,6 +1600,46 @@ module.exports = {
               description: "### soon ###",
             },
             {
+              optionId: "autoModInvites",
+              optionName: "",
+              optionDescription: "Auto-Moderation bei Invites an/aus:",
+              optionType: DBD.formTypes.switch(false),
+              getActualSet: async ({ guild }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "autoModInvites"
+                );
+
+                if (data) return data.value;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "autoModInvites"
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const property = "autoModInvites";
+                  await guildsRepository.insertGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                } else {
+                  const property = "autoModInvites";
+                  await guildsRepository.updateGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
+            {
               optionType: "spacer",
               title: "Warn System | Auto Mod",
               description: "",
