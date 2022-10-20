@@ -9,6 +9,10 @@ module.exports = {
 
   async execute(message) {
     return new Promise(async (resolve) => {
+      if (!message) {
+        return resolve(null);
+      }
+      
       const autoModInvites = await guildSettings.getGuildSetting(
         message.guild,
         "autoModInvites"
@@ -21,10 +25,6 @@ module.exports = {
 
       if (autoModInvites.value.length === 0) {
         console.log(chalk.yellow(`AUTO MOD INVITE | SYSTEM DEAKTIVIERT`));
-        return resolve(null);
-      }
-
-      if (!message) {
         return resolve(null);
       }
 

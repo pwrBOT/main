@@ -1,5 +1,5 @@
 const { EmbedBuilder, ActivityType } = require("discord.js");
-const config = require(`../../../config.json`);
+const guildSettings = require("../../mysql/guildsRepository");
 const chalk = require("chalk");
 
 module.exports = {
@@ -11,6 +11,15 @@ module.exports = {
         return resolve(null);
       }
       let embedMessage = "";
+      let ignoredChannels = await guildSettings.getGuildSetting(
+        message.guild,
+        "ignoredChannels"
+      );
+
+      if (ignoredChannels.value.includes(message.channelId)) {
+        console.log("LOGGING MSG DELETE | Ignorierter Channel")
+        return resolve(null);
+      }
 
       if (message.author == null) {
         return resolve(null);

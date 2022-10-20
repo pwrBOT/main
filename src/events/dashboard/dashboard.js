@@ -2146,6 +2146,57 @@ module.exports = {
           ],
         },
         /// ################ AUTO MOD SYSTEM END ################ \\\
+        /// ################## LOGGING SYSTEM ################## \\\
+        {
+          categoryId: "loggingsystem",
+          categoryName: "Logging System:",
+          categoryDescription:
+            "Richte das Logging nach deinen Bedürfnissen ein.",
+          categoryOptionsList: [
+            {
+              optionId: "ignoredChannels",
+              optionName: "",
+              optionDescription: "Channels die vom Logging ausgenommen sind (z.B. Admin Channels):",
+              optionType: DBD.formTypes.channelsMultiSelect(false, true, (channelTypes = [ChannelType.GuildText])),
+              getActualSet: async ({ guild }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "ignoredChannels"
+                );
+
+                if (data) return JSON.parse(data.value);
+                else return [];
+              },
+              setNew: async ({ guild, newData }) => {
+                
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "ignoredChannels"
+                );
+
+                if (!data) {
+                  const property = "ignoredChannels";
+                  newDataString = JSON.stringify(newData);
+                  await guildsRepository.insertGuildSetting(
+                    guild,
+                    property,
+                    newDataString
+                  );
+                } else {
+                  const property = "ignoredChannels";
+                  newDataString = JSON.stringify(newData);
+                  await guildsRepository.updateGuildSetting(
+                    guild,
+                    property,
+                    newDataString
+                  );
+                }
+                return;
+              },
+            },
+          ],
+        },
+        /// ################ LOGGING SYSTEM END ################ \\\
       ],
     });
     Dashboard.init();
