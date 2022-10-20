@@ -4,7 +4,11 @@ module.exports = {
   name: "guildMemberUpdate",
   async execute(oldMember, newMember, client) {
     return new Promise(async (resolve) => {
-      const userRolesChanged = new EmbedBuilder()
+      const { guild, user } = newMember;
+      const logChannel = require("../../mysql/loggingChannelsRepository");
+
+      // DEFINE EMBED
+      const guildMemberUpdateEmbed = new EmbedBuilder()
         .setTitle(`⚡️ PowerBot ⚡️ | Logging`)
         .setThumbnail(oldMember.displayAvatarURL())
         .setTimestamp(Date.now())
@@ -17,7 +21,7 @@ module.exports = {
         (role) => !newMember.roles.cache.has(role.id)
       );
       if (removedRoles.size > 0) {
-        userRolesChanged
+        guildMemberUpdateEmbed
           .setDescription(`Die Rollen von ${oldMember} haben sich verändert!`)
           .setColor("Red")
           .addFields([
@@ -32,10 +36,10 @@ module.exports = {
         await logChannel.logChannel(
           oldMember.guild,
           "botLog",
-          userRolesChanged
+          guildMemberUpdateEmbed
         );
 
-        userRolesChanged
+        guildMemberUpdateEmbed
           .setThumbnail(oldMember.guild.iconURL())
           .setDescription(
             `Deine Rollen bei ${oldMember.guild.name} haben sich verändert`
@@ -44,7 +48,7 @@ module.exports = {
           return resolve(null);
         }
         try {
-          await oldMember.send({ embeds: [userRolesChanged] });
+          await oldMember.send({ embeds: [guildMemberUpdateEmbed] });
         } catch (error) {}
         return resolve(null);
       }
@@ -54,7 +58,7 @@ module.exports = {
         (role) => !oldMember.roles.cache.has(role.id)
       );
       if (addedRoles.size > 0) {
-        userRolesChanged
+        guildMemberUpdateEmbed
           .setDescription(`Die Rollen von ${newMember} haben sich verändert!`)
           .setColor("Green")
           .addFields([
@@ -69,10 +73,10 @@ module.exports = {
         await logChannel.logChannel(
           newMember.guild,
           "botLog",
-          userRolesChanged
+          guildMemberUpdateEmbed
         );
 
-        userRolesChanged
+        guildMemberUpdateEmbed
           .setThumbnail(oldMember.guild.iconURL())
           .setDescription(
             `Deine Rollen bei ${newMember.guild.name} haben sich verändert`
@@ -81,10 +85,61 @@ module.exports = {
           return resolve(null);
         }
         try {
-          await newMember.send({ embeds: [userRolesChanged] });
+          await newMember.send({ embeds: [guildMemberUpdateEmbed] });
         } catch (error) {}
         return resolve(null);
       }
+
+      if (newMember.nickname !== oldMember.nickname) {
+        let oldmemberName = "";
+        if (oldMember.nickname == null) {
+          oldmemberName = oldMember.user.username;
+        } else {
+          oldmemberName = oldMember.nickname;
+        }
+
+        let newmemberName = "";
+        if (newMember.nickname == null) {
+          newmemberName = newMember.user.username;
+        } else {
+          newmemberName = newMember.nickname;
+        }
+
+        guildMemberUpdateEmbed
+          .setDescription(
+            `${newMember} hat seinen Nickname von "${oldmemberName}" zu "${newmemberName}" geändert.`
+          )
+          .setColor("Green");
+        await logChannel.logChannel(guild, "botLog", guildMemberUpdateEmbed);
+      }
+
+      if (newMember.displayAvatarURL() !== oldMember.displayAvatarURL()) {
+        guildMemberUpdateEmbed
+          .setDescription(`${newMember} hat seinen Avatar geändert.`)
+          .setColor("Green")
+          .setThumbnail(newMember.displayAvatarURL())
+          .addFields([
+            {
+              name: `Avatar alt:`,
+              value: `[LINK](${oldMember.displayAvatarURL({
+                size: "2048",
+                dynamic: false,
+              })})`,
+              inline: true,
+            },
+            {
+              name: `Avatar neu:`,
+              value: `[LINK](${newMember.displayAvatarURL({
+                size: "2048",
+                dynamic: false,
+              })})`,
+              inline: true,
+            },
+          ]);
+        await logChannel.logChannel(guild, "botLog", guildMemberUpdateEmbed);
+      }
+
+      return resolve(null);
     });
   },
 };

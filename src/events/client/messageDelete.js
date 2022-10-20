@@ -16,9 +16,12 @@ module.exports = {
         "ignoredChannels"
       );
 
-      if (ignoredChannels.value.includes(message.channelId)) {
-        console.log("LOGGING MSG DELETE | Ignorierter Channel")
-        return resolve(null);
+      if (!ignoredChannels) {
+      } else {
+        if (ignoredChannels.value.includes(message.channelId)) {
+          console.log("LOGGING MSG DELETE | Ignorierter Channel");
+          return resolve(null);
+        }
       }
 
       if (message.author == null) {
@@ -41,8 +44,10 @@ module.exports = {
           text: `powered by Powerbot`,
         });
 
-      const logChannel = require("../../mysql/loggingChannelsRepository");
-      await logChannel.logChannel(message.guild, "botLog", delMessageEmbed);
+      try {
+        const logChannel = require("../../mysql/loggingChannelsRepository");
+        await logChannel.logChannel(message.guild, "botLog", delMessageEmbed);
+      } catch (error) {}
     });
   },
 };
