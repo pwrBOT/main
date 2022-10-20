@@ -20,7 +20,15 @@ module.exports = {
         );
 
         if (message.member.roles.cache.has(teamRoleId.value)) {
-          console.log("TEAM MEMBER - AutoMod Stopp");
+          console.log(
+            chalk.yellow(
+              `[${new Date().toLocaleDateString(
+                "de-DE"
+              )} / ${new Date().toLocaleTimeString(
+                "de-DE"
+              )}] AUTO MOD INVITE | STOPP --> TEAM MEMBER`
+            )
+          );
           return resolve(null);
         }
 
@@ -36,6 +44,18 @@ module.exports = {
           await message.delete();
           return resolve(null);
         } catch (error) {}
+
+        console.log(
+          chalk.yellow(
+            `[${new Date().toLocaleDateString(
+              "de-DE"
+            )} / ${new Date().toLocaleTimeString(
+              "de-DE"
+            )}] AUTO MOD INVITE | Nachricht (${message.content}) von ${
+              message.member.user.tag
+            } gelöscht. Server: ${message.guild.name}.`
+          )
+        );
       }
 
       async function autoModWarnMember() {
@@ -46,7 +66,6 @@ module.exports = {
         );
 
         if (message.member.roles.cache.has(teamRoleId.value)) {
-          console.log("TEAM MEMBER - AutoMod Stopp");
           return resolve(null);
         }
 
@@ -131,7 +150,6 @@ module.exports = {
           message.client.user.tag,
           message.client.user.id
         );
-
         const commandLogRepository = require("../../mysql/commandLogRepository");
         // guild - command, user, affectedMember, reason
         await commandLogRepository.logCommandUse(
@@ -140,6 +158,18 @@ module.exports = {
           message.client.user,
           message.member.user,
           "-"
+        );
+
+        console.log(
+          chalk.yellow(
+            `[${new Date().toLocaleDateString(
+              "de-DE"
+            )} / ${new Date().toLocaleTimeString(
+              "de-DE"
+            )}] AUTO MOD INVITE | User ${
+              message.member.user.tag
+            } wurde verwarnt. Server: ${message.guild.name}.`
+          )
         );
       }
 
@@ -152,25 +182,25 @@ module.exports = {
         }
 
         const inviteCode = await message.content.split(link)[1].split(" ")[0];
-        
-        let isGuildInvite = ""
+
+        let isGuildInvite = "";
         try {
-        isGuildInvite = await message.guild.invites
-          .fetch({ code: `${inviteCode}`})
+          isGuildInvite = await message.guild.invites.fetch({
+            code: `${inviteCode}`,
+          });
         } catch (error) {
-          isGuildInvite = false}
+          isGuildInvite = false;
+        }
 
         if (!isGuildInvite) {
           try {
             const vanity = await message.guild.fetchVanityData();
             if (code !== vanity?.code) {
-              console.log("Nachricht wäre gelöscht worden");
               deleteMessage();
               //* autoModWarnMember();
               return resolve(null);
             }
           } catch (err) {
-            console.log("Nachricht wäre gelöscht worden");
             deleteMessage();
             //* autoModWarnMember();
             return resolve(null);
