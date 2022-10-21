@@ -10,6 +10,12 @@ module.exports = {
       if (!message) {
         return resolve(null);
       }
+
+      if (!message.author) {
+      } else if (message.author.bot == true) {
+        return resolve(null);
+      }
+
       let embedMessage = "";
       let ignoredChannels = await guildSettings.getGuildSetting(
         message.guild,

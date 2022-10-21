@@ -55,7 +55,11 @@ module.exports = {
         let data = client.guilds.cache.get(guilds.id);
         const usersRepository = require("../../mysql/usersRepository");
         const getUserTable = await usersRepository.getUserTable(data.id);
-        if (getUserTable.length === 0) {
+        if (!getUserTable) {
+          return console.log( chalk.red(
+            `[MYSQL DATABASE] Keine Verbindung zur DB...`
+          ))
+        } else if (getUserTable.length === 0) {
           console.log(
             chalk.yellow(
               `[MYSQL DATABASE] User Tabelle von Guild: ${data.name}(${data.id}) nicht gefunden. Guild User Tabelle wird angelegt...`
@@ -79,8 +83,12 @@ module.exports = {
         //// CHECK / ADD GUILD-ID TO AUTO-MOD TABLE
         const autoModRepository = require("../../mysql/autoModRepository");
         const getAutoModGuildSettings =
-        await autoModRepository.getGuildAutoModSettings(data);
-        if (getAutoModGuildSettings.length === 0) {
+          await autoModRepository.getGuildAutoModSettings(data);
+        if (!getAutoModGuildSettings) {
+          return console.log( chalk.red(
+            `[MYSQL DATABASE] Keine Verbindung zur DB...`
+          ))
+        } else if (getAutoModGuildSettings.length === 0) {
           console.log(
             chalk.yellow(
               `[MYSQL DATABASE] Guild: ${data.name}(${data.id}) in AutoMod Tabelle nicht gefunden. Guild wird hinzugefügt...`

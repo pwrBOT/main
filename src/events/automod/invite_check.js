@@ -216,12 +216,12 @@ module.exports = {
             const vanity = await message.guild.fetchVanityData();
             if (code !== vanity?.code) {
               deleteMessage();
-              //* autoModWarnMember();
+              autoModWarnMember();
               return resolve(null);
             }
           } catch (err) {
             deleteMessage();
-            //* autoModWarnMember();
+            autoModWarnMember();
             return resolve(null);
           }
         }
