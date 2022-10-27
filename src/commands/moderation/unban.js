@@ -31,10 +31,10 @@ module.exports = {
       });
 
       const { options, user, guild } = interaction;
-      const member = options.getString("userid");
+      const memberId = options.getString("userid");
       const reason = options.getString("reason") || "Kein Grund angegeben";
       const servername = guild.name;
-      const memberData = client.users.cache.get(member);
+      const member = client.users.cache.get(memberId);
 
       if (member.manageable === false) {
         interaction.editReply(
@@ -55,11 +55,10 @@ module.exports = {
       const banembed = new EmbedBuilder()
         .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
         .setDescription(
-          `User: ${memberData.username}#${memberData.discriminator} wurde entbannt`
+          `User: ${member} wurde entbannt`
         )
         .setColor(0x51ff00)
         .setTimestamp(Date.now())
-        .setThumbnail(memberData.displayAvatarURL())
         .setFooter({
           iconURL: client.user.displayAvatarURL(),
           text: `powered by Powerbot`,
@@ -115,10 +114,10 @@ module.exports = {
       await logChannel.logChannel(interaction.guild, "modLog", banembed);
 
       interaction.guild.members.unban(member).catch(console.error);
-      client.users.cache
-        .get(member)
-        .send({ embeds: [banembedmember] })
-        .catch(console.error);
+      try {
+        await member.send({ embeds: [banembedmember] }).catch(console.error);
+      } catch (error) {}
+      
 
       const commandLogRepository = require("../../mysql/commandLogRepository");
       // guild - command, user, affectedMember, reason
@@ -126,7 +125,7 @@ module.exports = {
         interaction.guild,
         "unban",
         interaction.user,
-        memberData,
+        member.tag,
         reason
       );
 

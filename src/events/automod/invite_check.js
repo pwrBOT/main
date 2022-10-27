@@ -34,7 +34,7 @@ module.exports = {
           return resolve(null);
         }
 
-        if (autoModInvites.value.length === 0) {
+        if (autoModInvites.length === 0) {
           console.log(chalk.yellow(`AUTO MOD INVITE | SYSTEM DEAKTIVIERT`));
           return resolve(null);
         }
@@ -200,7 +200,7 @@ module.exports = {
 
         // ####################    CHECK     ################## \\
 
-        const inviteCode = await message.content.split(link)[1].split(" ")[0];
+        const inviteCode = await message.content.split(link)[1].split(" ")[0].split("\n")[0];
 
         let isGuildInvite = "";
         try {

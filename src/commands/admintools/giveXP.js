@@ -24,6 +24,17 @@ module.exports = {
         .addNumberOption((option) =>
           option.setName("xp").setDescription("Anzahl der XP").setRequired(true)
         )
+    )
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName(`remove`)
+        .setDescription(`XP von Member entfernen`)
+        .addUserOption((option) =>
+          option.setName("member").setDescription("Member").setRequired(true)
+        )
+        .addNumberOption((option) =>
+          option.setName("xp").setDescription("Anzahl der XP").setRequired(true)
+        )
     ),
 
   async execute(interaction, client) {
@@ -62,37 +73,15 @@ module.exports = {
 
       if (interaction.options.getSubcommand() === "give") {
         var newXP = currentXP + xP;
-        let newLevel = "";
+        await usersRepository.addUserXP(guild.id, member.user, newXP);
 
-        if (newXP < 100) {
-          newLevel = 0;
-        } else if (newXP < 1000) {
-          newLevel = 1;
-        } else if (newXP < 2000) {
-          newLevel = 2;
-        } else if (newXP < 4000) {
-          newLevel = 3;
-        } else if (newXP < 6000) {
-          newLevel = 4;
-        } else if (newXP < 10000) {
-          newLevel = 5;
-        } else if (newXP < 15000) {
-          newLevel = 6;
-        } else if (newXP < 20000) {
-          newLevel = 7;
-        } else if (newXP < 30000) {
-          newLevel = 8;
-        } else if (newXP < 50000) {
-          newLevel = 9;
-        } else {
-          newLevel = 10;
+        const requiredXP = getMember.Level * getMember.Level * 100 + 100;
+
+        if (newXP >= requiredXP) {
+          let newLevel = (getMember.Level += 1);
+          await usersRepository.addUserLevel(guild.id, member.user, newLevel);
         }
-        await usersRepository.giveUserXP(
-          guild.id,
-          member.user.id,
-          newXP,
-          newLevel
-        );
+        
 
         const xPembed = new EmbedBuilder()
           .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
@@ -116,6 +105,47 @@ module.exports = {
         await commandLogRepository.logCommandUse(
           interaction.guild,
           "xp give",
+          interaction.user,
+          member.user,
+          "-"
+        );
+
+        return resolve(null);
+      }
+
+      if (interaction.options.getSubcommand() === "remove") {
+        var newXP = currentXP - xP;
+        await usersRepository.addUserXP(guild.id, member.user, newXP);
+
+        const requiredXP = getMember.Level * getMember.Level * 100 + 100;
+
+        if (newXP <= requiredXP) {
+          let newLevel = (getMember.Level -= 1);
+          await usersRepository.addUserLevel(guild.id, member.user, newLevel);
+        }
+
+        const xPembed = new EmbedBuilder()
+          .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+          .setDescription(
+            `${xP} XP von ${member} entfernt.\nModerator: ${user.tag}`
+          )
+          .setColor(0xffd800)
+          .setTimestamp(Date.now())
+          .setFooter({
+            iconURL: client.user.displayAvatarURL(),
+            text: `powered by Powerbot`,
+          });
+
+        await interaction.editReply({ embeds: [xPembed] });
+
+        const LoggingChannels = require("../../mysql/loggingChannelsRepository");
+        await LoggingChannels.logChannel(interaction.guild, "botLog", xPembed);
+
+        const commandLogRepository = require("../../mysql/commandLogRepository");
+        // guild - command, user, affectedMember, reason
+        await commandLogRepository.logCommandUse(
+          interaction.guild,
+          "xp remove",
           interaction.user,
           member.user,
           "-"
