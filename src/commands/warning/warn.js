@@ -117,7 +117,11 @@ module.exports = {
       }, 5000);
 
       const logChannel = require("../../mysql/loggingChannelsRepository");
-      const modLogChannel = await logChannel.logChannel(interaction.guild, "modLog", warnembed);
+      const modLogMessage = await logChannel.logChannel(
+        interaction.guild,
+        "modLog",
+        warnembed
+      );
 
       try {
         await member.send({ embeds: [warnembedmember] });
@@ -171,10 +175,15 @@ module.exports = {
       }
 
       const guildsRepository = require("../../mysql/guildsRepository");
-      const embedInfo = await guildsRepository.getGuildSetting(
+      const modLogChannel = await guildsRepository.getGuildSetting(
         interaction.guild,
+        "modLog"
+      );
+      const embedSettings = await guildsRepository.getGuildSetting(
+        guild,
         "embedinfo"
       );
+      const embedInfo = embedSettings.value;
       if (!embedInfo) {
         embedInfo = "Bei Fragen wende dich an die Communityleitung!";
       }
@@ -251,7 +260,7 @@ module.exports = {
             member.timeout(ms(duration01), reason);
 
             client.channels.cache
-              .get(modLogChannel)
+              .get(modLogChannel.value)
               .send({ embeds: [autoWarnModEmbed1] });
 
             try {
@@ -309,7 +318,7 @@ module.exports = {
               .catch(console.error);
 
             client.channels.cache
-              .get(modLogChannel)
+              .get(modLogChannel.value)
               .send({ embeds: [autoWarnModEmbed1] });
 
             try {
@@ -423,7 +432,7 @@ module.exports = {
             } catch (error) {}
 
             client.channels.cache
-              .get(modLogChannel)
+              .get(modLogChannel.value)
               .send({ embeds: [autoWarnModEmbed1] });
           }
         }
@@ -484,7 +493,7 @@ module.exports = {
             member.timeout(ms(duration02), reason);
 
             client.channels.cache
-              .get(modLogChannel)
+              .get(modLogChannel.value)
               .send({ embeds: [autoWarnModEmbed2] });
 
             try {
@@ -542,7 +551,7 @@ module.exports = {
               .catch(console.error);
 
             client.channels.cache
-              .get(modLogChannel)
+              .get(modLogChannel.value)
               .send({ embeds: [autoWarnModEmbed2] });
 
             try {
@@ -656,7 +665,7 @@ module.exports = {
             } catch (error) {}
 
             client.channels.cache
-              .get(modLogChannel)
+              .get(modLogChannel.value)
               .send({ embeds: [autoWarnModEmbed2] });
           }
         }
@@ -717,7 +726,7 @@ module.exports = {
             member.timeout(ms(duration03), reason);
 
             client.channels.cache
-              .get(modLogChannel)
+              .get(modLogChannel.value)
               .send({ embeds: [autoWarnModEmbed3] });
 
             try {
@@ -775,7 +784,7 @@ module.exports = {
               .catch(console.error);
 
             client.channels.cache
-              .get(modLogChannel)
+              .get(modLogChannel.value)
               .send({ embeds: [autoWarnModEmbed3] });
 
             try {
@@ -889,7 +898,7 @@ module.exports = {
             } catch (error) {}
 
             client.channels.cache
-              .get(modLogChannel)
+              .get(modLogChannel.value)
               .send({ embeds: [autoWarnModEmbed3] });
           }
         }

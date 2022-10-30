@@ -30,11 +30,11 @@ module.exports = {
             .setDescription("Wie lange soll der Timeout sein?")
             .setRequired(true)
             .addChoices(
-              { name: "15 Minuten", value: "15m" },
               { name: "30 Minuten", value: "30m" },
               { name: "1 Stunde", value: "1h" },
               { name: "1 Tag", value: "1d" },
-              { name: "1 Woche", value: "1w" }
+              { name: "1 Woche", value: "1w" },
+              { name: "4 Wochen", value: "4w" }
             )
         )
         .addStringOption((option) =>

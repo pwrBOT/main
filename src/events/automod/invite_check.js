@@ -1,6 +1,5 @@
 const { EmbedBuilder } = require("discord.js");
 const chalk = require("chalk");
-const config = require("../../../config.json");
 const warnsRepository = require("../../mysql/warnsRepository");
 const guildSettings = require("../../mysql/guildsRepository");
 
