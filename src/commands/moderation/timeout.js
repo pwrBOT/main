@@ -58,6 +58,11 @@ module.exports = {
 
   async execute(interaction, client) {
     return new Promise(async (resolve) => {
+      await interaction.deferReply({
+        ephemeral: false,
+        fetchReply: true,
+      });
+      
       const { options, user, guild } = interaction;
       const member = options.getMember("user");
       const length = options.getString("length");
@@ -175,10 +180,7 @@ module.exports = {
         member.timeout(ms(length), reason);
 
         const newMessage = `User ${member} wurde getimeouted ✅`;
-        await interaction.reply({ content: newMessage });
-        setTimeout(function () {
-          interaction.deleteReply();
-        }, 3000);
+        await interaction.editReply({ content: newMessage });
 
         const logChannel = require("../../mysql/loggingChannelsRepository");
         await logChannel.logChannel(interaction.guild, "modLog", modlogembed);
@@ -230,12 +232,9 @@ module.exports = {
         try {
           await member.send({ embeds: [embedmember2] });
         } catch (error) {}
-        interaction.reply({
+        interaction.editReply({
           content: `Timeout von User: ${member} entfernt ✅`,
         });
-        setTimeout(function () {
-          interaction.deleteReply();
-        }, 3000);
 
         member.timeout(null).catch(console.error);
 
