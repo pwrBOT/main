@@ -180,7 +180,7 @@ module.exports = {
         "modLog"
       );
       const embedSettings = await guildsRepository.getGuildSetting(
-        guild,
+        interaction.guild,
         "embedinfo"
       );
       const embedInfo = embedSettings.value;

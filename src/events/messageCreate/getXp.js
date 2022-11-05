@@ -24,6 +24,23 @@ module.exports = async function messageCreate(message) {
       return resolve(null);
     }
 
+    const teamRoleId = await guildSettings.getGuildSetting(
+      message.guild,
+      "teamRole"
+    );
+
+    if (message.member.roles.cache.has(teamRoleId.value)) {
+      return resolve(null);
+    }
+
+    if (message.guild.ownerId === message.member.id) {
+      return resolve(null);
+    }
+
+    if (message.member.manageable === false) {
+      return resolve(null);
+    }
+
     // ANTISPAM SYSTEM
     const LIMIT = 4;
     const TIME = 10000;
@@ -36,7 +53,6 @@ module.exports = async function messageCreate(message) {
       const difference =
         message.createdTimestamp - lastMessage.createdTimestamp;
       let msgCount = userData.msgCount;
-      console.log(difference);
 
       if (difference > DIFF) {
         clearTimeout(timer);
@@ -47,22 +63,28 @@ module.exports = async function messageCreate(message) {
         }, TIME);
         antiSpamMap.set(message.author.id, userData);
       } else {
+        /// SPAM SYSTEM SCHLAEGT AN \\\
         ++msgCount;
         if (parseInt(msgCount) === LIMIT) {
-          try {
-            message.member.timeout(ms(length), "Spam");
-          } catch (error) {}
+          userTimeout();
           autoModWarnMember();
+
+          try {
+            message.delete();
+            const channel = message.channel;
+            channel.send(
+              `${message.member} deine Nachricht wurde gelöscht | Spam!`
+            );
+          } catch (error) {}
+
           console.log(`Spam Limit von ${message.author.tag} ausgelöst`);
           return resolve(null);
         } else {
           userData.msgCount = msgCount;
           antiSpamMap.set(message.author.id, userData);
-          giveXP();
         }
       }
     } else {
-      giveXP();
       let fn = setTimeout(() => {
         antiSpamMap.delete(message.author.id);
       }, TIME);
@@ -71,6 +93,7 @@ module.exports = async function messageCreate(message) {
         lastMessage: message,
         timer: TIME,
       });
+      giveXP();
     }
 
     async function giveXP() {
@@ -88,6 +111,113 @@ module.exports = async function messageCreate(message) {
         let newLevel = (getUser.Level += 1);
         await usersRepository.addUserLevel(guildId, message.author, newLevel);
       }
+      return resolve(null);
+    }
+
+    async function userTimeout() {
+      const teamRoleId = await guildSettings.getGuildSetting(
+        message.guild,
+        "teamRole"
+      );
+
+      if (message.member.roles.cache.has(teamRoleId.value)) {
+        return resolve(null);
+      }
+
+      if (message.guild.ownerId === message.member.id) {
+        return resolve(null);
+      }
+
+      if (message.member.manageable === false) {
+        return resolve(null);
+      }
+
+      const length = "5m";
+      const guildsRepository = require("../../mysql/guildsRepository");
+      const embedInfo = await guildsRepository.getGuildSetting(
+        message.guild,
+        "embedinfo"
+      );
+      if (!embedInfo) {
+        embedInfo = "Bei Fragen wende dich an die Communityleitung!";
+      }
+
+      const modlogembed = new EmbedBuilder()
+        .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+        .setDescription(
+          `User: ${message.member} wurde getimeouted!\nDauer: ${length}`
+        )
+        .setColor(0x51ff00)
+        .setTimestamp(Date.now())
+        .setThumbnail(message.member.displayAvatarURL())
+        .setFooter({
+          iconURL: message.client.user.displayAvatarURL(),
+          text: `powered by Powerbot`,
+        })
+        .addFields([
+          {
+            name: `Grund:`,
+            value: `Auto-Mod | Spam`,
+            inline: true,
+          },
+          {
+            name: `Moderator:`,
+            value: "Auto-Mod",
+            inline: true,
+          },
+        ]);
+
+      const embedmember = new EmbedBuilder()
+        .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+        .setDescription(
+          `Du wurdest getimeouted!\nServer: "${message.guild.name}"\nDauer: ${length}!`
+        )
+        .setColor(0x51ff00)
+        .setTimestamp(Date.now())
+        .setThumbnail(message.guild.iconURL())
+        .setFooter({
+          iconURL: message.client.user.displayAvatarURL(),
+          text: `powered by Powerbot`,
+        })
+        .addFields([
+          {
+            name: `Grund:`,
+            value: `Auto-Mod | Spam`,
+            inline: true,
+          },
+          {
+            name: `Moderator:`,
+            value: "Auto-Mod",
+            inline: true,
+          },
+          {
+            name: `Information:`,
+            value: `${embedInfo.value}`,
+            inline: false,
+          },
+        ]);
+
+      const logChannel = require("../../mysql/loggingChannelsRepository");
+      await logChannel.logChannel(message.guild, "modLog", modlogembed);
+
+      try {
+        message.member.timeout(ms(length), "Auto-Mod | Spam");
+      } catch (error) {}
+
+      try {
+        await message.member.send({ embeds: [embedmember] });
+      } catch (error) {}
+
+      const commandLogRepository = require("../../mysql/commandLogRepository");
+      // guild - command, user, affectedMember, reason
+      await commandLogRepository.logCommandUse(
+        message.guild,
+        "Auto-Mod | Timout Spam",
+        message.client.user,
+        message.member.user,
+        "-"
+      );
+
       return resolve(null);
     }
 
