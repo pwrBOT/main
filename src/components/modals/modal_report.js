@@ -1,4 +1,11 @@
-const { EmbedBuilder } = require("discord.js");
+const {
+  EmbedBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  PermissionFlagsBits,
+} = require("discord.js");
+const guildsRepository = require("../../mysql/guildsRepository");
 
 module.exports = {
   data: {
@@ -18,7 +25,7 @@ module.exports = {
       const reporter = interaction.member;
       const reason = interaction.fields.getTextInputValue("reportUserInput");
 
-      const reportembed = new EmbedBuilder()
+      const reportembedBase1 = new EmbedBuilder()
         .setTitle(`⚡️ PowerBot ⚡️ | User Report`)
         .setDescription(`User: ${member} wurde soeben gemeldet.`)
         .setThumbnail(client.user.displayAvatarURL())
@@ -27,25 +34,54 @@ module.exports = {
         .setFooter({
           iconURL: client.user.displayAvatarURL(),
           text: `powered by PowerBot`,
-        })
-        .addFields([
-          {
-            name: `Beschwerde:`,
-            value: `${reason}`,
-            inline: false,
-          },
-          {
-            name: `Beschwerdeführer:`,
-            value: `${reporter}`,
-            inline: true,
-          },
-        ]);
+        });
 
-      await interaction.editReply(`Danke für Deine Meldung! User ${member} wurde den Moderatoren gemeldet ✅`);
-      
-      const logChannel = require("../../mysql/loggingChannelsRepository");
-      await logChannel.logChannel(interaction.guild, "modLog", reportembed);
+      const buttonUebernehmen = new ButtonBuilder()
+        .setCustomId("report_uebernahme")
+        .setLabel("Report übernehmen")
+        .setStyle(ButtonStyle.Danger);
+        
 
+      await interaction.editReply(
+        `Danke für Deine Meldung! User ${member} wurde den Moderatoren gemeldet ✅`
+      );
+
+      const data = await guildsRepository.getGuildSetting(
+        interaction.guild,
+        "modLog"
+      );
+
+      if (!data) {
+        return resolve(null);
+      } else {
+        const logChannel = data.value;
+
+        if (logChannel === undefined) {
+          return resolve(null);
+        } else {
+          const reportembed = reportembedBase1.addFields([
+            {
+              name: `Beschwerde:`,
+              value: `${reason}`,
+              inline: false,
+            },
+            {
+              name: `Beschwerdeführer:`,
+              value: `${reporter}`,
+              inline: true,
+            },
+          ]);
+          const message = await client.channels.cache
+            .get(logChannel)
+            .send({
+              embeds: [reportembed],
+              components: [
+                new ActionRowBuilder().addComponents(buttonUebernehmen),
+              ],
+            })
+            .catch(console.error);
+        }
+      }
       return resolve(null);
     });
   },

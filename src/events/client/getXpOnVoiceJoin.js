@@ -32,7 +32,7 @@ module.exports = {
         if (!currentXP) {
           currentXP = 0;
         }
-        let XP = Math.floor(Math.random() * (10 - 3 + 1)) + 3;
+        let XP = Math.floor(Math.random() * (7 - 2 + 1)) + 2;
         var newXP = currentXP + XP;
         await usersRepository.addUserXP(guildId, member.user, newXP);
 

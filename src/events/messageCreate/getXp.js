@@ -28,7 +28,8 @@ module.exports = async function messageCreate(message) {
       message.guild,
       "teamRole"
     );
-
+    
+    /** 
     if (message.member.roles.cache.has(teamRoleId.value)) {
       return resolve(null);
     }
@@ -40,11 +41,12 @@ module.exports = async function messageCreate(message) {
     if (message.member.manageable === false) {
       return resolve(null);
     }
+    */
 
     // ANTISPAM SYSTEM
-    const LIMIT = 4;
-    const TIME = 10000;
-    const DIFF = 5000;
+    const LIMIT = 5;
+    const TIME = 60000;
+    const DIFF = 10000;
     const length = "5m";
 
     if (antiSpamMap.has(message.author.id)) {
@@ -94,6 +96,7 @@ module.exports = async function messageCreate(message) {
         timer: TIME,
       });
       giveXP();
+      console.log(`${message.author.tag} hat XP bekommen`)
     }
 
     async function giveXP() {
@@ -101,7 +104,7 @@ module.exports = async function messageCreate(message) {
       if (!currentXP) {
         currentXP = 0;
       }
-      let XP = Math.floor(Math.random() * (30 - 10 + 1)) + 10;
+      let XP = Math.floor(Math.random() * (25 - 6 + 1)) + 6;
       var newXP = currentXP + XP;
       await usersRepository.addUserXP(guildId, message.author, newXP);
 

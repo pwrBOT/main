@@ -34,7 +34,8 @@ module.exports = {
               { name: "1 Stunde", value: "1h" },
               { name: "1 Tag", value: "1d" },
               { name: "1 Woche", value: "1w" },
-              { name: "4 Wochen", value: "4w" }
+              { name: "4 Wochen", value: "4w" },
+              { name: "Unbegrenzt", value: "99y" }
             )
         )
         .addStringOption((option) =>

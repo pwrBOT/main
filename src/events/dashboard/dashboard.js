@@ -250,46 +250,6 @@ module.exports = {
               },
             },
             {
-              optionId: "modRole",
-              optionName: "",
-              optionDescription: "Moderator Rolle:",
-              optionType: DBD.formTypes.rolesSelect(false),
-              getActualSet: async ({ guild }) => {
-                let data = await guildsRepository.getGuildSetting(
-                  guild,
-                  "modRole"
-                );
-
-                if (data) return data.value;
-                else return null;
-              },
-              setNew: async ({ guild, newData }) => {
-                let data = await guildsRepository.getGuildSetting(
-                  guild,
-                  "modRole"
-                );
-
-                if (!newData) newData = null;
-
-                if (!data) {
-                  const property = "modRole";
-                  await guildsRepository.insertGuildSetting(
-                    guild,
-                    property,
-                    newData
-                  );
-                } else {
-                  const property = "modRole";
-                  await guildsRepository.updateGuildSetting(
-                    guild,
-                    property,
-                    newData
-                  );
-                }
-                return;
-              },
-            },
-            {
               optionId: "muteRole",
               optionName: "",
               optionDescription: "Mute Rolle:",
@@ -329,7 +289,90 @@ module.exports = {
                 return;
               },
             },
+            {
+              optionId: "modRole",
+              optionName: "",
+              optionDescription: "Moderator Rolle:",
+              optionType: DBD.formTypes.rolesMultiSelect(false, false),
+              getActualSet: async ({ guild }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "modRole"
+                );
+
+                if (data) return JSON.parse(data.value);
+                else return [];
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "modRole"
+                );
+
+                if (!data) {
+                  const property = "modRole";
+                  newDataString = JSON.stringify(newData);
+                  await guildsRepository.insertGuildSetting(
+                    guild,
+                    property,
+                    newDataString
+                  );
+                } else {
+                  const property = "modRole";
+                  newDataString = JSON.stringify(newData);
+                  await guildsRepository.updateGuildSetting(
+                    guild,
+                    property,
+                    newDataString
+                  );
+                }
+                return;
+              },
+            },
             /// ########## CHANNEL SETTINGS ########## \\\
+            {
+              optionId: "modArea",
+              optionName: "",
+              optionDescription: "Mod-Area (Hier werden Threads für Reports erstellt. Freilassen, wenn man keine Threads aktivieren möchte):",
+              optionType: DBD.formTypes.channelsSelect(
+                false,
+                (channelTypes = [ChannelType.GuildText])
+              ),
+              getActualSet: async ({ guild }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "modArea"
+                );
+
+                if (data) return data.value;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "modArea"
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const property = "modArea";
+                  await guildsRepository.insertGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                } else {
+                  const property = "modArea";
+                  await guildsRepository.updateGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                }
+                return;
+              },
+            },
             {
               optionId: "botlog",
               optionName: "",
