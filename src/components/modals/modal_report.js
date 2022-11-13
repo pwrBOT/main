@@ -6,6 +6,7 @@ const {
   PermissionFlagsBits,
 } = require("discord.js");
 const guildsRepository = require("../../mysql/guildsRepository");
+const { Generator } = require('randomly-id-generator');
 
 module.exports = {
   data: {
@@ -22,12 +23,17 @@ module.exports = {
         interaction.fields.getTextInputValue("reportedUserInput");
       const memberId = interaction.fields.getTextInputValue("reportedUserId");
       const member = client.users.cache.get(memberId);
+      const reporterId = interaction.member.id;
       const reporter = interaction.member;
       const reason = interaction.fields.getTextInputValue("reportUserInput");
+      const reportId = new Generator().generate();
+
+      const reportRepository = require("../../mysql/reportRepository");
+      const reportData = await reportRepository.addReport(interaction, reporterId, memberId, reason, "open", "-", reportId);
 
       const reportembedBase1 = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot ⚡️ | User Report`)
-        .setDescription(`User: ${member} wurde soeben gemeldet.`)
+        .setTitle(`⚡️ PowerBot ⚡️ | Report`)
+        .setDescription(`User: ${member} wurde soeben gemeldet.\nReport ID: #${reportId}`)
         .setThumbnail(client.user.displayAvatarURL())
         .setColor(0x51ff00)
         .setTimestamp(Date.now())

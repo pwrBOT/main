@@ -40,6 +40,19 @@ module.exports = {
         return resolve(null);
       }
 
+      const reportId = await interaction.message.embeds[0].description.split("#")[1]
+      const reportRepository = require("../../mysql/reportRepository");
+      const reportData = await reportRepository.getReport(interaction.guild.id, reportId);
+      await reportRepository.updateReport(interaction.guild.id, reportId, `Resolved ${interaction.user.tag}`, interaction.user.id);
+
+      if (interaction.user.id != reportData.modId) {
+        await interaction.editReply({
+          ephemeral: true,
+          content: `❌ Du kannst den Report nicht abschließen. Du bearbeitest ihn nicht!`,
+        });
+        return resolve(null);
+      }
+
       const buttonErledigt = new ButtonBuilder()
         .setCustomId("report_erledigt")
         .setLabel(`Report erledigt durch ${interaction.user.tag}`)
@@ -67,7 +80,7 @@ module.exports = {
       const modThreadArea = await interaction.guild.channels.cache.get(
         modThreadAreaId.value
       );
-      const threadName = `Report | Mod ${interaction.member.user.username}`;
+      const threadName = `Report ${reportId} | Mod ${interaction.member.user.username}`;
       const thread = modThreadArea.threads.cache.find(
         (x) => x.name === threadName
       );

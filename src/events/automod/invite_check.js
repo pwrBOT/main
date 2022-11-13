@@ -2,6 +2,8 @@ const { EmbedBuilder } = require("discord.js");
 const chalk = require("chalk");
 const warnsRepository = require("../../mysql/warnsRepository");
 const guildSettings = require("../../mysql/guildsRepository");
+const autoModSanctions = require("../../events/eventFunctions/autoModSanctions");
+const ms = require("ms");
 
 module.exports = {
   name: "messageCreate",
@@ -67,7 +69,6 @@ module.exports = {
 
           try {
             await message.delete();
-            return resolve(null);
           } catch (error) {}
 
           console.log(
@@ -81,6 +82,113 @@ module.exports = {
               } gelöscht. Server: ${message.guild.name}.`
             )
           );
+        }
+
+        async function userTimeout() {
+          const teamRoleId = await guildSettings.getGuildSetting(
+            message.guild,
+            "teamRole"
+          );
+    
+          if (message.member.roles.cache.has(teamRoleId.value)) {
+            return resolve(null);
+          }
+    
+          if (message.guild.ownerId === message.member.id) {
+            return resolve(null);
+          }
+    
+          if (message.member.manageable === false) {
+            return resolve(null);
+          }
+    
+          const length = "5m";
+          const guildsRepository = require("../../mysql/guildsRepository");
+          const embedInfo = await guildsRepository.getGuildSetting(
+            message.guild,
+            "embedinfo"
+          );
+          if (!embedInfo) {
+            embedInfo = "Bei Fragen wende dich an die Communityleitung!";
+          }
+    
+          const modlogembed = new EmbedBuilder()
+            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setDescription(
+              `User: ${message.member} wurde getimeouted!\nDauer: ${length}`
+            )
+            .setColor(0x51ff00)
+            .setTimestamp(Date.now())
+            .setThumbnail(message.member.displayAvatarURL())
+            .setFooter({
+              iconURL: message.client.user.displayAvatarURL(),
+              text: `powered by Powerbot`,
+            })
+            .addFields([
+              {
+                name: `Grund:`,
+                value: `Auto-Mod | Spam`,
+                inline: true,
+              },
+              {
+                name: `Moderator:`,
+                value: "Auto-Mod",
+                inline: true,
+              },
+            ]);
+    
+          const embedmember = new EmbedBuilder()
+            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setDescription(
+              `Du wurdest getimeouted!\nServer: "${message.guild.name}"\nDauer: ${length}!`
+            )
+            .setColor(0x51ff00)
+            .setTimestamp(Date.now())
+            .setThumbnail(message.guild.iconURL())
+            .setFooter({
+              iconURL: message.client.user.displayAvatarURL(),
+              text: `powered by Powerbot`,
+            })
+            .addFields([
+              {
+                name: `Grund:`,
+                value: `Auto-Mod | Spam`,
+                inline: true,
+              },
+              {
+                name: `Moderator:`,
+                value: "Auto-Mod",
+                inline: true,
+              },
+              {
+                name: `Information:`,
+                value: `${embedInfo.value}`,
+                inline: false,
+              },
+            ]);
+    
+          const logChannel = require("../../mysql/loggingChannelsRepository");
+          await logChannel.logChannel(message.guild, "modLog", modlogembed);
+    
+          try {
+            message.member.timeout(ms(length), "Auto-Mod | Spam");
+          } catch (error) {}
+    
+          try {
+            await message.member.send({ embeds: [embedmember] });
+          } catch (error) {}
+    
+          const commandLogRepository = require("../../mysql/commandLogRepository");
+          // guild - command, user, affectedMember, reason
+          await commandLogRepository.logCommandUse(
+            message.guild,
+            "Auto-Mod | Timout Spam",
+            message.client.user,
+            message.member.user,
+            "-"
+          );
+    
+          return resolve(null);
         }
 
         async function autoModWarnMember() {
@@ -216,11 +324,15 @@ module.exports = {
             if (code !== vanity?.code) {
               deleteMessage();
               autoModWarnMember();
+              userTimeout();
+              autoModSanctions.autoModSanctions(message.guild, message.member);
               return resolve(null);
             }
           } catch (err) {
             deleteMessage();
             autoModWarnMember();
+            userTimeout();
+            autoModSanctions.autoModSanctions(message.guild, message.member);
             return resolve(null);
           }
         }

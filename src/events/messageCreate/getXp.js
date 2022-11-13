@@ -6,6 +6,7 @@ const usersRepository = require("../../mysql/usersRepository");
 const autoModSanctions = require("../../events/eventFunctions/autoModSanctions");
 const ms = require("ms");
 const antiSpamMap = new Map();
+const xPWaitMap = new Map();
 
 module.exports = async function messageCreate(message) {
   return new Promise(async (resolve) => {
@@ -28,7 +29,7 @@ module.exports = async function messageCreate(message) {
       message.guild,
       "teamRole"
     );
-    
+
     /** 
     if (message.member.roles.cache.has(teamRoleId.value)) {
       return resolve(null);
@@ -96,23 +97,43 @@ module.exports = async function messageCreate(message) {
         timer: TIME,
       });
       giveXP();
-      console.log(`${message.author.tag} hat XP bekommen`)
     }
 
     async function giveXP() {
-      let currentXP = getUser.xP;
-      if (!currentXP) {
-        currentXP = 0;
-      }
-      let XP = Math.floor(Math.random() * (25 - 6 + 1)) + 6;
-      var newXP = currentXP + XP;
-      await usersRepository.addUserXP(guildId, message.author, newXP);
+      const WAITTIME = 60000;
+      if (xPWaitMap.has(message.author.id)) {
+        const userData = xPWaitMap.get(message.author.id);
+        const { timer } = userData;
+        userData.timer = setTimeout(() => {
+          xPWaitMap.delete(message.author.id);
+        }, WAITTIME);
+        console.log(`${message.author.tag} XP-Timeout aktiv`);
+      } else {
+        let fn = setTimeout(() => {
+          xPWaitMap.delete(message.author.id);
+        }, WAITTIME);
+        xPWaitMap.set(message.author.id, {
+          msgCount: 1,
+          lastMessage: message,
+          timer: WAITTIME,
+        });
 
-      const requiredXP = getUser.Level * getUser.Level * 100 + 100;
+        console.log(`${message.author.tag} hat XP bekommen`);
 
-      if (newXP >= requiredXP) {
-        let newLevel = (getUser.Level += 1);
-        await usersRepository.addUserLevel(guildId, message.author, newLevel);
+        let currentXP = getUser.xP;
+        if (!currentXP) {
+          currentXP = 0;
+        }
+        let XP = Math.floor(Math.random() * (25 - 6 + 1)) + 6;
+        var newXP = currentXP + XP;
+        await usersRepository.addUserXP(guildId, message.author, newXP);
+
+        const requiredXP = getUser.Level * getUser.Level * 100 + 100;
+
+        if (newXP >= requiredXP) {
+          let newLevel = (getUser.Level += 1);
+          await usersRepository.addUserLevel(guildId, message.author, newLevel);
+        }
       }
       return resolve(null);
     }

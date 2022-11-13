@@ -46,6 +46,11 @@ module.exports = {
         return resolve(null);
       }
 
+      const reportId = await interaction.message.embeds[0].description.split("#")[1]
+      const reportRepository = require("../../mysql/reportRepository");
+      const reportData = await reportRepository.getReport(interaction.guild.id, reportId);
+      await reportRepository.updateReport(interaction.guild.id, reportId, `In process by ${interaction.user.tag}`, interaction.user.id);
+
       const buttonInBearbeitung = new ButtonBuilder()
         .setCustomId("report_uebernahme")
         .setLabel(`Report in Bearbeitung von ${interaction.user.tag}`)
@@ -87,7 +92,7 @@ module.exports = {
 
       if (interaction.guild.premiumTier === 3) {
       const newThread = await modThreadArea.threads.create({
-        name: `Report | Mod ${interaction.member.user.username}`,
+        name: `Report ${reportId} | Mod ${interaction.member.user.username}`,
         autoArchiveDuration: 60,
         type: ChannelType.PrivateThread,
         reason: "Thread for moderation",
@@ -99,14 +104,15 @@ module.exports = {
 
       await newThread.members.add(interaction.member.id);
       await newThread.members.add(reportedUserId);
+      await newThread.send(`Beschwerdemeldung:\n${reportData.reportReason}`)
       await interaction.editReply({
         ephemeral: true,
-        content: `✅ Du hast den Report übernommen!\nEin Mod-Thread mit dem Namen "Report | Mod: ${interaction.member.user.tag}" wurde erstellt.`,
+        content: `✅ Du hast den Report übernommen!\n\nEin Mod-Thread mit dem Namen "Report ${reportId} | Mod ${interaction.member.user.username}" wurde erstellt.`,
       });
     } else {
       await interaction.editReply({
         ephemeral: true,
-        content: `✅ Du hast den Report übernommen!\nEs wurde kein privater Mod-Thread erstellt (Erfordert Discord-Boost-Level 3)`,
+        content: `✅ Du hast den Report übernommen! Es wurde jedoch kein Private-Thread erstellt. Hierfür ist Discord-Boost-Level 3 erforderlich!)`,
       });
     }
       // CREATE PRIVATE THREAD END \\
