@@ -1,6 +1,5 @@
-const { VoiceState, PermissionFlagsBits, ChannelType } = require("discord.js");
+const { VoiceState, ChannelType } = require("discord.js");
 const tempChannelsRepository = require("../../mysql/tempChannelsRepository");
-const usersRepository = require("../../mysql/usersRepository");
 
 module.exports = {
   name: "voiceStateUpdate",
@@ -92,7 +91,7 @@ module.exports = {
           "-",
           "-"
         );
-        client.voiceGenerator.set(member.user.id, voiceChannel.id);
+        // client.voiceGenerator.set(member.user.id, voiceChannel.id);  häää?
         setTimeout(() => member.voice.setChannel(voiceChannel), 250);
 
         return resolve(null);

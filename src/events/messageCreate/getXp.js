@@ -107,7 +107,6 @@ module.exports = async function messageCreate(message) {
         userData.timer = setTimeout(() => {
           xPWaitMap.delete(message.author.id);
         }, WAITTIME);
-        console.log(`${message.author.tag} XP-Timeout aktiv`);
       } else {
         let fn = setTimeout(() => {
           xPWaitMap.delete(message.author.id);
