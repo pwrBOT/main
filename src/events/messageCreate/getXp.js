@@ -3,7 +3,7 @@ const chalk = require("chalk");
 const warnsRepository = require("../../mysql/warnsRepository");
 const guildSettings = require("../../mysql/guildsRepository");
 const usersRepository = require("../../mysql/usersRepository");
-const autoModSanctions = require("../../events/eventFunctions/autoModSanctions");
+const warnSystem = require("../../events/eventFunctions/warnSystem");
 const ms = require("ms");
 const antiSpamMap = new Map();
 const xPWaitMap = new Map();
@@ -338,13 +338,9 @@ module.exports = async function messageCreate(message) {
         await message.member.send({ embeds: [warnembedmember] });
       } catch (error) {}
 
-      await warnsRepository.addWarn(
-        message.guild.id,
-        message.member.id,
-        "Spam",
-        message.client.user.tag,
-        message.client.user.id
-      );
+      await warnSystem.warnUser(message.guild, message.member, "Auto-Mod | Spam", message.client.user.tag, message.client.user.id)
+      await warnSystem.autoModWarn(message.guild, message.member)
+
       const commandLogRepository = require("../../mysql/commandLogRepository");
       // guild - command, user, affectedMember, reason
       await commandLogRepository.logCommandUse(
@@ -354,8 +350,6 @@ module.exports = async function messageCreate(message) {
         message.member.user,
         "-"
       );
-
-      await autoModSanctions.autoModSanctions(message.guild, message.member);
 
       console.log(
         chalk.yellow(

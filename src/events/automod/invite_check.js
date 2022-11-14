@@ -2,7 +2,7 @@ const { EmbedBuilder } = require("discord.js");
 const chalk = require("chalk");
 const warnsRepository = require("../../mysql/warnsRepository");
 const guildSettings = require("../../mysql/guildsRepository");
-const autoModSanctions = require("../../events/eventFunctions/autoModSanctions");
+const warnSystem = require("../../events/eventFunctions/warnSystem");
 const ms = require("ms");
 
 module.exports = {
@@ -69,6 +69,9 @@ module.exports = {
 
           try {
             await message.delete();
+            await message.channel.send(
+              `_Auto-Mod | Invite Check --> Nachricht von ${message.member} gelöscht!_`
+            );
           } catch (error) {}
 
           console.log(
@@ -89,19 +92,19 @@ module.exports = {
             message.guild,
             "teamRole"
           );
-    
+
           if (message.member.roles.cache.has(teamRoleId.value)) {
             return resolve(null);
           }
-    
+
           if (message.guild.ownerId === message.member.id) {
             return resolve(null);
           }
-    
+
           if (message.member.manageable === false) {
             return resolve(null);
           }
-    
+
           const length = "5m";
           const guildsRepository = require("../../mysql/guildsRepository");
           const embedInfo = await guildsRepository.getGuildSetting(
@@ -111,7 +114,7 @@ module.exports = {
           if (!embedInfo) {
             embedInfo = "Bei Fragen wende dich an die Communityleitung!";
           }
-    
+
           const modlogembed = new EmbedBuilder()
             .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
             .setDescription(
@@ -122,21 +125,21 @@ module.exports = {
             .setThumbnail(message.member.displayAvatarURL())
             .setFooter({
               iconURL: message.client.user.displayAvatarURL(),
-              text: `powered by Powerbot`,
+              text: `powered by Powerbot`
             })
             .addFields([
               {
                 name: `Grund:`,
-                value: `Auto-Mod | Spam`,
-                inline: true,
+                value: `Auto-Mod | Invite Check`,
+                inline: true
               },
               {
                 name: `Moderator:`,
                 value: "Auto-Mod",
-                inline: true,
-              },
+                inline: true
+              }
             ]);
-    
+
           const embedmember = new EmbedBuilder()
             .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
             .setDescription(
@@ -147,70 +150,57 @@ module.exports = {
             .setThumbnail(message.guild.iconURL())
             .setFooter({
               iconURL: message.client.user.displayAvatarURL(),
-              text: `powered by Powerbot`,
+              text: `powered by Powerbot`
             })
             .addFields([
               {
                 name: `Grund:`,
-                value: `Auto-Mod | Spam`,
-                inline: true,
+                value: `Auto-Mod | Invite Check`,
+                inline: true
               },
               {
                 name: `Moderator:`,
                 value: "Auto-Mod",
-                inline: true,
+                inline: true
               },
               {
                 name: `Information:`,
                 value: `${embedInfo.value}`,
-                inline: false,
-              },
+                inline: false
+              }
             ]);
-    
+
           const logChannel = require("../../mysql/loggingChannelsRepository");
           await logChannel.logChannel(message.guild, "modLog", modlogembed);
-    
+
           try {
             message.member.timeout(ms(length), "Auto-Mod | Spam");
           } catch (error) {}
-    
+
           try {
             await message.member.send({ embeds: [embedmember] });
           } catch (error) {}
-    
+
           const commandLogRepository = require("../../mysql/commandLogRepository");
           // guild - command, user, affectedMember, reason
           await commandLogRepository.logCommandUse(
             message.guild,
-            "Auto-Mod | Timout Spam",
+            "Auto-Mod | Timout Auto-Mod | Invite Check",
             message.client.user,
             message.member.user,
             "-"
           );
-    
+
           return resolve(null);
         }
 
         async function autoModWarnMember() {
-          const teamRoleId = await guildSettings.getGuildSetting(
-            message.guild,
-            "teamRole"
-          );
+          let userMessage = "";
 
-          if (message.member.roles.cache.has(teamRoleId.value)) {
-            return resolve(null);
-          }
-
-          if (message.member.id === message.client.user.id) {
-            return resolve(null);
-          }
-
-          if (message.guild.ownerId === message.member.id) {
-            return resolve(null);
-          }
-
-          if (message.member.manageable === false) {
-            return resolve(null);
+          if (message.content) {
+            userMessage = message.content;
+          } else {
+            userMessage = "-";
           }
 
           const warnembed = new EmbedBuilder()
@@ -221,19 +211,24 @@ module.exports = {
             .setThumbnail(message.member.displayAvatarURL())
             .setFooter({
               iconURL: message.client.user.displayAvatarURL(),
-              text: `powered by Powerbot`,
+              text: `powered by Powerbot`
             })
             .addFields([
               {
                 name: `Grund:`,
-                value: `Eigen- / Fremdwerbung`,
-                inline: true,
+                value: `Auto-Mod | Invite Check`,
+                inline: true
               },
               {
                 name: `Moderator:`,
                 value: `Auto-Mod`,
-                inline: true,
+                inline: true
               },
+              {
+                name: `Nachricht:`,
+                value: `${userMessage}`,
+                inline: false
+              }
             ]);
 
           const warnembedmember = new EmbedBuilder()
@@ -246,24 +241,24 @@ module.exports = {
             .setThumbnail(message.guild.iconURL())
             .setFooter({
               iconURL: message.client.user.displayAvatarURL(),
-              text: `powered by Powerbot`,
+              text: `powered by Powerbot`
             })
             .addFields([
               {
                 name: `Grund:`,
-                value: `Eigen- / Fremdwerbung`,
-                inline: true,
+                value: `Auto-Mod | Invite Check`,
+                inline: true
               },
               {
                 name: `Moderator:`,
                 value: `Auto-Mod`,
-                inline: true,
+                inline: true
               },
               {
                 name: `Information:`,
                 value: `Bei Fragen wende dich bitte an die Projektleitung`,
-                inline: false,
-              },
+                inline: false
+              }
             ]);
 
           const logChannel = require("../../mysql/loggingChannelsRepository");
@@ -275,18 +270,14 @@ module.exports = {
             await message.member.send({ embeds: [warnembedmember] });
           } catch (error) {}
 
-          await warnsRepository.addWarn(
-            message.guild.id,
-            message.member.id,
-            "Eigen- / Fremdwerbung",
-            message.client.user.tag,
-            message.client.user.id
-          );
+          await warnSystem.warnUser(message.guild, message.member, "Auto-Mod | Invite Check", message.client.user.tag, message.client.user.id)
+          await warnSystem.autoModWarn(message.guild, message.member)
+
           const commandLogRepository = require("../../mysql/commandLogRepository");
           // guild - command, user, affectedMember, reason
           await commandLogRepository.logCommandUse(
             message.guild,
-            "Auto-Mod Warn | Invite",
+            "Auto-Mod Warn | Invite Check",
             message.client.user,
             message.member.user,
             "-"
@@ -307,12 +298,15 @@ module.exports = {
 
         // ####################    CHECK     ################## \\
 
-        const inviteCode = await message.content.split(link)[1].split(" ")[0].split("\n")[0];
+        const inviteCode = await message.content
+          .split(link)[1]
+          .split(" ")[0]
+          .split("\n")[0];
 
         let isGuildInvite = "";
         try {
           isGuildInvite = await message.guild.invites.fetch({
-            code: `${inviteCode}`,
+            code: `${inviteCode}`
           });
         } catch (error) {
           isGuildInvite = false;
@@ -325,18 +319,18 @@ module.exports = {
               deleteMessage();
               autoModWarnMember();
               userTimeout();
-              autoModSanctions.autoModSanctions(message.guild, message.member);
+              await warnSystem.autoModWarn(message.guild, message.member);
               return resolve(null);
             }
           } catch (err) {
             deleteMessage();
             autoModWarnMember();
             userTimeout();
-            autoModSanctions.autoModSanctions(message.guild, message.member);
+            await warnSystem.autoModWarn(message.guild, message.member);
             return resolve(null);
           }
         }
       }
     });
-  },
+  }
 };

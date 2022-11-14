@@ -17,7 +17,7 @@ const getWarn = async (warnId, guildId, userId) => {
 const getWarns = async (member, limit=-1) => {
   return new Promise((resolve) => {
     mysqlHelper
-      .query('SELECT * FROM powerbot_warns WHERE userId = ? AND guildId = ? ORDER BY ID', [member.user.id, member.guild.id], limit)
+      .query('SELECT * FROM powerbot_warns WHERE userId = ? AND guildId = ? AND warnStatus = ? ORDER BY ID', [member.user.id, member.guild.id, "active"], limit)
       .then( (result) => {
         // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
         resolve(result ?? null);
@@ -31,7 +31,7 @@ const getWarns = async (member, limit=-1) => {
 const addWarn = async (guildId, memberId, reason, warnModName, warnModId) => {
   return new Promise((resolve) => {
     mysqlHelper
-      .query('INSERT INTO powerbot_warns (guildId, userId, warnReason, warnModName, warnModId) VALUES ( ?, ?, ?, ?, ?)', [guildId, memberId, reason, warnModName, warnModId])
+      .query('INSERT INTO powerbot_warns (guildId, userId, warnReason, warnModName, warnModId, warnStatus) VALUES ( ?, ?, ?, ?, ?, ?)', [guildId, memberId, reason, warnModName, warnModId, "active"])
       .then( (result) => {
         // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
         resolve(null);
@@ -45,7 +45,7 @@ const addWarn = async (guildId, memberId, reason, warnModName, warnModId) => {
 const delWarn = async (warnId, guildId, userId, ) => {
   return new Promise((resolve) => {
     mysqlHelper
-      .query('DELETE FROM powerbot_warns WHERE ID=? AND guildId=? AND userId=?', [warnId, guildId, userId])
+      .query('UPDATE powerbot_warns SET warnStatus=? WHERE ID=? AND guildId=? AND userId=?', ["removed", warnId, guildId, userId])
       .then( (result) => {
         // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
         resolve(null);
@@ -59,7 +59,7 @@ const delWarn = async (warnId, guildId, userId, ) => {
 const delAllWarns = async (guildId, userId) => {
   return new Promise((resolve) => {
     mysqlHelper
-      .query('DELETE FROM powerbot_warns WHERE guildId=? AND userId=?', [guildId, userId])
+      .query('UPDATE powerbot_warns SET warnStatus=? WHERE guildId=? AND userId=?', ["removed", guildId, userId])
       .then( (result) => {
         // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
         resolve(null);
