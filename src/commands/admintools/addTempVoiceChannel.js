@@ -2,7 +2,7 @@ const {
   SlashCommandBuilder,
   PermissionFlagsBits,
   PermissionsBitField,
-  EmbedBuilder,
+  EmbedBuilder
 } = require("discord.js");
 const tempChannelsRepository = require("../../mysql/tempChannelsRepository");
 
@@ -27,47 +27,81 @@ module.exports = {
         .addStringOption((option) =>
           option
             .setName("channelname")
-            .setDescription("Wie soll der Channel heißen? '#username' wird dran gehängt!")
+            .setDescription(
+              "Wie soll der Channel heißen? '#username' wird dran gehängt!"
+            )
+            .setRequired(true)
+        )
+        .addChannelOption((option) =>
+          option
+            .setName("channelcategory")
+            .setDescription("Übergeordnete Kategorie auswählen")
             .setRequired(true)
         )
         .addStringOption((option) =>
           option
             .setName("permission")
-            .setDescription("Soll der User Mod-Rechte in seinem erstellen Channel bekommen?")
+            .setDescription(
+              "Soll der User Mod-Rechte in seinem erstellen Channel bekommen?"
+            )
             .addChoices(
               { name: "Ja", value: "yes" },
               { name: "Nein", value: "no" }
             )
             .setRequired(true)
-        ),
+        )
     ),
   async execute(interaction, client) {
     return new Promise(async (resolve) => {
       await interaction.deferReply({
         ephemeral: false,
-        fetchReply: true,
+        fetchReply: true
       });
 
       const voiceChannel = interaction.options.getChannel("voicechannel");
+      const channelCategory = interaction.options.getChannel("channelcategory");
       const tempChannelName = interaction.options.getString("channelname");
       const permission = interaction.options.getString("permission");
 
       if (voiceChannel.type != 2) {
-        interaction.editReply("Ich bin kein Voice Channel")
+        interaction.editReply("Ich bin kein Voice Channel");
         return resolve(null);
       }
 
-      const activeVC = await tempChannelsRepository.getTempVoiceChannel(interaction.guild.id, voiceChannel.id, "master");
+      const activeVC = await tempChannelsRepository.getTempVoiceChannel(
+        interaction.guild.id,
+        voiceChannel.id,
+        "master"
+      );
 
       if (activeVC) {
-        interaction.editReply("Voice-Channel-ID bereits als Temp-Voice-Channel angelegt")
+        await tempChannelsRepository.updateTempVoiceChannel(
+          tempChannelName,
+          permission,
+          channelCategory.id,
+          interaction.guild.id,
+          voiceChannel.id
+        );
+        interaction.editReply(
+          `⚠️ Voice-Channel bereits angelegt. Einstellungen wurden geupdated!\n**Name:**  ${tempChannelName}\n**Channel-Kategorie:**  ${channelCategory}\n**Userberechtigung:**  ${permission}`
+        );
         return resolve(null);
       }
 
-      await tempChannelsRepository.addTempVoiceChannel(interaction.guild.id, voiceChannel.id, "master", tempChannelName, "MASTER CHANNEL", permission);
-      interaction.editReply("Temp-Voice-Channel erfolgreich gespeichert")
+      await tempChannelsRepository.addTempVoiceChannel(
+        interaction.guild.id,
+        voiceChannel.id,
+        "master",
+        tempChannelName,
+        "MASTER CHANNEL",
+        permission,
+        channelCategory.id
+      );
+      interaction.editReply(
+        `✅ Temp-Voice-Channel erfolgreich gespeichert\n**Name:**  ${tempChannelName}\n**Channel-Kategorie:**  ${channelCategory}\n**Userberechtigung:**  ${permission}`
+      );
 
       return resolve(null);
-    })
+    });
   }
-}
+};

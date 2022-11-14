@@ -4,7 +4,7 @@ const getAllTempVoiceChannel = async (guildId) => {
   return new Promise((resolve) => {
     mysqlHelper
       .query(`SELECT * FROM powerbot_temp_channels WHERE guildId = ?`, [
-        guildId,
+        guildId
       ])
       .then((result) => {
         // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
@@ -39,12 +39,13 @@ const addTempVoiceChannel = async (
   type,
   tempChannelName,
   tempChannelOwner,
-  giveUserPermission
+  giveUserPermission,
+  channelCategory
 ) => {
   return new Promise((resolve) => {
     mysqlHelper
       .query(
-        "INSERT INTO powerbot_temp_channels (guildId, guildChannelId, type, tempChannelName, tempChannelOwner, giveUserPermission) VALUES (?, ?, ?, ?, ?, ?)",
+        "INSERT INTO powerbot_temp_channels (guildId, guildChannelId, type, tempChannelName, tempChannelOwner, giveUserPermission, channelCategory) VALUES (?, ?, ?, ?, ?, ?, ?)",
         [
           guildId,
           guildChannelId,
@@ -52,10 +53,39 @@ const addTempVoiceChannel = async (
           tempChannelName,
           tempChannelOwner,
           giveUserPermission,
+          channelCategory
         ]
       )
       .then((result) => {
         // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
+        resolve(null);
+      })
+      .catch(() => {
+        resolve(null);
+      });
+  });
+};
+
+const updateTempVoiceChannel = async (
+  tempChannelName,
+  giveUserPermission,
+  channelCategory,
+  guildId,
+  guildChannelId,
+) => {
+  return new Promise((resolve) => {
+    mysqlHelper
+      .query(
+        `UPDATE powerbot_temp_channels SET tempChannelName=?, giveUserPermission=?, channelCategory=? WHERE guildId=? AND guildChannelId=?`,
+        [
+          tempChannelName,
+          giveUserPermission,
+          channelCategory,
+          guildId,
+          guildChannelId,
+        ]
+      )
+      .then((result) => {
         resolve(null);
       })
       .catch(() => {
@@ -84,4 +114,5 @@ const deleteTempVoiceChannel = async (guildId, guildChannelId, type) => {
 module.exports.getAllTempVoiceChannel = getAllTempVoiceChannel;
 module.exports.getTempVoiceChannel = getTempVoiceChannel;
 module.exports.addTempVoiceChannel = addTempVoiceChannel;
+module.exports.updateTempVoiceChannel = updateTempVoiceChannel;
 module.exports.deleteTempVoiceChannel = deleteTempVoiceChannel;

@@ -16,8 +16,8 @@ module.exports = {
       const newChannelId = newState.channelId;
       const guild = client.guilds.cache.get(newState.guild.id);
       const member = guild.members.cache.get(newState.id);
-      const oldChannel = oldState.guild.channels.fetch(oldChannelId);
-      const newChannel = newState.guild.channels.fetch(newChannelId);
+      const oldChannel = await oldState.guild.channels.fetch(oldChannelId);
+      const newChannel = await newState.guild.channels.fetch(newChannelId);
 
       if (oldState) {
         const tempChannelCheckTemp =
@@ -59,26 +59,44 @@ module.exports = {
       const newChannelName = `${tempChannelCheck.tempChannelName} #${member.user.username}`;
 
       if (oldChannel !== newChannel && newChannelId === joinToCreate) {
-        // const mainPermissions = newChannel.permissionOverwrites
+
+        let channelParent = "";
+        if (tempChannelCheck.channelCategory) {
+          channelParent = tempChannelCheck.channelCategory;
+        } else {
+          channelParent = newState.channel.parent;
+        }
+
         const voiceChannel = await guild.channels.create({
           name: newChannelName,
           type: ChannelType.GuildVoice,
           bitrate: 384000,
-          parent: newState.channel.parent,
+          userLimit: newChannel.userLimit,
+          parent: channelParent
         });
+
+        if (tempChannelCheck.giveUserPermission == "yes") {
+          voiceChannel.permissionOverwrites.edit(member.id, {
+            MoveMembers: true,
+            ManageMessages: true,
+            MuteMembers: true,
+          });
+        }
+
         await tempChannelsRepository.addTempVoiceChannel(
           guild.id,
           voiceChannel.id,
           "temp",
           newChannelName,
           member.user.username,
+          "-",
           "-"
         );
         client.voiceGenerator.set(member.user.id, voiceChannel.id);
         setTimeout(() => member.voice.setChannel(voiceChannel), 250);
-        
+
         return resolve(null);
       }
     });
-  },
+  }
 };
