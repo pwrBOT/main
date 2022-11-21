@@ -9,7 +9,6 @@ const fs = require("fs");
 const getXp = require("./src/events/messageCreate/getXp");
 const levelSystemGiveRole = require("./src/events/messageCreate/levelSystemGiveRole");
 const tempUnbanUser = require("./src/events/tempCommands/tempUnbanUser");
-const servicecheck = require("./src/events/logging/servicecheck");
 
 // Discord Bot SetUp
 const TOKEN = config.powerbot_token;
@@ -51,7 +50,7 @@ client.modals = new Collection();
 client.voiceGenerator = new Collection();
 client.commandArray = [];
 
-const functionFolders = fs.readdirSync(`./src/functions`);
+const functionFolders = [ 'error', 'handlers'];
 for (const folder of functionFolders) {
   const functionFiles = fs
     .readdirSync(`./src/functions/${folder}`)

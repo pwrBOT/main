@@ -1,5 +1,5 @@
 const { Client, ChannelType } = require("discord.js");
-const DarkDashboard = require("dbd-dark-dashboard");
+const DarkDashboard = require('dbd-dark-dashboard');
 const DBD = require("discord-dashboard");
 const config = require(`../../../config.json`);
 const levelsRepository = require("../../mysql/levelsRepository");

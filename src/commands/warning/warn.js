@@ -127,7 +127,7 @@ module.exports = {
         await member.send({ embeds: [warnembedmember] });
       } catch (error) {}
 
-      const warnSystem = require("../../events/eventFunctions/warnSystem");
+      const warnSystem = require("../../functions/warningSystem/warnings");
       await warnSystem.warnUser(
         interaction.guild,
         member,

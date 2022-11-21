@@ -2,17 +2,18 @@ const {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  ChannelType,
+  ChannelType
 } = require("discord.js");
+
 module.exports = {
   data: {
-    name: `report_uebernahme`,
+    name: `report_uebernahme`
   },
   async execute(interaction, client) {
     return new Promise(async (resolve) => {
       await interaction.deferReply({
         ephemeral: true,
-        fetchReply: true,
+        fetchReply: true
       });
 
       const guildSettings = require("../../mysql/guildsRepository");
@@ -24,7 +25,7 @@ module.exports = {
       if (!modRoleId) {
         interaction.editReply({
           ephemeral: true,
-          content: "❌ Keine Moderator-Rolle definiert! ❌",
+          content: "❌ Keine Moderator-Rolle definiert! ❌"
         });
         return resolve(null);
       }
@@ -41,15 +42,25 @@ module.exports = {
       if (!isModerator) {
         interaction.editReply({
           ephemeral: true,
-          content: "❌ Du bist kein Moderator! ❌",
+          content: "❌ Du bist kein Moderator! ❌"
         });
         return resolve(null);
       }
 
-      const reportId = await interaction.message.embeds[0].description.split("#")[1]
+      const reportId = await interaction.message.embeds[0].description.split(
+        "#"
+      )[1];
       const reportRepository = require("../../mysql/reportRepository");
-      const reportData = await reportRepository.getReport(interaction.guild.id, reportId);
-      await reportRepository.updateReport(interaction.guild.id, reportId, `In process by ${interaction.user.tag}`, interaction.user.id);
+      const reportData = await reportRepository.getReport(
+        interaction.guild.id,
+        reportId
+      );
+      await reportRepository.updateReport(
+        interaction.guild.id,
+        reportId,
+        `In process by ${interaction.user.tag}`,
+        interaction.user.id
+      );
 
       const buttonInBearbeitung = new ButtonBuilder()
         .setCustomId("report_uebernahme")
@@ -67,9 +78,9 @@ module.exports = {
         components: [
           new ActionRowBuilder().addComponents([
             buttonInBearbeitung,
-            buttonErledigt,
-          ]),
-        ],
+            buttonErledigt
+          ])
+        ]
       });
 
       // CREATE PRIVATE THREAD \\
@@ -81,7 +92,7 @@ module.exports = {
       if (!modThreadAreaId.value) {
         await interaction.editReply({
           ephemeral: true,
-          content: `✅ Du hast den Report übernommen!\nEs wurde kein Mod-Thread erstellt (Keine Mod-Area definiert)`,
+          content: `✅ Du hast den Report übernommen!\nEs wurde kein Mod-Thread erstellt (Keine Mod-Area definiert)`
         });
         return resolve(null);
       }
@@ -91,33 +102,36 @@ module.exports = {
       );
 
       if (interaction.guild.premiumTier === 3) {
-      const newThread = await modThreadArea.threads.create({
-        name: `Report ${reportId} | Mod ${interaction.member.user.username}`,
-        autoArchiveDuration: 60,
-        type: ChannelType.PrivateThread,
-        reason: "Thread for moderation",
-      });
+        const newThread = await modThreadArea.threads.create({
+          name: `Report ${reportId} | Mod ${interaction.member.user.username}`,
+          autoArchiveDuration: 60,
+          type: ChannelType.PrivateThread,
+          reason: "Thread for moderation"
+        });
 
-      const reportedUserId = await interaction.message.embeds[0].description
-        .split("<@")[1]
-        .split(">")[0];
+        const reportedUserId = await interaction.message.embeds[0].description
+          .split("<@")[1]
+          .split(">")[0];
 
-      await newThread.members.add(interaction.member.id);
-      await newThread.members.add(reportedUserId);
-      await newThread.send(`Beschwerdemeldung:\n${reportData.reportReason}`)
-      await interaction.editReply({
-        ephemeral: true,
-        content: `✅ Du hast den Report übernommen!\n\nEin Mod-Thread mit dem Namen "Report ${reportId} | Mod ${interaction.member.user.username}" wurde erstellt.`,
-      });
-    } else {
-      await interaction.editReply({
-        ephemeral: true,
-        content: `✅ Du hast den Report übernommen! Es wurde jedoch kein Private-Thread erstellt. Hierfür ist Discord-Boost-Level 3 erforderlich!)`,
-      });
-    }
+        await newThread.members.add(interaction.member.id);
+        await newThread.members.add(reportedUserId);
+        await newThread.send(`**Hallo ${interaction.guild.members.cache.get(reportedUserId)}!**`);
+        await newThread.send(`Du wurdest von einem User gemeldet. Beschwerde:\n*${reportData.reportReason}*\n\nWas kannst du uns dazu sagen?`);
+        await newThread.send(`Bearbeitender Moderator: ${interaction.member}`);
+        await interaction.editReply({
+          ephemeral: true,
+          content: `✅ Du hast den Report übernommen!\n\nEin Mod-Thread mit dem Namen "Report ${reportId} | Mod ${interaction.member.user.username}" wurde erstellt.`
+        });
+      } else {
+        await interaction.editReply({
+          ephemeral: true,
+          content: `✅ Du hast den Report übernommen! Es wurde jedoch kein Private-Thread erstellt. Hierfür ist Discord-Boost-Level 3 erforderlich!)`
+        });
+        return resolve(null);
+      }
       // CREATE PRIVATE THREAD END \\
 
       return resolve(null);
     });
-  },
+  }
 };

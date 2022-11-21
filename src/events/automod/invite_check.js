@@ -2,7 +2,7 @@ const { EmbedBuilder } = require("discord.js");
 const chalk = require("chalk");
 const warnsRepository = require("../../mysql/warnsRepository");
 const guildSettings = require("../../mysql/guildsRepository");
-const warnSystem = require("../../events/eventFunctions/warnSystem");
+const warnSystem = require("../../functions/warningSystem/warnings");
 const ms = require("ms");
 
 module.exports = {

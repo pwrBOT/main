@@ -1,7 +1,7 @@
 const {
   SlashCommandBuilder,
   PermissionFlagsBits,
-  EmbedBuilder,
+  EmbedBuilder
 } = require(`discord.js`);
 const warnsRepository = require("../../mysql/warnsRepository");
 const usersRepository = require("../../mysql/usersRepository");
@@ -30,7 +30,7 @@ module.exports = {
     return new Promise(async (resolve) => {
       const message = await interaction.deferReply({
         ephemeral: true,
-        fetchReply: true,
+        fetchReply: true
       });
 
       if (interaction.options.getSubcommand() === "user") {
@@ -43,7 +43,7 @@ module.exports = {
 
         let userId = member.id;
         let guildId = guild.id;
-        let user = await usersRepository.getUser(userId, guildId)
+        let user = await usersRepository.getUser(userId, guildId);
 
         let warnsText = "";
         let warns = await warnsRepository.getWarns(member, 10);
@@ -59,12 +59,16 @@ module.exports = {
             const date = new Date(warn.warnAdd).toLocaleDateString("de-DE");
             const time = new Date(warn.warnAdd).toLocaleTimeString("de-DE", {
               hour: "2-digit",
-              minute: "2-digit",
+              minute: "2-digit"
             });
             const spacer = `\u00A0\u00A0\u00A0\u00A0`;
             warnsText += `${date}  •  ${time}h:${spacer}${warn.warnReason}\n`;
           });
         }
+
+        let currentUserXp = user.xP;
+        let currentLevel = user.Level;
+        let nextLevelXP = user.Level * user.Level * 100 + 100;
 
         const userembed = new EmbedBuilder()
           .setTitle(`⚡️ PowerBot | User Info ⚡️`)
@@ -75,24 +79,24 @@ module.exports = {
           .setTimestamp(Date.now())
           .setFooter({
             iconURL: client.user.displayAvatarURL(),
-            text: `powered by Powerbot`,
+            text: `powered by Powerbot`
           })
           .setThumbnail(member.user.displayAvatarURL())
           .addFields([
             {
               name: `Username:`,
               value: `${member.user.username} #${member.user.discriminator}`,
-              inline: true,
+              inline: true
             },
             {
               name: `User ID:`,
               value: `${member.user.id}`,
-              inline: true,
+              inline: true
             },
             {
               name: `\u200B`,
               value: `\u200B`,
-              inline: true,
+              inline: true
             },
             {
               name: `Account erstellt:`,
@@ -101,7 +105,7 @@ module.exports = {
               ).toLocaleDateString("de-DE")} | ${new Date(
                 member.user.createdTimestamp
               ).toLocaleTimeString("de-DE")}`,
-              inline: true,
+              inline: true
             },
             {
               name: `Am Server seit:`,
@@ -110,22 +114,27 @@ module.exports = {
               )} | ${new Date(member.joinedTimestamp).toLocaleTimeString(
                 "de-DE"
               )}`,
-              inline: true,
+              inline: true
             },
             {
               name: `\u200B`,
               value: `\u200B`,
-              inline: true,
+              inline: true
             },
             {
               name: `Bot:`,
               value: `${member.user.bot}`,
-              inline: true,
+              inline: true
             },
             {
               name: `XP:`,
-              value: `${user.xP}`,
-              inline: true,
+              value: `${currentUserXp} / ${nextLevelXP}`,
+              inline: true
+            },
+            {
+              name: `Level:`,
+              value: `${currentLevel}`,
+              inline: true
             },
             {
               name: `Rollen:`,
@@ -133,16 +142,16 @@ module.exports = {
                 .map((r) => r)
                 .join(" ")
                 .replace("everyone", " " || "None")}`,
-              inline: true,
+              inline: false
             },
             {
               name: `Verwarnungen:`,
               value: `${warnsText}`,
-              inline: false,
-            },
+              inline: false
+            }
           ]);
 
-        interaction.editReply({ embeds: [userembed] });
+        await interaction.editReply({ embeds: [userembed] });
 
         const commandLogRepository = require("../../mysql/commandLogRepository");
         // guild - command, user, affectedMember, reason
@@ -157,5 +166,5 @@ module.exports = {
         return resolve(null);
       }
     });
-  },
+  }
 };

@@ -1,7 +1,7 @@
 const {
   SlashCommandBuilder,
   PermissionFlagsBits,
-  EmbedBuilder,
+  EmbedBuilder
 } = require("discord.js");
 
 const usersRepository = require("../../mysql/usersRepository");
@@ -41,7 +41,7 @@ module.exports = {
     return new Promise(async (resolve) => {
       const message = await interaction.deferReply({
         ephemeral: false,
-        fetchReply: true,
+        fetchReply: true
       });
 
       const { options, user, guild } = interaction;
@@ -60,11 +60,6 @@ module.exports = {
         return resolve(null);
       }
 
-      if (member.user.bot == true) {
-        interaction.editReply("❌ Der Bot kann keine XP bekommen ❌");
-        return resolve(null);
-      }
-
       let currentXP = getMember.xP;
 
       if (!currentXP) {
@@ -72,16 +67,20 @@ module.exports = {
       }
 
       if (interaction.options.getSubcommand() === "give") {
-        var newXP = currentXP + xP;
-        await usersRepository.addUserXP(guild.id, member.user, newXP);
+        let newXP = currentXP + xP;
+        let currentLevel = getMember.Level
+        let newLevel = getMember.Level;
+        let requiredXP = newLevel * newLevel * 100 + 100;
 
-        const requiredXP = getMember.Level * getMember.Level * 100 + 100;
-
-        if (newXP >= requiredXP) {
-          let newLevel = (getMember.Level += 1);
-          await usersRepository.addUserLevel(guild.id, member.user, newLevel);
+        while (requiredXP <= newXP) {
+          newLevel += 1
+          requiredXP = newLevel * newLevel * 100 + 100;
         }
-        
+
+        await usersRepository.addUserXP(guild.id, member.user, newXP);
+        await usersRepository.addUserLevel(guild.id, member.user, newLevel);
+
+
 
         const xPembed = new EmbedBuilder()
           .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
@@ -92,8 +91,45 @@ module.exports = {
           .setTimestamp(Date.now())
           .setFooter({
             iconURL: client.user.displayAvatarURL(),
-            text: `powered by Powerbot`,
-          });
+            text: `powered by Powerbot`
+          })
+          .addFields([
+            {
+              name: `XP alt:`,
+              value: `${currentXP}`,
+              inline: true
+            },
+            {
+              name: `Level alt:`,
+              value: `${currentLevel}`,
+              inline: true
+            },
+            {
+              name: `\u200B`,
+              value: `\u200B`,
+              inline: true
+            },
+            {
+              name: `XP neu:`,
+              value: `${newXP}`,
+              inline: true
+            },
+            {
+              name: `Level neu:`,
+              value: `${newLevel}`,
+              inline: true
+            },
+            {
+              name: `\u200B`,
+              value: `\u200B`,
+              inline: true
+            },
+            {
+              name: `Moderator:`,
+              value: `${user.tag}`,
+              inline: false
+            }
+          ]);
 
         await interaction.editReply({ embeds: [xPembed] });
 
@@ -114,27 +150,69 @@ module.exports = {
       }
 
       if (interaction.options.getSubcommand() === "remove") {
-        var newXP = currentXP - xP;
-        await usersRepository.addUserXP(guild.id, member.user, newXP);
+        let newXP = currentXP - xP;
+        let currentLevel = getMember.Level
+        let newLevel = getMember.Level;
+        let requiredXP = newLevel * newLevel * 100 + 100;
 
-        const requiredXP = getMember.Level * getMember.Level * 100 + 100;
-
-        if (newXP <= requiredXP) {
-          let newLevel = (getMember.Level -= 1);
-          await usersRepository.addUserLevel(guild.id, member.user, newLevel);
+        while (requiredXP >= newXP) {
+          newLevel -= 1
+          requiredXP = newLevel * newLevel * 100 + 100;
         }
+
+        await usersRepository.addUserXP(guild.id, member.user, newXP);
+        newLevel += 1;
+        await usersRepository.addUserLevel(guild.id, member.user, newLevel);
 
         const xPembed = new EmbedBuilder()
           .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
           .setDescription(
-            `${xP} XP von ${member} entfernt.\nModerator: ${user.tag}`
+            `${xP} XP von ${member} entfernt.`
           )
           .setColor(0xffd800)
           .setTimestamp(Date.now())
           .setFooter({
             iconURL: client.user.displayAvatarURL(),
-            text: `powered by Powerbot`,
-          });
+            text: `powered by Powerbot`
+          })
+          .addFields([
+            {
+              name: `XP alt:`,
+              value: `${currentXP}`,
+              inline: true
+            },
+            {
+              name: `Level alt:`,
+              value: `${currentLevel}`,
+              inline: true
+            },
+            {
+              name: `\u200B`,
+              value: `\u200B`,
+              inline: true
+            },
+            {
+              name: `XP neu:`,
+              value: `${newXP}`,
+              inline: true
+            },
+            {
+              name: `Level neu:`,
+              value: `${newLevel}`,
+              inline: true
+            },
+            {
+              name: `\u200B`,
+              value: `\u200B`,
+              inline: true
+            },
+            {
+              name: `Moderator:`,
+              value: `${user.tag}`,
+              inline: false
+            }
+          ]);
+          
 
         await interaction.editReply({ embeds: [xPembed] });
 
@@ -154,5 +232,5 @@ module.exports = {
         return resolve(null);
       }
     });
-  },
+  }
 };
