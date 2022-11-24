@@ -1,11 +1,13 @@
 const { Client, ChannelType } = require("discord.js");
-const DarkDashboard = require("dbd-dark-dashboard");
-const SoftUI = require("dbd-soft-ui");
+const DarkDashboard = require('dbd-dark-dashboard');
+const SoftUI = require('dbd-soft-ui');
 const DBD = require("discord-dashboard");
 const config = require(`../../../config.json`);
 const levelsRepository = require("../../mysql/levelsRepository");
 const embedsRepository = require("../../mysql/embedsRepository");
 const autoModRepository = require("../../mysql/autoModRepository");
+
+/// NEW
 const guildsRepository = require("../../mysql/guildsRepository");
 
 module.exports = {
@@ -28,267 +30,136 @@ module.exports = {
     CommandPush(warnsystem, warning);
     CommandPush(admin, admintools);
 
-    await DBD.useLicense(config.dbd.license);
+    await DBD.useLicense(config.powerbot_dashboard);
     DBD.Dashboard = DBD.UpdatedClass();
 
     const Dashboard = new DBD.Dashboard({
-      port: config.dbd.port,
-      client: config.discord.client,
-      redirectUri: `${config.dbd.domain}${config.dbd.redirectUri}`,
-      domain: config.dbd.domain,
-      ownerIDs: config.dbd.ownerIDs,
-      useThemeMaintenance: false,
-      underMaintenance: {
-        title: "Under Maintenance",
-        contentTitle: "This page is under maintenance",
-        texts: [
-          "We still want to change for the better for you.",
-          "Therefore, we are introducing technical updates so that we can allow you to enjoy the quality of our services.",
-          "Come back to us later or join our Discord Support Server"
-        ],
-
-        // "Must contain 3 cards. All fields are optional - If card not wanted on maintenance page, infoCards can be deleted",
-        infoCards: [
-          {
-            title: "100+",
-            subtitle: "Over 100 commands!",
-            description: "Look at our commands during our downtime"
-          },
-          {
-            title: "500",
-            subtitle: "Text",
-            description: "Description here!"
-          },
-          {
-            title: "!",
-            subtitle: "Warning",
-            description: "Do you even have permission to be here?"
-          }
-        ]
+      port: 8010,
+      client: {
+        id: config.powerbot_clientId,
+        secret: config.powerbot_clientSecret,
       },
-      useTheme404: true,
+      redirectUri: "http://dashboard.pwr.lol/discord/callback/",
+      domain: "http://dashboard.pwr.lol",
       bot: client,
+      supportServer: {
+        slash: "/support",
+        inviteURL: "https://discord.gg/QfDNMCxzsN",
+      },
       acceptPrivacyPolicy: true,
       minimizedConsoleLogs: true,
-      bot: client,
-      theme: SoftUI({
-        customThemeOptions: {
-          index: async ({ req, res, config }) => {
-            const cards = [ 
-              {
-                title: "Server",
-                icon: "spaceship",
-                getValue: `${client.guilds.cache.size} Server`,
-                progressBar: {
-                  enabled: false,
-                  getProgress: 8 // 0 - 100 (get a percentage of the progress)
-                }
-              }  
-            ];
+      guildAfterAuthorization: {
+        use: true,
+        guildId: config.powerbot_guildId,
+      },
+      invite: {
+        clientId: client.user.id,
+        scopes: ["bot", "applications.commands", "guilds", "identify"],
+        permissions: "1644971949303",
+        redirectUri: "http://dashboard.pwr.lol/discord/callback/",
+      },
+      theme: DarkDashboard({
+        information: {
+          createdBy: "PowerBot Team",
+          websiteTitle: "PowerBot | Dashboard",
+          websiteName: "PowerBot",
+          websiteUrl: "/",
+          dashboardUrl: "http://localhost:3000/",
+          supporteMail: "power@pwr.lol",
+          supportServer: "https://discord.gg/yYq4UgRRzz",
+          imageFavicon: "https://pwr.lol/img/bot_logo.jpg",
+          iconURL: "https://pwr.lol/img/bot_logo.jpg",
+          loggedIn: "Erfolgreich eingeloggt.",
+          mainColor: "#f43638",
+          subColor: "#ffffff",
+          preloader: "Loading...",
+        },
 
-            const graph = {
-              values: [
-                120, 214, 214, 214, 220, 180, 210, 190, 220, 180, 210, 190
-              ],
-              labels: [
-                "1m",
-                "2m",
-                "3m",
-                "4m",
-                "5m",
-                "6m",
-                "7m",
-                "8m",
-                "9m",
-                "10m"
-              ]
-            };
-            return {
-              cards,
-              graph
-            };
-          }
+        sidebar: {
+          keepDefault: false,
+          list: [
+            {
+              icon: `<svg style="position: absolute; margin-left: 8px; margin-top: 2px;" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#f43638">    <path d="M0 0h24v24H0z" fill="none"/> <path d="M20.38 8.57l-1.23 1.85a8 8 0 0 1-.22 7.58H5.07A8 8 0 0 1 15.58 6.85l1.85-1.23A10 10 0 0 0 3.35 19a2 2 0 0 0 1.72 1h13.85a2 2 0 0 0 1.74-1 10 10 0 0 0-.27-10.44z"/> <path d="M10.59 15.41a2 2 0 0 0 2.83 0l5.66-8.49-8.49 5.66a2 2 0 0 0 0 2.83z"/></svg>`,
+              title: "Dashboard",
+              link: "/",
+              id: "dashboard",
+            },
+            {
+              icon: `<svg style="position: absolute; margin-left: 8px; margin-top: 2px;" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#f43638">    <path d="M4,18v-0.65c0-0.34,0.16-0.66,0.41-0.81C6.1,15.53,8.03,15,10,15c0.03,0,0.05,0,0.08,0.01c0.1-0.7,0.3-1.37,0.59-1.98 C10.45,13.01,10.23,13,10,13c-2.42,0-4.68,0.67-6.61,1.82C2.51,15.34,2,16.32,2,17.35V20h9.26c-0.42-0.6-0.75-1.28-0.97-2H4z"></path><path d="M10,12c2.21,0,4-1.79,4-4s-1.79-4-4-4C7.79,4,6,5.79,6,8S7.79,12,10,12z M10,6c1.1,0,2,0.9,2,2s-0.9,2-2,2 c-1.1,0-2-0.9-2-2S8.9,6,10,6z"></path><path d="M20.75,16c0-0.22-0.03-0.42-0.06-0.63l1.14-1.01l-1-1.73l-1.45,0.49c-0.32-0.27-0.68-0.48-1.08-0.63L18,11h-2l-0.3,1.49 c-0.4,0.15-0.76,0.36-1.08,0.63l-1.45-0.49l-1,1.73l1.14,1.01c-0.03,0.21-0.06,0.41-0.06,0.63s0.03,0.42,0.06,0.63l-1.14,1.01 l1,1.73l1.45-0.49c0.32,0.27,0.68,0.48,1.08,0.63L16,21h2l0.3-1.49c0.4-0.15,0.76-0.36,1.08-0.63l1.45,0.49l1-1.73l-1.14-1.01 C20.72,16.42,20.75,16.22,20.75,16z M17,18c-1.1,0-2-0.9-2-2s0.9-2,2-2s2,0.9,2,2S18.1,18,17,18z"></path></svg>`,
+              title: "Discord Server verwalten",
+              link: "/manage",
+              id: "manage",
+            },
+            {
+              icon: `<svg style="position: absolute; margin-left: 8px; margin-top: 2px;" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 16 16" width="24px" fill="#f43638">    <path d="M13.545 2.907a13.227 13.227 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.833.051.051 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.041.041 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.051.051 0 0 0-.018-.011 8.875 8.875 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.051.051 0 0 1 .015-.019c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.248.195a.051.051 0 0 1-.004.085 8.254 8.254 0 0 1-1.249.594.05.05 0 0 0-.03.03.052.052 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612Z"/></svg>`,
+              title: "Bot Command-Übersicht",
+              link: "/commands",
+              id: "commands",
+            },
+            {
+              icon: `<svg style="position: absolute; margin-left: 8px; margin-top: 2px;" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 16 16" width="24px" fill="#009999">    <path d="M8 1a5 5 0 0 0-5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a6 6 0 1 1 12 0v6a2.5 2.5 0 0 1-2.5 2.5H9.366a1 1 0 0 1-.866.5h-1a1 1 0 1 1 0-2h1a1 1 0 0 1 .866.5H11.5A1.5 1.5 0 0 0 13 12h-1a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h1V6a5 5 0 0 0-5-5z"/></svg>`,
+              title: "PowerBot Support Server",
+              link: "https://discord.gg/QfDNMCxzsN",
+              id: "supportserver",
+            },
+          ],
         },
-        websiteName: "PowerBot",
-        colorScheme: "yellow",
-        supporteMail: "power@pwr.lol",
-        icons: {
-          favicon: "https://pwr.lol/img/bot_logo_discord.png",
-          noGuildIcon: "https://pwr.lol/img/bot_logo_discord.png",
-          sidebar: {
-            darkUrl: "https://pwr.lol/img/bot_logo_wide.png",
-            lightUrl: "https://pwr.lol/img/bot_logo_wide.png",
-            hideName: true,
-            borderRadius: false,
-            alignCenter: true
-          }
+
+        guilds: {
+          cardTitle: "Discord Server",
+          cardDescription: "Hier kannst du all deine Discord Server verwalten:",
+          type: "blurlist",
         },
-        preloader: {
-          image: "https://pwr.lol/img/bot_logo_wide.png",
-          spinner: true,
-          text: "Power wird geladen..."
-        },
+
         index: {
           card: {
-            category: "PowerBot | Dashboard",
-            title:
-              "PowerBot - Hol dir die ultimative Power für deinen Discord Server",
-            description: "",
-            image: "https://pwr.lol/img/bot_logo_wide.png",
-            link: {
-              text: "Support Server",
-              enabled: true,
-              url: "https://discord.gg/yYq4UgRRzz"
-            }
+            category: "",
+            title: `PowerBot - Hol dir die ultimative Power für deinen Discord Server`,
+            image: "https://pwr.lol/img/Promo-1-de.jpg",
+            footer: "",
           },
-          graph: {
-            enabled: true,
-            lineGraph: false,
-            title: "Memory Usage",
-            tag: "Memory (MB)",
-            max: 100
-          }
+
+          information: {
+            category: "Category",
+            title: "Information",
+            description: `This bot and panel is currently a work in progress so contact me if you find any issues on discord.`,
+            footer: "Footer",
+          },
+
+          feeds: {
+            category: "Category",
+            title: "Information",
+            description: `This bot and panel is currently a work in progress so contact me if you find any issues on discord.`,
+            footer: "Footer",
+          },
         },
-        locales: {
-          deDE: {
-            name: "Deutsch",
-            index: {
-              feeds: [
-                "DIE ULTIMATIVE POWER NUTZEN:",
-              ],
-              card: {
-                category: "Welcome to PowerBot",
-                title:
-                  "PowerBot - Hol dir die ultimative Power für deinen Discord Server",
-                description: "",
-                image: "https://pwr.lol/img/bot_logo_wide.png",
-                link: {
-                  text: "Support Server",
-                  enabled: true,
-                  url: "https://discord.gg/yYq4UgRRzz"
-                }
-              },
-              feedsTitle: "Feeds",
-              graphTitle: "Graphs"
-            },
-            manage: {
-              settings: {
-                memberCount: "Members",
-                info: {
-                  info: "Info",
-                  server: "Server Information"
-                }
-              }
-            },
-            privacyPolicy: {
-              title: "Privacy Policy",
-              description: "Privacy Policy and Terms of Service",
-              pp: "Complete Privacy Policy"
-            },
-            partials: {
-              sidebar: {
-                dash: "Dashboard",
-                manage: "Discord Server verwalten",
-                commands: "Bot Commands",
-                pp: "Privacy Policy",
-                account: "Account Pages",
-                login: "Einloggen",
-                logout: "Ausloggen"
-              },
-              navbar: {
-                home: "Home",
-                pages: {
-                  manage: "Discord Server verwalten",
-                  settings: "Discord Server verwalten",
-                  commands: "Commands",
-                  pp: "Privacy Policy",
-                  error: "Error",
-                  credits: "Credits",
-                  debug: "Debug",
-                  leaderboard: "Leaderboard",
-                  profile: "Profil",
-                  maintenance: "Under Maintenance"
-                }
-              },
-              title: {
-                pages: {
-                  manage: "Discord Server verwalten",
-                  settings: "Discord Server verwalten",
-                  commands: "Commands",
-                  pp: "Privacy Policy",
-                  error: "Error",
-                  credits: "Credits",
-                  debug: "Debug",
-                  leaderboard: "Leaderboard",
-                  profile: "Profil",
-                  maintenance: "Under Maintenance"
-                }
-              },
-              preloader: {
-                image: "https://pwr.lol/img/bot_logo_wide.png",
-                spinner: true,
-                text: "Power wird geladen..."
-              },
-              premium: {
-                title: "Du möchtest Premium-Power?",
-                description: "Schau dir unsere Angebote an und hol dir die ultimative Power.",
-                buttonText: "Premium holen"
-              },
-              settings: {
-                title: "Einstellungen",
-                description: "Ansichtsoptionen",
-                theme: {
-                  title: "Theme",
-                  description: "Wie darf es sein?"
-                },
-                language: {
-                  title: "Sprache",
-                  description: "Wähl Deine bevorzugte Sprache aus!"
-                }
-              }
-            }
-          }
-        },
-        sweetalert: {
-          errors: {},
-          success: {
-            login: "Erfolgreich eingeloggt =)"
-          }
-        },
-        admin: {
-          pterodactyl: {
-            enabled: false,
-            apiKey: "apiKey",
-            panelLink: "http://localhost:3000/",
-            serverUUIDs: []
-          }
-        },
+
         commands: [
           {
             category: `Admin Tools`,
             subTitle: `Commands für Admins`,
             aliasesDisabled: true,
-            list: admintools
+            list: admintools,
           },
           {
             category: `Moderation`,
             subTitle: `Commands zur Moderation von Usern`,
             aliasesDisabled: true,
-            list: moderation
+            list: moderation,
           },
           {
             category: `Warn-System`,
             subTitle: `Zur Moderation von Usern`,
             aliasesDisabled: true,
-            list: warning
+            list: warning,
           },
           {
             category: `Allgemeines`,
             subTitle: `Allgemeine Commands`,
             aliasesDisabled: true,
-            list: info
-          }
-        ]
+            list: info,
+          },
+        ],
       }),
       settings: [
         /// ################## BOT SETTINGS ################## \\\
@@ -2373,7 +2244,7 @@ module.exports = {
       ],
     });
     Dashboard.init();
-  }
+  },
 };
 
 function CommandPush(filteredArray, CategoryArray) {
@@ -2382,7 +2253,7 @@ function CommandPush(filteredArray, CategoryArray) {
       commandName: obj.name,
       commandUsage: "/" + obj.name,
       commandDescription: obj.description,
-      commandAlias: "None"
+      commandAlias: "None",
     };
     CategoryArray.push(cmdObject);
   });

@@ -153,7 +153,7 @@ const generateImage = async (interaction, member, guild) => {
     context.drawImage(avatar, 25, 25, 150, 150);
 
     const attachment = new AttachmentBuilder(await canvas.encode("png"), {
-      name: "welcome.png",
+      name: `userbanner_${member.username}.png`,
     });
 
     return resolve(attachment);

@@ -2,7 +2,8 @@ const {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  ChannelType
+  ChannelType,
+  EmbedBuilder
 } = require("discord.js");
 
 module.exports = {
@@ -101,7 +102,7 @@ module.exports = {
         modThreadAreaId.value
       );
 
-      if (interaction.guild.premiumTier === 3) {
+      async function createPrivateThread() {
         const newThread = await modThreadArea.threads.create({
           name: `Report ${reportId} | Mod ${interaction.member.user.username}`,
           autoArchiveDuration: 60,
@@ -113,23 +114,152 @@ module.exports = {
           .split("<@")[1]
           .split(">")[0];
 
+        const reportEmbed = new EmbedBuilder()
+          .setTitle(`⚡️ PowerBot | Reporting-System ⚡️`)
+          .setDescription(
+            `Hallo ${interaction.guild.members.cache.get(
+              reportedUserId
+            )}!\n\nDu wurdest von einem User gemeldet. Was kannst du uns dazu sagen?`
+          )
+          .setColor(0x51ff00)
+          .setTimestamp(Date.now())
+          .setFooter({
+            iconURL: client.user.displayAvatarURL(),
+            text: `powered by Powerbot`
+          })
+          .addFields([
+            {
+              name: `Beschwerdemeldung:`,
+              value: `${reportData.reportReason}`,
+              inline: false
+            },
+            {
+              name: `Bearbeitender Moderator:`,
+              value: `${interaction.member}`,
+              inline: false
+            }
+          ]);
+
         await newThread.members.add(interaction.member.id);
         await newThread.members.add(reportedUserId);
-        await newThread.send(`**Hallo ${interaction.guild.members.cache.get(reportedUserId)}!**`);
-        await newThread.send(`Du wurdest von einem User gemeldet. Beschwerde:\n*${reportData.reportReason}*\n\nWas kannst du uns dazu sagen?`);
-        await newThread.send(`Bearbeitender Moderator: ${interaction.member}`);
+        await newThread.send({ embeds: [reportEmbed] });
+        const tagMember = await newThread.send(
+          `${interaction.guild.members.cache.get(reportedUserId)} / ${
+            interaction.member
+          }`
+        );
+        setTimeout(function () {
+          tagMember.delete();
+        }, 100);
+
         await interaction.editReply({
           ephemeral: true,
           content: `✅ Du hast den Report übernommen!\n\nEin Mod-Thread mit dem Namen "Report ${reportId} | Mod ${interaction.member.user.username}" wurde erstellt.`
         });
-      } else {
+        return resolve(null);
+      }
+
+      async function createOpenThread() {
+        const newThread = await modThreadArea.threads.create({
+          name: `Report ${reportId} | Mod ${interaction.member.user.username}`,
+          autoArchiveDuration: 60,
+          reason: "Thread for moderation"
+        });
+
+        const reportedUserId = await interaction.message.embeds[0].description
+          .split("<@")[1]
+          .split(">")[0];
+
+        const reportEmbed = new EmbedBuilder()
+          .setTitle(`⚡️ PowerBot | Reporting-System ⚡️`)
+          .setDescription(
+            `Hallo ${interaction.guild.members.cache.get(
+              reportedUserId
+            )}!\n\nDu wurdest von einem User gemeldet. Was kannst du uns dazu sagen?`
+          )
+          .setColor(0x51ff00)
+          .setTimestamp(Date.now())
+          .setFooter({
+            iconURL: client.user.displayAvatarURL(),
+            text: `powered by Powerbot`
+          })
+          .addFields([
+            {
+              name: `Beschwerdemeldung:`,
+              value: `${reportData.reportReason}`,
+              inline: false
+            },
+            {
+              name: `Bearbeitender Moderator:`,
+              value: `${interaction.member}`,
+              inline: false
+            }
+          ]);
+
+        await newThread.members.add(interaction.member.id);
+        await newThread.members.add(reportedUserId);
+        await newThread.send({ embeds: [reportEmbed] });
+        const tagMember = await newThread.send(
+          `${interaction.guild.members.cache.get(reportedUserId)} / ${
+            interaction.member
+          }`
+        );
+        setTimeout(function () {
+          tagMember.delete();
+        }, 100);
+
         await interaction.editReply({
           ephemeral: true,
-          content: `✅ Du hast den Report übernommen! Es wurde jedoch kein Private-Thread erstellt. Hierfür ist Discord-Boost-Level 3 erforderlich!)`
+          content: `✅ Du hast den Report übernommen! Es wurde ein Thread erstellt, der möglicherweise für alle sichtbar ist!. Für Private-Threads ist Discord-Boost-Level 3 erforderlich!)`
         });
         return resolve(null);
       }
+
+      if (interaction.guild.premiumTier === 3) {
+        createPrivateThread();
+      } else {
+        createOpenThread();
+      }
       // CREATE PRIVATE THREAD END \\
+
+      const reportInArbeitEmbed = new EmbedBuilder()
+        .setTitle(`⚡️ PowerBot | Reporting-System ⚡️`)
+        .setDescription(
+          `Hallo ${interaction.guild.members.cache.get(
+            reportData.reporterId
+          )}!\n\nDein Report wurde soeben übernommen und befindet sich in Bearbeitung!`
+        )
+        .setColor(0x51ff00)
+        .setTimestamp(Date.now())
+        .setFooter({
+          iconURL: client.user.displayAvatarURL(),
+          text: `powered by Powerbot`
+        })
+        .addFields([
+          {
+            name: `Gemeldeter User:`,
+            value: `${interaction.guild.members.cache.get(
+              reportData.reportedMemberId
+            )}`,
+            inline: false
+          },
+          {
+            name: `Beschwerdemeldung:`,
+            value: `${reportData.reportReason}`,
+            inline: false
+          },
+          {
+            name: `Bearbeitender Moderator:`,
+            value: `${interaction.member}`,
+            inline: false
+          }
+        ]);
+
+      try {
+        await interaction.guild.members.cache
+          .get(reportData.reporterId)
+          .send({ embeds: [reportInArbeitEmbed] });
+      } catch (error) {}
 
       return resolve(null);
     });

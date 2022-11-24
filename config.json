@@ -1,7 +1,12 @@
 {
-  "whitelist_testGuilds": ["994975619521712219", "396282694906150913", "539519507597885440"],
+  "whitelist_testGuilds": [
+    "994975619521712219",
+    "396282694906150913",
+    "539519507597885440"
+  ],
+
   "blacklist_Guilds": [],
-  
+
   "powerbot_token": "ODE1NjIxMTE1NzY5OTEzMzY0.GrbI_D.z3D1Q07OPhZMv7bAG0WO52mrs21T2UbbbWW0Pc",
   "powerbot_clientId": "815621115769913364",
   "powerbot_clientSecret": "_GcIlgPYoMzYKb97Hfa_vKHtE2a9i-pD",
@@ -9,11 +14,26 @@
   "powerbot_ldsguildID": "396282694906150913",
   "powerbot_mbrguildID": "539519507597885440",
 
-  "botmaster": ["539513467313455105", "609057609953312789", "289759037573169162"],
+  "botmaster": [
+    "539513467313455105",
+    "609057609953312789",
+    "289759037573169162"
+  ],
 
-
-  "powerbot_token_LIVE": "MTAwOTg1MTIzNTcwNjMzOTQ0MA.G2JdQS.zPN7vc5su37-z3m9VP8sCWqA425TuMhvHanocQ",
-  "powerbot_clientId_LIVE": "1009851235706339440",
+  "discord": {
+    "token": "ODE1NjIxMTE1NzY5OTEzMzY0.GrbI_D.z3D1Q07OPhZMv7bAG0WO52mrs21T2UbbbWW0Pc",
+    "client": {
+      "id": "815621115769913364",
+      "secret": "_GcIlgPYoMzYKb97Hfa_vKHtE2a9i-pD"
+    }
+  },
+  "dbd": {
+    "port": 8010,
+    "domain": "http://dashboard.pwr.lol",
+    "redirectUri": "/discord/callback/",
+    "license": "348c5b8a-91b9-4aa2-b0eb-d8d2ad2fe443",
+    "ownerIDs": ["539513467313455105"]
+  },
 
   "powerbot_status_channel": "997875924655689788",
   "powerbot_devlog_channel": "1012652868173565982",

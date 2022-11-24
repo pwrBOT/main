@@ -57,6 +57,11 @@ module.exports = {
         "modLog"
       );
 
+      const modRole = await guildsRepository.getGuildSetting(
+        interaction.guild,
+        "modRole"
+      );
+
       if (!data) {
         return resolve(null);
       } else {

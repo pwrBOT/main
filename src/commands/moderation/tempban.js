@@ -14,7 +14,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName(`tempban`)
     .setDescription(`User temporär vom Server bannen`)
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
     .addUserOption((option) =>
       option
         .setName("user")
@@ -34,7 +34,9 @@ module.exports = {
           { name: "1 Monat", value: "1 Monat" },
           { name: "3 Monate", value: "3 Monate" },
           { name: "6 Monate", value: "6 Monate" },
-          { name: "1 Jahr", value: "1 Jahr" }
+          { name: "1 Jahr", value: "1 Jahr" },
+          { name: "2 Jahre", value: "2 Jahre" },
+          { name: "3 Jahre", value: "3 Jahre" }
         )
     )
     .addStringOption((option) =>
@@ -133,12 +135,16 @@ module.exports = {
         unbanDate = moment(new Date()).add(2, "weeks");
       } else if (length === "1 Monat") {
         unbanDate = moment(new Date()).add(1, "month");
-      } else if (length === "3 Monat") {
+      } else if (length === "3 Monate") {
         unbanDate = moment(new Date()).add(3, "months");
-      } else if (length === "6 Monat") {
+      } else if (length === "6 Monate") {
         unbanDate = moment(new Date()).add(6, "months");
       } else if (length === "1 Jahr") {
-        unbanDate = moment(new Date()).add(1, "year");
+        unbanDate = moment(new Date()).add(1, "years");
+      } else if (length === "2 Jahre") {
+        unbanDate = moment(new Date()).add(2, "years");
+      } else if (length === "3 Jahre") {
+        unbanDate = moment(new Date()).add(3, "years");
       }
 
       const banembed = new EmbedBuilder()

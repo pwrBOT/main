@@ -1,4 +1,4 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
 module.exports = {
   data: {
     name: `report_erledigt`,
@@ -76,6 +76,37 @@ module.exports = {
         });
         return resolve(null);
       }
+
+      const reportErledigtEmbed = new EmbedBuilder()
+        .setTitle(`⚡️ PowerBot | Reporting-System ⚡️`)
+        .setDescription(`Hallo ${interaction.guild.members.cache.get(reportData.reporterId)}!\n\nDein Report wurde soeben bearbeitet und abgeschlossen.\n\nDanke für Deine Meldung!`)
+        .setColor(0x51ff00)
+        .setTimestamp(Date.now())
+        .setFooter({
+          iconURL: client.user.displayAvatarURL(),
+          text: `powered by Powerbot`
+        })
+        .addFields([
+          {
+            name: `Gemeldeter User:`,
+            value: `${interaction.guild.members.cache.get(reportData.reportedMemberId)}`,
+            inline: false
+          },
+          {
+            name: `Beschwerdemeldung:`,
+            value: `${reportData.reportReason}`,
+            inline: false
+          },
+          {
+            name: `Bearbeitender Moderator:`,
+            value: `${interaction.member}`,
+            inline: false
+          }
+        ]);
+
+      try {
+        await interaction.guild.members.cache.get(reportData.reporterId).send({ embeds: [reportErledigtEmbed] });
+      } catch (error) {}
 
       const modThreadArea = await interaction.guild.channels.cache.get(
         modThreadAreaId.value

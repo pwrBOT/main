@@ -100,11 +100,6 @@ module.exports = {
             inline: true
           },
           {
-            name: `Moderator:`,
-            value: interaction.user.tag,
-            inline: true
-          },
-          {
             name: `Information:`,
             value: `Bei Fragen wende dich bitte an die Projektleitung`,
             inline: false
