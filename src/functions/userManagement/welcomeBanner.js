@@ -5,7 +5,7 @@ const usersRepository = require("../../mysql/usersRepository");
 const guildsRepository = require("../../mysql/guildsRepository");
 const guildSettings = require("../../mysql/guildsRepository");
 
-const createWelcomeBanner = async (member) => {
+const createWelcomeBanner = async (member, welcomeMessage) => {
   const { join } = require("path");
   const { GlobalFonts } = require("@napi-rs/canvas");
   GlobalFonts.registerFromPath(
@@ -77,7 +77,7 @@ const createWelcomeBanner = async (member) => {
 
   context.textAlign = "center";
   context.font = "30px Roboto Light";
-  context.fillText(`Herzlich Willkommen @${memberDisplayName}`, 350, 270);
+  context.fillText(`${welcomeMessage} @${memberDisplayName}`, 350, 270);
 
   context.font = "18px Roboto Light";
   context.fillText(`Du bist Member #${user.ID}`, 350, 300);

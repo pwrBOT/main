@@ -23,7 +23,8 @@ module.exports = {
         await usersRepository.addUser(guildId, member.user);
 
         const user = await usersRepository.getUser(member.id, member.guild.id);
-        await welcomeBanner.createWelcomeBanner(member, user.ID);
+        const welcomeMessage = "Herzlich Willkommen"
+        await welcomeBanner.createWelcomeBanner(member, welcomeMessage);
 
         console.log(
           chalk.blue(
@@ -32,7 +33,8 @@ module.exports = {
         );
       } else {
         const user = await usersRepository.getUser(member.id, member.guild.id);
-        await welcomeBanner.createWelcomeBanner(member);
+        const welcomeMessage = "Willkommen zurück"
+        await welcomeBanner.createWelcomeBanner(member, welcomeMessage);
         console.log(
           chalk.blue(
             `[MYSQL DATABASE] User (${member.user.username}#${member.user.discriminator} | ID: ${member.user.id}) ist bereits bei Guild: ${guildId} registriert!`
