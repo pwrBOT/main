@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require(`discord.js`);
-const canvasWelcome = require("../../components/canvas/canvasUserbanner");
+const anvasUserbanner = require("../../components/canvas/canvasUserbanner");
 
 module.exports = {
   name: "userbanner",
@@ -10,7 +10,7 @@ module.exports = {
     .setDescription(`Userbanner anzeigen`),
 
   async execute(interaction) {
-    const img = await canvasWelcome.generateImage(interaction, interaction.user, interaction.guild);
+    const img = await anvasUserbanner.generateImage(interaction, interaction.user, interaction.guild);
 
     if (!img) {
       return interaction.reply("❌");

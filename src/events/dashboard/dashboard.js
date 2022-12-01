@@ -72,90 +72,14 @@ module.exports = {
       minimizedConsoleLogs: true,
       bot: client,
       theme: SoftUI({
-        customThemeOptions: {
-          index: async ({ req, res, config }) => {
-            const cards = [ 
-              {
-                title: "Server",
-                icon: "spaceship",
-                getValue: `${client.guilds.cache.size} Server`,
-                progressBar: {
-                  enabled: false,
-                  getProgress: 8 // 0 - 100 (get a percentage of the progress)
-                }
-              }  
-            ];
-
-            const graph = {
-              values: [
-                120, 214, 214, 214, 220, 180, 210, 190, 220, 180, 210, 190
-              ],
-              labels: [
-                "1m",
-                "2m",
-                "3m",
-                "4m",
-                "5m",
-                "6m",
-                "7m",
-                "8m",
-                "9m",
-                "10m"
-              ]
-            };
-            return {
-              cards,
-              graph
-            };
-          }
-        },
         websiteName: "PowerBot",
         colorScheme: "yellow",
         supporteMail: "power@pwr.lol",
-        icons: {
-          favicon: "https://pwr.lol/img/bot_logo_discord.png",
-          noGuildIcon: "https://pwr.lol/img/bot_logo_discord.png",
-          sidebar: {
-            darkUrl: "https://pwr.lol/img/bot_logo_wide.png",
-            lightUrl: "https://pwr.lol/img/bot_logo_wide.png",
-            hideName: true,
-            borderRadius: false,
-            alignCenter: true
-          }
-        },
-        preloader: {
-          image: "https://pwr.lol/img/bot_logo_wide.png",
-          spinner: true,
-          text: "Power wird geladen..."
-        },
-        index: {
-          card: {
-            category: "PowerBot | Dashboard",
-            title:
-              "PowerBot - Hol dir die ultimative Power für deinen Discord Server",
-            description: "",
-            image: "https://pwr.lol/img/bot_logo_wide.png",
-            link: {
-              text: "Support Server",
-              enabled: true,
-              url: "https://discord.gg/yYq4UgRRzz"
-            }
-          },
-          graph: {
-            enabled: true,
-            lineGraph: false,
-            title: "Memory Usage",
-            tag: "Memory (MB)",
-            max: 100
-          }
-        },
         locales: {
           deDE: {
             name: "Deutsch",
             index: {
-              feeds: [
-                "DIE ULTIMATIVE POWER NUTZEN:",
-              ],
+              feeds: ["DIE ULTIMATIVE POWER NUTZEN:"],
               card: {
                 category: "Welcome to PowerBot",
                 title:
@@ -231,7 +155,8 @@ module.exports = {
               },
               premium: {
                 title: "Du möchtest Premium-Power?",
-                description: "Schau dir unsere Angebote an und hol dir die ultimative Power.",
+                description:
+                  "Schau dir unsere Angebote an und hol dir die ultimative Power.",
                 buttonText: "Premium holen"
               },
               settings: {
@@ -247,6 +172,81 @@ module.exports = {
                 }
               }
             }
+          }
+        },
+        customThemeOptions: {
+          index: async ({ req, res, config }) => {
+            const cards = [
+              {
+                title: "Server",
+                icon: "spaceship",
+                getValue: `${client.guilds.cache.size} Server`,
+                progressBar: {
+                  enabled: false,
+                  getProgress: 8 // 0 - 100 (get a percentage of the progress)
+                }
+              }
+            ];
+
+            const graph = {
+              values: [
+                120, 214, 214, 214, 220, 180, 210, 190, 220, 180, 210, 190
+              ],
+              labels: [
+                "1m",
+                "2m",
+                "3m",
+                "4m",
+                "5m",
+                "6m",
+                "7m",
+                "8m",
+                "9m",
+                "10m"
+              ]
+            };
+            return {
+              cards,
+              graph
+            };
+          }
+        },
+        icons: {
+          favicon: "https://pwr.lol/img/bot_logo_discord.png",
+          noGuildIcon: "https://pwr.lol/img/bot_logo_discord.png",
+          sidebar: {
+            darkUrl: "https://pwr.lol/img/bot_logo_wide.png",
+            lightUrl: "https://pwr.lol/img/bot_logo_wide.png",
+            hideName: true,
+            borderRadius: false,
+            alignCenter: true
+          },
+          settings: {}
+        },
+        preloader: {
+          image: "https://pwr.lol/img/bot_logo_wide.png",
+          spinner: true,
+          text: "Power wird geladen..."
+        },
+        index: {
+          card: {
+            category: "PowerBot | Dashboard",
+            title:
+              "PowerBot - Hol dir die ultimative Power für deinen Discord Server",
+            description: "",
+            image: "https://pwr.lol/img/bot_logo_wide.png",
+            link: {
+              text: "Support Server",
+              enabled: true,
+              url: "https://discord.gg/yYq4UgRRzz"
+            }
+          },
+          graph: {
+            enabled: true,
+            lineGraph: false,
+            title: "Memory Usage",
+            tag: "Memory (MB)",
+            max: 100
           }
         },
         sweetalert: {
@@ -294,9 +294,11 @@ module.exports = {
         /// ################## BOT SETTINGS ################## \\\
         {
           categoryId: "adminsettings",
-          categoryName: "Bot-Admin Einstellungen",
+          categoryName: "Generelle Einstellungen",
           categoryDescription:
-            "Definiere die jeweiligen Bot-Channel (Bot-Log, Mod-Log, Welcome-Channel, ...)",
+            "Definiere wichtige Rollen und Channel für das Team, Moderatoren, Logging, ...",
+          categoryImageURL:
+            "http://primedepartamentos.com/images/icons/settings-icon.png",
           categoryOptionsList: [
             /// ########## ROLE SETTINGS ########## \\\
             {
@@ -337,7 +339,7 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
             {
               optionId: "teamRole",
@@ -377,52 +379,12 @@ module.exports = {
                   );
                 }
                 return;
-              },
-            },
-            {
-              optionId: "muteRole",
-              optionName: "",
-              optionDescription: "Mute Rolle:",
-              optionType: DBD.formTypes.rolesSelect(false),
-              getActualSet: async ({ guild }) => {
-                let data = await guildsRepository.getGuildSetting(
-                  guild,
-                  "muteRole"
-                );
-
-                if (data) return data.value;
-                else return null;
-              },
-              setNew: async ({ guild, newData }) => {
-                let data = await guildsRepository.getGuildSetting(
-                  guild,
-                  "muteRole"
-                );
-
-                if (!newData) newData = null;
-
-                if (!data) {
-                  const property = "muteRole";
-                  await guildsRepository.insertGuildSetting(
-                    guild,
-                    property,
-                    newData
-                  );
-                } else {
-                  const property = "muteRole";
-                  await guildsRepository.updateGuildSetting(
-                    guild,
-                    property,
-                    newData
-                  );
-                }
-                return;
-              },
+              }
             },
             {
               optionId: "modRole",
               optionName: "",
-              optionDescription: "Moderator Rolle:",
+              optionDescription: "Moderator Rollen:",
               optionType: DBD.formTypes.rolesMultiSelect(false, false),
               getActualSet: async ({ guild }) => {
                 let data = await guildsRepository.getGuildSetting(
@@ -457,13 +419,14 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
             /// ########## CHANNEL SETTINGS ########## \\\
             {
               optionId: "modArea",
               optionName: "",
-              optionDescription: "Mod-Area (Hier werden Threads für Reports erstellt. Freilassen, wenn man keine Threads aktivieren möchte):",
+              optionDescription:
+                "Mod-Area (Hier werden Threads für Reports erstellt. Freilassen, wenn man keine Threads aktivieren möchte):",
               optionType: DBD.formTypes.channelsSelect(
                 false,
                 (channelTypes = [ChannelType.GuildText])
@@ -501,138 +464,8 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
-            {
-              optionId: "botlog",
-              optionName: "",
-              optionDescription: "Bot-Log Channel:",
-              optionType: DBD.formTypes.channelsSelect(
-                false,
-                (channelTypes = [ChannelType.GuildText])
-              ),
-              getActualSet: async ({ guild }) => {
-                let data = await guildsRepository.getGuildSetting(
-                  guild,
-                  "botlog"
-                );
-
-                if (data) return data.value;
-                else return null;
-              },
-              setNew: async ({ guild, newData }) => {
-                let data = await guildsRepository.getGuildSetting(
-                  guild,
-                  "botlog"
-                );
-
-                if (!newData) newData = null;
-
-                if (!data) {
-                  const property = "botlog";
-                  await guildsRepository.insertGuildSetting(
-                    guild,
-                    property,
-                    newData
-                  );
-                } else {
-                  const property = "botlog";
-                  await guildsRepository.updateGuildSetting(
-                    guild,
-                    property,
-                    newData
-                  );
-                }
-                return;
-              },
-            },
-            {
-              optionId: "modLog",
-              optionName: "",
-              optionDescription: "Mod-Log Channel:",
-              optionType: DBD.formTypes.channelsSelect(
-                false,
-                (channelTypes = [ChannelType.GuildText])
-              ),
-              getActualSet: async ({ guild }) => {
-                let data = await guildsRepository.getGuildSetting(
-                  guild,
-                  "modLog"
-                );
-
-                if (data) return data.value;
-                else return null;
-              },
-              setNew: async ({ guild, newData }) => {
-                let data = await guildsRepository.getGuildSetting(
-                  guild,
-                  "modLog"
-                );
-
-                if (!newData) newData = null;
-
-                if (!data) {
-                  const property = "modLog";
-                  await guildsRepository.insertGuildSetting(
-                    guild,
-                    property,
-                    newData
-                  );
-                } else {
-                  const property = "modLog";
-                  await guildsRepository.updateGuildSetting(
-                    guild,
-                    property,
-                    newData
-                  );
-                }
-                return;
-              },
-            },
-            {
-              optionId: "welcomechannel",
-              optionName: "",
-              optionDescription: "Welcome Channel:",
-              optionType: DBD.formTypes.channelsSelect(
-                false,
-                (channelTypes = [ChannelType.GuildText])
-              ),
-              getActualSet: async ({ guild }) => {
-                let data = await guildsRepository.getGuildSetting(
-                  guild,
-                  "welcomechannel"
-                );
-
-                if (data) return data.value;
-                else return null;
-              },
-              setNew: async ({ guild, newData }) => {
-                let data = await guildsRepository.getGuildSetting(
-                  guild,
-                  "welcomechannel"
-                );
-
-                if (!newData) newData = null;
-
-                if (!data) {
-                  const property = "welcomechannel";
-                  await guildsRepository.insertGuildSetting(
-                    guild,
-                    property,
-                    newData
-                  );
-                } else {
-                  const property = "welcomechannel";
-                  await guildsRepository.updateGuildSetting(
-                    guild,
-                    property,
-                    newData
-                  );
-                }
-                return;
-              },
-            },
-            /// ########## MISC SETTINGS ########## \\\
             {
               optionId: "embedinfo",
               optionName: "",
@@ -678,7 +511,221 @@ module.exports = {
                   );
                 }
                 return;
+              }
+            },
+            {
+              optionId: "modLog",
+              optionName: "",
+              optionDescription: "Mod-Log Channel:",
+              optionType: DBD.formTypes.channelsSelect(
+                false,
+                (channelTypes = [ChannelType.GuildText])
+              ),
+              getActualSet: async ({ guild }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "modLog"
+                );
+
+                if (data) return data.value;
+                else return null;
               },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "modLog"
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const property = "modLog";
+                  await guildsRepository.insertGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                } else {
+                  const property = "modLog";
+                  await guildsRepository.updateGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                }
+                return;
+              }
+            },
+            {
+              optionId: "botlog",
+              optionName: "",
+              optionDescription: "Bot-Log Channel:",
+              optionType: DBD.formTypes.channelsSelect(
+                false,
+                (channelTypes = [ChannelType.GuildText])
+              ),
+              getActualSet: async ({ guild }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "botlog"
+                );
+
+                if (data) return data.value;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "botlog"
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const property = "botlog";
+                  await guildsRepository.insertGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                } else {
+                  const property = "botlog";
+                  await guildsRepository.updateGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                }
+                return;
+              }
+            },
+            {
+              optionId: "ignoredChannels",
+              optionName: "",
+              optionDescription:
+                "Channels die vom Logging ausgenommen sind (z.B. Admin Channels):",
+              optionType: DBD.formTypes.channelsMultiSelect(
+                false,
+                true,
+                (channelTypes = [ChannelType.GuildText])
+              ),
+              getActualSet: async ({ guild }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "ignoredChannels"
+                );
+
+                if (data) return JSON.parse(data.value);
+                else return [];
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "ignoredChannels"
+                );
+
+                if (!data) {
+                  const property = "ignoredChannels";
+                  newDataString = JSON.stringify(newData);
+                  await guildsRepository.insertGuildSetting(
+                    guild,
+                    property,
+                    newDataString
+                  );
+                } else {
+                  const property = "ignoredChannels";
+                  newDataString = JSON.stringify(newData);
+                  await guildsRepository.updateGuildSetting(
+                    guild,
+                    property,
+                    newDataString
+                  );
+                }
+                return;
+              }
+            },
+            {
+              optionId: "donatorRole",
+              optionName: "",
+              optionDescription: "Donator Rolle:",
+              optionType: DBD.formTypes.rolesSelect(false),
+              getActualSet: async ({ guild }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "donatorRole"
+                );
+
+                if (data) return data.value;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "donatorRole"
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const property = "donatorRole";
+                  await guildsRepository.insertGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                } else {
+                  const property = "donatorRole";
+                  await guildsRepository.updateGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                }
+                return;
+              }
+            },
+            {
+              optionId: "welcomechannel",
+              optionName: "",
+              optionDescription: "Welcome Channel:",
+              optionType: DBD.formTypes.channelsSelect(
+                false,
+                (channelTypes = [ChannelType.GuildText])
+              ),
+              getActualSet: async ({ guild }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "welcomechannel"
+                );
+
+                if (data) return data.value;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "welcomechannel"
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const property = "welcomechannel";
+                  await guildsRepository.insertGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                } else {
+                  const property = "welcomechannel";
+                  await guildsRepository.updateGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                }
+                return;
+              }
             },
             {
               optionId: "language",
@@ -721,66 +768,58 @@ module.exports = {
                   );
                 }
                 return;
-              },
-            },
-          ],
+              }
+            }
+          ]
         },
         /// ################ BOT SETTINGS END ################ \\\
         /// ################## AUTO MESSAGES ################## \\\
         {
           categoryId: "automessages",
-          categoryName: "Automatische Bot-Nachrichten (SOON)",
-          categoryDescription: "Schalte automatische Nachrichten an / aus",
+          categoryName: "Welcome Message",
+          categoryDescription: "### SOON ### - Funktion nicht verfügbar",
+
+          toggleable: true,
+          getActualSet: async ({ guild }) => {
+            let data = await embedsRepository.getEmbed(
+              guild,
+              "welcomeMessage"
+            );
+            if (data) return data.active;
+            else return false;
+          },
+          setNew: async ({ guild, newData }) => {
+            let data = await embedsRepository.getEmbed(
+              guild,
+              "welcomeMessage"
+            );
+
+            if (!newData) newData = null;
+
+            if (!data) {
+              const column = "active";
+              await embedsRepository.addEmbed(
+                guild,
+                "welcomeMessage",
+                "0",
+                false,
+                null,
+                false,
+                false
+              );
+            } else {
+              const column = "active";
+              await embedsRepository.updateEmbed(
+                column,
+                "0",
+                guild,
+                "welcomeMessage"
+              );
+            }
+            return;
+          },
+
           categoryOptionsList: [
-            {
-              optionId: "welcomeMessage",
-              optionName: "Willkommensnachricht DM:",
-              optionDescription: "Willkommensnachricht DM ein/aus:",
-              optionType: DBD.formTypes.switch(false),
-              themeOptions: {
-                minimalbutton: {
-                  first: true,
-                },
-              },
-              getActualSet: async ({ guild }) => {
-                let data = await embedsRepository.getEmbed(
-                  guild,
-                  "welcomeMessage"
-                );
-                if (data) return data.active;
-                else return false;
-              },
-              setNew: async ({ guild, newData }) => {
-                let data = await embedsRepository.getEmbed(
-                  guild,
-                  "welcomeMessage"
-                );
-
-                if (!newData) newData = null;
-
-                if (!data) {
-                  const column = "active";
-                  await embedsRepository.addEmbed(
-                    guild,
-                    "welcomeMessage",
-                    newData,
-                    false,
-                    null,
-                    false,
-                    false
-                  );
-                } else {
-                  const column = "active";
-                  await embedsRepository.updateEmbed(
-                    column,
-                    newData,
-                    guild,
-                    "welcomeMessage"
-                  );
-                }
-                return;
-              },
-            },
             {
               optionId: "welcomeEmbed",
               optionName: "",
@@ -788,8 +827,8 @@ module.exports = {
               optionType: DBD.formTypes.switch(false),
               themeOptions: {
                 minimalbutton: {
-                  last: true,
-                },
+                  last: true
+                }
               },
               getActualSet: async ({ guild }) => {
                 let data = await embedsRepository.getEmbed(
@@ -828,7 +867,7 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
 
             {
@@ -846,10 +885,10 @@ module.exports = {
                     timestamp: Date.now(),
                     footer: {
                       text: `powered by Powerbot`,
-                      icon_url: `${user.displayAvatarURL()}`,
-                    },
-                  },
-                },
+                      icon_url: `${user.displayAvatarURL()}`
+                    }
+                  }
+                }
               }),
 
               getActualSet: async ({ guild }) => {
@@ -895,105 +934,55 @@ module.exports = {
                   );
                 }
                 return;
-              },
-            },
-          ],
+              }
+            }
+          ]
         },
         /// ################ AUTO MESSAGES END ################ \\\
         /// ################## LEVEL SYSTEM ################## \\\
         {
           categoryId: "levelsystem",
           categoryName: "Level System",
-          categoryDescription: "Vergib Besondere Rollen an aktive User",
+          categoryDescription:
+            "Vergib Besondere Rollen an aktive User<br><br>XP pro Nachricht minimal: 6 <br> XP pro Nachricht maximal: 25<br> Level 1: 100XP || Level 10: 8200XP || Level 25: 57700XP || Level 50: 240200XP  || Level 75: 547700XP  || Level 100: 980200XP <br> Berechnung LevelUp = Level * Level * 100 + 100",
+
+          categoryImageURL: "https://toppng.com/uploads/preview/3d-gold-star-png-11552727047ns6x0xgmcz.png",  
+
+          toggleable: true,
+          getActualSet: async ({ guild }) => {
+            let data = await levelsRepository.getlevelSettings(guild);
+
+            if (data) return data.levelRolesActive;
+            else return null;
+          },
+          setNew: async ({ guild, newData }) => {
+            let data = await levelsRepository.getlevelSettings(guild);
+
+            if (!newData) newData = null;
+
+            if (!data) {
+              const column = "levelRolesActive";
+              await levelsRepository.updatelevelSettings(
+                guild,
+                column,
+                newData
+              );
+            } else {
+              const column = "levelRolesActive";
+              await levelsRepository.updatelevelSettings(
+                guild,
+                column,
+                newData
+              );
+            }
+            return;
+          },
+
           categoryOptionsList: [
-            {
-              optionType: "spacer",
-              title: "XP / Level System",
-              description:
-                "XP pro Nachricht minimal: 10 <br> XP pro Nachricht maximal: 30 <br><br> Level 1: 100XP || Level 10: 8200XP || Level 25: 57700XP || Level 50: 240200XP  || Level 75: 547700XP  || Level 100: 980200XP <br> Berechnung LevelUp = Level * Level * 100 + 100",
-            },
-            {
-              optionId: "levelRolesActive",
-              optionName: "",
-              optionDescription: "Level Auto-Roles an/aus:",
-              optionType: DBD.formTypes.switch(false),
-              themeOptions: {
-                minimalbutton: {
-                  first: true,
-                },
-              },
-              getActualSet: async ({ guild }) => {
-                let data = await levelsRepository.getlevelSettings(guild);
-
-                if (data) return data.levelRolesActive;
-                else return null;
-              },
-              setNew: async ({ guild, newData }) => {
-                let data = await levelsRepository.getlevelSettings(guild);
-
-                if (!newData) newData = null;
-
-                if (!data) {
-                  const column = "levelRolesActive";
-                  await levelsRepository.updatelevelSettings(
-                    guild,
-                    column,
-                    newData
-                  );
-                } else {
-                  const column = "levelRolesActive";
-                  await levelsRepository.updatelevelSettings(
-                    guild,
-                    column,
-                    newData
-                  );
-                }
-                return;
-              },
-            },
-            {
-              optionId: "levelRolesTeam",
-              optionName: "",
-              optionDescription: "Level-Rolle bei Teammitgliedern an/aus:",
-              optionType: DBD.formTypes.switch(false),
-              themeOptions: {
-                minimalbutton: {
-                  last: true,
-                },
-              },
-              getActualSet: async ({ guild }) => {
-                let data = await levelsRepository.getlevelSettings(guild);
-
-                if (data) return data.levelRolesTeam;
-                else return null;
-              },
-              setNew: async ({ guild, newData }) => {
-                let data = await levelsRepository.getlevelSettings(guild);
-
-                if (!newData) newData = null;
-
-                if (!data) {
-                  const column = "levelRolesTeam";
-                  await levelsRepository.updatelevelSettings(
-                    guild,
-                    column,
-                    newData
-                  );
-                } else {
-                  const column = "levelRolesTeam";
-                  await levelsRepository.updatelevelSettings(
-                    guild,
-                    column,
-                    newData
-                  );
-                }
-                return;
-              },
-            },
             {
               optionId: "rankChannel",
               optionName: "",
-              optionDescription: "Rank / Level Channel:",
+              optionDescription: "Rank / Level Channel auswählen:",
               optionType: DBD.formTypes.channelsSelect(
                 false,
                 (channelTypes = [ChannelType.GuildText])
@@ -1025,16 +1014,51 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
             {
-              optionType: "spacer",
-              title: "ROLLENBELOHNUNG 1:",
-              description: "",
+              optionId: "levelRolesTeam",
+              optionName: "",
+              optionDescription:
+                "Sollen Team-Mitglieder auch leveln und Rollen bekommen?",
+              optionType: DBD.formTypes.switch(false),
+              themeOptions: {
+                minimalbutton: {
+                  last: true
+                }
+              },
+              getActualSet: async ({ guild }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (data) return data.levelRolesTeam;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "levelRolesTeam";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "levelRolesTeam";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              }
             },
             {
               optionId: "LevelUp1",
-              optionName: "",
+              optionName: "ROLLENBELOHNUNG 1:",
               optionDescription: "Rollenbelohnung mit Level:",
               optionType: DBD.formTypes.input(1, 1, 3, false, true),
               getActualSet: async ({ guild }) => {
@@ -1064,7 +1088,7 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
             {
               optionId: "level1",
@@ -1098,16 +1122,11 @@ module.exports = {
                   );
                 }
                 return;
-              },
-            },
-            {
-              optionType: "spacer",
-              title: "ROLLENBELOHNUNG 2:",
-              description: "",
+              }
             },
             {
               optionId: "LevelUp2",
-              optionName: "",
+              optionName: "ROLLENBELOHNUNG 2:",
               optionDescription: "Rollenbelohnung mit Level:",
               optionType: DBD.formTypes.input(1, 1, 3, false, true),
               getActualSet: async ({ guild }) => {
@@ -1137,7 +1156,7 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
             {
               optionId: "level2",
@@ -1171,16 +1190,11 @@ module.exports = {
                   );
                 }
                 return;
-              },
-            },
-            {
-              optionType: "spacer",
-              title: "ROLLENBELOHNUNG 3:",
-              description: "",
+              }
             },
             {
               optionId: "LevelUp3",
-              optionName: "",
+              optionName: "ROLLENBELOHNUNG 3:",
               optionDescription: "Rollenbelohnung mit Level:",
               optionType: DBD.formTypes.input(1, 1, 3, false, true),
               getActualSet: async ({ guild }) => {
@@ -1210,7 +1224,7 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
             {
               optionId: "level3",
@@ -1244,16 +1258,11 @@ module.exports = {
                   );
                 }
                 return;
-              },
-            },
-            {
-              optionType: "spacer",
-              title: "ROLLENBELOHNUNG 4:",
-              description: "",
+              }
             },
             {
               optionId: "LevelUp4",
-              optionName: "",
+              optionName: "ROLLENBELOHNUNG 4:",
               optionDescription: "Rollenbelohnung mit Level:",
               optionType: DBD.formTypes.input(1, 1, 3, false, true),
               getActualSet: async ({ guild }) => {
@@ -1283,7 +1292,7 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
             {
               optionId: "level4",
@@ -1317,16 +1326,11 @@ module.exports = {
                   );
                 }
                 return;
-              },
-            },
-            {
-              optionType: "spacer",
-              title: "ROLLENBELOHNUNG 5:",
-              description: "",
+              }
             },
             {
               optionId: "LevelUp5",
-              optionName: "",
+              optionName: "ROLLENBELOHNUNG 5:",
               optionDescription: "Rollenbelohnung mit Level:",
               optionType: DBD.formTypes.input(1, 1, 3, false, true),
               getActualSet: async ({ guild }) => {
@@ -1356,7 +1360,7 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
             {
               optionId: "level5",
@@ -1390,16 +1394,11 @@ module.exports = {
                   );
                 }
                 return;
-              },
-            },
-            {
-              optionType: "spacer",
-              title: "ROLLENBELOHNUNG 6:",
-              description: "",
+              }
             },
             {
               optionId: "LevelUp6",
-              optionName: "",
+              optionName: "ROLLENBELOHNUNG 6:",
               optionDescription: "Rollenbelohnung mit Level:",
               optionType: DBD.formTypes.input(1, 1, 3, false, true),
               getActualSet: async ({ guild }) => {
@@ -1429,7 +1428,7 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
             {
               optionId: "level6",
@@ -1463,16 +1462,11 @@ module.exports = {
                   );
                 }
                 return;
-              },
-            },
-            {
-              optionType: "spacer",
-              title: "ROLLENBELOHNUNG 7:",
-              description: "",
+              }
             },
             {
               optionId: "LevelUp7",
-              optionName: "",
+              optionName: "ROLLENBELOHNUNG 7:",
               optionDescription: "Rollenbelohnung mit Level:",
               optionType: DBD.formTypes.input(1, 1, 3, false, true),
               getActualSet: async ({ guild }) => {
@@ -1502,7 +1496,7 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
             {
               optionId: "level7",
@@ -1536,16 +1530,11 @@ module.exports = {
                   );
                 }
                 return;
-              },
-            },
-            {
-              optionType: "spacer",
-              title: "ROLLENBELOHNUNG 8:",
-              description: "",
+              }
             },
             {
               optionId: "LevelUp8",
-              optionName: "",
+              optionName: "ROLLENBELOHNUNG 8:",
               optionDescription: "Rollenbelohnung mit Level:",
               optionType: DBD.formTypes.input(1, 1, 3, false, true),
               getActualSet: async ({ guild }) => {
@@ -1575,7 +1564,7 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
             {
               optionId: "level8",
@@ -1609,16 +1598,11 @@ module.exports = {
                   );
                 }
                 return;
-              },
-            },
-            {
-              optionType: "spacer",
-              title: "ROLLENBELOHNUNG 9:",
-              description: "",
+              }
             },
             {
               optionId: "LevelUp9",
-              optionName: "",
+              optionName: "ROLLENBELOHNUNG 9:",
               optionDescription: "Rollenbelohnung mit Level:",
               optionType: DBD.formTypes.input(1, 1, 3, false, true),
               getActualSet: async ({ guild }) => {
@@ -1648,7 +1632,7 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
             {
               optionId: "level9",
@@ -1682,16 +1666,11 @@ module.exports = {
                   );
                 }
                 return;
-              },
-            },
-            {
-              optionType: "spacer",
-              title: "ROLLENBELOHNUNG 10:",
-              description: "",
+              }
             },
             {
               optionId: "LevelUp10",
-              optionName: "",
+              optionName: "ROLLENBELOHNUNG 10:",
               optionDescription: "Rollenbelohnung mit Level:",
               optionType: DBD.formTypes.input(1, 1, 3, false, true),
               getActualSet: async ({ guild }) => {
@@ -1721,7 +1700,7 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
             {
               optionId: "level10",
@@ -1755,27 +1734,54 @@ module.exports = {
                   );
                 }
                 return;
-              },
-            },
-          ],
+              }
+            }
+          ]
         },
         /// ################ LEVEL SYSTEM END ################ \\\
         /// ################## AUTO MOD SYSTEM ################## \\\
         {
           categoryId: "autmodsystem",
-          categoryName: "Auto Moderation (SOON)",
+          categoryName: "Auto Mod",
           categoryDescription:
             "Einstellungen für die automatische Moderation von Usern.",
+          categoryImageURL: "https://cdn3.emoji.gg/emojis/6776-moderator-simplified.png",
+
+          toggleable: true,
+          getActualSet: async ({ guild }) => {
+            let data = await autoModRepository.getGuildAutoModSettings(guild);
+            if (data) return data.autoModWarnings;
+            else return null;
+          },
+          setNew: async ({ guild, newData }) => {
+            let data = await autoModRepository.getGuildAutoModSettings(guild);
+
+            if (!newData) newData = null;
+
+            if (!data) {
+              const column = "autoModWarnings";
+              await autoModRepository.updateAutoModSettingsDashboard(
+                guild,
+                column,
+                newData
+              );
+            } else {
+              const column = "autoModWarnings";
+              await autoModRepository.updateAutoModSettingsDashboard(
+                guild,
+                column,
+                newData
+              );
+            }
+            return;
+          },
+
           categoryOptionsList: [
-            {
-              optionType: "spacer",
-              title: "Automatische Moderation",
-              description: "### soon ###",
-            },
             {
               optionId: "autoModInvites",
               optionName: "",
-              optionDescription: "Auto-Moderation bei Invites an/aus:",
+              optionDescription:
+                "Sollen User verwarnt werden, wenn sie Einladungslinks von anderen Discords posten?",
               optionType: DBD.formTypes.switch(false),
               getActualSet: async ({ guild }) => {
                 let data = await guildsRepository.getGuildSetting(
@@ -1810,58 +1816,11 @@ module.exports = {
                   );
                 }
                 return;
-              },
-            },
-            {
-              optionType: "spacer",
-              title: "Warn System | Auto Mod",
-              description: "",
-            },
-            {
-              optionId: "autoModWarnings",
-              optionName: "",
-              optionDescription: "Auto-Moderation bei Warns an/aus:",
-              optionType: DBD.formTypes.switch(false),
-              getActualSet: async ({ guild }) => {
-                let data = await autoModRepository.getGuildAutoModSettings(
-                  guild
-                );
-                if (data) return data.autoModWarnings;
-                else return null;
-              },
-              setNew: async ({ guild, newData }) => {
-                let data = await autoModRepository.getGuildAutoModSettings(
-                  guild
-                );
-
-                if (!newData) newData = null;
-
-                if (!data) {
-                  const column = "autoModWarnings";
-                  await autoModRepository.updateAutoModSettingsDashboard(
-                    guild,
-                    column,
-                    newData
-                  );
-                } else {
-                  const column = "autoModWarnings";
-                  await autoModRepository.updateAutoModSettingsDashboard(
-                    guild,
-                    column,
-                    newData
-                  );
-                }
-                return;
-              },
-            },
-            {
-              optionType: "spacer",
-              title: "",
-              description: "Warn Sanktion 01:",
+              }
             },
             {
               optionId: "warnsCount01",
-              optionName: "",
+              optionName: "Warn Sanktion 01:",
               optionDescription: "",
               optionType: DBD.formTypes.select(
                 {
@@ -1875,7 +1834,7 @@ module.exports = {
                   "User soll bei 7 Warns": "7",
                   "User soll bei 8 Warns": "8",
                   "User soll bei 9 Warns": "9",
-                  "User soll bei 10 Warns": "10",
+                  "User soll bei 10 Warns": "10"
                 },
                 false
               ),
@@ -1909,7 +1868,7 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
             {
               optionId: "duration01",
@@ -1927,7 +1886,7 @@ module.exports = {
                   "1 Monat": "1m",
                   "2 Monate": "2m",
                   "4 Monate": "4m",
-                  "**dauerhaft**": "dauerhaft",
+                  "**dauerhaft**": "dauerhaft"
                 },
                 false
               ),
@@ -1961,7 +1920,7 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
             {
               optionId: "sanctionType01",
@@ -1972,7 +1931,7 @@ module.exports = {
                   "Sanktion auswählen": "0",
                   "getimeouted werden!": "timeout",
                   "temporär gebannt werden!": "tempban",
-                  "gebannt werden!": "ban",
+                  "gebannt werden!": "ban"
                 },
                 false
               ),
@@ -2006,16 +1965,11 @@ module.exports = {
                   );
                 }
                 return;
-              },
-            },
-            {
-              optionType: "spacer",
-              title: "",
-              description: "Warn Sanktion 02:",
+              }
             },
             {
               optionId: "warnsCount02",
-              optionName: "",
+              optionName: "Warn Sanktion 02:",
               optionDescription: "",
               optionType: DBD.formTypes.select(
                 {
@@ -2029,7 +1983,7 @@ module.exports = {
                   "User soll bei 7 Warns": "7",
                   "User soll bei 8 Warns": "8",
                   "User soll bei 9 Warns": "9",
-                  "User soll bei 10 Warns": "10",
+                  "User soll bei 10 Warns": "10"
                 },
                 false
               ),
@@ -2063,7 +2017,7 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
             {
               optionId: "duration02",
@@ -2081,7 +2035,7 @@ module.exports = {
                   "1 Monat": "1m",
                   "2 Monate": "2m",
                   "4 Monate": "4m",
-                  "**dauerhaft**": "dauerhaft",
+                  "**dauerhaft**": "dauerhaft"
                 },
                 false
               ),
@@ -2115,7 +2069,7 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
             {
               optionId: "sanctionType02",
@@ -2126,7 +2080,7 @@ module.exports = {
                   "Sanktion auswählen": "0",
                   "getimeouted werden!": "timeout",
                   "temporär gebannt werden!": "tempban",
-                  "gebannt werden!": "ban",
+                  "gebannt werden!": "ban"
                 },
                 false
               ),
@@ -2160,16 +2114,11 @@ module.exports = {
                   );
                 }
                 return;
-              },
-            },
-            {
-              optionType: "spacer",
-              title: "",
-              description: "Warn Sanktion 03:",
+              }
             },
             {
               optionId: "warnsCount03",
-              optionName: "",
+              optionName: "Warn Sanktion 03:",
               optionDescription: "",
               optionType: DBD.formTypes.select(
                 {
@@ -2183,7 +2132,7 @@ module.exports = {
                   "User soll bei 7 Warns": "7",
                   "User soll bei 8 Warns": "8",
                   "User soll bei 9 Warns": "9",
-                  "User soll bei 10 Warns": "10",
+                  "User soll bei 10 Warns": "10"
                 },
                 false
               ),
@@ -2217,7 +2166,7 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
             {
               optionId: "duration03",
@@ -2235,7 +2184,7 @@ module.exports = {
                   "2 Monat": "2m",
                   "4 Monate": "4m",
                   "6 Monate": "6m",
-                  "**dauerhaft**": "dauerhaft",
+                  "**dauerhaft**": "dauerhaft"
                 },
                 false
               ),
@@ -2269,7 +2218,7 @@ module.exports = {
                   );
                 }
                 return;
-              },
+              }
             },
             {
               optionId: "sanctionType03",
@@ -2280,7 +2229,7 @@ module.exports = {
                   "Sanktion auswählen": "0",
                   "getimeouted werden!": "timeout",
                   "temporär gebannt werden!": "tempban",
-                  "gebannt werden!": "ban",
+                  "gebannt werden!": "ban"
                 },
                 false
               ),
@@ -2314,63 +2263,12 @@ module.exports = {
                   );
                 }
                 return;
-              },
-            },
-          ],
-        },
+              }
+            }
+          ]
+        }
         /// ################ AUTO MOD SYSTEM END ################ \\\
-        /// ################## LOGGING SYSTEM ################## \\\
-        {
-          categoryId: "loggingsystem",
-          categoryName: "Logging System:",
-          categoryDescription:
-            "Richte das Logging nach deinen Bedürfnissen ein.",
-          categoryOptionsList: [
-            {
-              optionId: "ignoredChannels",
-              optionName: "",
-              optionDescription: "Channels die vom Logging ausgenommen sind (z.B. Admin Channels):",
-              optionType: DBD.formTypes.channelsMultiSelect(false, true, (channelTypes = [ChannelType.GuildText])),
-              getActualSet: async ({ guild }) => {
-                let data = await guildsRepository.getGuildSetting(
-                  guild,
-                  "ignoredChannels"
-                );
-
-                if (data) return JSON.parse(data.value);
-                else return [];
-              },
-              setNew: async ({ guild, newData }) => {
-                
-                let data = await guildsRepository.getGuildSetting(
-                  guild,
-                  "ignoredChannels"
-                );
-
-                if (!data) {
-                  const property = "ignoredChannels";
-                  newDataString = JSON.stringify(newData);
-                  await guildsRepository.insertGuildSetting(
-                    guild,
-                    property,
-                    newDataString
-                  );
-                } else {
-                  const property = "ignoredChannels";
-                  newDataString = JSON.stringify(newData);
-                  await guildsRepository.updateGuildSetting(
-                    guild,
-                    property,
-                    newDataString
-                  );
-                }
-                return;
-              },
-            },
-          ],
-        },
-        /// ################ LOGGING SYSTEM END ################ \\\
-      ],
+      ]
     });
     Dashboard.init();
   }

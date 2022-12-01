@@ -1,5 +1,6 @@
 const chalk = require("chalk");
 const usersRepository = require("../../mysql/usersRepository");
+const welcomeBanner = require("../../functions/userManagement/welcomeBanner");
 
 module.exports = {
   name: "guildMemberAdd",
@@ -20,14 +21,26 @@ module.exports = {
           )
         );
         await usersRepository.addUser(guildId, member.user);
+
+        const user = await usersRepository.getUser(member.id, member.guild.id);
+        await welcomeBanner.createWelcomeBanner(member, user.ID);
+
         console.log(
           chalk.blue(
             `[MYSQL DATABASE] User (${member.user.username}#${member.user.discriminator} | ID: ${member.user.id}) bei Guild: ${guildId} erfolgreich angelegt!`
+          )
+        );
+      } else {
+        const user = await usersRepository.getUser(member.id, member.guild.id);
+        await welcomeBanner.createWelcomeBanner(member);
+        console.log(
+          chalk.blue(
+            `[MYSQL DATABASE] User (${member.user.username}#${member.user.discriminator} | ID: ${member.user.id}) ist bereits bei Guild: ${guildId} registriert!`
           )
         );
       }
 
       return resolve(null);
     });
-  },
+  }
 };

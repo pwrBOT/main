@@ -7,14 +7,14 @@ module.exports = {
       const { guild, user } = newMember;
       const logChannel = require("../../mysql/loggingChannelsRepository");
 
-      // DEFINE EMBED
+      // #######################  UPDATE ROLES  ####################### \\
       const guildMemberUpdateEmbed = new EmbedBuilder()
         .setTitle(`⚡️ PowerBot ⚡️ | Logging`)
         .setThumbnail(oldMember.displayAvatarURL())
         .setTimestamp(Date.now())
         .setFooter({
           iconURL: client.user.displayAvatarURL(),
-          text: `powered by PowerBot`,
+          text: `powered by PowerBot`
         });
 
       const removedRoles = await oldMember.roles.cache.filter(
@@ -28,8 +28,8 @@ module.exports = {
             {
               name: `Entfernte Rollen:`,
               value: `⛔️ ${removedRoles.map((r) => r.name)}`,
-              inline: true,
-            },
+              inline: true
+            }
           ]);
 
         const logChannel = require("../../mysql/loggingChannelsRepository");
@@ -65,8 +65,8 @@ module.exports = {
             {
               name: `Hinzugefügte Rollen:`,
               value: `✅ ${addedRoles.map((r) => r.name)}`,
-              inline: true,
-            },
+              inline: true
+            }
           ]);
 
         const logChannel = require("../../mysql/loggingChannelsRepository");
@@ -89,6 +89,69 @@ module.exports = {
         } catch (error) {}
         return resolve(null);
       }
+
+      // #######################  UPDATE BOOST  ####################### \\
+      if (oldMember.premiumSince !== newMember.premiumSince) {
+        const oldStatus = oldMember.premiumSince;
+        const newStatus = newMember.premiumSince;
+
+        const logChannel = require("../../mysql/loggingChannelsRepository");
+          await logChannel.logChannel(
+            newMember.guild,
+            "botLog",
+            guildMemberUpdateEmbed
+          );
+
+
+        console.log(oldStatus);
+        console.log(newStatus);
+
+        if (!oldStatus && newStatus) {
+          console.log(
+            `${newMember.guild.name} wird von ${newMember.user.tag} geboostet!`
+          );
+
+          guildMemberUpdateEmbed
+            .setDescription(`${newMember} Boostet nun den Server 💎`)
+            .setColor("Yellow");
+          await logChannel.logChannel(guild, "botLog", guildMemberUpdateEmbed);
+
+          let donatorRoleId = await guildSettings.getGuildSetting(
+            message.guild,
+            "donatorRole"
+          );
+
+          if (donatorRoleId.value.length === 0) {
+          } else {
+            let donatorRole = guild.roles.cache.get(donatorRoleId.value);
+            await newMember.roles.add(donatorRole).catch(console.error);
+          }
+        }
+
+        if (oldStatus && !newStatus) {
+          console.log(
+            `${oldMember.guild.name} wird von ${oldMember.user.tag} geboostet!`
+          );
+
+          guildMemberUpdateEmbed
+            .setDescription(`${newMember} boostet den Server nicht mehr ☹️`)
+            .setColor("Red");
+          await logChannel.logChannel(guild, "botLog", guildMemberUpdateEmbed);
+
+          let donatorRoleId = await guildSettings.getGuildSetting(
+            message.guild,
+            "donatorRole"
+          );
+
+          if (donatorRoleId.value.length === 0) {
+          } else {
+            let donatorRole = guild.roles.cache.get(donatorRoleId.value);
+            await newMember.roles.remove(donatorRole).catch(console.error);
+          }
+        }
+      }
+
+      // #######################  UPDATE NICKNAME  ####################### \\
 
       if (newMember.nickname !== oldMember.nickname) {
         let oldmemberName = "";
@@ -113,6 +176,8 @@ module.exports = {
         await logChannel.logChannel(guild, "botLog", guildMemberUpdateEmbed);
       }
 
+      // #######################  UPDATE AVATAR  ####################### \\
+
       if (newMember.displayAvatarURL() !== oldMember.displayAvatarURL()) {
         guildMemberUpdateEmbed
           .setDescription(`${newMember} hat seinen Avatar geändert.`)
@@ -122,18 +187,18 @@ module.exports = {
             {
               name: `Avatar alt:`,
               value: `[LINK](${oldMember.displayAvatarURL()})`,
-              inline: true,
+              inline: true
             },
             {
               name: `Avatar neu:`,
               value: `[LINK](${newMember.displayAvatarURL()})`,
-              inline: true,
-            },
+              inline: true
+            }
           ]);
         await logChannel.logChannel(guild, "botLog", guildMemberUpdateEmbed);
       }
 
       return resolve(null);
     });
-  },
+  }
 };

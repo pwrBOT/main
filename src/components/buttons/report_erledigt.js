@@ -43,7 +43,6 @@ module.exports = {
       const reportId = await interaction.message.embeds[0].description.split("#")[1]
       const reportRepository = require("../../mysql/reportRepository");
       const reportData = await reportRepository.getReport(interaction.guild.id, reportId);
-      await reportRepository.updateReport(interaction.guild.id, reportId, `Resolved ${interaction.user.tag}`, interaction.user.id);
 
       if (interaction.user.id != reportData.modId) {
         await interaction.editReply({
@@ -52,6 +51,8 @@ module.exports = {
         });
         return resolve(null);
       }
+
+      await reportRepository.updateReport(interaction.guild.id, reportId, `Resolved ${interaction.user.tag}`, interaction.user.id);
 
       const buttonErledigt = new ButtonBuilder()
         .setCustomId("report_erledigt")
@@ -79,7 +80,7 @@ module.exports = {
 
       const reportErledigtEmbed = new EmbedBuilder()
         .setTitle(`⚡️ PowerBot | Reporting-System ⚡️`)
-        .setDescription(`Hallo ${interaction.guild.members.cache.get(reportData.reporterId)}!\n\nDein Report wurde soeben bearbeitet und abgeschlossen.\n\nDanke für Deine Meldung!`)
+        .setDescription(`Hallo ${interaction.guild.members.cache.get(reportData.reporterId)}!\n\nDein Report wurde soeben bearbeitet und abgeschlossen.\nDanke für Deine Meldung!`)
         .setColor(0x51ff00)
         .setTimestamp(Date.now())
         .setFooter({
@@ -88,19 +89,19 @@ module.exports = {
         })
         .addFields([
           {
-            name: `Gemeldeter User:`,
-            value: `${interaction.guild.members.cache.get(reportData.reportedMemberId)}`,
-            inline: false
-          },
-          {
             name: `Beschwerdemeldung:`,
             value: `${reportData.reportReason}`,
             inline: false
           },
           {
+            name: `Gemeldeter User:`,
+            value: `${interaction.guild.members.cache.get(reportData.reportedMemberId)}`,
+            inline: true
+          },
+          {
             name: `Bearbeitender Moderator:`,
             value: `${interaction.member}`,
-            inline: false
+            inline: true
           }
         ]);
 
@@ -111,7 +112,7 @@ module.exports = {
       const modThreadArea = await interaction.guild.channels.cache.get(
         modThreadAreaId.value
       );
-      const threadName = `Report ${reportId} | Mod ${interaction.member.user.username}`;
+      const threadName = `Report ${reportId}`;
       const thread = modThreadArea.threads.cache.find(
         (x) => x.name === threadName
       );
@@ -119,7 +120,7 @@ module.exports = {
       if (!thread) {
         await interaction.editReply({
           ephemeral: true,
-          content: `✅ Du hast den Report erfolgreich erledigt! Kein Thread zum Löschen gefunden!`,
+          content: `✅ Du hast den Report erfolgreich erledigt!`,
         });
         return resolve(null);
       }
@@ -127,7 +128,7 @@ module.exports = {
       await thread.setArchived(true); // archived
       await interaction.editReply({
         ephemeral: true,
-        content: `✅ Du hast den Report erfolgreich erledigt! Dein Thread wird automatisch geschlossen und archiviert.`,
+        content: `✅ Du hast den Report erfolgreich erledigt!`,
       });
 
       // LOCK AND ARCHIVE PRIVATE THREAD END \\

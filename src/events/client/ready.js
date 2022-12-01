@@ -136,6 +136,7 @@ module.exports = {
       console.log(
         `\x1b[32mOnline! ${client.user.tag} is now logged in and online!\x1b[0m`
       );
+      
       return resolve(null);
     });
   },
