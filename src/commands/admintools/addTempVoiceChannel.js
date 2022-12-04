@@ -64,7 +64,13 @@ module.exports = {
       const permission = interaction.options.getString("permission");
 
       if (voiceChannel.type != 2) {
-        interaction.editReply("Ich bin kein Voice Channel");
+        interaction.editReply("Fehler | Der ausgewählte Channel ist kein Voice Channel!");
+        return resolve(null);
+      }
+
+      if (channelCategory.type != "4")
+      {
+        interaction.editReply("Fehler | Die ausgewählte Kategorie ist ein Channel und keine Kategorie!");
         return resolve(null);
       }
 

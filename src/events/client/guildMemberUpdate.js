@@ -1,9 +1,11 @@
 const { EmbedBuilder } = require("discord.js");
+const guildSettings = require("../../mysql/guildsRepository");
 
 module.exports = {
   name: "guildMemberUpdate",
   async execute(oldMember, newMember, client) {
     return new Promise(async (resolve) => {
+      
       const { guild, user } = newMember;
       const logChannel = require("../../mysql/loggingChannelsRepository");
 
@@ -45,12 +47,10 @@ module.exports = {
             `Deine Rollen bei ${oldMember.guild.name} haben sich verändert`
           );
         if (oldMember.user.bot == true) {
-          return resolve(null);
         }
         try {
           await oldMember.send({ embeds: [guildMemberUpdateEmbed] });
         } catch (error) {}
-        return resolve(null);
       }
 
       // If the role(s) are present on the new member object but are not on the old one (i.e role(s) were added)
@@ -82,74 +82,78 @@ module.exports = {
             `Deine Rollen bei ${newMember.guild.name} haben sich verändert`
           );
         if (newMember.user.bot == true) {
-          return resolve(null);
         }
         try {
           await newMember.send({ embeds: [guildMemberUpdateEmbed] });
         } catch (error) {}
-        return resolve(null);
       }
 
       // #######################  UPDATE BOOST  ####################### \\
-      if (oldMember.premiumSince !== newMember.premiumSince) {
-        const oldStatus = oldMember.premiumSince;
-        const newStatus = newMember.premiumSince;
+      /**  
+      if (newMember.premiumSince !== oldMember.premiumSince) {
+        console.log(
+          `${newMember.guild.name} wird von ${newMember.user.tag} geboostet!`
+        );
+
+        let donatorRoleId = await guildSettings.getGuildSetting(
+          newMember.guild,
+          "donatorRole"
+        );
+
+        if (donatorRoleId.value.length === 0) {
+        } else {
+          let donatorRole = newMember.guild.roles.cache.get(
+            donatorRoleId.value
+          );
+          try {
+            await newMember.roles.add(donatorRole);
+          } catch (error) {}
+        }
+
+        guildMemberUpdateEmbed
+          .setDescription(`${newMember} Boostet den Server 💎`)
+          .setColor("Yellow");
+        await logChannel.logChannel(
+          oldMember.guild,
+          "botLog",
+          guildMemberUpdateEmbed
+        );
 
         const logChannel = require("../../mysql/loggingChannelsRepository");
-          await logChannel.logChannel(
-            newMember.guild,
-            "botLog",
-            guildMemberUpdateEmbed
-          );
-
-
-        console.log(oldStatus);
-        console.log(newStatus);
-
-        if (!oldStatus && newStatus) {
-          console.log(
-            `${newMember.guild.name} wird von ${newMember.user.tag} geboostet!`
-          );
-
+        await logChannel.logChannel(
+          newMember.guild,
+          "botLog",
           guildMemberUpdateEmbed
-            .setDescription(`${newMember} Boostet nun den Server 💎`)
-            .setColor("Yellow");
-          await logChannel.logChannel(guild, "botLog", guildMemberUpdateEmbed);
-
-          let donatorRoleId = await guildSettings.getGuildSetting(
-            message.guild,
-            "donatorRole"
-          );
-
-          if (donatorRoleId.value.length === 0) {
-          } else {
-            let donatorRole = guild.roles.cache.get(donatorRoleId.value);
-            await newMember.roles.add(donatorRole).catch(console.error);
-          }
-        }
-
-        if (oldStatus && !newStatus) {
-          console.log(
-            `${oldMember.guild.name} wird von ${oldMember.user.tag} geboostet!`
-          );
-
-          guildMemberUpdateEmbed
-            .setDescription(`${newMember} boostet den Server nicht mehr ☹️`)
-            .setColor("Red");
-          await logChannel.logChannel(guild, "botLog", guildMemberUpdateEmbed);
-
-          let donatorRoleId = await guildSettings.getGuildSetting(
-            message.guild,
-            "donatorRole"
-          );
-
-          if (donatorRoleId.value.length === 0) {
-          } else {
-            let donatorRole = guild.roles.cache.get(donatorRoleId.value);
-            await newMember.roles.remove(donatorRole).catch(console.error);
-          }
-        }
+        );
       }
+
+      if (oldMember.premiumSince && !newMember.premiumSince) {
+        console.log(
+          `${oldMember.guild.name} wird von ${oldMember.user.tag} nicht mehr geboostet!`
+        );
+
+        let donatorRoleId = await guildSettings.getGuildSetting(
+          oldMember.guild,
+          "donatorRole"
+        );
+
+        if (donatorRoleId.value.length === 0) {
+        } else {
+          let donatorRole = guild.roles.cache.get(donatorRoleId.value);
+          await oldMember.roles.remove(donatorRole).catch(console.error);
+        }
+
+        guildMemberUpdateEmbed
+          .setDescription(`${newMember} boostet den Server nicht mehr ☹️`)
+          .setColor("Red");
+
+        await logChannel.logChannel(
+          oldMember.guild,
+          "botLog",
+          guildMemberUpdateEmbed
+        );
+      }
+      */
 
       // #######################  UPDATE NICKNAME  ####################### \\
 

@@ -82,7 +82,7 @@ module.exports = {
               inline: true,
             },
           ]);
-          const message = await client.channels.cache
+          await client.channels.cache
             .get(logChannel)
             .send({
               embeds: [reportembed],

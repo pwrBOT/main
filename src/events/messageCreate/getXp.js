@@ -34,14 +34,6 @@ module.exports = async function messageCreate(message) {
     if (message.member.roles.cache.has(teamRoleId.value)) {
       return resolve(null);
     }
-
-    if (message.guild.ownerId === message.member.id) {
-      return resolve(null);
-    }
-
-    if (message.member.manageable === false) {
-      return resolve(null);
-    }
     */
 
     // ANTISPAM SYSTEM
@@ -117,7 +109,7 @@ module.exports = async function messageCreate(message) {
           timer: WAITTIME,
         });
 
-        console.log(`${message.author.tag} hat XP bekommen`);
+        // console.log(`${message.author.tag} hat XP bekommen`);
 
         let currentXP = getUser.xP;
         if (!currentXP) {
@@ -205,7 +197,7 @@ module.exports = async function messageCreate(message) {
         .addFields([
           {
             name: `Grund:`,
-            value: `Auto-Mod | Spam`,
+            value: `Spam! Du hast zu viele Nachrichten hintereinander geschickt.`,
             inline: true,
           },
           {
@@ -264,13 +256,6 @@ module.exports = async function messageCreate(message) {
       if (message.guild.ownerId === message.member.id) {
         console.log(
           `SPAM CHECK | ${message.author.tag} Verwarnung gestoppt --> Server Owner`
-        );
-        return resolve(null);
-      }
-
-      if (message.member.manageable === false) {
-        console.log(
-          `SPAM CHECK | ${message.author.tag} Verwarnung gestoppt --> Bot steht unter User`
         );
         return resolve(null);
       }

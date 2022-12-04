@@ -467,53 +467,6 @@ module.exports = {
               }
             },
             {
-              optionId: "embedinfo",
-              optionName: "",
-              optionDescription:
-                "Moderations Info-Text für User (z.B.: Bei Fragen wende dich an... / Server-Rejoin Link... / ...). Wird beim User Embed dran gehängt:",
-              optionType: DBD.formTypes.textarea(
-                "Bei Fragen wende dich an die Communityleitung!",
-                1,
-                200,
-                false,
-                false
-              ),
-              getActualSet: async ({ guild }) => {
-                let data = await guildsRepository.getGuildSetting(
-                  guild,
-                  "embedinfo"
-                );
-
-                if (data) return data.value;
-                else return null;
-              },
-              setNew: async ({ guild, newData }) => {
-                let data = await guildsRepository.getGuildSetting(
-                  guild,
-                  "embedinfo"
-                );
-
-                if (!newData) newData = null;
-
-                if (!data) {
-                  const property = "embedinfo";
-                  await guildsRepository.insertGuildSetting(
-                    guild,
-                    property,
-                    newData
-                  );
-                } else {
-                  const property = "embedinfo";
-                  await guildsRepository.updateGuildSetting(
-                    guild,
-                    property,
-                    newData
-                  );
-                }
-                return;
-              }
-            },
-            {
               optionId: "modLog",
               optionName: "",
               optionDescription: "Mod-Log Channel:",
@@ -727,6 +680,55 @@ module.exports = {
                 return;
               }
             },
+            /// ####### TEXTE ####### \\\
+            {
+              optionId: "embedinfo",
+              optionName: "",
+              optionDescription:
+                "Moderations Info-Text für User (z.B.: Bei Fragen wende dich an... / Server-Rejoin Link... / ...). Wird beim User Embed dran gehängt:",
+              optionType: DBD.formTypes.textarea(
+                "Bei Fragen wende dich an die Communityleitung!",
+                1,
+                200,
+                false,
+                false
+              ),
+              getActualSet: async ({ guild }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "embedinfo"
+                );
+
+                if (data) return data.value;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "embedinfo"
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const property = "embedinfo";
+                  await guildsRepository.insertGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                } else {
+                  const property = "embedinfo";
+                  await guildsRepository.updateGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                }
+                return;
+              }
+            },
+
             {
               optionId: "language",
               optionName: "",
@@ -777,49 +779,93 @@ module.exports = {
         {
           categoryId: "automessages",
           categoryName: "Welcome Message",
-          categoryDescription: "### SOON ### - Funktion nicht verfügbar",
+          categoryDescription: "### SOON ### - Funktion nur teilweise verfügbar",
 
           toggleable: true,
           getActualSet: async ({ guild }) => {
-            let data = await embedsRepository.getEmbed(
+            let data = await guildsRepository.getGuildSetting(
               guild,
-              "welcomeMessage"
+              "welcomeMessageStatus"
             );
-            if (data) return data.active;
+
+            if (data.value === "1") return true;
             else return false;
           },
           setNew: async ({ guild, newData }) => {
-            let data = await embedsRepository.getEmbed(
+            let data = await guildsRepository.getGuildSetting(
               guild,
-              "welcomeMessage"
+              "welcomeMessageStatus"
             );
 
             if (!newData) newData = null;
 
             if (!data) {
-              const column = "active";
-              await embedsRepository.addEmbed(
+              const property = "welcomeMessageStatus";
+              await guildsRepository.insertGuildSetting(
                 guild,
-                "welcomeMessage",
-                "0",
-                false,
-                null,
-                false,
-                false
+                property,
+                newData
               );
             } else {
-              const column = "active";
-              await embedsRepository.updateEmbed(
-                column,
-                "0",
-                guild,
-                "welcomeMessage"
-              );
-            }
+              const property = "welcomeMessageStatus";
+                  await guildsRepository.updateGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                }
             return;
           },
+          categoryOptionsList: [       
+            {
+              optionId: "welcomeChannelMessage",
+              optionName: "",
+              optionDescription:
+                "Text, der im Welcome Channel gepostet wird, wenn ein User joined. (Tags: Username: {member} / Servername: {servername})",
+              optionType: DBD.formTypes.textarea(
+                "Hey {member} 😎 | Herzlich Willkommen bei **{servername}**!",
+                1,
+                200,
+                false,
+                false
+              ),
+              getActualSet: async ({ guild }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "welcomeChannelMessage"
+                );
+                
+                if (data) return data.value;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "welcomeChannelMessage"
+                );
 
-          categoryOptionsList: [
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const property = "welcomeChannelMessage";
+                  await guildsRepository.insertGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                } else {
+                  const property = "welcomeChannelMessage";
+                  await guildsRepository.updateGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                }
+                return;
+              }
+            },
+
+
             {
               optionId: "welcomeEmbed",
               optionName: "",
@@ -869,7 +915,6 @@ module.exports = {
                 return;
               }
             },
-
             {
               optionId: "welcomeMessagedm",
               optionName: "",

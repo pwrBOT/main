@@ -22,7 +22,7 @@ module.exports = {
         );
 
         try {
-          await guildOwner.send(`Dein Discord Server ist nicht Teil der Whitelist. Du kannst den Bot nicht nutzen. Sry ;)`);
+          await guildOwner.send(`Dein Discord Server ist nicht Teil des Beta Programms. Du kannst den Bot nicht nutzen. Sry :(`);
         } catch (error) {}
         await guild.leave().catch(console.error);
         return resolve(null);
@@ -77,7 +77,7 @@ module.exports = {
         );
       }
 
-      //// CHECK / ADD GUILD-ID TO AUTO-MOD TABLE
+      //// CHECK / ADD GUILD-ID TO LEVEL SYSTEM TABLE
       const levelsRepository = require("../../mysql/levelsRepository");
       const getlevelSettings = await levelsRepository.getlevelSettings(guild);
       if (!getlevelSettings) {
