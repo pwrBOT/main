@@ -1,6 +1,5 @@
 const mysql2 = require("mysql2");
 const config = require(`../../config.json`);  
-const chalk = require("chalk");
 
 // DATABASE CONNECT 
 const poolConfig = {

@@ -7,6 +7,7 @@ const warnSystem = require("../../functions/warningSystem/warnings");
 const ms = require("ms");
 const antiSpamMap = new Map();
 const xPWaitMap = new Map();
+const loggingChannelsRepository = require("../../mysql/loggingChannelsRepository");
 
 module.exports = async function messageCreate(message) {
   return new Promise(async (resolve) => {
@@ -212,8 +213,7 @@ module.exports = async function messageCreate(message) {
           },
         ]);
 
-      const logChannel = require("../../mysql/loggingChannelsRepository");
-      await logChannel.logChannel(message.guild, "modLog", modlogembed);
+      await loggingChannelsRepository.logChannel(message.guild, "modLog", modlogembed);
 
       try {
         message.member.timeout(ms(length), "Auto-Mod | Spam");
@@ -313,8 +313,7 @@ module.exports = async function messageCreate(message) {
           },
         ]);
 
-      const logChannel = require("../../mysql/loggingChannelsRepository");
-      await logChannel.logChannel(message.guild, "modLog", warnembed);
+      await loggingChannelsRepository.logChannel(message.guild, "modLog", warnembed);
 
       await message.channel.send({ embeds: [warnembed] });
 

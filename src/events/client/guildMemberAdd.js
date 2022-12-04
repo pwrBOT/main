@@ -21,8 +21,6 @@ module.exports = {
           )
         );
         await usersRepository.addUser(guildId, member.user);
-
-        const user = await usersRepository.getUser(member.id, member.guild.id);
         const welcomeMessage = "Herzlich Willkommen"
         await welcomeBanner.createWelcomeBanner(member, welcomeMessage);
 
@@ -32,7 +30,6 @@ module.exports = {
           )
         );
       } else {
-        const user = await usersRepository.getUser(member.id, member.guild.id);
         const welcomeMessage = "Willkommen zurück"
         await welcomeBanner.createWelcomeBanner(member, welcomeMessage);
         console.log(

@@ -85,7 +85,7 @@ module.exports = {
         const xPembed = new EmbedBuilder()
           .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
           .setDescription(
-            `${member} hat ${xP} XP erhalten.\nModerator: ${user.tag}`
+            `${member} hat ${xP} XP erhalten.`
           )
           .setColor(0xffd800)
           .setTimestamp(Date.now())
