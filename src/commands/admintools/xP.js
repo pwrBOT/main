@@ -14,31 +14,43 @@ module.exports = {
     .setName(`xp`)
     .setDescription(`Member XP Verwaltung`)
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
-    .addSubcommand((subcommand) =>
+    .addSubcommand(subcommand =>
       subcommand
         .setName(`give`)
         .setDescription(`Member XP geben`)
-        .addUserOption((option) =>
+        .addUserOption(option =>
           option.setName("member").setDescription("Member").setRequired(true)
         )
-        .addNumberOption((option) =>
+        .addNumberOption(option =>
           option.setName("xp").setDescription("Anzahl der XP").setRequired(true)
         )
+        .addStringOption(option =>
+          option
+            .setName("reason")
+            .setDescription("Begründung")
+            .setRequired(true)
+        )
     )
-    .addSubcommand((subcommand) =>
+    .addSubcommand(subcommand =>
       subcommand
         .setName(`remove`)
         .setDescription(`XP von Member entfernen`)
-        .addUserOption((option) =>
+        .addUserOption(option =>
           option.setName("member").setDescription("Member").setRequired(true)
         )
-        .addNumberOption((option) =>
+        .addNumberOption(option =>
           option.setName("xp").setDescription("Anzahl der XP").setRequired(true)
+        )
+        .addStringOption(option =>
+          option
+            .setName("reason")
+            .setDescription("Begründung")
+            .setRequired(true)
         )
     ),
 
   async execute(interaction, client) {
-    return new Promise(async (resolve) => {
+    return new Promise(async resolve => {
       const message = await interaction.deferReply({
         ephemeral: false,
         fetchReply: true
@@ -47,6 +59,8 @@ module.exports = {
       const { options, user, guild } = interaction;
       const member = options.getMember("member");
       const xP = options.getNumber("xp");
+      const reason =
+        interaction.options.getString("reason") || "Kein Grund angegeben";
 
       if (!member) {
         interaction.editReply("❌ Der User ist nicht mehr auf dem Server ❌");
@@ -68,25 +82,21 @@ module.exports = {
 
       if (interaction.options.getSubcommand() === "give") {
         let newXP = currentXP + xP;
-        let currentLevel = getMember.Level
+        let currentLevel = getMember.Level;
         let newLevel = getMember.Level;
         let requiredXP = newLevel * newLevel * 100 + 100;
 
         while (requiredXP <= newXP) {
-          newLevel += 1
+          newLevel += 1;
           requiredXP = newLevel * newLevel * 100 + 100;
         }
 
         await usersRepository.addUserXP(guild.id, member.user, newXP);
         await usersRepository.addUserLevel(guild.id, member.user, newLevel);
 
-
-
         const xPembed = new EmbedBuilder()
           .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
-          .setDescription(
-            `${member} hat ${xP} XP erhalten.`
-          )
+          .setDescription(`${member} hat ${xP} XP erhalten.`)
           .setColor(0xffd800)
           .setTimestamp(Date.now())
           .setFooter({
@@ -95,34 +105,19 @@ module.exports = {
           })
           .addFields([
             {
-              name: `XP alt:`,
-              value: `${currentXP}`,
+              name: `XP:`,
+              value: `Alt: ${currentXP}\nNeu: ${newXP}`,
               inline: true
             },
             {
-              name: `Level alt:`,
-              value: `${currentLevel}`,
+              name: `Level:`,
+              value: `Alt: ${currentLevel}\nNeu: ${newLevel}`,
               inline: true
             },
             {
-              name: `\u200B`,
-              value: `\u200B`,
-              inline: true
-            },
-            {
-              name: `XP neu:`,
-              value: `${newXP}`,
-              inline: true
-            },
-            {
-              name: `Level neu:`,
-              value: `${newLevel}`,
-              inline: true
-            },
-            {
-              name: `\u200B`,
-              value: `\u200B`,
-              inline: true
+              name: `Grund:`,
+              value: `${reason}`,
+              inline: false
             },
             {
               name: `Moderator:`,
@@ -151,12 +146,12 @@ module.exports = {
 
       if (interaction.options.getSubcommand() === "remove") {
         let newXP = currentXP - xP;
-        let currentLevel = getMember.Level
+        let currentLevel = getMember.Level;
         let newLevel = getMember.Level;
         let requiredXP = newLevel * newLevel * 100 + 100;
 
         while (requiredXP >= newXP) {
-          newLevel -= 1
+          newLevel -= 1;
           requiredXP = newLevel * newLevel * 100 + 100;
         }
 
@@ -166,9 +161,7 @@ module.exports = {
 
         const xPembed = new EmbedBuilder()
           .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
-          .setDescription(
-            `${xP} XP von ${member} entfernt.`
-          )
+          .setDescription(`${xP} XP von ${member} entfernt.`)
           .setColor(0xffd800)
           .setTimestamp(Date.now())
           .setFooter({
@@ -177,34 +170,19 @@ module.exports = {
           })
           .addFields([
             {
-              name: `XP alt:`,
-              value: `${currentXP}`,
+              name: `XP:`,
+              value: `Alt: ${currentXP}\nNeu: ${newXP}`,
               inline: true
             },
             {
-              name: `Level alt:`,
-              value: `${currentLevel}`,
+              name: `Level:`,
+              value: `Alt: ${currentLevel}\nNeu: ${newLevel}`,
               inline: true
             },
             {
-              name: `\u200B`,
-              value: `\u200B`,
-              inline: true
-            },
-            {
-              name: `XP neu:`,
-              value: `${newXP}`,
-              inline: true
-            },
-            {
-              name: `Level neu:`,
-              value: `${newLevel}`,
-              inline: true
-            },
-            {
-              name: `\u200B`,
-              value: `\u200B`,
-              inline: true
+              name: `Grund:`,
+              value: `${reason}`,
+              inline: false
             },
             {
               name: `Moderator:`,
@@ -212,7 +190,6 @@ module.exports = {
               inline: false
             }
           ]);
-          
 
         await interaction.editReply({ embeds: [xPembed] });
 

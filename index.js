@@ -9,6 +9,7 @@ const fs = require("fs");
 const getXp = require("./src/events/messageCreate/getXp");
 const levelSystemGiveRole = require("./src/events/messageCreate/levelSystemGiveRole");
 const tempUnbanUser = require("./src/events/tempCommands/tempUnbanUser");
+const autoDeleteChannel = require("./src/events/autoDelete/autoDeleteChannel");
 
 // Discord Bot SetUp
 const TOKEN = config.powerbot_token;
@@ -75,6 +76,7 @@ client.on("messageCreate", async (message) => {
 
 client.on("ready", async () => {
   tempUnbanUser.init(client);
+  autoDeleteChannel.init(client);
   // servicecheck.init(client);
 });
 

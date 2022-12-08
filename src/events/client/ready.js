@@ -43,7 +43,7 @@ module.exports = {
         activities: [{ name: `Danny`, type: ActivityType.Listening }],
         status: "online",
       });
-      client.user.setUsername("PowerBot [DEV]").catch(console.error);
+      client.user.setUsername("PowerBot").catch(console.error);
 
       const channel = client.channels.cache.get(config.powerbot_status_channel);
       channel.send({ embeds: [embed] });

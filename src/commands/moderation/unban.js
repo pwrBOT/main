@@ -115,7 +115,7 @@ module.exports = {
 
       interaction.guild.members.unban(member).catch(console.error);
       try {
-        await member.send({ embeds: [banembedmember] }).catch(console.error);
+        await member.send({ embeds: [banembedmember] }).catch(error);
       } catch (error) {}
       
 
