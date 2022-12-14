@@ -18,10 +18,10 @@ module.exports = {
     let admintools = [];
 
     const { user } = client;
-    const information = client.commands.filter((x) => x.category === "info");
-    const mod = client.commands.filter((x) => x.category === "moderation");
-    const warnsystem = client.commands.filter((x) => x.category === "warning");
-    const admin = client.commands.filter((x) => x.category === "admintools");
+    const information = client.commands.filter(x => x.category === "info");
+    const mod = client.commands.filter(x => x.category === "moderation");
+    const warnsystem = client.commands.filter(x => x.category === "warning");
+    const admin = client.commands.filter(x => x.category === "admintools");
 
     CommandPush(information, info);
     CommandPush(mod, moderation);
@@ -154,10 +154,18 @@ module.exports = {
                 text: "Power wird geladen..."
               },
               premium: {
-                title: "Du möchtest Premium-Power?",
-                description:
-                  "Schau dir unsere Angebote an und hol dir die ultimative Power.",
-                buttonText: "Premium holen"
+                enabled: true,
+                card: {
+                  title: "Du möchtest Premium-Power?",
+                  description:
+                    "Schau dir unsere Angebote an und hol dir die ultimative Power.",
+                  bgImage:
+                    "https://assistantscenter.com/wp-content/uploads/2021/11/cropped-cropped-logov6.png",
+                  button: {
+                    text: "Premium holen",
+                    url: ""
+                  }
+                }
               },
               settings: {
                 title: "Einstellungen",
@@ -171,6 +179,20 @@ module.exports = {
                   description: "Wähl Deine bevorzugte Sprache aus!"
                 }
               }
+            }
+          }
+        },
+        premium: {
+          enabled: true,
+          card: {
+            title: "Du möchtest Premium-Power?",
+            description:
+              "Schau dir unsere Angebote an und hol dir die ultimative Power.",
+            bgImage:
+              "https://assistantscenter.com/wp-content/uploads/2021/11/cropped-cropped-logov6.png",
+            button: {
+              text: "Premium holen",
+              url: ""
             }
           }
         },
@@ -190,7 +212,18 @@ module.exports = {
 
             const graph = {
               values: [
-                120, 214, 214, 214, 220, 180, 210, 190, 220, 180, 210, 190
+                120,
+                214,
+                214,
+                214,
+                220,
+                180,
+                210,
+                190,
+                220,
+                180,
+                210,
+                190
               ],
               labels: [
                 "1m",
@@ -242,7 +275,7 @@ module.exports = {
             }
           },
           graph: {
-            enabled: true,
+            enabled: false,
             lineGraph: false,
             title: "Memory Usage",
             tag: "Memory (MB)",
@@ -299,6 +332,7 @@ module.exports = {
             "Definiere wichtige Rollen und Channel für das Team, Moderatoren, Logging, ...",
           categoryImageURL:
             "http://primedepartamentos.com/images/icons/settings-icon.png",
+          refreshOnSave: true,
           categoryOptionsList: [
             /// ########## ROLE SETTINGS ########## \\\
             {
@@ -779,8 +813,10 @@ module.exports = {
         {
           categoryId: "automessages",
           categoryName: "Welcome Message",
-          categoryDescription: "### SOON ### - Funktion nur teilweise verfügbar",
+          categoryDescription:
+            "### SOON ### - Funktion nur teilweise verfügbar",
 
+          refreshOnSave: true,
           toggleable: true,
           getActualSet: async ({ guild }) => {
             let data = await guildsRepository.getGuildSetting(
@@ -788,8 +824,8 @@ module.exports = {
               "welcomeMessageStatus"
             );
             if (data) {
-            if (data.value === "1") return true;}
-            else return false;
+              if (data.value === "1") return true;
+            } else return false;
           },
           setNew: async ({ guild, newData }) => {
             let data = await guildsRepository.getGuildSetting(
@@ -808,15 +844,15 @@ module.exports = {
               );
             } else {
               const property = "welcomeMessageStatus";
-                  await guildsRepository.updateGuildSetting(
-                    guild,
-                    property,
-                    newData
-                  );
-                }
+              await guildsRepository.updateGuildSetting(
+                guild,
+                property,
+                newData
+              );
+            }
             return;
           },
-          categoryOptionsList: [       
+          categoryOptionsList: [
             {
               optionId: "welcomeChannelMessage",
               optionName: "",
@@ -834,7 +870,7 @@ module.exports = {
                   guild,
                   "welcomeChannelMessage"
                 );
-                
+
                 if (data) return data.value;
                 else return null;
               },
@@ -864,7 +900,6 @@ module.exports = {
                 return;
               }
             },
-
 
             {
               optionId: "welcomeEmbed",
@@ -991,8 +1026,10 @@ module.exports = {
           categoryDescription:
             "Vergib Besondere Rollen an aktive User<br><br>XP pro Nachricht minimal: 6 <br> XP pro Nachricht maximal: 25<br> Level 1: 100XP || Level 10: 8200XP || Level 25: 57700XP || Level 50: 240200XP  || Level 75: 547700XP  || Level 100: 980200XP <br> Berechnung LevelUp = Level * Level * 100 + 100",
 
-          categoryImageURL: "https://toppng.com/uploads/preview/3d-gold-star-png-11552727047ns6x0xgmcz.png",  
+          categoryImageURL:
+            "https://toppng.com/uploads/preview/3d-gold-star-png-11552727047ns6x0xgmcz.png",
 
+          refreshOnSave: true,
           toggleable: true,
           getActualSet: async ({ guild }) => {
             let data = await levelsRepository.getlevelSettings(guild);
@@ -1790,8 +1827,10 @@ module.exports = {
           categoryName: "Auto Mod",
           categoryDescription:
             "Einstellungen für die automatische Moderation von Usern.",
-          categoryImageURL: "https://cdn3.emoji.gg/emojis/6776-moderator-simplified.png",
+          categoryImageURL:
+            "https://cdn3.emoji.gg/emojis/6776-moderator-simplified.png",
 
+          refreshOnSave: true,
           toggleable: true,
           getActualSet: async ({ guild }) => {
             let data = await autoModRepository.getGuildAutoModSettings(guild);
@@ -1866,8 +1905,7 @@ module.exports = {
             {
               optionId: "badwords",
               optionName: "",
-              optionDescription:
-                "Schimpfwörter",
+              optionDescription: "Schimpfwörter",
               optionType: SoftUI.formTypes.tagInput(false),
               getActualSet: async ({ guild }) => {
                 let data = await guildsRepository.getGuildSetting(
@@ -1876,7 +1914,89 @@ module.exports = {
                 );
 
                 if (data) return JSON.parse(data.value);
-                else return ["Analbaron", "Analraupe", "Analzone", "Fettsau", "Arschfotzengesicht", "Arschgesicht", "Spast", "Auspuffbumser", "Bumsnuss", "Dauerlutscher", "Muschi", "Fotze", "Gay", "Fresse", "Hodenbussard", "Hodenkopf", "Kotlutscher", "Mongo", "Opfer", "Peniskopf", "Pimmelfresse", "Pimmelkopf", "Pimmelpapagei", "Sackfotze", "Schlampe", "Schmongo", "Slut", "Spastard", "spastophil", "Vollmongo", "Wichsbazille", "Wichsfisch", "anal", "analritter", "arschficker", "arschgeburt", "arschgeige", "arschgesicht", "arschhaarfetischist", "arschhaarrasierer", "arschhöhlenforscher", "arschloch", "asshole", "motherfucker", "bastard", "bauernschlampe", "biatch", "bimbo", "bitch", "bitches", "cock", "eierlutscher", "ficken", "ficker", "fickfehler", "fickfetzen", "fickfresse", "kanacke", "kanake", "kanaken", "kinderficker", "kinderporno", "kotgeburt", "möse", "mösenficker", "mösenlecker", "motherfucker", "muschilecker", "muschischlitz", "mutterficker", "nazi", "nazis", "neger", "nigga", "nigger", "nutte", "nuttensohn", "nuttenstecher", "nuttentochter", "schwuchtel"];
+                else
+                  return [
+                    "Analbaron",
+                    "Analraupe",
+                    "Analzone",
+                    "Fettsau",
+                    "Arschfotzengesicht",
+                    "Arschgesicht",
+                    "Spast",
+                    "Auspuffbumser",
+                    "Bumsnuss",
+                    "Dauerlutscher",
+                    "Muschi",
+                    "Fotze",
+                    "Gay",
+                    "Fresse",
+                    "Hodenbussard",
+                    "Hodenkopf",
+                    "Kotlutscher",
+                    "Mongo",
+                    "Opfer",
+                    "Peniskopf",
+                    "Pimmelfresse",
+                    "Pimmelkopf",
+                    "Pimmelpapagei",
+                    "Sackfotze",
+                    "Schlampe",
+                    "Schmongo",
+                    "Slut",
+                    "Spastard",
+                    "spastophil",
+                    "Vollmongo",
+                    "Wichsbazille",
+                    "Wichsfisch",
+                    "anal",
+                    "analritter",
+                    "arschficker",
+                    "arschgeburt",
+                    "arschgeige",
+                    "arschgesicht",
+                    "arschhaarfetischist",
+                    "arschhaarrasierer",
+                    "arschhöhlenforscher",
+                    "arschloch",
+                    "asshole",
+                    "motherfucker",
+                    "bastard",
+                    "bauernschlampe",
+                    "biatch",
+                    "bimbo",
+                    "bitch",
+                    "bitches",
+                    "cock",
+                    "eierlutscher",
+                    "ficken",
+                    "ficker",
+                    "fickfehler",
+                    "fickfetzen",
+                    "fickfresse",
+                    "kanacke",
+                    "kanake",
+                    "kanaken",
+                    "kinderficker",
+                    "kinderporno",
+                    "kotgeburt",
+                    "möse",
+                    "mösenficker",
+                    "mösenlecker",
+                    "motherfucker",
+                    "muschilecker",
+                    "muschischlitz",
+                    "mutterficker",
+                    "nazi",
+                    "nazis",
+                    "neger",
+                    "nigga",
+                    "nigger",
+                    "nutte",
+                    "nuttensohn",
+                    "nuttenstecher",
+                    "nuttentochter",
+                    "schwuchtel"
+                  ];
               },
               setNew: async ({ guild, newData }) => {
                 let data = await guildsRepository.getGuildSetting(
@@ -2402,7 +2522,7 @@ module.exports = {
 };
 
 function CommandPush(filteredArray, CategoryArray) {
-  filteredArray.forEach((obj) => {
+  filteredArray.forEach(obj => {
     let cmdObject = {
       commandName: obj.name,
       commandUsage: "/" + obj.name,
