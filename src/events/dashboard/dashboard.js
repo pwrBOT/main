@@ -1823,6 +1823,88 @@ module.exports = {
 
           categoryOptionsList: [
             {
+              optionId: "autoModBadwords",
+              optionName: "",
+              optionDescription:
+                "Sollen User verwarnt werden, wenn sie Schimpfwörter posten?",
+              optionType: DBD.formTypes.switch(false),
+              getActualSet: async ({ guild }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "autoModBadwords"
+                );
+
+                if (data) return data.value;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "autoModBadwords"
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const property = "autoModBadwords";
+                  await guildsRepository.insertGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                } else {
+                  const property = "autoModBadwords";
+                  await guildsRepository.updateGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                }
+                return;
+              }
+            },
+            {
+              optionId: "badwords",
+              optionName: "",
+              optionDescription:
+                "Schimpfwörter",
+              optionType: SoftUI.formTypes.tagInput(false),
+              getActualSet: async ({ guild }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "badwords"
+                );
+
+                if (data) return JSON.parse(data.value);
+                else return ["Analbaron", "Analraupe", "Analzone", "Fettsau", "Arschfotzengesicht", "Arschgesicht", "Spast", "Auspuffbumser", "Bumsnuss", "Dauerlutscher", "Muschi", "Fotze", "Gay", "Fresse", "Hodenbussard", "Hodenkopf", "Kotlutscher", "Mongo", "Opfer", "Peniskopf", "Pimmelfresse", "Pimmelkopf", "Pimmelpapagei", "Sackfotze", "Schlampe", "Schmongo", "Slut", "Spastard", "spastophil", "Vollmongo", "Wichsbazille", "Wichsfisch", "anal", "analritter", "arschficker", "arschgeburt", "arschgeige", "arschgesicht", "arschhaarfetischist", "arschhaarrasierer", "arschhöhlenforscher", "arschloch", "asshole", "motherfucker", "bastard", "bauernschlampe", "biatch", "bimbo", "bitch", "bitches", "cock", "eierlutscher", "ficken", "ficker", "fickfehler", "fickfetzen", "fickfresse", "kanacke", "kanake", "kanaken", "kinderficker", "kinderporno", "kotgeburt", "möse", "mösenficker", "mösenlecker", "motherfucker", "muschilecker", "muschischlitz", "mutterficker", "nazi", "nazis", "neger", "nigga", "nigger", "nutte", "nuttensohn", "nuttenstecher", "nuttentochter", "schwuchtel"];
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "badwords"
+                );
+
+                if (!data) {
+                  const property = "badwords";
+                  newDataString = JSON.stringify(newData);
+                  await guildsRepository.insertGuildSetting(
+                    guild,
+                    property,
+                    newDataString
+                  );
+                } else {
+                  const property = "badwords";
+                  newDataString = JSON.stringify(newData);
+                  await guildsRepository.updateGuildSetting(
+                    guild,
+                    property,
+                    newDataString
+                  );
+                }
+                return;
+              }
+            },
+            {
               optionId: "autoModInvites",
               optionName: "",
               optionDescription:

@@ -11,6 +11,43 @@ module.exports = {
   async execute(message) {
     return new Promise(async (resolve) => {
       if (!message) {
+        console.log(
+          chalk.yellow(
+            `[${new Date().toLocaleDateString(
+              "de-DE"
+            )} / ${new Date().toLocaleTimeString(
+              "de-DE"
+            )}] AUTO MOD INVITE | STOPP --> NO MESSAGE DEFINED`
+          )
+        );
+        return resolve(null);
+      }
+
+      if (!message.member) {
+        if (!message) {
+          console.log(
+            chalk.yellow(
+              `[${new Date().toLocaleDateString(
+                "de-DE"
+              )} / ${new Date().toLocaleTimeString(
+                "de-DE"
+              )}] AUTO MOD INVITE | STOPP --> NO MESSAGE.MEMBER DEFINED`
+            )
+          );}
+        return resolve(null);
+      }
+
+      if (!message.guild) {
+        if (!message) {
+          console.log(
+            chalk.yellow(
+              `[${new Date().toLocaleDateString(
+                "de-DE"
+              )} / ${new Date().toLocaleTimeString(
+                "de-DE"
+              )}] AUTO MOD INVITE | STOPP --> NO MESSAGE.GUILD DEFINED`
+            )
+          );}
         return resolve(null);
       }
 
@@ -39,6 +76,43 @@ module.exports = {
           console.log(chalk.yellow(`AUTO MOD INVITE | SYSTEM DEAKTIVIERT`));
           return resolve(null);
         }
+
+        // ####################    CHECK     ################## \\
+
+        const inviteCode = await message.content
+          .split(link)[1]
+          .split(" ")[0]
+          .split("\n")[0];
+
+        let isGuildInvite = "";
+        try {
+          isGuildInvite = await message.guild.invites.fetch({
+            code: `${inviteCode}`
+          });
+        } catch (error) {
+          isGuildInvite = false;
+        }
+
+        if (!isGuildInvite) {
+          try {
+            const vanity = await message.guild.fetchVanityData();
+            if (code !== vanity?.code) {
+              deleteMessage();
+              autoModWarnMember();
+              userTimeout();
+              await warnSystem.autoModWarn(message.guild, message.member);
+              return resolve(null);
+            }
+          } catch (err) {
+            deleteMessage();
+            autoModWarnMember();
+            userTimeout();
+            await warnSystem.autoModWarn(message.guild, message.member);
+            return resolve(null);
+          }
+        }
+
+      }
 
         async function deleteMessage() {
           const teamRoleId = await guildSettings.getGuildSetting(
@@ -296,41 +370,7 @@ module.exports = {
           );
         }
 
-        // ####################    CHECK     ################## \\
-
-        const inviteCode = await message.content
-          .split(link)[1]
-          .split(" ")[0]
-          .split("\n")[0];
-
-        let isGuildInvite = "";
-        try {
-          isGuildInvite = await message.guild.invites.fetch({
-            code: `${inviteCode}`
-          });
-        } catch (error) {
-          isGuildInvite = false;
-        }
-
-        if (!isGuildInvite) {
-          try {
-            const vanity = await message.guild.fetchVanityData();
-            if (code !== vanity?.code) {
-              deleteMessage();
-              autoModWarnMember();
-              userTimeout();
-              await warnSystem.autoModWarn(message.guild, message.member);
-              return resolve(null);
-            }
-          } catch (err) {
-            deleteMessage();
-            autoModWarnMember();
-            userTimeout();
-            await warnSystem.autoModWarn(message.guild, message.member);
-            return resolve(null);
-          }
-        }
-      }
+      
     });
   }
 };

@@ -6,7 +6,7 @@ module.exports = {
   name: "messageDelete",
   once: false,
   async execute(message) {
-    return new Promise(async (resolve) => {
+    return new Promise(async resolve => {
       if (!message) {
         return resolve(null);
       }
@@ -16,20 +16,24 @@ module.exports = {
         return resolve(null);
       }
 
-      let embedMessage = "";
-      let ignoredChannels = await guildSettings.getGuildSetting(
-        message.guild,
-        "ignoredChannels"
-      );
+      if (message.guild) {
+        
+        let ignoredChannels = await guildSettings.getGuildSetting(
+          message.guild,
+          "ignoredChannels"
+        );
 
-      if (!ignoredChannels) {
-      } else {
-        if (ignoredChannels.value.includes(message.channelId)) {
-          console.log("LOGGING MSG DELETE | Ignorierter Channel");
-          return resolve(null);
+        if (!ignoredChannels) {
+        } else {
+          if (ignoredChannels.value.includes(message.channelId)) {
+            console.log("LOGGING MSG DELETE | Ignorierter Channel");
+            return resolve(null);
+          }
         }
       }
 
+      let embedMessage = "";
+      
       if (message.author == null) {
         return resolve(null);
       } else if (message.content == null) {
@@ -47,7 +51,7 @@ module.exports = {
         .setTimestamp(Date.now())
         .setFooter({
           iconURL: message.client.user.displayAvatarURL(),
-          text: `powered by Powerbot`,
+          text: `powered by Powerbot`
         });
 
       try {
@@ -55,5 +59,5 @@ module.exports = {
         await logChannel.logChannel(message.guild, "botLog", delMessageEmbed);
       } catch (error) {}
     });
-  },
+  }
 };
