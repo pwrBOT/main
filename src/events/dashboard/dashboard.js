@@ -787,8 +787,8 @@ module.exports = {
               guild,
               "welcomeMessageStatus"
             );
-
-            if (data.value === "1") return true;
+            if (data) {
+            if (data.value === "1") return true;}
             else return false;
           },
           setNew: async ({ guild, newData }) => {
