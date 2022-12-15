@@ -51,13 +51,6 @@ module.exports = {
         return resolve(null);
       }
 
-      const inviteLinks = ["discord.gg/", "discord.com/invite/"];
-
-      for (const link of inviteLinks) {
-        if (!message.content.includes(link)) {
-          return resolve(null);
-        }
-
         let autoModInvites = "";
 
         if (message.guild) {
@@ -72,15 +65,14 @@ module.exports = {
           return resolve(null);
         }
 
-        if (autoModInvites.length === 0) {
-          console.log(chalk.yellow(`AUTO MOD INVITE | SYSTEM DEAKTIVIERT`));
+        if (!autoModInvites.value) {
           return resolve(null);
         }
 
         // ####################    CHECK     ################## \\
-
-        const inviteCode = await message.content
-          .split(link)[1]
+        if (message.content.includes("discord.gg/")){
+          const inviteCode = await message.content
+          .split("discord.gg/")[1]
           .split(" ")[0]
           .split("\n")[0];
 
@@ -110,9 +102,62 @@ module.exports = {
             await warnSystem.autoModWarn(message.guild, message.member);
             return resolve(null);
           }
+        }         
         }
 
-      }
+        if (message.content.includes("discord.com/invite/")){
+          const inviteCode = await message.content
+          .split("discord.com/invite/")[1]
+          .split(" ")[0]
+          .split("\n")[0];
+
+          console.log(inviteCode)
+
+        let isGuildInvite = "";
+        try {
+          isGuildInvite = await message.guild.invites.fetch({
+            code: `${inviteCode}`
+          });
+        } catch (error) {
+          isGuildInvite = false;
+        }
+
+        if (!isGuildInvite) {
+          try {
+            const vanity = await message.guild.fetchVanityData();
+            if (code !== vanity?.code) {
+              deleteMessage();
+              autoModWarnMember();
+              userTimeout();
+              await warnSystem.autoModWarn(message.guild, message.member);
+              return resolve(null);
+            }
+          } catch (err) {
+            deleteMessage();
+            autoModWarnMember();
+            userTimeout();
+            await warnSystem.autoModWarn(message.guild, message.member);
+            return resolve(null);
+          }
+        }         
+        }
+
+        if (message.content.includes("discord.com/channels/")){
+          const inviteCode = await message.content
+          .split("discord.com/channels/")[1]
+          .split(" ")[0]
+          .split("\n")[0];
+
+          const inviteCodeOfGuild = inviteCode.includes(message.guild.id);
+          if (inviteCodeOfGuild === false){
+            deleteMessage();
+            autoModWarnMember();
+            userTimeout();
+            await warnSystem.autoModWarn(message.guild, message.member);
+            return resolve(null);
+          }     
+        }
+
 
         async function deleteMessage() {
           const teamRoleId = await guildSettings.getGuildSetting(
@@ -269,6 +314,23 @@ module.exports = {
         }
 
         async function autoModWarnMember() {
+          const teamRoleId = await guildSettings.getGuildSetting(
+            message.guild,
+            "teamRole"
+          );
+
+          if (message.member.roles.cache.has(teamRoleId.value)) {
+            return resolve(null);
+          }
+
+          if (message.guild.ownerId === message.member.id) {
+            return resolve(null);
+          }
+
+          if (message.member.manageable === false) {
+            return resolve(null);
+          }
+
           let userMessage = "";
 
           if (message.content) {

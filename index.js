@@ -76,7 +76,7 @@ client.on("messageCreate", async (message) => {
 
 client.on("ready", async () => {
   tempUnbanUser.init(client);
-  autoDeleteChannel.init(client);
+  // autoDeleteChannel.init(client);
   // servicecheck.init(client);
 });
 

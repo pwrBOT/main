@@ -7,6 +7,15 @@ const levelsRepository = require("../../mysql/levelsRepository");
 const embedsRepository = require("../../mysql/embedsRepository");
 const autoModRepository = require("../../mysql/autoModRepository");
 const guildsRepository = require("../../mysql/guildsRepository");
+const os = require('os')
+let values = [0, null, null, null, null, null, null, null, null, null]
+
+setInterval(function () {
+    values.unshift(
+        ((os.totalmem() - os.freemem()) / (1000 * 1000 * 1000)).toFixed(2) * 100
+    )
+    values.pop()
+}, 60 * 1000)
 
 module.exports = {
   name: "ready",
@@ -72,9 +81,110 @@ module.exports = {
       minimizedConsoleLogs: true,
       bot: client,
       theme: SoftUI({
+        customThemeOptions: {
+          index: async ({ req, res, config }) => {
+            const cards = [
+              {
+                title: "Server",
+                icon: "spaceship",
+                getValue: `${client.guilds.cache.size} Server`,
+                progressBar: {
+                  enabled: false,
+                  getProgress: 8 // 0 - 100 (get a percentage of the progress)
+                }
+              }
+            ];
+
+            const graph = {
+              values,
+              labels: [
+                  '1m',
+                  '2m',
+                  '3m',
+                  '4m',
+                  '5m',
+                  '6m',
+                  '7m',
+                  '8m',
+                  '9m',
+                  '10m'
+              ]
+          }
+            return {
+              cards,
+              graph
+            };
+          }
+        },
         websiteName: "PowerBot",
         colorScheme: "yellow",
         supporteMail: "power@pwr.lol",
+        premium: {
+          enabled: true,
+          card: {
+            title: "Du möchtest Premium-Power?",
+            description:
+              "Schau dir unsere Angebote an und hol dir die ultimative Power.",
+            bgImage:
+              "https://assistantscenter.com/wp-content/uploads/2021/11/cropped-cropped-logov6.png",
+            button: {
+              text: "Premium holen",
+              url: "https://pwr.lol"
+            }
+          }
+        },
+        icons: {
+          favicon: "https://pwr.lol/img/bot_logo_discord.png",
+          noGuildIcon: "https://pwr.lol/img/bot_logo_discord.png",
+          sidebar: {
+            darkUrl: "https://pwr.lol/img/bot_logo_wide.png",
+            lightUrl: "https://pwr.lol/img/bot_logo_wide.png",
+            hideName: true,
+            borderRadius: false,
+            alignCenter: true
+          },
+          settings: {}
+        },
+        preloader: {
+          image: "https://pwr.lol/img/bot_logo_wide.png",
+          spinner: true,
+          text: "Power wird geladen..."
+        },
+        index: {
+          card: {
+            category: "PowerBot | Dashboard",
+            title:
+              "PowerBot - Hol dir die ultimative Power für deinen Discord Server",
+            description: "",
+            image: "https://pwr.lol/img/bot_logo_wide.png",
+            link: {
+              text: "Support Server",
+              enabled: true,
+              url: "https://discord.gg/yYq4UgRRzz"
+            }
+          },
+          graph: {
+            enabled: true,
+            lineGraph: false,
+            title: "Memory Usage",
+            tag: "Memory (MB)",
+            max: 100
+          }
+        },
+        sweetalert: {
+          errors: {},
+          success: {
+            login: "Erfolgreich eingeloggt =)"
+          }
+        },
+        admin: {
+          pterodactyl: {
+            enabled: false,
+            apiKey: "apiKey",
+            panelLink: "http://localhost:3000/",
+            serverUUIDs: []
+          }
+        },
         locales: {
           deDE: {
             name: "Deutsch",
@@ -93,7 +203,7 @@ module.exports = {
                 }
               },
               feedsTitle: "Feeds",
-              graphTitle: "Graphs"
+              graphTitle: "RAM-Auslastung"
             },
             manage: {
               settings: {
@@ -163,7 +273,7 @@ module.exports = {
                     "https://assistantscenter.com/wp-content/uploads/2021/11/cropped-cropped-logov6.png",
                   button: {
                     text: "Premium holen",
-                    url: ""
+                    url: "https://pwr.lol"
                   }
                 }
               },
@@ -179,123 +289,10 @@ module.exports = {
                   description: "Wähl Deine bevorzugte Sprache aus!"
                 }
               }
-            }
+            },
           }
         },
-        premium: {
-          enabled: true,
-          card: {
-            title: "Du möchtest Premium-Power?",
-            description:
-              "Schau dir unsere Angebote an und hol dir die ultimative Power.",
-            bgImage:
-              "https://assistantscenter.com/wp-content/uploads/2021/11/cropped-cropped-logov6.png",
-            button: {
-              text: "Premium holen",
-              url: ""
-            }
-          }
-        },
-        customThemeOptions: {
-          index: async ({ req, res, config }) => {
-            const cards = [
-              {
-                title: "Server",
-                icon: "spaceship",
-                getValue: `${client.guilds.cache.size} Server`,
-                progressBar: {
-                  enabled: false,
-                  getProgress: 8 // 0 - 100 (get a percentage of the progress)
-                }
-              }
-            ];
-
-            const graph = {
-              values: [
-                120,
-                214,
-                214,
-                214,
-                220,
-                180,
-                210,
-                190,
-                220,
-                180,
-                210,
-                190
-              ],
-              labels: [
-                "1m",
-                "2m",
-                "3m",
-                "4m",
-                "5m",
-                "6m",
-                "7m",
-                "8m",
-                "9m",
-                "10m"
-              ]
-            };
-            return {
-              cards,
-              graph
-            };
-          }
-        },
-        icons: {
-          favicon: "https://pwr.lol/img/bot_logo_discord.png",
-          noGuildIcon: "https://pwr.lol/img/bot_logo_discord.png",
-          sidebar: {
-            darkUrl: "https://pwr.lol/img/bot_logo_wide.png",
-            lightUrl: "https://pwr.lol/img/bot_logo_wide.png",
-            hideName: true,
-            borderRadius: false,
-            alignCenter: true
-          },
-          settings: {}
-        },
-        preloader: {
-          image: "https://pwr.lol/img/bot_logo_wide.png",
-          spinner: true,
-          text: "Power wird geladen..."
-        },
-        index: {
-          card: {
-            category: "PowerBot | Dashboard",
-            title:
-              "PowerBot - Hol dir die ultimative Power für deinen Discord Server",
-            description: "",
-            image: "https://pwr.lol/img/bot_logo_wide.png",
-            link: {
-              text: "Support Server",
-              enabled: true,
-              url: "https://discord.gg/yYq4UgRRzz"
-            }
-          },
-          graph: {
-            enabled: false,
-            lineGraph: false,
-            title: "Memory Usage",
-            tag: "Memory (MB)",
-            max: 100
-          }
-        },
-        sweetalert: {
-          errors: {},
-          success: {
-            login: "Erfolgreich eingeloggt =)"
-          }
-        },
-        admin: {
-          pterodactyl: {
-            enabled: false,
-            apiKey: "apiKey",
-            panelLink: "http://localhost:3000/",
-            serverUUIDs: []
-          }
-        },
+        /// ################## COMMANDS ################## \\\
         commands: [
           {
             category: `Admin Tools`,
