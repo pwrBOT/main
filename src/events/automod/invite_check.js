@@ -158,6 +158,22 @@ module.exports = {
           }     
         }
 
+        if (message.content.includes("discordapp.com/channels/")){
+          const inviteCode = await message.content
+          .split("discordapp.com/channels/")[1]
+          .split(" ")[0]
+          .split("\n")[0];
+
+          const inviteCodeOfGuild = inviteCode.includes(message.guild.id);
+          if (inviteCodeOfGuild === false){
+            deleteMessage();
+            autoModWarnMember();
+            userTimeout();
+            await warnSystem.autoModWarn(message.guild, message.member);
+            return resolve(null);
+          }     
+        }
+
 
         async function deleteMessage() {
           const teamRoleId = await guildSettings.getGuildSetting(

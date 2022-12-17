@@ -76,6 +76,7 @@ module.exports = {
 
         if (tempChannelCheck.giveUserPermission == "yes") {
           voiceChannel.permissionOverwrites.edit(member.id, {
+            ManageChannels: true,
             MoveMembers: true,
             ManageMessages: true,
             MuteMembers: true,

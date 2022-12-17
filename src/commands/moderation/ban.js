@@ -151,7 +151,7 @@ module.exports = {
       await logChannel.logChannel(interaction.guild, "modLog", banembed);
 
       member
-        .ban({ deleteMessageDays: days, reason: reason })
+        .ban({ deleteMessageSeconds: days * 24 * 60 * 60, reason: reason })
         .catch(console.error);
 
       try {

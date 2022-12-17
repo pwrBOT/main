@@ -1,4 +1,4 @@
-const { EmbedBuilder, ActivityType } = require("discord.js");
+const { EmbedBuilder, AuditLogEvent } = require("discord.js");
 const guildSettings = require("../../mysql/guildsRepository");
 const chalk = require("chalk");
 
