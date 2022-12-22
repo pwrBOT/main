@@ -73,6 +73,7 @@ module.exports = {
         if (message.content.includes("discord.gg/")){
           const inviteCode = await message.content
           .split("discord.gg/")[1]
+          .split(")")[0]
           .split(" ")[0]
           .split("\n")[0];
 
@@ -108,10 +109,9 @@ module.exports = {
         if (message.content.includes("discord.com/invite/")){
           const inviteCode = await message.content
           .split("discord.com/invite/")[1]
+          .split(")")[0]
           .split(" ")[0]
           .split("\n")[0];
-
-          console.log(inviteCode)
 
         let isGuildInvite = "";
         try {
@@ -145,6 +145,7 @@ module.exports = {
         if (message.content.includes("discord.com/channels/")){
           const inviteCode = await message.content
           .split("discord.com/channels/")[1]
+          .split(")")[0]
           .split(" ")[0]
           .split("\n")[0];
 
@@ -161,6 +162,7 @@ module.exports = {
         if (message.content.includes("discordapp.com/channels/")){
           const inviteCode = await message.content
           .split("discordapp.com/channels/")[1]
+          .split(")")[0]
           .split(" ")[0]
           .split("\n")[0];
 
@@ -383,6 +385,29 @@ module.exports = {
               }
             ]);
 
+            const warnembedChannel = new EmbedBuilder()
+            .setTitle(`⚡️ PowerBot | Warning-System ⚡️`)
+            .setDescription(`User: ${message.member} wurde verwarnt`)
+            .setColor(0x51ff00)
+            .setTimestamp(Date.now())
+            .setThumbnail(message.member.displayAvatarURL())
+            .setFooter({
+              iconURL: message.client.user.displayAvatarURL(),
+              text: `powered by Powerbot`
+            })
+            .addFields([
+              {
+                name: `Grund:`,
+                value: `Auto-Mod | Invite Check`,
+                inline: true
+              },
+              {
+                name: `Moderator:`,
+                value: `Auto-Mod`,
+                inline: true
+              },
+            ]);
+
           const warnembedmember = new EmbedBuilder()
             .setTitle(`⚡️ PowerBot | Warning-System ⚡️`)
             .setDescription(
@@ -416,7 +441,7 @@ module.exports = {
           const logChannel = require("../../mysql/loggingChannelsRepository");
           await logChannel.logChannel(message.guild, "modLog", warnembed);
 
-          await message.channel.send({ embeds: [warnembed] });
+          await message.channel.send({ embeds: [warnembedChannel] });
 
           try {
             await message.member.send({ embeds: [warnembedmember] });
