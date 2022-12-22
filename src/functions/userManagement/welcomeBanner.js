@@ -114,15 +114,13 @@ const createWelcomeBanner = async (member, welcomeMessage) => {
     context.font = "18px Roboto Light";
     context.fillText(`Du bist Member #${user.ID}`, 350, 300);
 
-    // Pick up the pen
     context.beginPath();
-    // Start the arc to form a circle
-    context.arc(350, 130, 80, 0, Math.PI * 2, true);
-    // Put the pen down
+    ///// links - oben - radius - ?  >> Wird von Mitte aus gezeichnet
+    context.arc(350, 160, 80, 0, Math.PI * 2, true);
     context.closePath();
-    // Clip off the region you drew on
     context.clip();
-    context.drawImage(avatar, 270, 50, 160, 160);
+    ///// links - oben - breite - höhe >> links + radius = links | oben + radius = pfad oben
+    context.drawImage(avatar, 270, 80, 160, 160);
 
     const filenname = `welcome_${member.user.username}.png`;
     const attachment = new AttachmentBuilder(await canvas.encode("png"), {
