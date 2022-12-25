@@ -1,5 +1,6 @@
 const chalk = require("chalk");
 const usersRepository = require("../../mysql/usersRepository");
+const guildsRepository = require("../../mysql/guildsRepository");
 const welcomeBanner = require("../../functions/userManagement/welcomeBanner");
 
 module.exports = {
@@ -21,7 +22,7 @@ module.exports = {
           )
         );
         await usersRepository.addUser(guildId, member.user);
-        const welcomeMessage = "Herzlich Willkommen"
+        const welcomeMessage = "Herzlich Willkommen";
         await welcomeBanner.createWelcomeBanner(member, welcomeMessage);
 
         console.log(
@@ -30,7 +31,7 @@ module.exports = {
           )
         );
       } else {
-        const welcomeMessage = "Willkommen zurück"
+        const welcomeMessage = "Willkommen zurück";
         await welcomeBanner.createWelcomeBanner(member, welcomeMessage);
         console.log(
           chalk.blue(
@@ -39,7 +40,41 @@ module.exports = {
         );
       }
 
+      // ########################## USER COUNT SPECIAL MESSAGE (EVERY 1000 MEMBERS) ########################## \\
+      let nextUserCountSpecialValue = "";
+      let insertOrUpdate = ""
+      const newUser = await usersRepository.getUser(member.id, member.guild.id);
+      const nextUserCountSpecial = await guildsRepository.getGuildSetting(
+        member.guild,
+        "nextUserCountSpecial"
+      );
+
+      if (!nextUserCountSpecial) {
+        nextUserCountSpecialValue = 1000;
+        insertOrUpdate = "insertGuildSetting";
+      } else {
+        nextUserCountSpecialValue = parseInt(nextUserCountSpecial.value);
+        insertOrUpdate = "updateGuildSetting";
+      }
+
+      console.log(nextUserCountSpecialValue);
+
+      if (newUser.ID == nextUserCountSpecialValue) {
+        console.log(`YIPPY - WIR HABEN ${nextUserCountSpecialValue} Member erreicht`);
+
+        nextUserCountSpecialValue + 1000;
+
+        await guildsRepository.insertOrUpdate(
+          member.guild,
+          "nextUserCountSpecial",
+          nextUserCountSpecialValue.toString()
+        );
+        console.log(nextUserCountSpecialValue);
+      }
+
+      // ###################################################################################################### \\
+
       return resolve(null);
     });
-  }
+  },
 };
