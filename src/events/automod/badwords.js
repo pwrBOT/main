@@ -63,7 +63,7 @@ module.exports = {
       );
 
       if (!badwords && badwords.value.length === 0) {
-        badwords = ["hure", "hurre", "Analbaron", "Fettsau", "Arschfotzengesicht", "Arschgesicht", "Spast", "Auspuffbumser", "Bumsnuss", "Dauerlutscher", "Muschi", "Fotze", "Gay", "Fresse", "Hodenbussard", "Hodenkopf", "Kotlutscher", "Mongo", "Opfer", "Peniskopf", "Pimmelfresse", "Pimmelkopf", "Pimmelpapagei", "Sackfotze", "Schlampe", "Schmongo", "Slut", "Spastard", "spastophil", "Vollmongo", "Wichsbazille", "Wichsfisch", "anal", "analritter", "arschficker", "arschgeburt", "arschgeige", "arschgesicht", "arschhaarfetischist", "arschhaarrasierer", "arschhöhlenforscher", "arschloch", "asshole", "motherfucker", "bastard", "bauernschlampe", "biatch", "bimbo", "bitch", "bitches", "cock", "eierlutscher", "ficken", "ficker", "fickfehler", "fickfetzen", "fickfresse", "kanacke", "kanake", "kanaken", "kinderficker", "kinderporno", "kotgeburt", "möse", "mösenficker", "mösenlecker", "motherfucker", "muschilecker", "muschischlitz", "mutterficker", "nazi", "nazis", "neger", "nigga", "nigger", "nutte", "nuttensohn", "nuttenstecher", "nuttentochter", "schwuchtel"]
+        badwords = ["hure", "hurre", "Analbaron", "Fettsau", "Arschfotzengesicht", "Arschgesicht", "Spast", "Auspuffbumser", "Bumsnuss", "Dauerlutscher", "Muschi", "Fotze", "Gay", "Fresse", "Hodenbussard", "Hodenkopf", "Kotlutscher", "Mongo", "Opfer", "Peniskopf", "Pimmelfresse", "Pimmelkopf", "Pimmelpapagei", "Sackfotze", "Schlampe", "Schmongo", "Slut", "Spastard", "spastophil", "Vollmongo", "Wichsbazille", "Wichsfisch", "analritter", "arschficker", "arschgeburt", "arschgeige", "arschgesicht", "arschhaarfetischist", "arschhaarrasierer", "arschhöhlenforscher", "arschloch", "asshole", "motherfucker", "bastard", "bauernschlampe", "biatch", "bimbo", "bitch", "bitches", "cock", "eierlutscher", "ficken", "ficker", "fickfehler", "fickfetzen", "fickfresse", "kanacke", "kanake", "kanaken", "kinderficker", "kinderporno", "kotgeburt", "möse", "mösenficker", "mösenlecker", "motherfucker", "muschilecker", "muschischlitz", "mutterficker", "nazi", "nazis", "neger", "nigga", "nigger", "nutte", "nuttensohn", "nuttenstecher", "nuttentochter", "schwuchtel"]
       }
 
       for (const badword of JSON.parse(badwords.value.toLowerCase())) {
@@ -76,6 +76,22 @@ module.exports = {
         }
       }
       async function deleteMessage() {
+        const modRoleId = await guildSettings.getGuildSetting(
+          message.guild,
+          "modRole"
+        );
+
+        if (message.member.roles.cache.has(modRoleId.value)) {
+          return resolve(null);
+        }
+
+        if (message.guild.ownerId === message.member.id) {
+          return resolve(null);
+        }
+
+        if (message.member.manageable === false) {
+          return resolve(null);
+        }
         try {
           await message.delete();
           await message.channel.send(
@@ -97,12 +113,12 @@ module.exports = {
       }
 
       async function userTimeout() {
-        const teamRoleId = await guildSettings.getGuildSetting(
+        const modRoleId = await guildSettings.getGuildSetting(
           message.guild,
-          "teamRole"
+          "modRole"
         );
 
-        if (message.member.roles.cache.has(teamRoleId.value)) {
+        if (message.member.roles.cache.has(modRoleId.value)) {
           return resolve(null);
         }
 
@@ -204,19 +220,22 @@ module.exports = {
       }
 
       async function autoModWarnMember() {
-        const teamRoleId = await guildSettings.getGuildSetting(
-            message.guild,
-            "teamRole"
-          );
-  
-          if (message.member.roles.cache.has(teamRoleId.value)) {
-            return resolve(null);
-          }
-  
-          if (message.guild.ownerId === message.member.id) {
-            return resolve(null);
-          }
-          F
+        const modRoleId = await guildSettings.getGuildSetting(
+          message.guild,
+          "modRole"
+        );
+
+        if (message.member.roles.cache.has(modRoleId.value)) {
+          return resolve(null);
+        }
+
+        if (message.guild.ownerId === message.member.id) {
+          return resolve(null);
+        }
+
+        if (message.member.manageable === false) {
+          return resolve(null);
+        }
         let userMessage = "";
 
         if (message.content) {
