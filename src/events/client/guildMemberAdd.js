@@ -41,7 +41,7 @@ module.exports = {
       }
 
       // ########################## USER COUNT SPECIAL MESSAGE (EVERY 1000 MEMBERS) ########################## \\
-      let nextUserCountSpecialValue = "";
+      let nextUserCountSpecialValue = '';
       let insertOrUpdate = ""
       const newUser = await usersRepository.getUser(member.id, member.guild.id);
       const nextUserCountSpecial = await guildsRepository.getGuildSetting(
@@ -50,26 +50,35 @@ module.exports = {
       );
 
       if (!nextUserCountSpecial) {
-        nextUserCountSpecialValue = 1000;
-        insertOrUpdate = "insertGuildSetting";
+        nextUserCountSpecialValue = 5;
+        insertOrUpdate = "insert";
       } else {
         nextUserCountSpecialValue = parseInt(nextUserCountSpecial.value);
-        insertOrUpdate = "updateGuildSetting";
       }
 
       console.log(nextUserCountSpecialValue);
 
       if (newUser.ID == nextUserCountSpecialValue) {
         console.log(`YIPPY - WIR HABEN ${nextUserCountSpecialValue} Member erreicht`);
+        let nextUserCountSpecialValueNew = '';
+        nextUserCountSpecialValueNew = nextUserCountSpecialValue + 1000;
 
-        nextUserCountSpecialValue + 1000;
-
-        await guildsRepository.insertOrUpdate(
+        if (insertOrUpdate == "insert") {
+          await guildsRepository.insertGuildSetting(
           member.guild,
           "nextUserCountSpecial",
-          nextUserCountSpecialValue.toString()
+          nextUserCountSpecialValueNew.toString()
         );
-        console.log(nextUserCountSpecialValue);
+        console.log(nextUserCountSpecialValueNew.toString());
+      } else {
+        await guildsRepository.updateGuildSetting(
+          member.guild,
+          "nextUserCountSpecial",
+          nextUserCountSpecialValueNew.toString()
+        );
+        console.log(nextUserCountSpecialValueNew.toString());
+      }
+        
       }
 
       // ###################################################################################################### \\
