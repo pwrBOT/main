@@ -71,85 +71,49 @@ module.exports = {
 
         // ####################    CHECK     ################## \\
         if (message.content.includes("discord.gg/")){
-          const inviteCode = await message.content
-          .split("discord.gg/")[1]
-          .split(")")[0]
-          .split(" ")[0]
-          .split("\n")[0];
+          const inviteCode = getFullUrls(message.content)[0].split("/").pop();
 
-        let isGuildInvite = "";
-        try {
-          isGuildInvite = await message.guild.invites.fetch({
-            code: `${inviteCode}`
-          });
-        } catch (error) {
-          isGuildInvite = false;
-        }
+          let isGuildInvite = false;
+          await message.guild.invites.fetch({code: inviteCode, cache: true })
+          .then(() => {isGuildInvite = true})
+          .catch(() => {});
 
-        if (!isGuildInvite) {
-          try {
-            const vanity = await message.guild.fetchVanityData();
-            if (code !== vanity?.code) {
-              deleteMessage();
-              autoModWarnMember();
-              userTimeout();
-              await warnSystem.autoModWarn(message.guild, message.member);
-              return resolve(null);
-            }
-          } catch (err) {
+          await message.guild.invites.fetch({code: inviteCode, force: true })
+          .then(() => {isGuildInvite = true})
+          .catch(() => {});
+
+          if (!isGuildInvite) {
             deleteMessage();
             autoModWarnMember();
             userTimeout();
             await warnSystem.autoModWarn(message.guild, message.member);
             return resolve(null);
-          }
-        }         
+          }         
         }
 
         if (message.content.includes("discord.com/invite/")){
-          const inviteCode = await message.content
-          .split("discord.com/invite/")[1]
-          .split(")")[0]
-          .split(" ")[0]
-          .split("\n")[0];
+          const inviteCode = getFullUrls(message.content)[0].split("/").pop();
 
-        let isGuildInvite = "";
-        try {
-          isGuildInvite = await message.guild.invites.fetch({
-            code: `${inviteCode}`
-          });
-        } catch (error) {
-          isGuildInvite = false;
-        }
+          let isGuildInvite = false;
+          await message.guild.invites.fetch({code: inviteCode, cache: true })
+          .then(() => {isGuildInvite = true})
+          .catch(() => {});
 
-        if (!isGuildInvite) {
-          try {
-            const vanity = await message.guild.fetchVanityData();
-            if (code !== vanity?.code) {
-              deleteMessage();
-              autoModWarnMember();
-              userTimeout();
-              await warnSystem.autoModWarn(message.guild, message.member);
-              return resolve(null);
-            }
-          } catch (err) {
+          await message.guild.invites.fetch({code: inviteCode, force: true })
+          .then(() => {isGuildInvite = true})
+          .catch(() => {});
+
+          if (!isGuildInvite) {
             deleteMessage();
             autoModWarnMember();
             userTimeout();
             await warnSystem.autoModWarn(message.guild, message.member);
             return resolve(null);
-          }
-        }         
+          }   
         }
 
         if (message.content.includes("discord.com/channels/")){
-          const inviteCode = await message.content
-          .split("discord.com/channels/")[1]
-          .split(")")[0]
-          .split(" ")[0]
-          .split("\n")[0];
-
-          const inviteCodeOfGuild = inviteCode.includes(message.guild.id);
+          const inviteCodeOfGuild = message.content.includes(message.guild.id);
           if (inviteCodeOfGuild === false){
             deleteMessage();
             autoModWarnMember();
@@ -160,13 +124,7 @@ module.exports = {
         }
 
         if (message.content.includes("discordapp.com/channels/")){
-          const inviteCode = await message.content
-          .split("discordapp.com/channels/")[1]
-          .split(")")[0]
-          .split(" ")[0]
-          .split("\n")[0];
-
-          const inviteCodeOfGuild = inviteCode.includes(message.guild.id);
+          const inviteCodeOfGuild = message.content.includes(message.guild.id);
           if (inviteCodeOfGuild === false){
             deleteMessage();
             autoModWarnMember();
@@ -176,6 +134,10 @@ module.exports = {
           }     
         }
 
+        function getFullUrls(text) {
+          var urlRegex =/(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+          return text.match(urlRegex);
+      }
 
         async function deleteMessage() {
           const teamRoleId = await guildSettings.getGuildSetting(

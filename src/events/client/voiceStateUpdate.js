@@ -31,6 +31,10 @@ module.exports = {
             tempChannelCheckTemp.guildChannelId
           );
 
+          if (!tempChannelToDelete) {
+            return resolve(null);
+          }
+
           if (tempChannelToDelete.members.size === 0) {
             tempChannelToDelete.delete("del temp channel").catch(console.error);
 

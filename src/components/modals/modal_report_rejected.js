@@ -1,50 +1,23 @@
 const {
+  EmbedBuilder,
   ActionRowBuilder,
   ButtonBuilder,
-  ButtonStyle,
-  EmbedBuilder
+  ButtonStyle
 } = require("discord.js");
+const guildsRepository = require("../../mysql/guildsRepository");
+
 module.exports = {
   data: {
-    name: `report_abgelehnt`
+    name: "userReport_rejected"
   },
+
   async execute(interaction, client) {
-    return new Promise(async resolve => {
-      await interaction.deferReply({
+    return new Promise(async (resolve) => {
+      const message = await interaction.deferReply({
         ephemeral: true,
         fetchReply: true
       });
-
-      const guildSettings = require("../../mysql/guildsRepository");
-      const modRoleId = await guildSettings.getGuildSetting(
-        interaction.guild,
-        "modRole"
-      );
-      if (!modRoleId) {
-        interaction.editReply({
-          ephemeral: true,
-          content: "❌ Keine Moderator-Rolle definiert! ❌"
-        });
-        return resolve(null);
-      }
-
-      let isModerator = false;
-
-      const modRoleIds = JSON.parse(modRoleId.value);
-      modRoleIds.forEach(modRoleId => {
-        if (interaction.member.roles.cache.has(modRoleId)) {
-          isModerator = true;
-        }
-      });
-
-      if (!isModerator) {
-        interaction.editReply({
-          ephemeral: true,
-          content: "❌ Du bist kein Moderator! ❌"
-        });
-        return resolve(null);
-      }
-
+      const adminMessage = interaction.fields.getTextInputValue("adminMessage");
       const reportId = await interaction.message.embeds[0].description.split(
         "#"
       )[1];
@@ -106,6 +79,11 @@ module.exports = {
             name: `Bearbeitender Moderator:`,
             value: `${interaction.member}`,
             inline: true
+          },
+          {
+            name: `Anmerkung des Moderators:`,
+            value: `${adminMessage}`,
+            inline: false
           }
         ]);
 
