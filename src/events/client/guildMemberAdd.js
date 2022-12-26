@@ -56,7 +56,7 @@ module.exports = {
         nextUserCountSpecialValue = parseInt(nextUserCountSpecial.value);
       }
 
-      console.log(nextUserCountSpecialValue);
+      console.log(`Guild: ${member.guild.name} | Next member achievement: ${nextUserCountSpecialValue}`);
 
       if (newUser.ID == nextUserCountSpecialValue) {
         console.log(`YIPPY - WIR HABEN ${nextUserCountSpecialValue} Member erreicht`);

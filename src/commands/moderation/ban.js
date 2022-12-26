@@ -43,19 +43,7 @@ module.exports = {
       const reason = options.getString("reason") || "Kein Grund angegeben";
       const days = options.getString("delete");
       const servername = guild.name;
-      const affectedMember = options.getMember("user");
-      let member = "";
-
-      function containsOnlyNumbers(str) {
-        return /^\d+$/.test(str);
-      }
-
-      if (containsOnlyNumbers(affectedMember)) {
-        member = await client.users.cache.get(affectedMember);
-        console.log(`Mit "ID" gebannt (${affectedMember} / member)`)
-      } else {
-        member = affectedMember;
-      }
+      const member = options.getMember("user");
 
       if (!member) {
         interaction.editReply("❌ Der User ist nicht mehr auf dem Server ❌");
@@ -162,7 +150,7 @@ module.exports = {
       const logChannel = require("../../mysql/loggingChannelsRepository");
       await logChannel.logChannel(interaction.guild, "modLog", banembed);
 
-      member
+      guild.member
         .ban({ deleteMessageSeconds: days * 24 * 60 * 60, reason: reason })
         .catch(console.error);
 
