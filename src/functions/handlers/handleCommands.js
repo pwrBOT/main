@@ -29,7 +29,7 @@ module.exports = (client) => {
 
     const rest = new REST({ version: "10" }).setToken(TOKEN);
     try {
-      console.log("\x1b[33mStarted refreshing bot (/) commands.\x1b[0m");
+      console.log("\x1b[33mÜbertrage Slash-Commands zu Guilds.\x1b[0m");
 
       // DEPLOY COMMANDS GLOBAL TO ALL GUILDS (1h Refresh Time)
       await rest.put(Routes.applicationCommands(clientId), {
@@ -43,14 +43,14 @@ module.exports = (client) => {
         const guild = client.guilds.fetch(testGuild);
 
         console.log(
-          `\x1b[33mÜbertrage Commands zu Test-Guild: ${testGuild}\x1b[0m`
+          `\x1b[33mÜbertrage Slash-Commands zu Test-Guild: ${testGuild}\x1b[0m`
         );
         await rest.put(Routes.applicationGuildCommands(clientId, testGuild), {
           body: client.commandArray,
         });
       });
 
-      console.log("\x1b[32mAlle commands erfolgreich übertragen!\x1b[0m");
+      console.log("\x1b[32mAlle Slash-Commands erfolgreich übertragen!\x1b[0m");
     } catch (error) {
       console.error(error);
     }
