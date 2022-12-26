@@ -711,6 +711,49 @@ module.exports = {
                 return;
               }
             },
+            {
+              optionId: "achievementChannel",
+              optionName: "",
+              optionDescription: "Achievement Channel:",
+              optionType: DBD.formTypes.channelsSelect(
+                false,
+                (channelTypes = [ChannelType.GuildText])
+              ),
+              getActualSet: async ({ guild }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "achievementChannel"
+                );
+
+                if (data) return data.value;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "achievementChannel"
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const property = "achievementChannel";
+                  await guildsRepository.insertGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                } else {
+                  const property = "achievementChannel";
+                  await guildsRepository.updateGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                }
+                return;
+              }
+            },
             /// ####### TEXTE ####### \\\
             {
               optionId: "embedinfo",

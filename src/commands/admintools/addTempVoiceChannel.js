@@ -1,8 +1,7 @@
 const {
   SlashCommandBuilder,
   PermissionFlagsBits,
-  PermissionsBitField,
-  EmbedBuilder
+  ChannelType,
 } = require("discord.js");
 const tempChannelsRepository = require("../../mysql/tempChannelsRepository");
 
