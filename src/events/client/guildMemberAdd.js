@@ -62,16 +62,11 @@ module.exports = {
         nextUserCountSpecialValue = parseInt(nextUserCountSpecial.value);
       }
 
-      console.log(
-        `Guild: ${member.guild
-          .name} | Next member achievement: ${nextUserCountSpecialValue}`
-      );
-
       if (newUser.ID == nextUserCountSpecialValue) {
         const UserCountSpecialEmbed = new EmbedBuilder()
           .setTitle(`⭐️ Wir sind ${nextUserCountSpecialValue} ⭐️`)
           .setDescription(`Unser ${nextUserCountSpecialValue}er Discord Member ist ${member} 🏆`)
-          .setColor(0xfffb00)
+          .setColor(0xFFBA0F)
           .setTimestamp(Date.now())
           .setImage('https://pwr.lol/img/memberAchievement.jpg')
           .setFooter({
@@ -96,6 +91,11 @@ module.exports = {
 
       let nextUserCountSpecialValueNew = "";
       nextUserCountSpecialValueNew = nextUserCountSpecialValue + 1000;
+
+      console.log(
+        `Guild: ${member.guild
+          .name} | Next member achievement: ${nextUserCountSpecialValueNew}`
+      );
 
       if (insertOrUpdate == "insert") {
         await guildsRepository.insertGuildSetting(

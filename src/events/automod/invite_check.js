@@ -71,9 +71,8 @@ module.exports = {
 
         // ####################    CHECK     ################## \\
         if (message.content.includes("discord.gg/")){
-
           const links = getFullUrls(message.content)
-
+          
           for (const link of links) {
             if (link.includes("discord.gg/")) {
               let isGuildInvite = false;
@@ -102,7 +101,6 @@ module.exports = {
         }
 
         if (message.content.includes("discord.com/invite/")){
-
           const links = getFullUrls(message.content)
 
           for (const link of links) {
