@@ -40,10 +40,22 @@ module.exports = {
       });
 
       const { options, user, guild } = interaction;
-      const member = options.getMember("user");
       const reason = options.getString("reason") || "Kein Grund angegeben";
       const days = options.getString("delete");
       const servername = guild.name;
+      const affectedMember = options.getMember("user");
+      let member = "";
+
+      function containsOnlyNumbers(str) {
+        return /^\d+$/.test(str);
+      }
+
+      if (containsOnlyNumbers(affectedMember)) {
+        member = await client.users.cache.get(affectedMember);
+        console.log(`Mit "ID" gebannt (${affectedMember} / member)`)
+      } else {
+        member = affectedMember;
+      }
 
       if (!member) {
         interaction.editReply("❌ Der User ist nicht mehr auf dem Server ❌");
