@@ -65,10 +65,12 @@ module.exports = {
       if (newUser.ID == nextUserCountSpecialValue) {
         const UserCountSpecialEmbed = new EmbedBuilder()
           .setTitle(`⭐️ Wir sind ${nextUserCountSpecialValue} ⭐️`)
-          .setDescription(`Unser ${nextUserCountSpecialValue}er Discord Member ist ${member} 🏆`)
-          .setColor(0xFFBA0F)
+          .setDescription(
+            `Unser ${nextUserCountSpecialValue}er Discord Member ist ${member} 🏆`
+          )
+          .setColor(0xffba0f)
           .setTimestamp(Date.now())
-          .setImage('https://pwr.lol/img/memberAchievement.jpg')
+          .setImage("https://pwr.lol/img/memberAchievement.jpg")
           .setFooter({
             iconURL: member.client.user.displayAvatarURL(),
             text: `powered by Powerbot`
@@ -87,27 +89,32 @@ module.exports = {
               .catch(console.error);
           }
         }
-      }
 
-      let nextUserCountSpecialValueNew = "";
-      nextUserCountSpecialValueNew = nextUserCountSpecialValue + 1000;
+        let nextUserCountSpecialValueNew = "";
+        nextUserCountSpecialValueNew = nextUserCountSpecialValue + 1000;
 
-      console.log(
-        `Guild: ${member.guild
-          .name} | Next member achievement: ${nextUserCountSpecialValueNew}`
-      );
-
-      if (insertOrUpdate == "insert") {
-        await guildsRepository.insertGuildSetting(
-          member.guild,
-          "nextUserCountSpecial",
-          nextUserCountSpecialValueNew.toString()
+        console.log(
+          `Guild: ${member.guild
+            .name} | Next member achievement: ${newUser.ID}/${nextUserCountSpecialValueNew}`
         );
+
+        if (insertOrUpdate == "insert") {
+          await guildsRepository.insertGuildSetting(
+            member.guild,
+            "nextUserCountSpecial",
+            nextUserCountSpecialValueNew.toString()
+          );
+        } else {
+          await guildsRepository.updateGuildSetting(
+            member.guild,
+            "nextUserCountSpecial",
+            nextUserCountSpecialValueNew.toString()
+          );
+        }
       } else {
-        await guildsRepository.updateGuildSetting(
-          member.guild,
-          "nextUserCountSpecial",
-          nextUserCountSpecialValueNew.toString()
+        console.log(
+          `Guild: ${member.guild
+            .name} | Next member achievement: ${newUser.ID}/${nextUserCountSpecialValue}`
         );
       }
       // ###################################################################################################### \\
