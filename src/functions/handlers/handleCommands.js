@@ -1,5 +1,4 @@
-const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v9");
+const { REST, Routes } = require('discord.js');
 const fs = require("fs");
 const config = require("../../../config.json");
 
@@ -28,7 +27,7 @@ module.exports = (client) => {
     const ldsguildID = config.powerbot_ldsguildID;
     const mbrguildID = config.powerbot_mbrguildID;
 
-    const rest = new REST({ version: "9" }).setToken(TOKEN);
+    const rest = new REST({ version: "10" }).setToken(TOKEN);
     try {
       console.log("\x1b[33mStarted refreshing bot (/) commands.\x1b[0m");
 

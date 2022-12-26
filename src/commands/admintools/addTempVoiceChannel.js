@@ -22,6 +22,7 @@ module.exports = {
           option
             .setName("voicechannel")
             .setDescription("Voice-Channel auswählen")
+            .addChannelTypes(ChannelType.GuildVoice)
             .setRequired(true)
         )
         .addStringOption((option) =>
@@ -36,6 +37,7 @@ module.exports = {
           option
             .setName("channelcategory")
             .setDescription("Übergeordnete Kategorie auswählen")
+            .addChannelTypes(ChannelType.GuildCategory)
             .setRequired(true)
         )
         .addStringOption((option) =>
