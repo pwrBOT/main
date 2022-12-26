@@ -73,7 +73,7 @@ module.exports = {
           .setDescription(`Unser ${nextUserCountSpecialValue}er Discord Member ist ${member} 🏆`)
           .setColor(0xfffb00)
           .setTimestamp(Date.now())
-          .setImage('../../img/memberAchievement.jpg')
+          .setImage('https://pwr.lol/img/memberAchievement.jpg')
           .setFooter({
             iconURL: member.client.user.displayAvatarURL(),
             text: `powered by Powerbot`
