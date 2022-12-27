@@ -153,9 +153,9 @@ module.exports = {
         }
 
         function getFullUrls(text) {
-          var urlRegex =/(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+          const urlRegex =/(((https?:\/\/)|(www\.))[^\s]+)/g;
           return text.match(urlRegex);
-      }
+        }
 
         async function deleteMessage() {
           const teamRoleId = await guildSettings.getGuildSetting(

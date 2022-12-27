@@ -75,31 +75,17 @@ const generateImage = async (interaction, member, guild, guildMember) => {
     );
     const avatar = await Canvas.loadImage(await body.arrayBuffer());
 
-    const memberDisplayName = `${guildMember.displayName}`;
-    const regex = /\W/g;
-    let userName = "";
+    const memberDisplayNameRaw = `${guildMember.displayName}`;
+    const memberDisplayName = memberDisplayNameRaw.normalize('NFKD');
 
-    
-    if (memberDisplayName.match(regex) == null) {
-      userName = (canvas, text) => {
-        const context = canvas.getContext("2d");
-        let fontSize = 50;
-        do {
-          context.font = `${(fontSize -= 10)}px Doctor Glitch`;
-        } while (context.measureText(text).width > canvas.width - 300);
-        return context.font;
-      }
-    } else {
-      userName = (canvas, text) => {
-        const context = canvas.getContext("2d");
-        let fontSize = 50;
-        do {
-          context.font = `${(fontSize -= 10)}px DejavuSansBold`;
-        } while (context.measureText(text).width > canvas.width - 300);
-        return context.font;
-      };
+    const userName = (canvas, text) => {
+      const context = canvas.getContext("2d");
+      let fontSize = 50;
+      do {
+        context.font = `${(fontSize -= 10)}px Doctor Glitch`;
+      } while (context.measureText(text).width > canvas.width - 300);
+      return context.font;
     }
-
 
     context.strokeStyle = "#414141";
     context.strokeRect(0, 0, canvas.width, canvas.height);
