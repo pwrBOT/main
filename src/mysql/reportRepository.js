@@ -56,11 +56,10 @@ const getAllUserReports = async (guildId, reportedMemberId, limit=-1) => {
   return new Promise((resolve) => {
     mysqlHelper
       .query(
-        `SELECT * FROM powerbot_reports WHERE guildId=? AND reportedMemberId=?`,
+        `SELECT * FROM powerbot_reports WHERE guildId=? AND reportedMemberId=? AND reportStatus LIKE "%Resolved%"`,
         [guildId, reportedMemberId],
         limit)
       .then( (result) => {
-        // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
         resolve(result ?? null);
       })
       .catch(() => {

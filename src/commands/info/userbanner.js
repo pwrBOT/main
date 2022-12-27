@@ -10,7 +10,7 @@ module.exports = {
     .setDescription(`Userbanner anzeigen`),
 
   async execute(interaction) {
-    const img = await anvasUserbanner.generateImage(interaction, interaction.user, interaction.guild);
+    const img = await anvasUserbanner.generateImage(interaction, interaction.user, interaction.guild, interaction.member);
 
     if (!img) {
       return interaction.reply("❌");

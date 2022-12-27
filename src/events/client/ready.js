@@ -7,10 +7,10 @@ module.exports = {
   name: "ready",
   once: true,
   async execute(client) {
-    return new Promise(async (resolve) => {
+    return new Promise(async resolve => {
       var botGuilds = "";
-      const allBotGuilds = client.guilds.cache.map((guild) => guild);
-      allBotGuilds.forEach((guilds) => {
+      const allBotGuilds = client.guilds.cache.map(guild => guild);
+      allBotGuilds.forEach(guilds => {
         const date = new Date(guilds.joinedTimestamp).toLocaleDateString(
           "de-DE"
         );
@@ -24,24 +24,24 @@ module.exports = {
         .setTimestamp(Date.now())
         .setFooter({
           iconURL: client.user.displayAvatarURL(),
-          text: `powered by PowerBot`,
+          text: `powered by PowerBot`
         })
         .addFields([
           {
             name: `Eingeloggt als:`,
             value: `${client.user.tag}`,
-            inline: true,
+            inline: true
           },
           {
             name: `Online bei:`,
             value: `${botGuilds}`,
-            inline: false,
-          },
+            inline: false
+          }
         ]);
 
       client.user.setPresence({
         activities: [{ name: `Danny`, type: ActivityType.Listening }],
-        status: "online",
+        status: "online"
       });
       client.user.setUsername("PowerBot").catch(console.error);
 
@@ -50,15 +50,15 @@ module.exports = {
 
       //// ##################### TABLE CHECK ##################### \\\\
 
-      await allBotGuilds.forEach(async (guilds) => {
+      await allBotGuilds.forEach(async guilds => {
         //// CHECK / CREATE USER TABLE
         let data = client.guilds.cache.get(guilds.id);
         const usersRepository = require("../../mysql/usersRepository");
         const getUserTable = await usersRepository.getUserTable(data.id);
         if (!getUserTable) {
-          return console.log( chalk.red(
-            `[MYSQL DATABASE] Keine Verbindung zur DB...`
-          ))
+          return console.log(
+            chalk.red(`[MYSQL DATABASE] Keine Verbindung zur DB...`)
+          );
         } else if (getUserTable.length === 0) {
           console.log(
             chalk.yellow(
@@ -82,12 +82,13 @@ module.exports = {
 
         //// CHECK / ADD GUILD-ID TO AUTO-MOD TABLE
         const autoModRepository = require("../../mysql/autoModRepository");
-        const getAutoModGuildSettings =
-          await autoModRepository.getGuildAutoModSettings(data);
+        const getAutoModGuildSettings = await autoModRepository.getGuildAutoModSettings(
+          data
+        );
         if (!getAutoModGuildSettings) {
-          return console.log( chalk.red(
-            `[MYSQL DATABASE] Keine Verbindung zur DB...`
-          ))
+          return console.log(
+            chalk.red(`[MYSQL DATABASE] Keine Verbindung zur DB...`)
+          );
         } else if (getAutoModGuildSettings.length === 0) {
           console.log(
             chalk.yellow(
@@ -136,8 +137,8 @@ module.exports = {
       console.log(
         `\x1b[32mOnline! ${client.user.tag} is now logged in and online!\x1b[0m`
       );
-      
+
       return resolve(null);
     });
-  },
+  }
 };

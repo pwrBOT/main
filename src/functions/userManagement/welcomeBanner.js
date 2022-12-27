@@ -4,6 +4,28 @@ const { request } = require("undici");
 const usersRepository = require("../../mysql/usersRepository");
 const guildSettings = require("../../mysql/guildsRepository");
 
+//// ##################### REGISTER FONTS ##################### \\\\
+const { join } = require("path");
+const { GlobalFonts } = require("@napi-rs/canvas");
+GlobalFonts.registerFromPath(
+  join(__dirname, ".", "fonts", "Roboto-Light.ttf"),
+  "Roboto Light"
+);
+GlobalFonts.registerFromPath(
+  join(__dirname, ".", "fonts", "Roboto-Regular.ttf"),
+  "Roboto Regular"
+);
+GlobalFonts.registerFromPath(
+  join(__dirname, ".", "fonts", "Roboto-Bold.ttf"),
+  "Roboto Bold"
+);
+GlobalFonts.registerFromPath(
+  join(__dirname, ".", "fonts", "Doctor Glitch.otf"),
+  "Doctor Glitch"
+);
+
+//// ##################### REGISTER END ##################### \\\\
+
 const createWelcomeBanner = async (member, welcomeMessage) => {
   return new Promise(async (resolve) => {
     const welcomeMessageStatus = await guildSettings.getGuildSetting(
@@ -14,25 +36,6 @@ const createWelcomeBanner = async (member, welcomeMessage) => {
     if (welcomeMessageStatus.value !== "1") {
       return resolve(null);
     }
-
-    const { join } = require("path");
-    const { GlobalFonts } = require("@napi-rs/canvas");
-    GlobalFonts.registerFromPath(
-      join(__dirname, ".", "fonts", "Roboto-Light.ttf"),
-      "Roboto Light"
-    );
-    GlobalFonts.registerFromPath(
-      join(__dirname, ".", "fonts", "Roboto-Regular.ttf"),
-      "Roboto Regular"
-    );
-    GlobalFonts.registerFromPath(
-      join(__dirname, ".", "fonts", "Roboto-Bold.ttf"),
-      "Roboto Bold"
-    );
-    GlobalFonts.registerFromPath(
-      join(__dirname, ".", "fonts", "Doctor Glitch.otf"),
-      "Doctor Glitch"
-    );
 
     const av = {
       size: 512,

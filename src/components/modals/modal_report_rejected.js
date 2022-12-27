@@ -54,7 +54,7 @@ module.exports = {
         .setDescription(
           `Hallo ${interaction.guild.members.cache.get(
             reportData.reporterId
-          )}!\n\nDein Report wurde von einem Moderator abgelehnt!\n\nDies kann verschiedene Gründe haben. Zum Beispiel, dass deine Meldung nicht gegen die Regeln verstößt, oder die Moderatoren der Meinung sind, dass es ein privates Problem ist. Private Missverständnisse sollen persönlich geklärt werden.\n\nSolltest du anderer Meinung sein, kannst du das Moderatoren-Team gerne kontaktieren.\n\nDennoch bedanken wir uns für Deine Meldung und wünschen noch einen schönen Tag 😊\n\n`
+          )}!\n\nDein Report wurde von einem Moderator abgelehnt!\n\nDies kann verschiedene Gründe haben. Zum Beispiel, dass deine Meldung nicht gegen die Regeln verstößt, oder die Moderatoren der Meinung sind, dass es ein privates Problem ist. Private Missverständnisse sollen persönlich geklärt werden.\n\nSolltest du anderer Meinung sein, kannst du das Moderatoren-Team gerne kontaktieren. Report ID: #${reportId}\n\nDennoch bedanken wir uns für Deine Meldung und wünschen noch einen schönen Tag 😊\n\n`
         )
         .setColor(0x51ff00)
         .setTimestamp(Date.now())

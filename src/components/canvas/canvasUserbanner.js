@@ -4,6 +4,7 @@ const { request } = require("undici");
 const usersRepository = require("../../mysql/usersRepository");
 const guildsRepository = require("../../mysql/guildsRepository");
 
+//// ##################### REGISTER FONTS ##################### \\\\
 const { join } = require("path");
 const { GlobalFonts } = require("@napi-rs/canvas");
 GlobalFonts.registerFromPath(
@@ -22,15 +23,21 @@ GlobalFonts.registerFromPath(
   join(__dirname, ".", "fonts", "Doctor Glitch.otf"),
   "Doctor Glitch"
 );
+GlobalFonts.registerFromPath(
+  join(__dirname, ".", "fonts", "DejavuSansBold.ttf"),
+  "Doctor Glitch"
+);
+
+//// ##################### REGISTER END ##################### \\\\
 
 const av = {
   size: 512,
   x: 50,
-  y: 50,
+  y: 50
 };
 
-const generateImage = async (interaction, member, guild) => {
-  return new Promise(async (resolve) => {
+const generateImage = async (interaction, member, guild, guildMember) => {
+  return new Promise(async resolve => {
     const discriminator = member.discriminator;
 
     const user = await usersRepository.getUser(member.id, guild.id);
@@ -39,11 +46,8 @@ const generateImage = async (interaction, member, guild) => {
       return resolve(null);
     }
     var backgroundImg = "";
-  
-    const rankcard = await guildsRepository.getGuildSetting(
-      guild,
-      "rankcard"
-    );
+
+    const rankcard = await guildsRepository.getGuildSetting(guild, "rankcard");
     if (rankcard) {
       backgroundImg = `./src/components/canvas/img/welcome/${rankcard.value}`;
     } else {
@@ -66,44 +70,60 @@ const generateImage = async (interaction, member, guild) => {
       member.displayAvatarURL({
         extension: "png",
         size: av.size,
-        dynamic: false,
+        dynamic: false
       })
     );
     const avatar = await Canvas.loadImage(await body.arrayBuffer());
 
-    const userName = (canvas, text) => {
-      const context = canvas.getContext("2d");
-      let fontSize = 50;
-      do {
-        context.font = `${(fontSize -= 10)}px Doctor Glitch`;
-      } while (context.measureText(text).width > canvas.width - 300);
-      return context.font;
-    };
+    const memberDisplayName = `${guildMember.displayName}`;
+    const regex = /\W/g;
+    let userName = "";
+
+    
+    if (memberDisplayName.match(regex) == null) {
+      userName = (canvas, text) => {
+        const context = canvas.getContext("2d");
+        let fontSize = 50;
+        do {
+          context.font = `${(fontSize -= 10)}px Doctor Glitch`;
+        } while (context.measureText(text).width > canvas.width - 300);
+        return context.font;
+      }
+    } else {
+      userName = (canvas, text) => {
+        const context = canvas.getContext("2d");
+        let fontSize = 50;
+        do {
+          context.font = `${(fontSize -= 10)}px DejavuSansBold`;
+        } while (context.measureText(text).width > canvas.width - 300);
+        return context.font;
+      };
+    }
+
 
     context.strokeStyle = "#414141";
     context.strokeRect(0, 0, canvas.width, canvas.height);
 
     context.fillStyle = "#ffffff";
-
-    const memberDisplayName = `${member.username}`;
+    
     context.font = userName(canvas, memberDisplayName);
     context.fillText(`${memberDisplayName}`, 200, 90);
 
     context.font = "18px Roboto Regular";
-    context.fillText(`Rang:    ${interaction.member.roles.highest.name}`, 200, 125);
-
-    context.font = "18px Roboto Regular";
     context.fillText(
-      `Server:  ${guild.name}`,
+      `Rang:    ${interaction.member.roles.highest.name}`,
       200,
-      145
+      125
     );
 
     context.font = "18px Roboto Regular";
+    context.fillText(`Server:  ${guild.name}`, 200, 145);
+
+    context.font = "18px Roboto Regular";
     context.fillText(
-      `Auf dem Server seit: ${new Date(interaction.member.joinedTimestamp).toLocaleDateString(
-        "de-DE"
-      )}`,
+      `Auf dem Server seit: ${new Date(
+        interaction.member.joinedTimestamp
+      ).toLocaleDateString("de-DE")}`,
       200,
       165
     );
@@ -120,27 +140,19 @@ const generateImage = async (interaction, member, guild) => {
 
     // Empty Bar
     context.strokeStyle = "black";
-    context.strokeRect(215,205, 350, 0);
+    context.strokeRect(215, 205, 350, 0);
 
     // Bar Filled
     context.strokeStyle = "#a7b9d7";
-    context.strokeRect(215,205, 350 * currentUserXp / nextLevelXP ,0);
-    
+    context.strokeRect(215, 205, 350 * currentUserXp / nextLevelXP, 0);
+
     context.font = "18px Roboto Regular";
     context.fillStyle = "#444444";
-    context.fillText(
-      `XP: ${currentUserXp} / ${nextLevelXP}`,
-      300,
-      211
-    );
-    
+    context.fillText(`XP: ${currentUserXp} / ${nextLevelXP}`, 300, 211);
+
     context.fillStyle = "#ffffff";
     context.font = "12px Roboto Regular";
-    context.fillText(
-      `LEVEL: ${currentLevel}`,
-      500,
-      185
-    );
+    context.fillText(`LEVEL: ${currentLevel}`, 500, 185);
 
     // Pick up the pen
     context.beginPath();
@@ -153,7 +165,7 @@ const generateImage = async (interaction, member, guild) => {
     context.drawImage(avatar, 25, 25, 150, 150);
 
     const attachment = new AttachmentBuilder(await canvas.encode("png"), {
-      name: `userbanner_${member.username}.png`,
+      name: `userbanner_${member.username}.png`
     });
 
     return resolve(attachment);
