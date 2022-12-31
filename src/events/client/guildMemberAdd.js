@@ -34,19 +34,8 @@ module.exports = {
               .id}) bei Guild: ${guildId} erfolgreich angelegt!`
           )
         );
-      } else {
-        const welcomeMessage = "Willkommen zurück";
-        await welcomeBanner.createWelcomeBanner(member, welcomeMessage);
-        console.log(
-          chalk.blue(
-            `[MYSQL DATABASE] User (${member.user.username}#${member.user
-              .discriminator} | ID: ${member.user
-              .id}) ist bereits bei Guild: ${guildId} registriert!`
-          )
-        );
-      }
 
-      // ########################## USER COUNT SPECIAL MESSAGE (EVERY 1000 MEMBERS) ########################## \\
+        // ########################## USER COUNT SPECIAL MESSAGE (EVERY 1000 MEMBERS) ########################## \\
       let nextUserCountSpecialValue = "";
       let insertOrUpdate = "";
       const newUser = await usersRepository.getUser(member.id, member.guild.id);
@@ -118,6 +107,19 @@ module.exports = {
         );
       }
       // ###################################################################################################### \\
+
+
+      } else {
+        const welcomeMessage = "Willkommen zurück";
+        await welcomeBanner.createWelcomeBanner(member, welcomeMessage);
+        console.log(
+          chalk.blue(
+            `[MYSQL DATABASE] User (${member.user.username}#${member.user
+              .discriminator} | ID: ${member.user
+              .id}) ist bereits bei Guild: ${guildId} registriert!`
+          )
+        );
+      }
     });
   }
 };

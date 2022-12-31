@@ -11,7 +11,7 @@ module.exports = {
     name: `report_uebernahme`
   },
   async execute(interaction, client) {
-    return new Promise(async (resolve) => {
+    return new Promise(async resolve => {
       await interaction.deferReply({
         ephemeral: true,
         fetchReply: true
@@ -34,7 +34,7 @@ module.exports = {
       let isModerator = false;
 
       const modRoleIds = JSON.parse(modRoleId.value);
-      modRoleIds.forEach((modRoleId) => {
+      modRoleIds.forEach(modRoleId => {
         if (interaction.member.roles.cache.has(modRoleId)) {
           isModerator = true;
         }
@@ -81,12 +81,18 @@ module.exports = {
         .setStyle(ButtonStyle.Primary)
         .setDisabled(false);
 
+      const buttonAbgelehnt = new ButtonBuilder()
+        .setCustomId("report_abgelehnt")
+        .setLabel("Report ablehnen")
+        .setStyle(ButtonStyle.Danger);
+
       await interaction.message.edit({
         components: [
           new ActionRowBuilder().addComponents([
             buttonUebernahme,
             buttonBearbeiten,
-            buttonErledigt
+            buttonErledigt,
+            buttonAbgelehnt
           ])
         ]
       });

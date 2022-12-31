@@ -1,6 +1,15 @@
 const { EmbedBuilder } = require("discord.js");
 const tempCommandRepository = require("../../mysql/tempCommandRepository");
+const schedule = require("node-schedule");
 var client;
+
+async function init(_client) {
+  client = _client;
+  const cronJobTempBan = schedule.scheduleJob({hour: 05, minute: 00}, function() {
+    console.log(`\x1b[32mCRONJOB | Temp-Ban Check ausgeführt\x1b[0m`);
+    userTempBanCheck()
+  });
+}
 
 async function userTempBanCheck() {
   const allTempUserToDelete = await tempCommandRepository.getAllTempBanUser();
@@ -13,6 +22,7 @@ async function userTempBanCheck() {
     userTempBanUnban(tempUserToDelete);
   });
 }
+
 async function userTempBanUnban(tempUserToDelete) {
   const guildId = tempUserToDelete.guildId;
   const unbanGuild = await client.guilds.fetch(guildId);
@@ -57,11 +67,6 @@ async function userTempBanUnban(tempUserToDelete) {
   } catch (error) {}
 
   await tempCommandRepository.deleteTempUser(unbanMember, unbanGuild);
-}
-
-async function init(_client) {
-  client = _client;
-  setInterval(userTempBanCheck, 60000);
 }
 
 module.exports.init = init;

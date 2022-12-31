@@ -30,7 +30,7 @@ const client = new Client({
     GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.DirectMessages,
     GatewayIntentBits.DirectMessageTyping,
-    GatewayIntentBits.DirectMessageReactions,
+    GatewayIntentBits.DirectMessageReactions
   ],
   partials: [
     Partials.Channel,
@@ -40,8 +40,8 @@ const client = new Client({
     Partials.Message,
     Partials.Reaction,
     Partials.ThreadMember,
-    Partials.User,
-  ],
+    Partials.User
+  ]
 });
 
 client.commands = new Collection();
@@ -51,11 +51,11 @@ client.modals = new Collection();
 client.voiceGenerator = new Collection();
 client.commandArray = [];
 
-const functionFolders = [ 'error', 'handlers'];
+const functionFolders = ["error", "handlers"];
 for (const folder of functionFolders) {
   const functionFiles = fs
     .readdirSync(`./src/functions/${folder}`)
-    .filter((file) => file.endsWith(".js"));
+    .filter(file => file.endsWith(".js"));
   for (const file of functionFiles)
     require(`./src/functions/${folder}/${file}`)(client);
 }
@@ -68,20 +68,17 @@ client.login(TOKEN);
 
 // CLIENT ON EVENTS
 
-
-client.on("messageCreate", async (message) => {
+client.on("messageCreate", async message => {
   getXp(message);
   levelSystemGiveRole(message);
 });
 
 client.on("ready", async () => {
   tempUnbanUser.init(client);
-  // autoDeleteChannel.init(client);
+  autoDeleteChannel.init(client);
   // servicecheck.init(client);
 });
 
-
-
 // Discord Together
-const { DiscordTogether } = require('discord-together');
+const { DiscordTogether } = require("discord-together");
 client.discordTogether = new DiscordTogether(client);

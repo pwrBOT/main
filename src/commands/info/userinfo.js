@@ -45,6 +45,20 @@ module.exports = {
         let guildId = guild.id;
         let user = await usersRepository.getUser(userId, guildId);
 
+        let currentUserXp = 0;
+        let currentLevel = 0;
+        let nextLevelXP = 0;
+
+        if (user == null) {
+          currentUserXp = 0
+          currentLevel = 0
+          nextLevelXP = 100
+        } else {
+          currentUserXp = user.xP;
+          currentLevel = user.Level;
+          nextLevelXP = user.Level * user.Level * 100 + 100;
+        }
+
         let warnsText = "";
         let warns = await warnsRepository.getWarns(member, 10);
 
@@ -65,10 +79,6 @@ module.exports = {
             warnsText += `${date}  •  ${time}h:${spacer}${warn.warnReason}\n`;
           });
         }
-
-        let currentUserXp = user.xP;
-        let currentLevel = user.Level;
-        let nextLevelXP = user.Level * user.Level * 100 + 100;
 
         const userembed = new EmbedBuilder()
           .setTitle(`⚡️ PowerBot | User Info ⚡️`)
