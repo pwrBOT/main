@@ -104,6 +104,11 @@ module.exports = {
         return resolve(null);
       }
 
+      if (member.isCommunicationDisabled()){
+        interaction.editReply("❌ Der User hat bereits ein Timeout! ❌");
+        return resolve(null);
+      }
+
       if (interaction.options.getSubcommand() === "add") {
         if (!length)
           return interaction

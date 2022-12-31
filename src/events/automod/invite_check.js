@@ -222,7 +222,11 @@ module.exports = {
             return resolve(null);
           }
 
-          const length = "5m";
+          if (message.member.isCommunicationDisabled()){
+            return resolve(null);
+          }
+
+          const length = "1h";
           const guildsRepository = require("../../mysql/guildsRepository");
           const embedInfo = await guildsRepository.getGuildSetting(
             message.guild,
@@ -291,7 +295,7 @@ module.exports = {
           await logChannel.logChannel(message.guild, "modLog", modlogembed);
 
           try {
-            message.member.timeout(ms(length), "Auto-Mod | Spam");
+            message.member.timeout(ms(length), "Auto-Mod | Invite Check");
           } catch (error) {}
 
           try {
