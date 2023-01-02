@@ -1,14 +1,20 @@
-const { REST, Routes } = require('discord.js');
+const { REST, Routes } = require("discord.js");
 const fs = require("fs");
+const powerbotManagement = require("../../mysql/powerbotManagement");
 const config = require("../../../config.json");
+const clientId = config.powerbot_clientId;
+const TOKEN = config.powerbot_token;
+const rest = new REST({ version: "10" }).setToken(TOKEN);
+const restPremium = new REST({ version: "10" }).setToken(TOKEN);
 
-module.exports = (client) => {
+module.exports = client => {
   client.handleCommands = async () => {
+    // ####################### MAIN COMMANDS ####################### \\
     const commandFolders = fs.readdirSync("./src/commands");
     for (const folder of commandFolders) {
       const commandFiles = fs
         .readdirSync(`./src/commands/${folder}`)
-        .filter((file) => file.endsWith(".js"));
+        .filter(file => file.endsWith(".js"));
 
       const { commands, commandArray } = client;
       for (const file of commandFiles) {
@@ -16,41 +22,69 @@ module.exports = (client) => {
         commands.set(command.data.name, command);
         commandArray.push(command.data.toJSON());
         console.log(
-          `\x1b[36mCommand: ${command.data.name} has been passed through the handler\x1b[0m`
+          `\x1b[36mCommand: ${command.data
+            .name} has been passed through the handler\x1b[0m`
         );
       }
     }
 
-    const clientId = config.powerbot_clientId;
-    const TOKEN = config.powerbot_token;
-    const pwrguildID = config.powerbot_pwrguildID;
-    const ldsguildID = config.powerbot_ldsguildID;
-    const mbrguildID = config.powerbot_mbrguildID;
+    // ####################### PREMIUM COMMANDS ####################### \\
+    const commandPremiumFolders = fs.readdirSync("./src/commandsPremium");
+    for (const folder of commandPremiumFolders) {
+      const commandPremiumFiles = fs
+        .readdirSync(`./src/commandsPremium/${folder}`)
+        .filter(file => file.endsWith(".js"));
 
-    const rest = new REST({ version: "10" }).setToken(TOKEN);
+      const { premiumCommands, premiumCommandArray } = client;
+      for (const file of commandPremiumFiles) {
+        const commandPremium = require(`../../commandsPremium/${folder}/${file}`);
+        premiumCommands.set(commandPremium.data.name, commandPremium);
+        premiumCommandArray.push(commandPremium.data.toJSON());
+        console.log(
+          `\x1b[36mPremium Command: ${commandPremium.data
+            .name} has been passed through the handler\x1b[0m`
+        );
+      }
+    }
+    // ################################################################# \\
+    let commandPremiumArray = await client.commandArray.concat(
+      client.premiumCommandArray
+    );
+    const whitelistGuilds = await powerbotManagement.getValues("whitelist");
+    const premiumGuilds = await powerbotManagement.getValues("premium");
+
     try {
-      console.log("\x1b[33mÜbertrage Slash-Commands zu Guilds.\x1b[0m");
-
-      // DEPLOY COMMANDS GLOBAL TO ALL GUILDS (1h Refresh Time)
-      await rest.put(Routes.applicationCommands(clientId), {
-        body: [],
-      });
-
-      // DEPLOY COMMANDS TO SPECIFIC GUILDS --> ATTENTION! COMMANDS ARE DOUBLED --> ONLY FOR DEV
-      const testGuilds = config.whitelist_Guilds;
-      testGuilds.forEach(async (guildId) => {
-        let testGuild = guildId;
-        const guild = client.guilds.fetch(testGuild);
+      whitelistGuilds.forEach(async guildId => {
+        let whitelistGuild = guildId.value;
+        const guild = await client.guilds.fetch(whitelistGuild);
 
         console.log(
-          `\x1b[33mÜbertrage Slash-Commands zu Test-Guild: ${testGuild}\x1b[0m`
+          `\x1b[33mÜbertrage Slash-Commands zu Guild: ${guild.name} (${whitelistGuild})\x1b[0m`
         );
-        await rest.put(Routes.applicationGuildCommands(clientId, testGuild), {
-          body: client.commandArray,
+
+        premiumGuilds.forEach(premiumGuildId => {
+          if (premiumGuildId.value == whitelistGuild) {
+            console.log(
+              `\x1b[33m>>>> PREMIUM GUILD: ${guild.name} (${whitelistGuild})\x1b[0m`
+            );
+            restPremium.put(
+              Routes.applicationGuildCommands(clientId, whitelistGuild),
+              {
+                body: commandPremiumArray
+              }
+            );
+          } else {
+            rest.put(
+              Routes.applicationGuildCommands(clientId, whitelistGuild),
+              {
+                body: client.commandArray
+              }
+            );
+          }
         });
       });
 
-      console.log("\x1b[32mAlle Slash-Commands erfolgreich übertragen!\x1b[0m");
+      console.log("\x1b[32mSlash-Commands erfolgreich übertragen!\x1b[0m");
     } catch (error) {
       console.error(error);
     }

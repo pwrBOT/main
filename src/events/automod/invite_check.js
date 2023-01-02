@@ -61,7 +61,6 @@ module.exports = {
         }
 
         if (!autoModInvites) {
-          console.log(chalk.yellow(`AUTO MOD INVITE | KEINE SETTINGS`));
           return resolve(null);
         }
 

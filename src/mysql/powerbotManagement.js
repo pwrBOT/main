@@ -1,6 +1,6 @@
 const mysqlHelper = require("./mysqlHelper");
 
-const getPowerbotManagementSettings = async (property) => {
+const getValues = async (property) => {
   return new Promise((resolve) => {
     mysqlHelper
       .query(
@@ -16,4 +16,4 @@ const getPowerbotManagementSettings = async (property) => {
   });
 };
 
-module.exports.getPowerbotManagementSettings = getPowerbotManagementSettings;
+module.exports.getValues = getValues;

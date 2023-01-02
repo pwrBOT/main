@@ -10,10 +10,10 @@ module.exports = {
     return new Promise(async resolve => {
       /// CHECK IF GUILD IS BLOCKED \\\
       const guildOwner = await guild.fetchOwner();
-      const guildsWhitelist = await powerbotManagement.getPowerbotManagementSettings(
+      const guildsWhitelist = await powerbotManagement.getValues(
         "whitelist"
       );
-      const guildsBlacklist = await powerbotManagement.getPowerbotManagementSettings(
+      const guildsBlacklist = await powerbotManagement.getValues(
         "blacklist"
       );
       const newGuildId = guild.id;
