@@ -55,7 +55,7 @@ module.exports = {
 
 
       const reportembedBase1 = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot ⚡️ | Report`)
+        .setTitle(`⚡️ Report System ⚡️`)
         .setDescription(
           `User: ${member} wurde soeben gemeldet.\nReport ID: #${reportId}`
         )

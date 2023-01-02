@@ -150,7 +150,7 @@ module.exports = {
       const logChannel = require("../../mysql/loggingChannelsRepository");
       await logChannel.logChannel(interaction.guild, "modLog", banembed);
 
-      guild.member
+      member
         .ban({ deleteMessageSeconds: days * 24 * 60 * 60, reason: reason })
         .catch(console.error);
 

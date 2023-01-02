@@ -45,11 +45,23 @@ const generateImage = async (interaction, member, guild, guildMember) => {
     if (!user) {
       return resolve(null);
     }
-    var backgroundImg = "";
 
-    const rankcard = await guildsRepository.getGuildSetting(guild, "rankcard");
-    if (rankcard) {
-      backgroundImg = `./src/components/canvas/img/welcome/${rankcard.value}`;
+    function isImage(url) {
+      return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
+    }
+
+    var backgroundImg = "";
+    const rankBannerPictureLink = await guildsRepository.getGuildSetting(
+      guild,
+      "rankBannerPictureLink"
+    );
+    if (rankBannerPictureLink) {
+      if (isImage(rankBannerPictureLink.value)) {
+        backgroundImg = rankBannerPictureLink.value;
+      } else {
+        backgroundImg =
+          "./src/components/canvas/img/welcome/powerbot_rankcard.jpg";
+      }
     } else {
       backgroundImg =
         "./src/components/canvas/img/welcome/powerbot_rankcard.jpg";
@@ -76,7 +88,7 @@ const generateImage = async (interaction, member, guild, guildMember) => {
     const avatar = await Canvas.loadImage(await body.arrayBuffer());
 
     const memberDisplayNameRaw = `${guildMember.displayName}`;
-    const memberDisplayName = memberDisplayNameRaw.normalize('NFKD');
+    const memberDisplayName = memberDisplayNameRaw.normalize("NFKD");
 
     const userName = (canvas, text) => {
       const context = canvas.getContext("2d");
@@ -85,13 +97,13 @@ const generateImage = async (interaction, member, guild, guildMember) => {
         context.font = `${(fontSize -= 10)}px Doctor Glitch`;
       } while (context.measureText(text).width > canvas.width - 300);
       return context.font;
-    }
+    };
 
     context.strokeStyle = "#414141";
     context.strokeRect(0, 0, canvas.width, canvas.height);
 
     context.fillStyle = "#ffffff";
-    
+
     context.font = userName(canvas, memberDisplayName);
     context.fillText(`${memberDisplayName}`, 200, 90);
 

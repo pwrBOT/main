@@ -28,12 +28,12 @@ GlobalFonts.registerFromPath(
 
 const createWelcomeBanner = async (member, welcomeMessage) => {
   return new Promise(async (resolve) => {
-    const welcomeMessageStatus = await guildSettings.getGuildSetting(
+    const welcomeBannerStatus = await guildSettings.getGuildSetting(
       member.guild,
       "welcomeMessageStatus"
     );
 
-    if (welcomeMessageStatus.value !== "1") {
+    if (welcomeBannerStatus.value !== "1") {
       return resolve(null);
     }
 
@@ -48,18 +48,29 @@ const createWelcomeBanner = async (member, welcomeMessage) => {
     if (!user) {
       return resolve(null);
     }
-    var backgroundImg = "";
 
+    function isImage(url) {
+      return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
+    }
+
+    var backgroundImg = "";
     const welcomeImage = await guildSettings.getGuildSetting(
       member.guild,
-      "welcomeImage"
+      "welcomeBannerPictureLink"
     );
+    
     if (welcomeImage) {
-      backgroundImg = `./src/components/canvas/img/welcome/${welcomeImage.value}`;
+      if (isImage(welcomeImage.value)) {
+        backgroundImg = welcomeImage.value;
+      } else {
+        backgroundImg =
+          "./src/components/canvas/img/welcome/powerbot_rankcard.jpg";
+      }
     } else {
       backgroundImg =
         "./src/components/canvas/img/welcome/powerbot_rankcard.jpg";
     }
+
 
     const canvas = Canvas.createCanvas(700, 350);
     const context = canvas.getContext("2d");
@@ -68,12 +79,8 @@ const createWelcomeBanner = async (member, welcomeMessage) => {
     const background = await Canvas.loadImage(backgroundImg);
     context.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-    // draw overlay in the background
-    const powerbot_welcomeOverlay = await Canvas.loadImage(
-      "./src/components/canvas/img/welcome/powerbot_welcomeOverlay.png"
-    );
-
     // draw christmas overlay in the background
+    /** 
     const powerbot_welcomeOverlay_christmas = await Canvas.loadImage(
       "./src/components/canvas/img/welcome/powerbot_welcomeOverlay_christmas.png"
     );
@@ -83,8 +90,12 @@ const createWelcomeBanner = async (member, welcomeMessage) => {
       0,
       canvas.width,
       canvas.height
-    );
+    );*/
 
+    // draw overlay in the background
+    const powerbot_welcomeOverlay = await Canvas.loadImage(
+      "./src/components/canvas/img/welcome/powerbot_welcomeOverlay.png"
+    );
 
     context.drawImage(
       powerbot_welcomeOverlay,

@@ -1,45 +1,57 @@
 const { EmbedBuilder } = require("discord.js");
 const chalk = require("chalk");
 const config = require("../../../config.json");
+const powerbotManagement = require("../../mysql/powerbotManagement");
 
 module.exports = {
   name: "guildCreate",
 
   async execute(guild) {
-    return new Promise(async (resolve) => {
-
+    return new Promise(async resolve => {
       /// CHECK IF GUILD IS BLOCKED \\\
       const guildOwner = await guild.fetchOwner();
-      const guildsWhitelist = config.whitelist_testGuilds;
-      const guildsBlacklist = config.blacklist_Guilds;
+      const guildsWhitelist = await powerbotManagement.getPowerbotManagementSettings(
+        "whitelist"
+      );
+      const guildsBlacklist = await powerbotManagement.getPowerbotManagementSettings(
+        "blacklist"
+      );
       const newGuildId = guild.id;
 
-      if (!guildsWhitelist.includes(newGuildId)) {
-        console.log(
-          chalk.red(
-            `WHITELIST CHECK NEGATIV | GUILD: ${guild.name}(${guild.id})`
-          )
-        );
+      guildsWhitelist.forEach(async guildsWhitelistId => {
+        if (!guildsWhitelistId.value.includes(newGuildId)) {
+          await guild.leave().catch(console.error);
+          console.log(
+            chalk.red(
+              `WHITELIST CHECK NEGATIV | GUILD: ${guild.name}(${guild.id})`
+            )
+          );
 
-        try {
-          await guildOwner.send(`Dein Discord Server ist nicht Teil des Beta Programms. Du kannst den Bot nicht nutzen. Sry :(`);
-        } catch (error) {}
-        await guild.leave().catch(console.error);
-        return resolve(null);
-      }
+          try {
+            await guildOwner.send(
+              `Dein Discord Server ist nicht Teil des Beta Programms. Du kannst den Bot nicht nutzen. Sry :(`
+            );
+          } catch (error) {}
+          return resolve(null);
+        }
+      });
 
-      if (guildsBlacklist.includes(newGuildId)) {
-        console.log(
-          chalk.red(
-            `BLACKLIST CHECK POSITIV | GUILD: ${guild.name}(${guild.id})`
-          )
-        );
-        try {
-          await guildOwner.send(`Dein Discord Server ist auf der Blacklist gelandet. Du kannst den Bot nicht mehr nutzen!`);
-        } catch (error) {}
-        await guild.leave().catch(console.error);
-        return resolve(null);
-      }
+      guildsBlacklist.forEach(async guildsBlacklistId => {
+        if (guildsBlacklistId.value.includes(newGuildId)) {
+          await guild.leave().catch(console.error);
+          console.log(
+            chalk.red(
+              `BLACKLIST CHECK POSITIV | GUILD: ${guild.name}(${guild.id})`
+            )
+          );
+          try {
+            await guildOwner.send(
+              `Dein Discord Server ist auf der Blacklist gelandet. Du kannst den Bot nicht mehr nutzen!`
+            );
+          } catch (error) {}
+          return resolve(null);
+        }
+      });
 
       //// ##################### TABLE CHECK ##################### \\\\
       //// CHECK / CREATE USER TABLE
@@ -61,8 +73,9 @@ module.exports = {
 
       //// CHECK / ADD GUILD-ID TO AUTO-MOD TABLE
       const autoModRepository = require("../../mysql/autoModRepository");
-      const getAutoModGuildSettings =
-        await autoModRepository.getGuildAutoModSettings(guild);
+      const getAutoModGuildSettings = await autoModRepository.getGuildAutoModSettings(
+        guild
+      );
       if (getAutoModGuildSettings.length === 0) {
         console.log(
           chalk.yellow(
@@ -96,13 +109,13 @@ module.exports = {
       //// ##################### TABLE CHECK END ##################### \\\\
 
       //// ##################### IMPORT GUILD USER TO DB ##################### \\\\
-      await guild.members.fetch().then(async (members) => {
+      await guild.members.fetch().then(async members => {
         const sorting = (a, b) => {
           return a.joinedTimestamp - b.joinedTimestamp;
         };
         const sortedMembers = await members.sort(sorting);
 
-        sortedMembers.forEach(async (member) => {
+        sortedMembers.forEach(async member => {
           const getUser = await usersRepository.getUser(
             member.user.id,
             member.guild.id
@@ -116,12 +129,11 @@ module.exports = {
               member.joinedTimestamp
             );
           }
-        }),
-          console.log(
-            chalk.blue(
-              `[MYSQL DATABASE] Alle vorhandenen User von Guild: ${guild.name}(${guild.id}) in User Tabelle importiert.`
-            )
-          );
+        }), console.log(
+          chalk.blue(
+            `[MYSQL DATABASE] Alle vorhandenen User von Guild: ${guild.name}(${guild.id}) in User Tabelle importiert.`
+          )
+        );
       });
 
       //// ##################### IMPORT GUILD USER TO DB END ##################### \\\\
@@ -137,43 +149,43 @@ module.exports = {
           {
             name: `1️⃣ Schritt 1:`,
             value: `Verschiebe die Bot-Rolle nach ganz oben. Lasse sie aber unter deiner Inhaber-Rolle. Der Bot kann nur User moderieren, deren Rolle UNTER der Bot-Rolle ist.\n
-          Aber keine Angst: Es gibt Schutzmechanismen die es verbieten, dass der Server-Inhaber, oder andere Administratoren moderiert werden können.\n`,
-            inline: true,
+          Aber keine Angst: Es gibt Schutzmechanismen die es verbieten, dass der Server-Inhaber, Administratoren oder Team-Member moderiert werden können.\n`,
+            inline: true
           },
           {
             name: `2️⃣ Schritt 2:`,
             value: `Am Besten gibst du dem Bot Admin-Rechte. So kann er automatisch alle Channel sehen und du kannst ihn überall nutzen.\n
           Möchtest du dem Bot keine Adminrechte geben, musst du die Bot-Rolle allen Kategorien / Channeln einzeln hinzufügen. Sonst kann er diese nicht sehen.\n`,
-            inline: true,
+            inline: true
           },
           {
             name: `3️⃣ Schritt 3:`,
             value: `Richte den Bot beim Dashboard (https://dashboard.pwr.lol/) ein!\n`,
-            inline: false,
+            inline: false
           },
           {
             name: `⚡️ Allgemeines:`,
             value: `Du hast Fragen, Wünsche, Anregungen oder Probeleme? Dann melde dich bei uns und schau beim Support-Server vorbei:
           https://discord.gg/QfDNMCxzsN \n`,
-            inline: false,
+            inline: false
           },
           {
             name: `✅ Danke und Viel Spaß:`,
             value: `Nun wünschen wir die viel Spaß mit dem PowerBot und bedanken uns vorab, dass du uns in der Erstphase unterstützt und den Bot nutzt.
           Gerade in der Anfangszeit ist dies sehr wichtig, damit Fehler schnell gefunden und ausgebessert werden können.\n`,
-            inline: false,
+            inline: false
           },
           {
             name: `👨‍🔧 Working on:`,
-            value: `Welcome Message, Temp-Voice-Channel System, Level-System, Reaction-Roles, Auto-Moderation, Dashboard...`,
-            inline: false,
-          },
+            value: `Welcome Message, Reaction-Roles, Auto-Moderation, Musik-System, Dashboard...`,
+            inline: false
+          }
         ])
         .setThumbnail(guild.iconURL())
         .setTimestamp(Date.now())
         .setImage("https://pwr.lol/img/discord_embed.jpg")
         .setFooter({
-          text: `powered by PowerBot`,
+          text: `powered by PowerBot`
         });
       try {
         await guildOwner.send({ embeds: [newGuildEmbed] });
@@ -188,19 +200,19 @@ module.exports = {
         .setTimestamp(Date.now())
         .setFooter({
           iconURL: client.user.displayAvatarURL(),
-          text: `powered by Powerbot`,
+          text: `powered by Powerbot`
         })
         .setThumbnail(guild.iconURL())
         .addFields([
           {
             name: `Guild Name:`,
             value: `${guild.name}`,
-            inline: true,
+            inline: true
           },
           {
             name: `Guild Owner:`,
             value: `${guildOwner.user.tag}\n${guildOwner.user.id}`,
-            inline: true,
+            inline: true
           },
           {
             name: `Guild erstellt:`,
@@ -209,18 +221,18 @@ module.exports = {
             )} | ${new Date(guild.createdTimestamp).toLocaleTimeString(
               "de-DE"
             )}`,
-            inline: true,
+            inline: true
           },
           {
             name: `Anzahl der Mitglieder:`,
             value: `${guild.members.cache.size}`,
-            inline: true,
+            inline: true
           },
           {
             name: `\u200B`,
             value: `\u200B`,
-            inline: true,
-          },
+            inline: true
+          }
         ]);
 
       const powerbotGuildLogChannelId = config.powerbot_guildlog_channel;
@@ -230,5 +242,5 @@ module.exports = {
 
       return resolve(null);
     });
-  },
+  }
 };

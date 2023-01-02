@@ -7,15 +7,15 @@ const levelsRepository = require("../../mysql/levelsRepository");
 const embedsRepository = require("../../mysql/embedsRepository");
 const autoModRepository = require("../../mysql/autoModRepository");
 const guildsRepository = require("../../mysql/guildsRepository");
-const os = require('os')
-let values = [0, null, null, null, null, null, null, null, null, null]
+const os = require("os");
+let values = [0, null, null, null, null, null, null, null, null, null];
 
-setInterval(function () {
-    values.unshift(
-        ((os.totalmem() - os.freemem()) / (1000 * 1000 * 1000)).toFixed(2) * 100
-    )
-    values.pop()
-}, 60 * 1000)
+setInterval(function() {
+  values.unshift(
+    ((os.totalmem() - os.freemem()) / (1000 * 1000 * 1000)).toFixed(2) * 100
+  );
+  values.pop();
+}, 60 * 1000);
 
 module.exports = {
   name: "ready",
@@ -98,18 +98,18 @@ module.exports = {
             const graph = {
               values,
               labels: [
-                  '1m',
-                  '2m',
-                  '3m',
-                  '4m',
-                  '5m',
-                  '6m',
-                  '7m',
-                  '8m',
-                  '9m',
-                  '10m'
+                "1m",
+                "2m",
+                "3m",
+                "4m",
+                "5m",
+                "6m",
+                "7m",
+                "8m",
+                "9m",
+                "10m"
               ]
-          }
+            };
             return {
               cards,
               graph
@@ -120,7 +120,7 @@ module.exports = {
         colorScheme: "yellow",
         supporteMail: "power@pwr.lol",
         premium: {
-          enabled: true,
+          enabled: false,
           card: {
             title: "Du möchtest Premium-Power?",
             description:
@@ -264,18 +264,10 @@ module.exports = {
                 text: "Power wird geladen..."
               },
               premium: {
-                enabled: true,
-                card: {
-                  title: "Du möchtest Premium-Power?",
-                  description:
-                    "Schau dir unsere Angebote an und hol dir die ultimative Power.",
-                  bgImage:
-                    "https://assistantscenter.com/wp-content/uploads/2021/11/cropped-cropped-logov6.png",
-                  button: {
-                    text: "Premium holen",
-                    url: "https://pwr.lol"
-                  }
-                }
+                title: "Du möchtest Premium-Power?",
+                description:
+                  "Schau dir unsere Angebote an und hol dir die ultimative Power.",
+                buttonText: "Premium holen"
               },
               settings: {
                 title: "Einstellungen",
@@ -289,7 +281,7 @@ module.exports = {
                   description: "Wähl Deine bevorzugte Sprache aus!"
                 }
               }
-            },
+            }
           }
         },
         /// ################## COMMANDS ################## \\\
@@ -328,7 +320,7 @@ module.exports = {
           categoryDescription:
             "Definiere wichtige Rollen und Channel für das Team, Moderatoren, Logging, ...",
           categoryImageURL:
-            "http://primedepartamentos.com/images/icons/settings-icon.png",
+            "https://pwr.lol/img/icons/screwdriver-wrench-solid.svg",
           refreshOnSave: true,
           categoryOptionsList: [
             /// ########## ROLE SETTINGS ########## \\\
@@ -802,7 +794,6 @@ module.exports = {
                 return;
               }
             },
-
             {
               optionId: "language",
               optionName: "",
@@ -853,6 +844,7 @@ module.exports = {
         {
           categoryId: "automessages",
           categoryName: "Welcome Message",
+          categoryImageURL: "https://pwr.lol/img/icons/handshake-regular.svg",
           categoryDescription:
             "### SOON ### - Funktion nur teilweise verfügbar",
 
@@ -897,7 +889,7 @@ module.exports = {
               optionId: "welcomeChannelMessage",
               optionName: "",
               optionDescription:
-                "Text, der im Welcome Channel gepostet wird, wenn ein User joined. (Tags: Username: {member} / Servername: {servername})",
+                "Text, der im Welcome Channel, über dem Welcome Banner, gepostet wird, wenn ein User joined. (Tags: Username: {member} / Servername: {servername})",
               optionType: DBD.formTypes.textarea(
                 "Hey {member} 😎 | Herzlich Willkommen bei **{servername}**!",
                 1,
@@ -940,7 +932,55 @@ module.exports = {
                 return;
               }
             },
+            {
+              optionId: "welcomeBannerPictureLink",
+              optionName: "",
+              optionDescription:
+                "Link zum Hintergrundbild für den Welcome-Banner (Größe 700x350 px)(Format: jpg|png):",
+              optionType: DBD.formTypes.input(
+                "https://.......",
+                1,
+                200,
+                false,
+                false
+              ),
+              getActualSet: async ({ guild }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "welcomeBannerPictureLink"
+                );
 
+                if (data) return data.value;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "welcomeBannerPictureLink"
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const property = "welcomeBannerPictureLink";
+                  await guildsRepository.insertGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                } else {
+                  const property = "welcomeBannerPictureLink";
+                  await guildsRepository.updateGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                }
+                return;
+              }
+            }
+
+            /** EMBED BUILDER --> WIP
             {
               optionId: "welcomeEmbed",
               optionName: "",
@@ -1056,6 +1096,7 @@ module.exports = {
                 return;
               }
             }
+             */
           ]
         },
         /// ################ AUTO MESSAGES END ################ \\\
@@ -1066,8 +1107,7 @@ module.exports = {
           categoryDescription:
             "Vergib Besondere Rollen an aktive User<br><br>XP pro Nachricht minimal: 6 <br> XP pro Nachricht maximal: 25<br> Level 1: 100XP || Level 10: 8200XP || Level 25: 57700XP || Level 50: 240200XP  || Level 75: 547700XP  || Level 100: 980200XP <br> Berechnung LevelUp = Level * Level * 100 + 100",
 
-          categoryImageURL:
-            "https://toppng.com/uploads/preview/3d-gold-star-png-11552727047ns6x0xgmcz.png",
+          categoryImageURL: "https://pwr.lol/img/icons/award-solid.svg",
 
           refreshOnSave: true,
           toggleable: true,
@@ -1132,6 +1172,53 @@ module.exports = {
                   await levelsRepository.updatelevelSettings(
                     guild,
                     column,
+                    newData
+                  );
+                }
+                return;
+              }
+            },
+            {
+              optionId: "rankBannerPictureLink",
+              optionName: "",
+              optionDescription:
+                "Link zum Hintergrundbild für den User-Rank-Banner (Größe 700x250 px)(Format: jpg|png):",
+              optionType: DBD.formTypes.input(
+                "https://.......",
+                1,
+                200,
+                false,
+                false
+              ),
+              getActualSet: async ({ guild }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "rankBannerPictureLink"
+                );
+
+                if (data) return data.value;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "rankBannerPictureLink"
+                );
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const property = "rankBannerPictureLink";
+                  await guildsRepository.insertGuildSetting(
+                    guild,
+                    property,
+                    newData
+                  );
+                } else {
+                  const property = "rankBannerPictureLink";
+                  await guildsRepository.updateGuildSetting(
+                    guild,
+                    property,
                     newData
                   );
                 }
@@ -1867,8 +1954,7 @@ module.exports = {
           categoryName: "Auto Mod",
           categoryDescription:
             "Einstellungen für die automatische Moderation von Usern.",
-          categoryImageURL:
-            "https://cdn3.emoji.gg/emojis/6776-moderator-simplified.png",
+          categoryImageURL: "https://pwr.lol/img/icons/user-shield-solid.svg",
 
           refreshOnSave: true,
           toggleable: true,

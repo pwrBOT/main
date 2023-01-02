@@ -37,7 +37,7 @@ module.exports = (client) => {
       });
 
       // DEPLOY COMMANDS TO SPECIFIC GUILDS --> ATTENTION! COMMANDS ARE DOUBLED --> ONLY FOR DEV
-      const testGuilds = config.whitelist_testGuilds;
+      const testGuilds = config.whitelist_Guilds;
       testGuilds.forEach(async (guildId) => {
         let testGuild = guildId;
         const guild = client.guilds.fetch(testGuild);

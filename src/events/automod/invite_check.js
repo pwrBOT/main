@@ -51,7 +51,7 @@ module.exports = {
         return resolve(null);
       }
 
-        let autoModInvites = "";
+      let autoModInvites = "";
 
         if (message.guild) {
           autoModInvites = await guildSettings.getGuildSetting(
@@ -90,9 +90,9 @@ module.exports = {
 
               if (!isGuildInvite) {
                 console.log(`${link} / ${inviteCode}`)
+                userTimeout();
                 deleteMessage();
                 autoModWarnMember();
-                userTimeout();
                 await warnSystem.autoModWarn(message.guild, message.member);
                 return resolve(null);
               }
@@ -120,9 +120,9 @@ module.exports = {
 
               if (!isGuildInvite) {
                 console.log(`${link} / ${inviteCode}`)
+                userTimeout();
                 deleteMessage();
                 autoModWarnMember();
-                userTimeout();
                 await warnSystem.autoModWarn(message.guild, message.member);
                 return resolve(null);
               }
@@ -133,9 +133,9 @@ module.exports = {
         if (message.content.includes("discord.com/channels/")){
           const inviteCodeOfGuild = message.content.includes(message.guild.id);
           if (inviteCodeOfGuild === false){
+            userTimeout();
             deleteMessage();
             autoModWarnMember();
-            userTimeout();
             await warnSystem.autoModWarn(message.guild, message.member);
             return resolve(null);
           }     
@@ -144,9 +144,9 @@ module.exports = {
         if (message.content.includes("discordapp.com/channels/")){
           const inviteCodeOfGuild = message.content.includes(message.guild.id);
           if (inviteCodeOfGuild === false){
+            userTimeout();
             deleteMessage();
             autoModWarnMember();
-            userTimeout();
             await warnSystem.autoModWarn(message.guild, message.member);
             return resolve(null);
           }     
@@ -291,8 +291,10 @@ module.exports = {
               }
             ]);
 
+          /** 
           const logChannel = require("../../mysql/loggingChannelsRepository");
           await logChannel.logChannel(message.guild, "modLog", modlogembed);
+          */
 
           try {
             message.member.timeout(ms(length), "Auto-Mod | Invite Check");
@@ -364,7 +366,7 @@ module.exports = {
               },
               {
                 name: `Nachricht:`,
-                value: `${userMessage}`,
+                value: `${userMessage}\nChannel: ${message.channel}`,
                 inline: false
               }
             ]);
@@ -414,6 +416,11 @@ module.exports = {
                 name: `Moderator:`,
                 value: `Auto-Mod`,
                 inline: true
+              },
+              {
+                name: `Nachricht:`,
+                value: `${userMessage}`,
+                inline: false
               },
               {
                 name: `Information:`,

@@ -45,11 +45,13 @@ const client = new Client({
 });
 
 client.commands = new Collection();
+client.commandArray = [];
+client.premiumCommands = new Collection();
+client.premiumCommandArray = [];
 client.buttons = new Collection();
 client.selectMenus = new Collection();
 client.modals = new Collection();
 client.voiceGenerator = new Collection();
-client.commandArray = [];
 
 const functionFolders = ["error", "handlers"];
 for (const folder of functionFolders) {

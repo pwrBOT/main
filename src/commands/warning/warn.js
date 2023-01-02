@@ -6,6 +6,7 @@ const {
   Guild
 } = require("discord.js");
 const warnsRepository = require("../../mysql/warnsRepository");
+const guildsRepository = require("../../mysql/guildsRepository");
 
 module.exports = {
   name: "warn",
@@ -60,6 +61,14 @@ module.exports = {
         return resolve(null);
       }
 
+      const embedInfo = await guildsRepository.getGuildSetting(
+        guild,
+        "embedinfo"
+      );
+      if (!embedInfo) {
+        embedInfo = "Bei Fragen wende dich an die Communityleitung!";
+      }
+
       const warnembed = new EmbedBuilder()
         .setTitle(`⚡️ PowerBot | Warning-System ⚡️`)
         .setDescription(`User: ${member} wurde verwarnt`)
@@ -101,7 +110,7 @@ module.exports = {
           },
           {
             name: `Information:`,
-            value: `Bei Fragen wende dich bitte an die Projektleitung`,
+            value: `${embedInfo}`,
             inline: false
           }
         ]);

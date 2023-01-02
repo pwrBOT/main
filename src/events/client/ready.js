@@ -1,6 +1,5 @@
 const { EmbedBuilder, ActivityType } = require("discord.js");
 const config = require(`../../../config.json`);
-const usersRepository = require("../../mysql/usersRepository");
 const chalk = require("chalk");
 
 module.exports = {

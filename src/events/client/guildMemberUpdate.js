@@ -11,7 +11,7 @@ module.exports = {
 
       // #######################  UPDATE ROLES  ####################### \\
       const guildMemberUpdateEmbed = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot ⚡️ | Logging`)
+        .setTitle(`⚡️ Logging System ⚡️`)
         .setThumbnail(oldMember.displayAvatarURL())
         .setTimestamp(Date.now())
         .setFooter({
