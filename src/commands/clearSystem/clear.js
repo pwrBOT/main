@@ -6,7 +6,7 @@ const {
 
 module.exports = {
   name: "clear",
-  category: "admintools",
+  category: "moderation",
   description: "Nachrichten mit dem Bot löschen",
   data: new SlashCommandBuilder()
     .setName(`clear`)

@@ -89,7 +89,7 @@ module.exports = {
       }
 
       const banembed = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+        .setTitle(`⚡️ Moderation ⚡️`)
         .setDescription(
           `User: ${member} wurde vom Server gebannt\nID: ${member.id}`
         )
@@ -114,7 +114,7 @@ module.exports = {
         ]);
 
       const banembedmember = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+        .setTitle(`⚡️ Moderation ⚡️`)
         .setDescription(`Du wurdest gebannt!\n\nServer: "${servername}"`)
         .setColor(0x51ff00)
         .setTimestamp(Date.now())

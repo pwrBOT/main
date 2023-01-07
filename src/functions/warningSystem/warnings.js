@@ -85,7 +85,7 @@ const autoModWarn = async (guild, member) => {
       if (userWarns.length == warnsCount01) {
         if (sanctionType01 === "timeout") {
           const autoWarnModEmbed1 = new EmbedBuilder()
-            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setTitle(`⚡️ Moderation ⚡️`)
             .setDescription(
               `User: ${member} wurde getimeouted!\nDauer: ${duration01}`
             )
@@ -105,7 +105,7 @@ const autoModWarn = async (guild, member) => {
             ]);
 
           const autoWarnModMemberEmbed1 = new EmbedBuilder()
-            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setTitle(`⚡️ Moderation ⚡️`)
             .setDescription(
               `Du wurdest getimeouted!\nServer: "${servername}"\nDauer: ${duration01}!`
             )
@@ -143,7 +143,7 @@ const autoModWarn = async (guild, member) => {
           } catch (error) {}
         } else if (sanctionType01 === "ban") {
           const autoWarnModEmbed1 = new EmbedBuilder()
-            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setTitle(`⚡️ Moderation ⚡️`)
             .setDescription(`User: ${member} wurde gebannt!`)
             .setColor(0x51ff00)
             .setTimestamp(Date.now())
@@ -161,7 +161,7 @@ const autoModWarn = async (guild, member) => {
             ]);
 
           const autoWarnModMemberEmbed1 = new EmbedBuilder()
-            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setTitle(`⚡️ Moderation ⚡️`)
             .setDescription(
               `Du wurdest dauerhaft gebannt!\nServer: "${servername}"!`
             )
@@ -224,7 +224,7 @@ const autoModWarn = async (guild, member) => {
           }
 
           const autoWarnModEmbed1 = new EmbedBuilder()
-            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setTitle(`⚡️ Moderation ⚡️`)
             .setDescription(`User: ${member} wurde temporär gebannt!`)
             .setColor(0x51ff00)
             .setTimestamp(Date.now())
@@ -251,7 +251,7 @@ const autoModWarn = async (guild, member) => {
             ]);
 
           const autoWarnModMemberEmbed1 = new EmbedBuilder()
-            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setTitle(`⚡️ Moderation ⚡️`)
             .setDescription(
               `Du wurdest temporär gebannt!\nServer: "${servername}"!`
             )
@@ -291,7 +291,7 @@ const autoModWarn = async (guild, member) => {
             member.id,
             member.user.tag,
             "AutoMod - Zu viele Warns",
-            "PowerBot | Auto Mod",
+            "Auto Mod",
             " ",
             "tempban",
             tempEnd
@@ -318,7 +318,7 @@ const autoModWarn = async (guild, member) => {
       if (userWarns.length == warnsCount02) {
         if (sanctionType02 === "timeout") {
           const autoWarnModEmbed2 = new EmbedBuilder()
-            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setTitle(`⚡️ Moderation ⚡️`)
             .setDescription(
               `User: ${member} wurde getimeouted!\nDauer: ${duration02}`
             )
@@ -338,7 +338,7 @@ const autoModWarn = async (guild, member) => {
             ]);
 
           const autoWarnModMemberEmbed2 = new EmbedBuilder()
-            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setTitle(`⚡️ Moderation ⚡️`)
             .setDescription(
               `Du wurdest getimeouted!\nServer: "${servername}"\nDauer: ${duration02}!`
             )
@@ -376,7 +376,7 @@ const autoModWarn = async (guild, member) => {
           } catch (error) {}
         } else if (sanctionType02 === "ban") {
           const autoWarnModEmbed2 = new EmbedBuilder()
-            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setTitle(`⚡️ Moderation ⚡️`)
             .setDescription(`User: ${member} wurde gebannt!`)
             .setColor(0x51ff00)
             .setTimestamp(Date.now())
@@ -394,7 +394,7 @@ const autoModWarn = async (guild, member) => {
             ]);
 
           const autoWarnModMemberEmbed2 = new EmbedBuilder()
-            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setTitle(`⚡️ Moderation ⚡️`)
             .setDescription(
               `Du wurdest dauerhaft gebannt!\nServer: "${servername}"!`
             )
@@ -457,7 +457,7 @@ const autoModWarn = async (guild, member) => {
           }
 
           const autoWarnModEmbed2 = new EmbedBuilder()
-            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setTitle(`⚡️ Moderation ⚡️`)
             .setDescription(`User: ${member} wurde temporär gebannt!`)
             .setColor(0x51ff00)
             .setTimestamp(Date.now())
@@ -484,7 +484,7 @@ const autoModWarn = async (guild, member) => {
             ]);
 
           const autoWarnModMemberEmbed2 = new EmbedBuilder()
-            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setTitle(`⚡️ Moderation ⚡️`)
             .setDescription(
               `Du wurdest temporär gebannt!\nServer: "${servername}"!`
             )
@@ -524,7 +524,7 @@ const autoModWarn = async (guild, member) => {
             member.id,
             member.user.tag,
             "AutoMod - Zu viele Warns",
-            "PowerBot | Auto Mod",
+            "Auto Mod",
             " ",
             "tempban",
             tempEnd
@@ -551,7 +551,7 @@ const autoModWarn = async (guild, member) => {
       if (userWarns.length == warnsCount03) {
         if (sanctionType03 === "timeout") {
           const autoWarnModEmbed3 = new EmbedBuilder()
-            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setTitle(`⚡️ Moderation ⚡️`)
             .setDescription(
               `User: ${member} wurde getimeouted!\nDauer: ${duration03}`
             )
@@ -571,7 +571,7 @@ const autoModWarn = async (guild, member) => {
             ]);
 
           const autoWarnModMemberEmbed3 = new EmbedBuilder()
-            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setTitle(`⚡️ Moderation ⚡️`)
             .setDescription(
               `Du wurdest getimeouted!\nServer: "${servername}"\nDauer: ${duration03}!`
             )
@@ -609,7 +609,7 @@ const autoModWarn = async (guild, member) => {
           } catch (error) {}
         } else if (sanctionType03 === "ban") {
           const autoWarnModEmbed3 = new EmbedBuilder()
-            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setTitle(`⚡️ Moderation ⚡️`)
             .setDescription(`User: ${member} wurde gebannt!`)
             .setColor(0x51ff00)
             .setTimestamp(Date.now())
@@ -627,7 +627,7 @@ const autoModWarn = async (guild, member) => {
             ]);
 
           const autoWarnModMemberEmbed3 = new EmbedBuilder()
-            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setTitle(`⚡️ Moderation ⚡️`)
             .setDescription(
               `Du wurdest dauerhaft gebannt!\nServer: "${servername}"!`
             )
@@ -690,7 +690,7 @@ const autoModWarn = async (guild, member) => {
           }
 
           const autoWarnModEmbed3 = new EmbedBuilder()
-            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setTitle(`⚡️ Moderation ⚡️`)
             .setDescription(`User: ${member} wurde temporär gebannt!`)
             .setColor(0x51ff00)
             .setTimestamp(Date.now())
@@ -717,7 +717,7 @@ const autoModWarn = async (guild, member) => {
             ]);
 
           const autoWarnModMemberEmbed3 = new EmbedBuilder()
-            .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+            .setTitle(`⚡️ Moderation ⚡️`)
             .setDescription(
               `Du wurdest temporär gebannt!\nServer: "${servername}"!`
             )
@@ -757,7 +757,7 @@ const autoModWarn = async (guild, member) => {
             member.id,
             member.user.tag,
             "AutoMod - Zu viele Warns",
-            "PowerBot | Auto Mod",
+            "Auto Mod",
             " ",
             "tempban",
             tempEnd

@@ -81,7 +81,7 @@ module.exports = {
         });
 
         const warnsembed = new EmbedBuilder()
-          .setTitle(`⚡️ PowerBot | Warning-System ⚡️`)
+          .setTitle(`⚡️ Warning-System ⚡️`)
           .setDescription(`Warns-Übersicht von ${member}`)
           .setColor(0x51ff00)
           .setTimestamp(Date.now())
@@ -132,7 +132,7 @@ module.exports = {
         }
 
         const delWarnembed = new EmbedBuilder()
-          .setTitle(`⚡️ PowerBot | Warning-System ⚡️`)
+          .setTitle(`⚡️ Warning-System ⚡️`)
           .setDescription(`Warn von ${member} entfernt!`)
           .setColor(0x51ff00)
           .setTimestamp(Date.now())
@@ -159,7 +159,7 @@ module.exports = {
           ]);
 
           const delWarnembedUser = new EmbedBuilder()
-          .setTitle(`⚡️ PowerBot | Warning-System ⚡️`)
+          .setTitle(`⚡️ Warning-System ⚡️`)
           .setDescription(`Ein Warn von dir wurde gelöscht!`)
           .setColor(0x51ff00)
           .setTimestamp(Date.now())
@@ -235,7 +235,7 @@ module.exports = {
         });
 
         const delWarnsembed = new EmbedBuilder()
-          .setTitle(`⚡️ PowerBot | Warning-System ⚡️`)
+          .setTitle(`⚡️ Warning-System ⚡️`)
           .setDescription(`Alle Warns von ${member} entfernt!`)
           .setColor(0x51ff00)
           .setTimestamp(Date.now())

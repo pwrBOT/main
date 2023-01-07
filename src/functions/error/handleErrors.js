@@ -16,7 +16,7 @@ module.exports = async (client) => {
     console.log(chalk.red(reason, promise));
 
     const errorEmbed = new EmbedBuilder()
-      .setTitle(`⚡️ PowerBot | Error Management ⚡️`)
+      .setTitle(`⚡️ Error Management ⚡️`)
       .setDescription(`Es ist ein Fehler aufgetreten1:`)
       .setColor(0xff0000)
       .addFields([
@@ -42,7 +42,7 @@ module.exports = async (client) => {
     console.log(chalk.red(err, origin));
 
     const errorEmbed = new EmbedBuilder()
-      .setTitle(`⚡️ PowerBot | Error Management ⚡️`)
+      .setTitle(`⚡️ Error Management ⚡️`)
       .setDescription(`Es ist ein Fehler aufgetreten2:`)
       .setColor(0xff0000)
       .addFields([
@@ -68,7 +68,7 @@ module.exports = async (client) => {
     console.log(chalk.red(err, origin));
 
     const errorEmbed = new EmbedBuilder()
-      .setTitle(`⚡️ PowerBot | Error Management ⚡️`)
+      .setTitle(`⚡️ Error Management ⚡️`)
       .setDescription(`Es ist ein Fehler aufgetreten3:`)
       .setColor(0xff0000)
       .addFields([
@@ -94,7 +94,7 @@ module.exports = async (client) => {
     console.log(chalk.red(err, origin));
 
     const errorEmbed = new EmbedBuilder()
-      .setTitle(`⚡️ PowerBot | Error Management ⚡️`)
+      .setTitle(`⚡️ Error Management ⚡️`)
       .setDescription(`Es ist ein Fehler aufgetreten4:`)
       .setColor(0xff0000)
       .addFields([

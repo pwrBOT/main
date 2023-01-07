@@ -53,7 +53,7 @@ module.exports = {
       }
 
       const banembed = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+        .setTitle(`⚡️ Moderation ⚡️`)
         .setDescription(
           `User: ${member} wurde entbannt`
         )
@@ -77,7 +77,7 @@ module.exports = {
         ]);
 
       const banembedmember = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+        .setTitle(`⚡️ Moderation ⚡️`)
         .setDescription(`Du wurdest entbannt!\n\nServer: "${servername}"\n`)
         .setColor(0x51ff00)
         .setTimestamp(Date.now())

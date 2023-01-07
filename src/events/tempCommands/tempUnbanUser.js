@@ -35,7 +35,7 @@ async function userTempBanUnban(tempUserToDelete) {
     `${unbanMember.tag}(${unbanMember.id}) wurde bei ${unbanGuild.name} automatisch entbannt!`
   );
   const unbanembed = new EmbedBuilder()
-    .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+    .setTitle(`⚡️ Moderation ⚡️`)
     .setDescription(
       `User: ${unbanMember.tag} wurde automatisch entbannt.\n\nBan-Grund: ${tempUserToDelete.warnReason}\nModerator: ${tempUserToDelete.warnModName}`
     )
@@ -48,7 +48,7 @@ async function userTempBanUnban(tempUserToDelete) {
     });
 
   const unbanembedmember = new EmbedBuilder()
-    .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+    .setTitle(`⚡️ Moderation ⚡️`)
     .setDescription(
       `Dein Tempban wurde automatisch entfernt!\n\nServer: "${unbanGuild.name}"\n`
     )

@@ -38,7 +38,7 @@ module.exports = {
     .addStringOption(option =>
       option
         .setName("text")
-        .setDescription("Text der Ankuendigung")
+        .setDescription("Text der Ankuendigung ($n = neue Zeile)")
         .setRequired(false)
     )
     .addAttachmentOption(option =>
@@ -68,7 +68,7 @@ module.exports = {
           iconURL: `${guild.iconURL()}`,
         })
         .setTitle(titel)
-        .setDescription(text)
+        .setDescription(text.replaceAll("$n", "\n"))
         .setColor(0x0068f7)
         .setTimestamp(Date.now())
 

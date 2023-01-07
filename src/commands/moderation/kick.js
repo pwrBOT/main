@@ -79,7 +79,7 @@ module.exports = {
       }
 
       const kickembed = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+        .setTitle(`⚡️ Moderation ⚡️`)
         .setDescription(`User: ${member} wurde vom Server gekickt`)
         .setColor(0x51ff00)
         .setTimestamp(Date.now())
@@ -102,7 +102,7 @@ module.exports = {
         ]);
 
       const kickembedmember = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+        .setTitle(`⚡️ Moderation ⚡️`)
         .setDescription(`Du wurdest gekickt!\n\nServer: "${servername}"\n`)
         .setColor(0x51ff00)
         .setTimestamp(Date.now())

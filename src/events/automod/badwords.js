@@ -140,7 +140,7 @@ module.exports = {
         }
 
         const modlogembed = new EmbedBuilder()
-          .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+          .setTitle(`⚡️ Moderation ⚡️`)
           .setDescription(
             `User: ${message.member} wurde getimeouted!\nDauer: ${length}`
           )
@@ -165,7 +165,7 @@ module.exports = {
           ]);
 
         const embedmember = new EmbedBuilder()
-          .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+          .setTitle(`⚡️ Moderation ⚡️`)
           .setDescription(
             `Du wurdest getimeouted!\nServer: "${message.guild.name}"\nDauer: ${length}!`
           )
@@ -244,7 +244,7 @@ module.exports = {
         }
 
         const warnembed = new EmbedBuilder()
-          .setTitle(`⚡️ PowerBot | Warning-System ⚡️`)
+          .setTitle(`⚡️ Warning-System ⚡️`)
           .setDescription(`User: ${message.member} wurde verwarnt`)
           .setColor(0x51ff00)
           .setTimestamp(Date.now())
@@ -272,7 +272,7 @@ module.exports = {
           ]);
 
         const warnembedmember = new EmbedBuilder()
-          .setTitle(`⚡️ PowerBot | Warning-System ⚡️`)
+          .setTitle(`⚡️ Warning-System ⚡️`)
           .setDescription(
             `Du wurdest soeben verwarnt!\nServer: ${message.guild.name}`
           )

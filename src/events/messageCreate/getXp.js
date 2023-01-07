@@ -41,7 +41,7 @@ module.exports = async function messageCreate(message) {
     const LIMIT = 5;
     const TIME = 60000;
     const DIFF = 10000;
-    const length = "5m";
+    const length = "1h";
 
     if (antiSpamMap.has(message.author.id)) {
       const userData = antiSpamMap.get(message.author.id);
@@ -148,7 +148,7 @@ module.exports = async function messageCreate(message) {
         return resolve(null);
       }
 
-      const length = "5m";
+      const length = "1h";
       const guildsRepository = require("../../mysql/guildsRepository");
       const embedInfo = await guildsRepository.getGuildSetting(
         message.guild,
@@ -159,7 +159,7 @@ module.exports = async function messageCreate(message) {
       }
 
       const modlogembed = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+        .setTitle(`⚡️ Moderation ⚡️`)
         .setDescription(
           `User: ${message.member} wurde getimeouted!\nDauer: ${length}`
         )
@@ -184,7 +184,7 @@ module.exports = async function messageCreate(message) {
         ]);
 
       const embedmember = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+        .setTitle(`⚡️ Moderation ⚡️`)
         .setDescription(
           `Du wurdest getimeouted!\nServer: "${message.guild.name}"\nDauer: ${length}!`
         )
@@ -261,7 +261,7 @@ module.exports = async function messageCreate(message) {
       }
 
       const warnembed = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot | Warning-System ⚡️`)
+        .setTitle(`⚡️ Warning-System ⚡️`)
         .setDescription(`User: ${message.member} wurde verwarnt`)
         .setColor(0x51ff00)
         .setTimestamp(Date.now())
@@ -284,7 +284,7 @@ module.exports = async function messageCreate(message) {
         ]);
 
       const warnembedmember = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot | Warning-System ⚡️`)
+        .setTitle(`⚡️ Warning-System ⚡️`)
         .setDescription(
           `Du wurdest soeben verwarnt!\nServer: ${message.guild.name}`
         )

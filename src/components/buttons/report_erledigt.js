@@ -79,7 +79,7 @@ module.exports = {
       }
 
       const reportErledigtEmbed = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot | Reporting-System ⚡️`)
+        .setTitle(`⚡️ Reporting-System ⚡️`)
         .setDescription(`Hallo ${interaction.guild.members.cache.get(reportData.reporterId)}!\n\nDein Report wurde soeben bearbeitet und abgeschlossen.\nDanke für Deine Meldung!`)
         .setColor(0x51ff00)
         .setTimestamp(Date.now())

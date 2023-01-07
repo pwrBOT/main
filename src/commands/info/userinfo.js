@@ -81,7 +81,7 @@ module.exports = {
         }
 
         const userembed = new EmbedBuilder()
-          .setTitle(`⚡️ PowerBot | User Info ⚡️`)
+          .setTitle(`⚡️ User Info ⚡️`)
           .setDescription(
             `Diese Information ist ausschließlich für Server-Admins! Die Weitergabe von Informationen ist nicht erlaubt!`
           )

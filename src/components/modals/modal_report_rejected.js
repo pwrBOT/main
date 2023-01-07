@@ -50,7 +50,7 @@ module.exports = {
       });
 
       const reportAbgelehntEmbed = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot | Reporting-System ⚡️`)
+        .setTitle(`⚡️ Reporting-System ⚡️`)
         .setDescription(
           `Hallo ${interaction.guild.members.cache.get(
             reportData.reporterId

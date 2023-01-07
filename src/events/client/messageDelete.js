@@ -45,7 +45,7 @@ module.exports = {
       }
 
       const delMessageEmbed = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot | Logging ⚡️`)
+        .setTitle(`⚡️ Logging ⚡️`)
         .setDescription(`${embedMessage}`)
         .setColor(0x00dcff)
         .setTimestamp(Date.now())

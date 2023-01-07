@@ -132,7 +132,7 @@ module.exports = {
           .split(">")[0];
 
         const reportEmbed = new EmbedBuilder()
-          .setTitle(`⚡️ PowerBot | Reporting-System ⚡️`)
+          .setTitle(`⚡️ Reporting-System ⚡️`)
           .setDescription(
             `Hallo ${interaction.guild.members.cache.get(
               reportedUserId
@@ -188,7 +188,7 @@ module.exports = {
           .split(">")[0];
 
         const reportEmbed = new EmbedBuilder()
-          .setTitle(`⚡️ PowerBot | Reporting-System ⚡️`)
+          .setTitle(`⚡️ Reporting-System ⚡️`)
           .setDescription(
             `Hallo ${interaction.guild.members.cache.get(
               reportedUserId
@@ -240,7 +240,7 @@ module.exports = {
       // CREATE PRIVATE THREAD END \\
 
       const reportInArbeitEmbed = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot | Reporting-System ⚡️`)
+        .setTitle(`⚡️ Reporting-System ⚡️`)
         .setDescription(
           `Hallo ${interaction.guild.members.cache.get(
             reportData.reporterId

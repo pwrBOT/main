@@ -152,7 +152,7 @@ module.exports = {
         },
         index: {
           card: {
-            category: "PowerBot | Dashboard",
+            category: "Dashboard",
             title:
               "PowerBot - Hol dir die ultimative Power für deinen Discord Server",
             description: "",

@@ -70,7 +70,7 @@ module.exports = {
       }
 
       const warnembed = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot | Warning-System ⚡️`)
+        .setTitle(`⚡️ Warning-System ⚡️`)
         .setDescription(`User: ${member} wurde verwarnt`)
         .setColor(0x51ff00)
         .setTimestamp(Date.now())
@@ -93,7 +93,7 @@ module.exports = {
         ]);
 
       const warnembedmember = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot | Warning-System ⚡️`)
+        .setTitle(`⚡️ Warning-System ⚡️`)
         .setDescription(`Du wurdest soeben verwarnt!\nServer: ${servername}`)
         .setColor(0x51ff00)
         .setTimestamp(Date.now())

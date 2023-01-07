@@ -130,11 +130,11 @@ const createWelcomeBanner = async (member, welcomeMessage) => {
 
     context.beginPath();
     ///// links - oben - radius - ?  >> Wird von Mitte aus gezeichnet
-    context.arc(350, 160, 80, 0, Math.PI * 2, true);
+    context.arc(350, 130, 80, 0, Math.PI * 2, true);
     context.closePath();
     context.clip();
     ///// links - oben - breite - höhe >> links + radius = links | oben + radius = pfad oben
-    context.drawImage(avatar, 270, 80, 160, 160);
+    context.drawImage(avatar, 270, 50, 160, 160);
 
     const filenname = `welcome_${member.user.username}.png`;
     const attachment = new AttachmentBuilder(await canvas.encode("png"), {

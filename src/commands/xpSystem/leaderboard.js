@@ -41,7 +41,7 @@ module.exports = {
       });
       
       const leaderboardEmbed = new EmbedBuilder()
-          .setTitle(`⚡️ PowerBot | Level System ⚡️`)
+          .setTitle(`⚡️ Level System ⚡️`)
           .setColor(0x51ff00)
           .setTimestamp(Date.now())
           .setFooter({

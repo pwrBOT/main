@@ -129,7 +129,7 @@ module.exports = {
         }
 
         const modlogembed = new EmbedBuilder()
-          .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+          .setTitle(`⚡️ Moderation ⚡️`)
           .setDescription(
             `User: ${member} wurde getimeouted!\nDauer: ${length}`
           )
@@ -154,7 +154,7 @@ module.exports = {
           ]);
 
         const embedmember = new EmbedBuilder()
-          .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+          .setTitle(`⚡️ Moderation ⚡️`)
           .setDescription(
             `Du wurdest getimeouted!\nServer: "${servername}"\nDauer: ${length}!`
           )
@@ -210,7 +210,7 @@ module.exports = {
 
       if (interaction.options.getSubcommand() === "remove") {
         const modlogembed2 = new EmbedBuilder()
-          .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+          .setTitle(`⚡️ Moderation ⚡️`)
           .setDescription(
             `Timeout von User: ${member} entfernt ✅\n\nModerator: ${interaction.user.tag}`
           )
@@ -222,7 +222,7 @@ module.exports = {
           });
 
         const embedmember2 = new EmbedBuilder()
-          .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+          .setTitle(`⚡️ Moderation ⚡️`)
           .setDescription(
             `Dein Timeout wurde entfernt. \nDu wurdest freigegeben ✅\n\nServer: "${servername}"\n\nModerator: ${interaction.user.tag}`
           )

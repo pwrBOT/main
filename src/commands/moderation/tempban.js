@@ -148,7 +148,7 @@ module.exports = {
       }
 
       const banembed = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+        .setTitle(`⚡️ Moderation ⚡️`)
         .setDescription(
           `Temp-Ban für User: ${member} ausgesprochen!\nID: ${member.id}`
         )
@@ -182,7 +182,7 @@ module.exports = {
         ]);
 
       const banembedmember = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+        .setTitle(`⚡️ Moderation ⚡️`)
         .setDescription(
           `Du hast einen Temp-Ban bekommen!\n\nServer: "${servername}"`
         )

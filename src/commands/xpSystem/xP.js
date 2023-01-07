@@ -95,7 +95,7 @@ module.exports = {
         await usersRepository.addUserLevel(guild.id, member.user, newLevel);
 
         const xPembed = new EmbedBuilder()
-          .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+          .setTitle(`⚡️ Moderation ⚡️`)
           .setDescription(`${member} hat ${xP} XP erhalten.`)
           .setColor(0xffd800)
           .setTimestamp(Date.now())
@@ -160,7 +160,7 @@ module.exports = {
         await usersRepository.addUserLevel(guild.id, member.user, newLevel);
 
         const xPembed = new EmbedBuilder()
-          .setTitle(`⚡️ PowerBot | Moderation ⚡️`)
+          .setTitle(`⚡️ Moderation ⚡️`)
           .setDescription(`${xP} XP von ${member} entfernt.`)
           .setColor(0xffd800)
           .setTimestamp(Date.now())

@@ -117,7 +117,7 @@ module.exports = async function messageCreate(message) {
         if (rankChannel === undefined) {
         } else {
           const embedBefoerderung = new EmbedBuilder()
-            .setTitle(`⚡️ PowerBot | Level-System ⚡️`)
+            .setTitle(`⚡️ Level-System ⚡️`)
             .setDescription(`${member} wurde zum ${newRole.name} befördert!`)
             .setColor(0xf1c232)
             .setTimestamp(Date.now())

@@ -97,7 +97,7 @@ module.exports = {
           "-"
         );
         // client.voiceGenerator.set(member.user.id, voiceChannel.id);  häää?
-        setTimeout(() => member.voice.setChannel(voiceChannel), 250);
+        setTimeout(() => member.voice.setChannel(voiceChannel), 200);
 
         return resolve(null);
       }

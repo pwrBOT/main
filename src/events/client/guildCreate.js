@@ -192,7 +192,7 @@ module.exports = {
       } catch (error) {}
 
       const newGuildLogEmbed = new EmbedBuilder()
-        .setTitle(`⚡️ PowerBot | New Guild ⚡️`)
+        .setTitle(`⚡️ New Guild ⚡️`)
         .setDescription(
           `PowerBot wurde bei einem neuen Discordserver hinzugefügt`
         )
