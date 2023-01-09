@@ -10,7 +10,7 @@ module.exports = {
    */
 
   async execute(oldState, newState, client) {
-    return new Promise(async (resolve) => {
+    return new Promise(async resolve => {
       const oldChannelId = oldState.channelId;
       const newChannelId = newState.channelId;
       const guild = client.guilds.cache.get(newState.guild.id);
@@ -19,33 +19,30 @@ module.exports = {
       const newChannel = await newState.guild.channels.fetch(newChannelId);
 
       if (oldState) {
-        const tempChannelCheckTemp =
-          await tempChannelsRepository.getTempVoiceChannel(
-            guild.id,
-            oldChannelId,
-            "temp"
-          );
+        const tempChannelCheckTemp = await tempChannelsRepository.getTempVoiceChannel(
+          guild.id,
+          oldChannelId,
+          "temp"
+        );
 
         if (tempChannelCheckTemp) {
           tempChannelToDelete = oldState.guild.channels.cache.get(
             tempChannelCheckTemp.guildChannelId
           );
 
-          if (!tempChannelToDelete) {
-            return resolve(null);
-          }
+          if (tempChannelToDelete) {
+            if (tempChannelToDelete.members.size === 0) {
+              tempChannelToDelete
+                .delete("del temp channel")
+                .catch(console.error);
 
-          if (tempChannelToDelete.members.size === 0) {
-            tempChannelToDelete.delete("del temp channel").catch(console.error);
-
-            await tempChannelsRepository.deleteTempVoiceChannel(
-              oldState.guild.id,
-              oldChannelId,
-              "temp"
-            );
-            return resolve(null);
+              await tempChannelsRepository.deleteTempVoiceChannel(
+                oldState.guild.id,
+                oldChannelId,
+                "temp"
+              );
+            }
           }
-          return resolve(null);
         }
       }
 
@@ -59,10 +56,10 @@ module.exports = {
       }
 
       const joinToCreate = tempChannelCheck.guildChannelId;
-      const newChannelName = `${tempChannelCheck.tempChannelName} #${member.user.username}`;
+      const newChannelName = `${tempChannelCheck.tempChannelName} #${member.user
+        .username}`;
 
       if (oldChannel !== newChannel && newChannelId === joinToCreate) {
-
         let channelParent = "";
         if (tempChannelCheck.channelCategory) {
           channelParent = tempChannelCheck.channelCategory;
@@ -83,7 +80,7 @@ module.exports = {
             ManageChannels: true,
             MoveMembers: true,
             ManageMessages: true,
-            MuteMembers: true,
+            MuteMembers: true
           });
         }
 

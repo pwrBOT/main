@@ -107,7 +107,7 @@ const createUserTable = async (guildId) => {
   return new Promise((resolve) => {
     mysqlHelper
       .query(
-        `CREATE TABLE IF NOT EXISTS mbr_hosting_powerbot. ${tabelle} ( ID INT NOT NULL AUTO_INCREMENT , userId TEXT NOT NULL , userName TEXT NOT NULL , userAdd DATETIME NOT NULL , xP BIGINT NOT NULL , Level INT NOT NULL , PRIMARY KEY (ID)) ENGINE = InnoDB`,
+        `CREATE TABLE IF NOT EXISTS mbr_hosting_powerbot. ${tabelle} ( ID INT NOT NULL AUTO_INCREMENT , userId TEXT NOT NULL , userName TEXT NOT NULL , userAdd DATETIME NOT NULL , lastChannelJoin TEXT NOT NULL , xP BIGINT NOT NULL , Level INT NOT NULL , PRIMARY KEY (ID)) ENGINE = InnoDB`,
         [tabelle]
       )
       .then((result) => {
@@ -151,6 +151,21 @@ const giveUserXP = async (guildId, userId, newXP, newLevel) => {
   });
 };
 
+const setlastChannelJoin = async (guildId, userId, joinTime) => {
+  return new Promise((resolve) => {
+    const tabelle = `${guildId}_users`;
+
+    mysqlHelper
+      .query(`UPDATE ${tabelle} SET lastChannelJoin=? WHERE userId = ?`, [joinTime, userId])
+      .then((result) => {
+        resolve(null);
+      })
+      .catch(() => {
+        resolve(null);
+      });
+  });
+};
+
 module.exports.getUser = getUser;
 module.exports.getUsers = getUsers;
 module.exports.addUser = addUser;
@@ -160,3 +175,4 @@ module.exports.getUserTable = getUserTable;
 module.exports.createUserTable = createUserTable;
 module.exports.importUserXp = importUserXp;
 module.exports.giveUserXP = giveUserXP;
+module.exports.setlastChannelJoin = setlastChannelJoin;

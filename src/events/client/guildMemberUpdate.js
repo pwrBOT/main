@@ -11,7 +11,7 @@ module.exports = {
 
       // #######################  UPDATE ROLES  ####################### \\
       const guildMemberUpdateEmbed = new EmbedBuilder()
-        .setTitle(`⚡️ Logging System ⚡️`)
+        .setTitle(`⚡️ Logging ⚡️`)
         .setThumbnail(oldMember.displayAvatarURL())
         .setTimestamp(Date.now())
         .setFooter({

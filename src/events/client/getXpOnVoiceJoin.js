@@ -1,7 +1,6 @@
 const { VoiceState, PermissionFlagsBits, ChannelType } = require("discord.js");
-const tempChannelsRepository = require("../../mysql/tempChannelsRepository");
+const levelsRepository = require("../../mysql/levelsRepository");
 const usersRepository = require("../../mysql/usersRepository");
-const xPWaitMap = new Map();
 
 module.exports = {
   name: "voiceStateUpdate",
@@ -19,6 +18,8 @@ module.exports = {
       const member = guild.members.cache.get(newState.id);
       const guildId = guild.id;
       const getUser = await usersRepository.getUser(member.user.id, guildId);
+      const levelSettings = await levelsRepository.getlevelSettings(guild);
+      const channelTimeXPCategoryIds = levelSettings.channelTimeXPCategoryIds;
 
       if (!getUser) {
         return resolve(null);
@@ -28,43 +29,75 @@ module.exports = {
         return resolve(null);
       }
 
-      if (newChannelId !== null && oldChannelId !== newChannelId) {
-        // GIVE XP
-        const WAITTIME = 150000;
+      // USER JOINED CHANNEL
+      if (oldChannelId === null && newChannelId !== null) {
+        const currentChannel = await client.channels.cache.get(newChannelId);
 
-        if (xPWaitMap.has(member.user.id)) {
-          console.log(xPWaitMap);
-          const userData = xPWaitMap.get(member.user.id);
-          userData.timer = setTimeout(() => {
-            xPWaitMap.delete(member.user.id);
-          }, WAITTIME);
-        } else {
+        if (channelTimeXPCategoryIds.includes(currentChannel.parentId)) {
+          if (getUser.lastChannelJoin.length !== 0) {
+            await usersRepository.setlastChannelJoin(
+              guildId,
+              member.user.id,
+              ""
+            );
+            console.log(`User in DB vorhanden: ${member.user.username}`);
+          } else {
+            const joinTime = new Date();
+            await usersRepository.setlastChannelJoin(
+              guildId,
+              member.user.id,
+              joinTime
+            );
+          }
+        }
+      }
+
+      // USER LEFT CHANNEL
+      if (oldChannelId !== null && newChannelId === null) {
+        if (getUser.lastChannelJoin.length !== 0) {
+          // TIME DIFFERENCE CALCUALTION
+          const currentTime = new Date();
+          var timeDifference =
+            (currentTime.getTime() -
+              new Date(getUser.lastChannelJoin).getTime()) /
+            1000;
+          timeDifference /= 60;
+          Math.abs(Math.round(timeDifference));
+
+          const minutesInChannel = timeDifference.toFixed(0);
+
+          // GIVE USER XP
           let currentXP = getUser.xP;
           if (!currentXP) {
             currentXP = 0;
           }
-          let XP = Math.floor(Math.random() * (40 - 20 + 1)) + 10;
-          var newXP = currentXP + XP;
 
-          await usersRepository.addUserXP(guildId, member.user, newXP);
-          const requiredXP = getUser.Level * getUser.Level * 100 + 100;
-
-          let newLevel = "";
-
-          if (newXP >= requiredXP) {
-            newLevel = (getUser.Level += 1);
-            await usersRepository.addUserLevel(guildId, member.user, newLevel);
+          let XP = 0;
+          if (minutesInChannel * 2 >= 400) {
+            XP = 400;
+          } else {
+            XP = minutesInChannel * 2;
           }
 
-          xPWaitMap.set(member.user.id, {
-            oldXP: getUser.xP,
-            newXP: newXP,
-            oldLevel: getUser.Level,
-            newLevel: newLevel,
-            timer: WAITTIME
-          });
+          let newXP = currentXP + XP;
+          let currentLevel = getUser.Level;
+          let newLevel = getUser.Level;
+          let requiredXP = newLevel * newLevel * 100 + 100;
+
+          while (requiredXP <= newXP) {
+            newLevel += 1;
+            requiredXP = newLevel * newLevel * 100 + 100;
+          }
+
+          await usersRepository.addUserXP(guild.id, member.user, newXP);
+          await usersRepository.addUserLevel(guild.id, member.user, newLevel);
+          await usersRepository.setlastChannelJoin(guildId, member.user.id, "");
+
+          console.log(
+            `USER: ${member.user
+              .username} XP: ${currentXP} + ${XP} = ${newXP} | Zeit im Channel: ${minutesInChannel}`
+          );
         }
-        return resolve(null);
       }
     });
   }

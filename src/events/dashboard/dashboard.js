@@ -1266,10 +1266,89 @@ module.exports = {
               }
             },
             {
+              optionId: "channelTimeXP",
+              optionName: "",
+              optionDescription:
+                "Sollen User für die Zeit, die sie in einem Voice-Channel waren, XP bekommen?",
+              optionType: DBD.formTypes.switch(false),
+              themeOptions: {
+                minimalbutton: {
+                  last: true
+                }
+              },
+              getActualSet: async ({ guild }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (data) return data.channelTimeXP;
+                else return null;
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (!newData) newData = null;
+
+                if (!data) {
+                  const column = "channelTimeXP";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                } else {
+                  const column = "channelTimeXP";
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newData
+                  );
+                }
+                return;
+              }
+            },
+            {
+              optionId: "channelTimeXPCategoryIds",
+              optionName: "",
+              optionDescription:
+                "Wähle Kategorien aus, in denen User, für das verbringen in Voice-Channels, XP bekommen sollen (z.B. Gaming Bereiche):",
+              optionType: DBD.formTypes.channelsMultiSelect(
+                false,
+                true,
+                (channelTypes = [ChannelType.GuildCategory])
+              ),
+              getActualSet: async ({ guild }) => {
+                let data = await levelsRepository.getlevelSettings(guild);
+
+                if (data.channelTimeXPCategoryIds) return JSON.parse(data.channelTimeXPCategoryIds);
+                else return [];
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = levelsRepository.getlevelSettings(guild)
+
+                if (!data) {
+                  const column = "channelTimeXPCategoryIds";
+                  newDataString = JSON.stringify(newData);
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newDataString
+                  );
+                } else {
+                  const column = "channelTimeXPCategoryIds";
+                  newDataString = JSON.stringify(newData);
+                  await levelsRepository.updatelevelSettings(
+                    guild,
+                    column,
+                    newDataString
+                  );
+                }
+                return;
+              }
+            },
+            {
               optionId: "LevelUp1",
               optionName: "ROLLENBELOHNUNG 1:",
               optionDescription: "Rollenbelohnung mit Level:",
-              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              optionType: DBD.formTypes.input("1", 1, 3, false, false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);
 
@@ -1337,7 +1416,7 @@ module.exports = {
               optionId: "LevelUp2",
               optionName: "ROLLENBELOHNUNG 2:",
               optionDescription: "Rollenbelohnung mit Level:",
-              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              optionType: DBD.formTypes.input("3", 1, 3, false, false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);
 
@@ -1405,7 +1484,7 @@ module.exports = {
               optionId: "LevelUp3",
               optionName: "ROLLENBELOHNUNG 3:",
               optionDescription: "Rollenbelohnung mit Level:",
-              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              optionType: DBD.formTypes.input("5", 1, 3, false, false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);
 
@@ -1473,7 +1552,7 @@ module.exports = {
               optionId: "LevelUp4",
               optionName: "ROLLENBELOHNUNG 4:",
               optionDescription: "Rollenbelohnung mit Level:",
-              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              optionType: DBD.formTypes.input("8", 1, 3, false, false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);
 
@@ -1541,7 +1620,7 @@ module.exports = {
               optionId: "LevelUp5",
               optionName: "ROLLENBELOHNUNG 5:",
               optionDescription: "Rollenbelohnung mit Level:",
-              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              optionType: DBD.formTypes.input("10", 1, 3, false, false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);
 
@@ -1609,7 +1688,7 @@ module.exports = {
               optionId: "LevelUp6",
               optionName: "ROLLENBELOHNUNG 6:",
               optionDescription: "Rollenbelohnung mit Level:",
-              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              optionType: DBD.formTypes.input("13", 1, 3, false, false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);
 
@@ -1677,7 +1756,7 @@ module.exports = {
               optionId: "LevelUp7",
               optionName: "ROLLENBELOHNUNG 7:",
               optionDescription: "Rollenbelohnung mit Level:",
-              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              optionType: DBD.formTypes.input("16", 1, 3, false, false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);
 
@@ -1745,7 +1824,7 @@ module.exports = {
               optionId: "LevelUp8",
               optionName: "ROLLENBELOHNUNG 8:",
               optionDescription: "Rollenbelohnung mit Level:",
-              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              optionType: DBD.formTypes.input("20", 1, 3, false, false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);
 
@@ -1813,7 +1892,7 @@ module.exports = {
               optionId: "LevelUp9",
               optionName: "ROLLENBELOHNUNG 9:",
               optionDescription: "Rollenbelohnung mit Level:",
-              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              optionType: DBD.formTypes.input("30", 1, 3, false, false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);
 
@@ -1881,7 +1960,7 @@ module.exports = {
               optionId: "LevelUp10",
               optionName: "ROLLENBELOHNUNG 10:",
               optionDescription: "Rollenbelohnung mit Level:",
-              optionType: DBD.formTypes.input(1, 1, 3, false, true),
+              optionType: DBD.formTypes.input("50", 1, 3, false, false),
               getActualSet: async ({ guild }) => {
                 let data = await levelsRepository.getlevelSettings(guild);
 
