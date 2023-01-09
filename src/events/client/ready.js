@@ -1,6 +1,7 @@
 const { EmbedBuilder, ActivityType } = require("discord.js");
 const config = require(`../../../config.json`);
 const chalk = require("chalk");
+const dashboard = require("../../functions/dashboard/dashboard")
 
 module.exports = {
   name: "ready",
@@ -133,9 +134,16 @@ module.exports = {
       });
       //// ##################### TABLE CHECK END ##################### \\\\
 
-      console.log(
-        `\x1b[32mOnline! ${client.user.tag} is now logged in and online!\x1b[0m`
-      );
+      await dashboard.init(client)
+
+      setTimeout(function() {
+        console.log(
+          `\x1b[32m
+            #########################################################
+            Online! ${client.user.tag} is now logged in and online!
+            #########################################################\x1b[0m`
+        );
+      }, 2000);
 
       return resolve(null);
     });

@@ -62,6 +62,13 @@ for (const folder of functionFolders) {
     require(`./src/functions/${folder}/${file}`)(client);
 }
 
+console.log(
+  `\x1b[33m
+    #########################################################
+                 PowerBot initialisation....
+    #########################################################\x1b[0m`
+);
+
 // BOT HANDLER
 client.handleEvents();
 client.handleCommands();
