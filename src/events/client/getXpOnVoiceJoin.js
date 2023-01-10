@@ -35,17 +35,19 @@ module.exports = {
 
         if (channelTimeXPCategoryIds.includes(currentChannel.parentId)) {
           if (getUser.lastChannelJoin.length !== 0) {
-            await usersRepository.setlastChannelJoin(
+            await usersRepository.updateUser(
               guildId,
               member.user.id,
+              "lastChannelJoin",
               ""
             );
             console.log(`User in DB vorhanden: ${member.user.username}`);
           } else {
             const joinTime = new Date();
-            await usersRepository.setlastChannelJoin(
+            await usersRepository.updateUser(
               guildId,
               member.user.id,
+              "lastChannelJoin",
               joinTime
             );
           }
@@ -54,6 +56,30 @@ module.exports = {
 
       // USER LEFT CHANNEL
       if (oldChannelId !== null && newChannelId === null) {
+        userLeftChannel();
+      }
+
+      // USER CHANGED CHANNEL
+      if (oldChannelId !== null && newChannelId !== null) {
+        const currentChannel = await client.channels.cache.get(newChannelId);
+        if (!channelTimeXPCategoryIds.includes(currentChannel.parentId)) {
+          userLeftChannel();
+        } else {
+          if (getUser.lastChannelJoin.length !== 0) {
+          } else {
+            const joinTime = new Date();
+            await usersRepository.updateUser(
+              guildId,
+              member.user.id,
+              "lastChannelJoin",
+              joinTime
+            );
+          }
+        }
+      }
+
+      // FUNCTIONS
+      async function userLeftChannel() {
         if (getUser.lastChannelJoin.length !== 0) {
           // TIME DIFFERENCE CALCUALTION
           const currentTime = new Date();
@@ -80,7 +106,6 @@ module.exports = {
           }
 
           let newXP = currentXP + XP;
-          let currentLevel = getUser.Level;
           let newLevel = getUser.Level;
           let requiredXP = newLevel * newLevel * 100 + 100;
 
@@ -89,13 +114,38 @@ module.exports = {
             requiredXP = newLevel * newLevel * 100 + 100;
           }
 
-          await usersRepository.addUserXP(guild.id, member.user, newXP);
-          await usersRepository.addUserLevel(guild.id, member.user, newLevel);
-          await usersRepository.setlastChannelJoin(guildId, member.user.id, "");
+          let newMinutesInChannel = 0;
+          newMinutesInChannel =
+            getUser.totalVoiceTime + parseInt(minutesInChannel);
+
+          await usersRepository.updateUser(
+            guildId,
+            member.user.id,
+            "xP",
+            newXP
+          );
+          await usersRepository.updateUser(
+            guildId,
+            member.user.id,
+            "Level",
+            newLevel
+          );
+          await usersRepository.updateUser(
+            guildId,
+            member.user.id,
+            "lastChannelJoin",
+            ""
+          );
+          await usersRepository.updateUser(
+            guildId,
+            member.user.id,
+            "totalVoiceTime",
+            newMinutesInChannel
+          );
 
           console.log(
             `USER: ${member.user
-              .username} XP: ${currentXP} + ${XP} = ${newXP} | Zeit im Channel: ${minutesInChannel}`
+              .username} XP: ${currentXP} + ${XP} = ${newXP} | Zeit im Channel: ${minutesInChannel} | Total: ${newMinutesInChannel}`
           );
         }
       }

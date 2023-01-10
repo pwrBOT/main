@@ -1,4 +1,5 @@
 const mysqlHelper = require("./mysqlHelper");
+const powerbotManagement = new Map()
 
 const getValues = async (property) => {
   return new Promise((resolve) => {

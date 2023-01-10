@@ -32,6 +32,22 @@ const getGuildSettings = async (guild) => {
   });
 };
 
+const getGuildSettingsByProperty = async (property) => {
+  return new Promise((resolve) => {
+    mysqlHelper
+      .query(
+        "SELECT * FROM powerbot_guildsettings WHERE property = ?",
+        [property])
+        .then((result) => {
+          // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
+          resolve(result ?? null);
+        })
+      .catch(() => {
+        resolve(null);
+      });
+  });
+};
+
 const insertGuildSetting = async (guild, property, value) => {
   return new Promise(async (resolve) => {
 
@@ -80,3 +96,4 @@ module.exports.getGuildSetting = getGuildSetting;
 module.exports.getGuildSettings = getGuildSettings;
 module.exports.insertGuildSetting = insertGuildSetting;
 module.exports.updateGuildSetting = updateGuildSetting;
+module.exports.getGuildSettingsByProperty = getGuildSettingsByProperty

@@ -26,6 +26,9 @@ module.exports = async function messageCreate(message) {
       return resolve(null);
     }
 
+    const newUserMessageCount = getUser.messageCount + 1
+    await usersRepository.updateUser(guildId, message.author.id, "messageCount", newUserMessageCount);
+
     const teamRoleId = await guildSettings.getGuildSetting(
       message.guild,
       "teamRole"
@@ -69,7 +72,7 @@ module.exports = async function messageCreate(message) {
             message.delete();
             const channel = message.channel;
             channel.send(
-              `${message.member} deine Nachricht wurde gelöscht | Spam!`
+              `${message.member} deine Nachricht wurde gelöscht. Spam ist nicht erwünscht 😡!`
             );
           } catch (error) {}
 
@@ -118,13 +121,14 @@ module.exports = async function messageCreate(message) {
         }
         let XP = Math.floor(Math.random() * (25 - 6 + 1)) + 6;
         var newXP = currentXP + XP;
-        await usersRepository.addUserXP(guildId, message.author, newXP);
+
+        await usersRepository.updateUser(guildId, message.author.id, "xP", newXP);
 
         const requiredXP = getUser.Level * getUser.Level * 100 + 100;
 
         if (newXP >= requiredXP) {
           let newLevel = (getUser.Level += 1);
-          await usersRepository.addUserLevel(guildId, message.author, newLevel);
+          await usersRepository.updateUser(guildId, message.author.id, "Level", newLevel);
         }
       }
       return resolve(null);

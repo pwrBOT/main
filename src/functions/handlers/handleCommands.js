@@ -1,6 +1,7 @@
 const { REST, Routes } = require("discord.js");
 const fs = require("fs");
 const powerbotManagement = require("../../mysql/powerbotManagement");
+const guildsRepository = require("../../mysql/guildsRepository");
 const config = require("../../../config.json");
 const clientId = config.powerbot_clientId;
 const TOKEN = config.powerbot_token;
@@ -51,7 +52,7 @@ module.exports = client => {
       client.premiumCommandArray
     );
     const whitelistGuilds = await powerbotManagement.getValues("whitelist");
-    const premiumGuilds = await powerbotManagement.getValues("premium");
+    const premiumGuilds = await guildsRepository.getGuildSettingsByProperty("premium");
 
     try {
       whitelistGuilds.forEach(async guildId => {
@@ -63,7 +64,7 @@ module.exports = client => {
         );
 
         premiumGuilds.forEach(premiumGuildId => {
-          if (premiumGuildId.value == whitelistGuild) {
+          if (premiumGuildId.guildId == whitelistGuild) {
             console.log(
               `\x1b[33m>>>> PREMIUM GUILD: ${guild.name} (${whitelistGuild})\x1b[0m`
             );

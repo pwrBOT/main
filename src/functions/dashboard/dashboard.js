@@ -1256,6 +1256,20 @@ const init = async client => {
                 last: true
               }
             },
+            allowedCheck: async ({ guild }) => {
+              let guildPremium = await guildsRepository.getGuildSetting(
+                guild,
+                "premium"
+              );
+              if (guildPremium && guildPremium.value == "active") {
+                return { allowed: true };
+              } else {
+                return {
+                  allowed: false,
+                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                };
+              }
+            },
             getActualSet: async ({ guild }) => {
               let data = await levelsRepository.getlevelSettings(guild);
 
@@ -1295,6 +1309,20 @@ const init = async client => {
               true,
               (channelTypes = [ChannelType.GuildCategory])
             ),
+            allowedCheck: async ({ guild }) => {
+              let guildPremium = await guildsRepository.getGuildSetting(
+                guild,
+                "premium"
+              );
+              if (guildPremium && guildPremium.value == "active") {
+                return { allowed: true };
+              } else {
+                return {
+                  allowed: false,
+                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                };
+              }
+            },
             getActualSet: async ({ guild }) => {
               let data = await levelsRepository.getlevelSettings(guild);
 
@@ -2010,14 +2038,14 @@ const init = async client => {
       /// ################ LEVEL SYSTEM END ################ \\\
       /// ################## AUTO MOD SYSTEM ################## \\\
       {
-        categoryId: "autmodsystem",
+        categoryId: "automodsystem",
         categoryName: "Auto Mod",
         categoryDescription:
           "Einstellungen für die automatische Moderation von Usern.",
         categoryImageURL: "https://pwr.lol/img/icons/user-shield-solid.svg",
-
         refreshOnSave: true,
         toggleable: true,
+
         getActualSet: async ({ guild }) => {
           let data = await autoModRepository.getGuildAutoModSettings(guild);
           if (data) return data.autoModWarnings;
@@ -2053,6 +2081,7 @@ const init = async client => {
             optionDescription:
               "Sollen User verwarnt werden, wenn sie Schimpfwörter posten?",
             optionType: DBD.formTypes.switch(false),
+            
             getActualSet: async ({ guild }) => {
               let data = await guildsRepository.getGuildSetting(
                 guild,
@@ -2214,6 +2243,7 @@ const init = async client => {
             optionDescription:
               "Sollen User verwarnt werden, wenn sie Einladungslinks von anderen Discords posten?",
             optionType: DBD.formTypes.switch(false),
+
             getActualSet: async ({ guild }) => {
               let data = await guildsRepository.getGuildSetting(
                 guild,
@@ -2269,6 +2299,20 @@ const init = async client => {
               },
               false
             ),
+            allowedCheck: async ({ guild }) => {
+              let guildPremium = await guildsRepository.getGuildSetting(
+                guild,
+                "premium"
+              );
+              if (guildPremium && guildPremium.value == "active") {
+                return { allowed: true };
+              } else {
+                return {
+                  allowed: false,
+                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                };
+              }
+            },
             getActualSet: async ({ guild }) => {
               let data = await autoModRepository.getGuildAutoModSettings(guild);
               if (data) return data.warnsCount01;
@@ -2317,6 +2361,20 @@ const init = async client => {
               },
               false
             ),
+            allowedCheck: async ({ guild }) => {
+              let guildPremium = await guildsRepository.getGuildSetting(
+                guild,
+                "premium"
+              );
+              if (guildPremium && guildPremium.value == "active") {
+                return { allowed: true };
+              } else {
+                return {
+                  allowed: false,
+                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                };
+              }
+            },
             getActualSet: async ({ guild }) => {
               let data = await autoModRepository.getGuildAutoModSettings(guild);
               if (data) return data.duration01;
@@ -2358,6 +2416,20 @@ const init = async client => {
               },
               false
             ),
+            allowedCheck: async ({ guild }) => {
+              let guildPremium = await guildsRepository.getGuildSetting(
+                guild,
+                "premium"
+              );
+              if (guildPremium && guildPremium.value == "active") {
+                return { allowed: true };
+              } else {
+                return {
+                  allowed: false,
+                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                };
+              }
+            },
             getActualSet: async ({ guild }) => {
               let data = await autoModRepository.getGuildAutoModSettings(guild);
               if (data) return data.sanctionType01;
@@ -2406,6 +2478,20 @@ const init = async client => {
               },
               false
             ),
+            allowedCheck: async ({ guild }) => {
+              let guildPremium = await guildsRepository.getGuildSetting(
+                guild,
+                "premium"
+              );
+              if (guildPremium && guildPremium.value == "active") {
+                return { allowed: true };
+              } else {
+                return {
+                  allowed: false,
+                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                };
+              }
+            },
             getActualSet: async ({ guild }) => {
               let data = await autoModRepository.getGuildAutoModSettings(guild);
               if (data) return data.warnsCount02;
@@ -2454,6 +2540,20 @@ const init = async client => {
               },
               false
             ),
+            allowedCheck: async ({ guild }) => {
+              let guildPremium = await guildsRepository.getGuildSetting(
+                guild,
+                "premium"
+              );
+              if (guildPremium && guildPremium.value == "active") {
+                return { allowed: true };
+              } else {
+                return {
+                  allowed: false,
+                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                };
+              }
+            },
             getActualSet: async ({ guild }) => {
               let data = await autoModRepository.getGuildAutoModSettings(guild);
               if (data) return data.duration02;
@@ -2495,6 +2595,20 @@ const init = async client => {
               },
               false
             ),
+            allowedCheck: async ({ guild }) => {
+              let guildPremium = await guildsRepository.getGuildSetting(
+                guild,
+                "premium"
+              );
+              if (guildPremium && guildPremium.value == "active") {
+                return { allowed: true };
+              } else {
+                return {
+                  allowed: false,
+                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                };
+              }
+            },
             getActualSet: async ({ guild }) => {
               let data = await autoModRepository.getGuildAutoModSettings(guild);
               if (data) return data.sanctionType02;
@@ -2543,6 +2657,20 @@ const init = async client => {
               },
               false
             ),
+            allowedCheck: async ({ guild }) => {
+              let guildPremium = await guildsRepository.getGuildSetting(
+                guild,
+                "premium"
+              );
+              if (guildPremium && guildPremium.value == "active") {
+                return { allowed: true };
+              } else {
+                return {
+                  allowed: false,
+                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                };
+              }
+            },
             getActualSet: async ({ guild }) => {
               let data = await autoModRepository.getGuildAutoModSettings(guild);
               if (data) return data.warnsCount03;
@@ -2591,6 +2719,20 @@ const init = async client => {
               },
               false
             ),
+            allowedCheck: async ({ guild }) => {
+              let guildPremium = await guildsRepository.getGuildSetting(
+                guild,
+                "premium"
+              );
+              if (guildPremium && guildPremium.value == "active") {
+                return { allowed: true };
+              } else {
+                return {
+                  allowed: false,
+                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                };
+              }
+            },
             getActualSet: async ({ guild }) => {
               let data = await autoModRepository.getGuildAutoModSettings(guild);
               if (data) return data.duration03;
@@ -2632,6 +2774,20 @@ const init = async client => {
               },
               false
             ),
+            allowedCheck: async ({ guild }) => {
+              let guildPremium = await guildsRepository.getGuildSetting(
+                guild,
+                "premium"
+              );
+              if (guildPremium && guildPremium.value == "active") {
+                return { allowed: true };
+              } else {
+                return {
+                  allowed: false,
+                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                };
+              }
+            },
             getActualSet: async ({ guild }) => {
               let data = await autoModRepository.getGuildAutoModSettings(guild);
               if (data) return data.sanctionType03;

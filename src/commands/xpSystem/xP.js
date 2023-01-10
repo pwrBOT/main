@@ -91,8 +91,8 @@ module.exports = {
           requiredXP = newLevel * newLevel * 100 + 100;
         }
 
-        await usersRepository.addUserXP(guild.id, member.user, newXP);
-        await usersRepository.addUserLevel(guild.id, member.user, newLevel);
+        await usersRepository.updateUser(guild.id, member.user.id, "xP", newXP);
+        await usersRepository.updateUser(guild.id, member.user.id, "Level", newLevel);
 
         const xPembed = new EmbedBuilder()
           .setTitle(`⚡️ Moderation ⚡️`)
@@ -155,9 +155,9 @@ module.exports = {
           requiredXP = newLevel * newLevel * 100 + 100;
         }
 
-        await usersRepository.addUserXP(guild.id, member.user, newXP);
         newLevel += 1;
-        await usersRepository.addUserLevel(guild.id, member.user, newLevel);
+        await usersRepository.updateUser(guild.id, member.user.id, "xP", newXP);
+        await usersRepository.updateUser(guild.id, member.user.id, "Level", newLevel);
 
         const xPembed = new EmbedBuilder()
           .setTitle(`⚡️ Moderation ⚡️`)
