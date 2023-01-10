@@ -2,7 +2,7 @@ const {
   SlashCommandBuilder,
   PermissionFlagsBits,
   EmbedBuilder,
-  PermissionsBitField,
+  PermissionsBitField
 } = require("discord.js");
 const ms = require("ms");
 
@@ -14,17 +14,17 @@ module.exports = {
     .setName(`timeout`)
     .setDescription(`User timeouten / Timeout entfernen`)
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
-    .addSubcommand((subcommand) =>
+    .addSubcommand(subcommand =>
       subcommand
         .setName(`add`)
         .setDescription(`User timeouten`)
-        .addUserOption((option) =>
+        .addUserOption(option =>
           option
             .setName("user")
             .setDescription("User der getimeouted werden soll")
             .setRequired(true)
         )
-        .addStringOption((option) =>
+        .addStringOption(option =>
           option
             .setName("length")
             .setDescription("Wie lange soll der Timeout sein?")
@@ -38,32 +38,38 @@ module.exports = {
               { name: "Unbegrenzt", value: "99y" }
             )
         )
-        .addStringOption((option) =>
+        .addStringOption(option =>
           option
             .setName("reason")
             .setDescription("Begründung")
             .setRequired(true)
         )
     )
-    .addSubcommand((subcommand) =>
+    .addSubcommand(subcommand =>
       subcommand
         .setName(`remove`)
         .setDescription(`Timeout entfernen`)
-        .addUserOption((option) =>
+        .addUserOption(option =>
           option
             .setName("user")
             .setDescription("User der getimeouted werden soll")
             .setRequired(true)
         )
+        .addStringOption(option =>
+          option
+            .setName("reason")
+            .setDescription("Begründung")
+            .setRequired(true)
+        )
     ),
 
   async execute(interaction, client) {
-    return new Promise(async (resolve) => {
+    return new Promise(async resolve => {
       await interaction.deferReply({
         ephemeral: false,
-        fetchReply: true,
+        fetchReply: true
       });
-      
+
       const { options, user, guild } = interaction;
       const member = options.getMember("user");
       const length = options.getString("length");
@@ -104,17 +110,18 @@ module.exports = {
         return resolve(null);
       }
 
-      if (member.isCommunicationDisabled()){
-        interaction.editReply("❌ Der User hat bereits ein Timeout! ❌");
-        return resolve(null);
-      }
-
       if (interaction.options.getSubcommand() === "add") {
+
+        if (member.isCommunicationDisabled()) {
+          interaction.editReply("❌ Der User hat bereits ein Timeout! ❌");
+          return resolve(null);
+        }
+
         if (!length)
           return interaction
             .editReply("❌ Wähle einen gültigen Zeitraum aus! ❌")
             .then(
-              setTimeout(function () {
+              setTimeout(function() {
                 interaction.deleteReply();
               }, 3000)
             );
@@ -138,19 +145,19 @@ module.exports = {
           .setThumbnail(member.displayAvatarURL())
           .setFooter({
             iconURL: client.user.displayAvatarURL(),
-            text: `powered by Powerbot`,
+            text: `powered by Powerbot`
           })
           .addFields([
             {
               name: `Grund:`,
               value: `${reason}`,
-              inline: true,
+              inline: true
             },
             {
               name: `Moderator:`,
               value: interaction.user.tag,
-              inline: true,
-            },
+              inline: true
+            }
           ]);
 
         const embedmember = new EmbedBuilder()
@@ -163,24 +170,24 @@ module.exports = {
           .setThumbnail(guild.iconURL())
           .setFooter({
             iconURL: client.user.displayAvatarURL(),
-            text: `powered by Powerbot`,
+            text: `powered by Powerbot`
           })
           .addFields([
             {
               name: `Grund:`,
               value: `${reason}`,
-              inline: true,
+              inline: true
             },
             {
               name: `Moderator:`,
               value: interaction.user.tag,
-              inline: true,
+              inline: true
             },
             {
               name: `Information:`,
               value: `${embedInfo}`,
-              inline: false,
-            },
+              inline: false
+            }
           ]);
 
         member.timeout(ms(length), reason);
@@ -209,37 +216,57 @@ module.exports = {
       }
 
       if (interaction.options.getSubcommand() === "remove") {
+
+        if (!member.isCommunicationDisabled()) {
+          interaction.editReply("❌ Der User ist nicht getimeouted! ❌");
+          return resolve(null);
+        }
+
         const modlogembed2 = new EmbedBuilder()
           .setTitle(`⚡️ Moderation ⚡️`)
           .setDescription(
-            `Timeout von User: ${member} entfernt ✅\n\nModerator: ${interaction.user.tag}`
+            `Timeout von User: ${member} entfernt ✅\n\nModerator: ${interaction
+              .user.tag}`
           )
           .setColor(0x51ff00)
           .setTimestamp(Date.now())
           .setFooter({
             iconURL: client.user.displayAvatarURL(),
-            text: `powered by Powerbot`,
+            text: `powered by Powerbot`
           });
 
         const embedmember2 = new EmbedBuilder()
           .setTitle(`⚡️ Moderation ⚡️`)
           .setDescription(
-            `Dein Timeout wurde entfernt. \nDu wurdest freigegeben ✅\n\nServer: "${servername}"\n\nModerator: ${interaction.user.tag}`
+            `Dein Timeout wurde entfernt. \nDu wurdest freigegeben ✅\n\nServer: "${servername}"\n\nModerator: ${interaction
+              .user.tag}`
           )
+          .addFields([
+            {
+              name: `Grund:`,
+              value: `${reason}`,
+              inline: true
+            },
+            {
+              name: `Moderator:`,
+              value: interaction.user.tag,
+              inline: true
+            }
+          ])
           .setColor(0x51ff00)
           .setTimestamp(Date.now())
           .setFooter({
             iconURL: client.user.displayAvatarURL(),
-            text: `powered by Powerbot`,
+            text: `powered by Powerbot`
           });
 
-          const logChannel = require("../../mysql/loggingChannelsRepository");
-          await logChannel.logChannel(interaction.guild, "modLog", modlogembed2);
+        const logChannel = require("../../mysql/loggingChannelsRepository");
+        await logChannel.logChannel(interaction.guild, "modLog", modlogembed2);
         try {
           await member.send({ embeds: [embedmember2] });
         } catch (error) {}
         interaction.editReply({
-          content: `Timeout von User: ${member} entfernt ✅`,
+          content: `Timeout von User: ${member} entfernt ✅`
         });
 
         member.timeout(null).catch(console.error);
@@ -257,5 +284,5 @@ module.exports = {
         return resolve(null);
       }
     });
-  },
+  }
 };
