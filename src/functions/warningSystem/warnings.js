@@ -66,7 +66,7 @@ const autoModWarn = async (guild, member) => {
       embedInfo = "Bei Fragen wende dich an die Communityleitung!";
     }
     const tempCommandRepository = require("../../mysql/tempCommandRepository");
-    const userWarns = await warnsRepository.getWarns(member);
+    const userWarns = await warnsRepository.getWarns(member, "active");
  
     const warnsCount01 = autoWarnsModSettings.warnsCount01;
     let duration01 = autoWarnsModSettings.duration01;

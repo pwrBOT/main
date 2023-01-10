@@ -43,24 +43,25 @@ module.exports = {
 
         let userId = member.id;
         let guildId = guild.id;
-        let user = await usersRepository.getUser(userId, guildId);
+        let userData = await usersRepository.getUser(userId, guildId);
 
         let currentUserXp = 0;
         let currentLevel = 0;
         let nextLevelXP = 0;
 
-        if (user == null) {
+        if (userData == null) {
           currentUserXp = 0
           currentLevel = 0
           nextLevelXP = 100
         } else {
-          currentUserXp = user.xP;
-          currentLevel = user.Level;
-          nextLevelXP = user.Level * user.Level * 100 + 100;
+          currentUserXp = userData.xP;
+          currentLevel = userData.Level;
+          nextLevelXP = userData.Level * userData.Level * 100 + 100;
         }
-
+        
+        // GET CURRENT WARNS
         let warnsText = "";
-        let warns = await warnsRepository.getWarns(member, 10);
+        let warns = await warnsRepository.getWarns(member, "active", -1);
 
         if (!warns) {
           return resolve(null);
@@ -77,6 +78,28 @@ module.exports = {
             });
             const spacer = `\u00A0\u00A0\u00A0\u00A0`;
             warnsText += `${date}  •  ${time}h:${spacer}${warn.warnReason}\n`;
+          });
+        }
+
+        // GET OLD WARNS
+        let oldWarnsText = "";
+        let oldWarns = await warnsRepository.getWarns(member, "removed", -1);
+
+        if (!oldWarns) {
+          return resolve(null);
+        }
+
+        if (oldWarns.length === 0) {
+          oldWarnsText = `Der User hat keine gelöschten Verwarnungen!`;
+        } else {
+          oldWarns.forEach((oldWarn) => {
+            const date = new Date(oldWarn.warnAdd).toLocaleDateString("de-DE");
+            const time = new Date(oldWarn.warnAdd).toLocaleTimeString("de-DE", {
+              hour: "2-digit",
+              minute: "2-digit"
+            });
+            const spacer = `\u00A0\u00A0\u00A0\u00A0`;
+            oldWarnsText += `${date}•${time}h:${spacer}${oldWarn.warnReason}${spacer}•${spacer}Löschgrund: ${oldWarn.delReason}\n`;
           });
         }
 
@@ -104,8 +127,8 @@ module.exports = {
               inline: true
             },
             {
-              name: `\u200B`,
-              value: `\u200B`,
+              name: `Bot:`,
+              value: `${member.user.bot}`,
               inline: true
             },
             {
@@ -132,11 +155,6 @@ module.exports = {
               inline: true
             },
             {
-              name: `Bot:`,
-              value: `${member.user.bot}`,
-              inline: true
-            },
-            {
               name: `XP:`,
               value: `${currentUserXp} / ${nextLevelXP}`,
               inline: true
@@ -147,16 +165,41 @@ module.exports = {
               inline: true
             },
             {
+              name: `\u200B`,
+              value: `\u200B`,
+              inline: true
+            },
+            {
+              name: `Verbrachte Zeit im Voice-Channel:`,
+              value: `${userData.totalVoiceTime}`,
+              inline: true
+            },
+            {
+              name: `Gesendete Nachrichten:`,
+              value: `${userData.messageCount}`,
+              inline: true
+            },
+            {
+              name: `\u200B`,
+              value: `\u200B`,
+              inline: true
+            },
+            {
               name: `Rollen:`,
               value: `${member.roles.cache
                 .map((r) => r)
                 .join(" ")
-                .replace("everyone", " " || "None")}`,
+                .replace("@everyone", " " || "None")}`,
               inline: false
             },
             {
-              name: `Verwarnungen:`,
+              name: `Aktive Verwarnungen:`,
               value: `${warnsText}`,
+              inline: false
+            },
+            {
+              name: `Gelöschte Verwarnungen:`,
+              value: `${oldWarnsText}`,
               inline: false
             }
           ]);

@@ -50,9 +50,8 @@ module.exports = {
   async execute(interaction, client) {
     return new Promise(async resolve => {
       const member = interaction.options.getMember("user");
-      const channel = interaction.channel.id;
       const warnId = interaction.options.getNumber("id");
-      const warns = await warnsRepository.getWarns(member, 10);
+      const warns = await warnsRepository.getWarns(member, "active", 10);
       const delreason =
         interaction.options.getString("delreason") || "Kein Grund angegeben";
 
@@ -187,6 +186,7 @@ module.exports = {
 
         await warnsRepository.delWarn(
           warnId,
+          delreason,
           interaction.guild.id,
           member.user.id
         );
@@ -215,6 +215,7 @@ module.exports = {
         // ############## LOGGING END ############## \\
         return resolve(null);
       }
+
       if (interaction.options.getSubcommand() === "clearall") {
         if (warns.length === 0) {
           interaction.reply(
