@@ -5,6 +5,7 @@ const {
 } = require("discord.js");
 
 const usersRepository = require("../../mysql/usersRepository");
+const xPSystemGiveRole = require("../../functions/userManagement/xPSystemGiveRole");
 
 module.exports = {
   name: "xp",
@@ -93,6 +94,7 @@ module.exports = {
 
         await usersRepository.updateUser(guild.id, member.user.id, "xP", newXP);
         await usersRepository.updateUser(guild.id, member.user.id, "Level", newLevel);
+        await xPSystemGiveRole.autoUserRoles(guild, member, getMember.Level)
 
         const xPembed = new EmbedBuilder()
           .setTitle(`⚡️ Moderation ⚡️`)
@@ -158,6 +160,7 @@ module.exports = {
         newLevel += 1;
         await usersRepository.updateUser(guild.id, member.user.id, "xP", newXP);
         await usersRepository.updateUser(guild.id, member.user.id, "Level", newLevel);
+        await xPSystemGiveRole.autoUserRoles(guild, member, getMember.Level)
 
         const xPembed = new EmbedBuilder()
           .setTitle(`⚡️ Moderation ⚡️`)

@@ -1,6 +1,7 @@
 const { VoiceState, PermissionFlagsBits, ChannelType } = require("discord.js");
 const levelsRepository = require("../../mysql/levelsRepository");
 const usersRepository = require("../../mysql/usersRepository");
+const xPSystemGiveRole = require("../../functions/userManagement/xPSystemGiveRole");
 
 module.exports = {
   name: "voiceStateUpdate",
@@ -28,6 +29,8 @@ module.exports = {
       if (member.user.bot == true) {
         return resolve(null);
       }
+
+      const oldLevel = getUser.Level
 
       // USER JOINED CHANNEL
       if (oldChannelId === null && newChannelId !== null) {
@@ -143,9 +146,10 @@ module.exports = {
             newMinutesInChannel
           );
 
+          await xPSystemGiveRole.autoUserRoles(guild, member, oldLevel)
+
           console.log(
-            `USER: ${member.user
-              .username} XP: ${currentXP} + ${XP} = ${newXP} | Zeit im Channel: ${minutesInChannel} | Total: ${newMinutesInChannel}`
+            `USER: ${member.displayName} XP: ${currentXP} + ${XP} = ${newXP} | Zeit im Channel: ${minutesInChannel} | Total: ${newMinutesInChannel}`
           );
         }
       }

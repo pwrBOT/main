@@ -2,10 +2,8 @@ const { EmbedBuilder } = require("discord.js");
 const usersRepository = require("../../mysql/usersRepository");
 const levelsRepository = require("../../mysql/levelsRepository");
 
-module.exports = async function messageCreate(message) {
-  return new Promise(async (resolve) => {
-    const { client, guild, member, author } = message;
-
+async function autoUserRoles(guild, member, oldLevel) {
+  return new Promise(async resolve => {
     if (guild == null) {
       return resolve(null);
     }
@@ -20,7 +18,7 @@ module.exports = async function messageCreate(message) {
       return resolve(null);
     }
 
-    if (author.bot == true) {
+    if (member.user.bot == true) {
       return resolve(null);
     }
 
@@ -32,7 +30,7 @@ module.exports = async function messageCreate(message) {
       return resolve(null);
     }
 
-    const getUser = await usersRepository.getUser(author.id, guild.id);
+    const getUser = await usersRepository.getUser(member.user.id, guild.id);
 
     if (!getUser) {
       return resolve(null);
@@ -47,59 +45,99 @@ module.exports = async function messageCreate(message) {
       return resolve(null);
     }
 
+    // RANK UP
     if (currentLevel === levelSettings.LevelUp1) {
       newRoleId = levelSettings.level1;
+      if (oldLevel < currentLevel) {
+      } else {
+        oldRoleId = levelSettings.level2;
+      }
     } else if (
       currentLevel >= levelSettings.LevelUp2 &&
       currentLevel < levelSettings.LevelUp3
     ) {
-      oldRoleId = levelSettings.level1;
       newRoleId = levelSettings.level2;
+      if (oldLevel < currentLevel) {
+        oldRoleId = levelSettings.level1;
+      } else {
+        oldRoleId = levelSettings.level3;
+      }
     } else if (
       currentLevel >= levelSettings.LevelUp3 &&
       currentLevel < levelSettings.LevelUp4
     ) {
-      oldRoleId = levelSettings.level2;
       newRoleId = levelSettings.level3;
+      if (oldLevel < currentLevel) {
+        oldRoleId = levelSettings.level2;
+      } else {
+        oldRoleId = levelSettings.level4;
+      }
     } else if (
       currentLevel >= levelSettings.LevelUp4 &&
       currentLevel < levelSettings.LevelUp5
     ) {
-      oldRoleId = levelSettings.level3;
       newRoleId = levelSettings.level4;
+      if (oldLevel < currentLevel) {
+        oldRoleId = levelSettings.level3;
+      } else {
+        oldRoleId = levelSettings.level5;
+      }
     } else if (
       currentLevel >= levelSettings.LevelUp5 &&
       currentLevel < levelSettings.LevelUp6
     ) {
-      oldRoleId = levelSettings.level4;
       newRoleId = levelSettings.level5;
+      if (oldLevel < currentLevel) {
+        oldRoleId = levelSettings.level4;
+      } else {
+        oldRoleId = levelSettings.level6;
+      }
     } else if (
       currentLevel >= levelSettings.LevelUp6 &&
       currentLevel < levelSettings.LevelUp7
     ) {
-      oldRoleId = levelSettings.level5;
       newRoleId = levelSettings.level6;
+      if (oldLevel < currentLevel) {
+        oldRoleId = levelSettings.level5;
+      } else {
+        oldRoleId = levelSettings.level7;
+      }
     } else if (
       currentLevel >= levelSettings.LevelUp7 &&
       currentLevel < levelSettings.LevelUp8
     ) {
-      oldRoleId = levelSettings.level6;
       newRoleId = levelSettings.level7;
+      if (oldLevel < currentLevel) {
+        oldRoleId = levelSettings.level6;
+      } else {
+        oldRoleId = levelSettings.level8;
+      }
     } else if (
       currentLevel >= levelSettings.LevelUp8 &&
       currentLevel < levelSettings.LevelUp9
     ) {
-      oldRoleId = levelSettings.level7;
       newRoleId = levelSettings.level8;
+      if (oldLevel < currentLevel) {
+        oldRoleId = levelSettings.level7;
+      } else {
+        oldRoleId = levelSettings.level9;
+      }
     } else if (
       currentLevel >= levelSettings.LevelUp9 &&
       currentLevel < levelSettings.LevelUp10
     ) {
-      oldRoleId = levelSettings.level8;
       newRoleId = levelSettings.level9;
+      if (oldLevel < currentLevel) {
+        oldRoleId = levelSettings.level8;
+      } else {
+        oldRoleId = levelSettings.level10;
+      }
     } else if (currentLevel >= levelSettings.LevelUp10) {
-      oldRoleId = levelSettings.level9;
       newRoleId = levelSettings.level10;
+      if (oldLevel < currentLevel) {
+        oldRoleId = levelSettings.level9;
+      } else {
+      }
     } else {
       return resolve(null);
     }
@@ -116,28 +154,39 @@ module.exports = async function messageCreate(message) {
 
         if (rankChannel === undefined) {
         } else {
+          let statusText = "";
+
+          if (oldLevel > currentLevel) {
+            statusText = "degradiert";
+          } else {
+            statusText = "befördert";
+          }
+
           const embedBefoerderung = new EmbedBuilder()
             .setTitle(`⚡️ Level-System ⚡️`)
-            .setDescription(`${member} wurde zum ${newRole.name} befördert!`)
+            .setDescription(
+              `${member} wurde zum ${newRole.name} ${statusText}!`
+            )
             .setColor(0xf1c232)
             .setTimestamp(Date.now())
             .setFooter({
-              iconURL: client.user.displayAvatarURL(),
-              text: `powered by Powerbot`,
+              iconURL: guild.client.user.displayAvatarURL(),
+              text: `powered by Powerbot`
             });
 
-          await client.channels.cache
+          await guild.client.channels.cache
             .get(rankChannel)
             .send({ embeds: [embedBefoerderung] })
             .catch(console.error);
 
-          await client.channels.cache
+          const pingMember = await guild.client.channels.cache
             .get(rankChannel)
             .send(`${member}`)
             .catch(console.error);
-          setTimeout(function () {
-            client.channels.cache.get(rankChannel).bulkDelete(1, true);
-          }, 100);
+
+          setTimeout(function() {
+            pingMember.delete();
+          }, 200);
         }
       }
     }
@@ -159,4 +208,6 @@ module.exports = async function messageCreate(message) {
 
     return resolve(null);
   });
-};
+}
+
+module.exports.autoUserRoles = autoUserRoles;

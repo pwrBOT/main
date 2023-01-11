@@ -6,8 +6,6 @@ const {
 } = require("discord.js");
 const config = require("./config.json");
 const fs = require("fs");
-const getXp = require("./src/events/messageCreate/getXp");
-const levelSystemGiveRole = require("./src/events/messageCreate/levelSystemGiveRole");
 const tempUnbanUser = require("./src/events/tempCommands/tempUnbanUser");
 const autoDeleteChannel = require("./src/events/autoDelete/autoDeleteChannel");
 
@@ -77,10 +75,7 @@ client.login(TOKEN);
 
 // CLIENT ON EVENTS
 
-client.on("messageCreate", async message => {
-  getXp(message);
-  levelSystemGiveRole(message);
-});
+client.on("messageCreate", async message => {});
 
 client.on("ready", async () => {
   tempUnbanUser.init(client);

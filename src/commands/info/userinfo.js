@@ -45,6 +45,15 @@ module.exports = {
         let guildId = guild.id;
         let userData = await usersRepository.getUser(userId, guildId);
 
+        let totalVoiceTime = ""
+        if (userData.totalVoiceTime > 60) {
+          const voiceTime = userData.totalVoiceTime / 60
+          totalVoiceTime = `${voiceTime.toFixed(1)} Stunden`
+        } else {
+          const voiceTime = userData.totalVoiceTime
+          totalVoiceTime = `${voiceTime} Minuten`
+        }
+
         let currentUserXp = 0;
         let currentLevel = 0;
         let nextLevelXP = 0;
@@ -99,7 +108,7 @@ module.exports = {
               minute: "2-digit"
             });
             const spacer = `\u00A0\u00A0\u00A0\u00A0`;
-            oldWarnsText += `${date}•${time}h:${spacer}${oldWarn.warnReason}${spacer}•${spacer}Löschgrund: ${oldWarn.delReason}\n`;
+            oldWarnsText += `${date}\u00A0•\u00A0${time}h:${spacer}Warngrund: ${oldWarn.warnReason}\u00A0|\u00A0\nLöschgrund: ${oldWarn.delReason}\n\n`;
           });
         }
 
@@ -171,11 +180,11 @@ module.exports = {
             },
             {
               name: `Verbrachte Zeit im Voice-Channel:`,
-              value: `${userData.totalVoiceTime}`,
+              value: `${totalVoiceTime}`,
               inline: true
             },
             {
-              name: `Gesendete Nachrichten:`,
+              name: `Nachrichten gesendet:`,
               value: `${userData.messageCount}`,
               inline: true
             },
