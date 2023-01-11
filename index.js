@@ -6,8 +6,9 @@ const {
 } = require("discord.js");
 const config = require("./config.json");
 const fs = require("fs");
-const tempUnbanUser = require("./src/events/tempCommands/tempUnbanUser");
-const autoDeleteChannel = require("./src/events/autoDelete/autoDeleteChannel");
+const tempUnbanUser = require("./src/events/cronjobs/tempUnbanUser");
+const autoDeleteChannel = require("./src/events/cronjobs/autoDeleteChannel");
+const autoDeleteWarns = require("./src/events/cronjobs/autoDeleteWarns");
 
 // Discord Bot SetUp
 const TOKEN = config.powerbot_token;
@@ -80,6 +81,7 @@ client.on("messageCreate", async message => {});
 client.on("ready", async () => {
   tempUnbanUser.init(client);
   autoDeleteChannel.init(client);
+  autoDeleteWarns.init(client);
   // servicecheck.init(client);
 });
 

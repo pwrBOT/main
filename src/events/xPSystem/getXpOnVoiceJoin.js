@@ -30,7 +30,7 @@ module.exports = {
         return resolve(null);
       }
 
-      const oldLevel = getUser.Level
+      const oldLevel = getUser.Level;
 
       // USER JOINED CHANNEL
       if (oldChannelId === null && newChannelId !== null) {
@@ -102,10 +102,20 @@ module.exports = {
           }
 
           let XP = 0;
-          if (minutesInChannel * 2 >= 400) {
-            XP = 400;
+
+          const currentChannel = await client.channels.cache.get(oldChannelId);
+          if (channelTimeXPCategoryIds.includes(currentChannel.parentId)) {
+            if (minutesInChannel * 2 >= 400) {
+              XP = 400;
+            } else {
+              XP = minutesInChannel * 2;
+            }
           } else {
-            XP = minutesInChannel * 2;
+            if (minutesInChannel * 1 >= 400) {
+              XP = 200;
+            } else {
+              XP = minutesInChannel * 2;
+            }
           }
 
           let newXP = currentXP + XP;
@@ -146,7 +156,7 @@ module.exports = {
             newMinutesInChannel
           );
 
-          await xPSystemGiveRole.autoUserRoles(guild, member, oldLevel)
+          await xPSystemGiveRole.autoUserRoles(guild, member, oldLevel);
 
           console.log(
             `USER: ${member.displayName} XP: ${currentXP} + ${XP} = ${newXP} | Zeit im Channel: ${minutesInChannel} | Total: ${newMinutesInChannel}`

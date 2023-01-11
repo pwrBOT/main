@@ -28,6 +28,20 @@ const getWarns = async (member, status, limit=-1) => {
   });
 }
 
+const getObsoleteWarns = async () => {
+  return new Promise((resolve) => {
+    mysqlHelper
+      .query('SELECT * FROM powerbot_warns WHERE warnStatus = ?', ["active"], -1)
+      .then( (result) => {
+        // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
+        resolve(result ?? null);
+      })
+      .catch(() => {
+        resolve(null);
+      });
+  });
+}
+
 const addWarn = async (guildId, memberId, reason, warnModName, warnModId) => {
   return new Promise((resolve) => {
     mysqlHelper
@@ -42,10 +56,10 @@ const addWarn = async (guildId, memberId, reason, warnModName, warnModId) => {
   });
 }
 
-const delWarn = async (warnId, delreason, guildId, userId, ) => {
+const delWarn = async (warnId, userId, delreason) => {
   return new Promise((resolve) => {
     mysqlHelper
-      .query('UPDATE powerbot_warns SET warnStatus=?, delReason=? WHERE ID=? AND guildId=? AND userId=?', ["removed", delreason, warnId, guildId, userId])
+      .query('UPDATE powerbot_warns SET warnStatus=?, delReason=? WHERE ID=? AND userId=?', ["removed", delreason, warnId, userId])
       .then( (result) => {
         // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
         resolve(null);
@@ -56,10 +70,10 @@ const delWarn = async (warnId, delreason, guildId, userId, ) => {
   });
 }
 
-const delAllWarns = async (guildId, userId) => {
+const delAllWarns = async (guildId, userId, delreason) => {
   return new Promise((resolve) => {
     mysqlHelper
-      .query('UPDATE powerbot_warns SET warnStatus=? WHERE guildId=? AND userId=?', ["removed", guildId, userId])
+      .query('UPDATE powerbot_warns SET warnStatus=?, delReason=? WHERE guildId=? AND userId=?', ["removed", delreason ,guildId, userId])
       .then( (result) => {
         // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
         resolve(null);
@@ -75,3 +89,4 @@ module.exports.getWarns = getWarns;
 module.exports.addWarn = addWarn;
 module.exports.delWarn = delWarn;
 module.exports.delAllWarns = delAllWarns;
+module.exports.getObsoleteWarns = getObsoleteWarns

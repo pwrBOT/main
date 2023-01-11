@@ -13,7 +13,7 @@ module.exports = {
     const img = await anvasUserbanner.generateImage(interaction, interaction.user, interaction.guild, interaction.member);
 
     if (!img) {
-      return interaction.reply("❌");
+      return interaction.reply(`❌ Kein Userbanner verfügbar! Möglicherweise hast du bisher noch keine Nachricht geschrieben! ❌`);
     }
 
     interaction.reply({ files: [img] });

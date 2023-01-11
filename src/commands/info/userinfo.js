@@ -45,6 +45,11 @@ module.exports = {
         let guildId = guild.id;
         let userData = await usersRepository.getUser(userId, guildId);
 
+        if (!userData) {
+          interaction.editReply(`❌ Kein Daten zu ${member} verfügbar! ❌`);
+          return resolve(null)
+        }
+
         let totalVoiceTime = ""
         if (userData.totalVoiceTime > 60) {
           const voiceTime = userData.totalVoiceTime / 60
@@ -207,7 +212,7 @@ module.exports = {
               inline: false
             },
             {
-              name: `Gelöschte Verwarnungen:`,
+              name: `Abgelaufene / gelöschte Verwarnungen:`,
               value: `${oldWarnsText}`,
               inline: false
             }

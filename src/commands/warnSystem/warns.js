@@ -45,6 +45,12 @@ module.exports = {
         .addUserOption(option =>
           option.setName("user").setDescription("User").setRequired(true)
         )
+        .addStringOption(option =>
+          option
+            .setName("delreason")
+            .setDescription("Begründung")
+            .setRequired(true)
+        )
     ),
 
   async execute(interaction, client) {
@@ -61,7 +67,7 @@ module.exports = {
         }
 
         if (warns.length === 0) {
-          interaction.reply(`${member} hat keine Verwarnungen!`);
+          interaction.reply(`${member.displayName} hat keine Verwarnungen!`);
           setTimeout(function() {
             interaction.deleteReply();
           }, 3000);
@@ -79,6 +85,28 @@ module.exports = {
           warnsText += `ID: ${warn.ID} | ${date}  •  ${time}h:${spacer}${warn.warnReason}\n`;
         });
 
+        // GET OLD WARNS
+        let oldWarnsText = "";
+        let oldWarns = await warnsRepository.getWarns(member, "removed", 10);
+
+        if (!oldWarns) {
+          return resolve(null);
+        }
+
+        if (oldWarns.length === 0) {
+          oldWarnsText = `Der User hat keine gelöschten Verwarnungen!`;
+        } else {
+          oldWarns.forEach((oldWarn) => {
+            const date = new Date(oldWarn.warnAdd).toLocaleDateString("de-DE");
+            const time = new Date(oldWarn.warnAdd).toLocaleTimeString("de-DE", {
+              hour: "2-digit",
+              minute: "2-digit"
+            });
+            const spacer = `\u00A0\u00A0\u00A0\u00A0`;
+            oldWarnsText += `${date}\u00A0•\u00A0${time}h:${spacer}Warngrund: ${oldWarn.warnReason}\u00A0|\u00A0\nLöschgrund: ${oldWarn.delReason}\n\n`;
+          });
+        }
+
         const warnsembed = new EmbedBuilder()
           .setTitle(`⚡️ Warning-System ⚡️`)
           .setDescription(`Warns-Übersicht von ${member}`)
@@ -92,6 +120,11 @@ module.exports = {
             {
               name: `Letzten 10 Verwarnungen:`,
               value: `${warnsText}`,
+              inline: false
+            },
+            {
+              name: `Letzten 10 gelöschten Verwarnungen:`,
+              value: `${oldWarnsText}`,
               inline: false
             }
           ])
@@ -157,7 +190,7 @@ module.exports = {
             }
           ]);
 
-          const delWarnembedUser = new EmbedBuilder()
+        const delWarnembedUser = new EmbedBuilder()
           .setTitle(`⚡️ Warning-System ⚡️`)
           .setDescription(`Ein Warn von dir wurde gelöscht!`)
           .setColor(0x51ff00)
@@ -184,12 +217,7 @@ module.exports = {
             }
           ]);
 
-        await warnsRepository.delWarn(
-          warnId,
-          delreason,
-          interaction.guild.id,
-          member.user.id
-        );
+        await warnsRepository.delWarn(warnId, member.user.id, delreason);
 
         const logChannel = require("../../mysql/loggingChannelsRepository");
         await logChannel.logChannel(interaction.guild, "modLog", delWarnembed);
@@ -249,17 +277,20 @@ module.exports = {
               name: `Gelöscht von Moderator:`,
               value: `${interaction.user.tag}`,
               inline: false
-            }
-          ])
-          .addFields([
+            },
             {
               name: `Gelöschte Verwarnungen:`,
               value: `${warnsText}`,
               inline: false
+            },
+            {
+              name: `Begründung:`,
+              value: `${delreason}`,
+              inline: true
             }
           ]);
 
-        await warnsRepository.delAllWarns(interaction.guild.id, member.user.id);
+        await warnsRepository.delAllWarns(interaction.guild.id, member.user.id, delreason);
 
         const logChannel = require("../../mysql/loggingChannelsRepository");
         await logChannel.logChannel(interaction.guild, "modLog", delWarnsembed);
