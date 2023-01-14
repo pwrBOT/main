@@ -51,13 +51,15 @@ module.exports = {
         }
 
         let totalVoiceTime = ""
-        if (userData.totalVoiceTime > 60) {
+         if (userData.totalVoiceTime > 60) {
           const voiceTime = userData.totalVoiceTime / 60
           totalVoiceTime = `${voiceTime.toFixed(1)} Stunden`
         } else {
           const voiceTime = userData.totalVoiceTime
           totalVoiceTime = `${voiceTime} Minuten`
         }
+
+        let totalVoiceTimeDays = ((userData.totalVoiceTime / 60) / 24).toFixed(1)
 
         let currentUserXp = 0;
         let currentLevel = 0;
@@ -185,7 +187,7 @@ module.exports = {
             },
             {
               name: `Verbrachte Zeit im Voice-Channel:`,
-              value: `${totalVoiceTime}`,
+              value: `${totalVoiceTime}\n${totalVoiceTimeDays} Tage`,
               inline: true
             },
             {

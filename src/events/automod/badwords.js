@@ -304,8 +304,6 @@ module.exports = {
         const logChannel = require("../../mysql/loggingChannelsRepository");
         await logChannel.logChannel(message.guild, "modLog", warnembed);
 
-        await message.channel.send({ embeds: [warnembed] });
-
         try {
           await message.member.send({ embeds: [warnembedmember] });
         } catch (error) {}

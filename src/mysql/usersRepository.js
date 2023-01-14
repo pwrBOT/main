@@ -92,7 +92,7 @@ const createUserTable = async (guildId) => {
   return new Promise((resolve) => {
     mysqlHelper
       .query(
-        `CREATE TABLE IF NOT EXISTS mbr_hosting_powerbot. ${tabelle} ( ID INT NOT NULL AUTO_INCREMENT , userId TEXT NOT NULL , userName TEXT NOT NULL , userAdd DATETIME NOT NULL , lastChannelJoin TEXT NOT NULL , totalVoiceTime BIGINT NOT NULL , xP BIGINT NOT NULL , Level INT NOT NULL , messageCount TEXT NOT NULL , PRIMARY KEY (ID)) ENGINE = InnoDB`,
+        `CREATE TABLE IF NOT EXISTS mbr_hosting_powerbot. ${tabelle} ( ID INT NOT NULL AUTO_INCREMENT , userId TEXT NOT NULL , userName TEXT NOT NULL , userAdd DATETIME NOT NULL , lastChannelJoin TEXT NOT NULL , totalVoiceTime BIGINT DEFAULT 0 NOT NULL , xP BIGINT DEFAULT 0 NOT NULL , Level INT DEFAULT 0 NOT NULL , messageCount TEXT DEFAULT 0 NOT NULL , PRIMARY KEY (ID)) ENGINE = InnoDB`,
         [tabelle]
       )
       .then((result) => {

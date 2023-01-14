@@ -245,7 +245,7 @@ module.exports = {
         tempEnd
       );
       member
-        .ban({ deleteMessageDays: days, reason: reason })
+        .ban({ deleteMessageSeconds: days * 24 * 60 * 60, reason: reason })
         .catch(console.error);
       try {
         await member.send({ embeds: [banembedmember] });

@@ -46,6 +46,19 @@ const generateImage = async (interaction, member, guild, guildMember) => {
       return resolve(null);
     }
 
+    let totalVoiceTime = "";
+    if (user.totalVoiceTime > 60) {
+      const voiceTime = user.totalVoiceTime / 60;
+      totalVoiceTime = `${voiceTime.toFixed(1)} Stunden`;
+    } else {
+      const voiceTime = user.totalVoiceTime;
+      totalVoiceTime = `${voiceTime} Minuten`;
+    }
+
+    let currentUserXp = user.xP;
+    let currentLevel = user.Level;
+    let nextLevelXP = user.Level * user.Level * 100 + 100;
+
     function isImage(url) {
       return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
     }
@@ -66,10 +79,6 @@ const generateImage = async (interaction, member, guild, guildMember) => {
       backgroundImg =
         "./src/components/canvas/img/welcome/powerbot_rankcard.jpg";
     }
-
-    let currentUserXp = user.xP;
-    let currentLevel = user.Level;
-    let nextLevelXP = user.Level * user.Level * 100 + 100;
 
     const canvas = Canvas.createCanvas(700, 250);
     const context = canvas.getContext("2d");
@@ -105,28 +114,32 @@ const generateImage = async (interaction, member, guild, guildMember) => {
     context.fillStyle = "#ffffff";
 
     context.font = userName(canvas, memberDisplayName);
-    context.fillText(`${memberDisplayName}`, 200, 90);
+    context.fillText(`${memberDisplayName}`, 200, 70);
 
-    context.font = "18px Roboto Regular";
+    context.font = "17px Roboto Regular";
+    context.fillText(`Server:  ${guild.name}`, 200, 100);
     context.fillText(
-      `Rang:    ${interaction.member.roles.highest.name}`,
+      `Rang:  ${interaction.member.roles.highest.name}`,
       200,
-      125
+      120
     );
 
-    context.font = "18px Roboto Regular";
-    context.fillText(`Server:  ${guild.name}`, 200, 145);
-
-    context.font = "18px Roboto Regular";
     context.fillText(
       `Auf dem Server seit: ${new Date(
         interaction.member.joinedTimestamp
       ).toLocaleDateString("de-DE")}`,
       200,
-      165
+      140
     );
 
-    context.font = "18px Roboto Bold";
+    context.fillText(
+      `Nachrichten: ${user.messageCount}
+      Zeit im VC: ${totalVoiceTime}`,
+      200,
+      170
+    );
+
+    context.font = "16px Roboto Bold";
     context.textAlign = "center";
     context.fillText(`Member #${user.ID}`, 100, 210);
 
@@ -138,19 +151,19 @@ const generateImage = async (interaction, member, guild, guildMember) => {
 
     // Empty Bar
     context.strokeStyle = "black";
-    context.strokeRect(215, 205, 350, 0);
+    context.strokeRect(215, 215, 350, 0);
 
     // Bar Filled
     context.strokeStyle = "#a7b9d7";
-    context.strokeRect(215, 205, 350 * currentUserXp / nextLevelXP, 0);
+    context.strokeRect(215, 215, 350 * currentUserXp / nextLevelXP, 0);
 
     context.font = "18px Roboto Regular";
     context.fillStyle = "#444444";
-    context.fillText(`XP: ${currentUserXp} / ${nextLevelXP}`, 300, 211);
+    context.fillText(`XP: ${currentUserXp} / ${nextLevelXP}`, 300, 221);
 
     context.fillStyle = "#ffffff";
     context.font = "12px Roboto Regular";
-    context.fillText(`LEVEL: ${currentLevel}`, 500, 185);
+    context.fillText(`LEVEL: ${currentLevel}`, 500, 195);
 
     // Pick up the pen
     context.beginPath();

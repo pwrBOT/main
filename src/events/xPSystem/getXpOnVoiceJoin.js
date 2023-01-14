@@ -1,6 +1,7 @@
 const { VoiceState, PermissionFlagsBits, ChannelType } = require("discord.js");
 const levelsRepository = require("../../mysql/levelsRepository");
 const usersRepository = require("../../mysql/usersRepository");
+const guildsRepository = require("../../mysql/guildsRepository");
 const xPSystemGiveRole = require("../../functions/userManagement/xPSystemGiveRole");
 
 module.exports = {
@@ -21,6 +22,10 @@ module.exports = {
       const getUser = await usersRepository.getUser(member.user.id, guildId);
       const levelSettings = await levelsRepository.getlevelSettings(guild);
       const channelTimeXPCategoryIds = levelSettings.channelTimeXPCategoryIds;
+      let channelXpBoostIds = [];
+      if (levelSettings.channelXpBoostIds) {
+        channelXpBoostIds = levelSettings.channelXpBoostIds
+      }
 
       if (!getUser) {
         return resolve(null);
@@ -35,16 +40,21 @@ module.exports = {
       // USER JOINED CHANNEL
       if (oldChannelId === null && newChannelId !== null) {
         const currentChannel = await client.channels.cache.get(newChannelId);
+        const afkChannel = await guildsRepository.getGuildSetting(
+          guild,
+          "afkChannel"
+        );
+        let afkChannelId = "";
+        if (afkChannel) {
+          if (afkChannel.value.length != 0) {
+            afkChannelId = afkChannel.value;
+          }
+        }
 
         if (channelTimeXPCategoryIds.includes(currentChannel.parentId)) {
-          if (getUser.lastChannelJoin.length !== 0) {
-            await usersRepository.updateUser(
-              guildId,
-              member.user.id,
-              "lastChannelJoin",
-              ""
-            );
-            console.log(`User in DB vorhanden: ${member.user.username}`);
+          if (afkChannel) {
+            if (newChannelId == afkChannel.value) {
+            }
           } else {
             const joinTime = new Date();
             await usersRepository.updateUser(
@@ -65,8 +75,23 @@ module.exports = {
       // USER CHANGED CHANNEL
       if (oldChannelId !== null && newChannelId !== null) {
         const currentChannel = await client.channels.cache.get(newChannelId);
+        const afkChannel = await guildsRepository.getGuildSetting(
+          guild,
+          "afkChannel"
+        );
+        let afkChannelId = "";
+        if (afkChannel) {
+          if (afkChannel.value.length != 0) {
+            afkChannelId = afkChannel.value;
+          }
+        }
+
         if (!channelTimeXPCategoryIds.includes(currentChannel.parentId)) {
           userLeftChannel();
+        } else if (afkChannel) {
+          if (newChannelId == afkChannel.value) {
+            userLeftChannel();
+          }
         } else {
           if (getUser.lastChannelJoin.length !== 0) {
           } else {
@@ -103,18 +128,23 @@ module.exports = {
 
           let XP = 0;
 
-          const currentChannel = await client.channels.cache.get(oldChannelId);
-          if (channelTimeXPCategoryIds.includes(currentChannel.parentId)) {
+          let oldChannel = "";
+          if (oldState) {
+            oldChannel = await client.channels.cache.get(oldChannelId);
+          } else {
+            oldChannel = await client.channels.cache.get(newChannelId);
+          }
+          if (channelXpBoostIds.includes(oldChannel.parentId)) {
             if (minutesInChannel * 2 >= 400) {
               XP = 400;
             } else {
               XP = minutesInChannel * 2;
             }
           } else {
-            if (minutesInChannel * 1 >= 400) {
+            if (minutesInChannel * 1 >= 200) {
               XP = 200;
             } else {
-              XP = minutesInChannel * 2;
+              XP = minutesInChannel * 1;
             }
           }
 

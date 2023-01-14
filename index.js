@@ -82,7 +82,6 @@ client.on("ready", async () => {
   tempUnbanUser.init(client);
   autoDeleteChannel.init(client);
   autoDeleteWarns.init(client);
-  // servicecheck.init(client);
 });
 
 // Discord Together

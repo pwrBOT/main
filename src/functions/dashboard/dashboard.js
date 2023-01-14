@@ -657,6 +657,7 @@ const init = async client => {
               return;
             }
           },
+          /// ####### Channel ####### \\\
           {
             optionId: "welcomechannel",
             optionName: "",
@@ -691,6 +692,49 @@ const init = async client => {
                 );
               } else {
                 const property = "welcomechannel";
+                await guildsRepository.updateGuildSetting(
+                  guild,
+                  property,
+                  newData
+                );
+              }
+              return;
+            }
+          },
+          {
+            optionId: "afkchannel",
+            optionName: "",
+            optionDescription: "AFK-Channel:",
+            optionType: DBD.formTypes.channelsSelect(
+              false,
+              (channelTypes = [ChannelType.GuildVoice])
+            ),
+            getActualSet: async ({ guild }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "afkchannel"
+              );
+
+              if (data) return data.value;
+              else return null;
+            },
+            setNew: async ({ guild, newData }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "afkchannel"
+              );
+
+              if (!newData) newData = null;
+
+              if (!data) {
+                const property = "afkchannel";
+                await guildsRepository.insertGuildSetting(
+                  guild,
+                  property,
+                  newData
+                );
+              } else {
+                const property = "afkchannel";
                 await guildsRepository.updateGuildSetting(
                   guild,
                   property,
@@ -1343,6 +1387,60 @@ const init = async client => {
                 );
               } else {
                 const column = "channelTimeXPCategoryIds";
+                newDataString = JSON.stringify(newData);
+                await levelsRepository.updatelevelSettings(
+                  guild,
+                  column,
+                  newDataString
+                );
+              }
+              return;
+            }
+          },
+          {
+            optionId: "channelXpBoostIds",
+            optionName: "",
+            optionDescription:
+              "Wähle Kategorien aus, in denen man doppelt so viele XP für das verbringen in Voice-Channels bekommt:",
+            optionType: DBD.formTypes.channelsMultiSelect(
+              false,
+              true,
+              (channelTypes = [ChannelType.GuildCategory])
+            ),
+            allowedCheck: async ({ guild }) => {
+              let guildPremium = await guildsRepository.getGuildSetting(
+                guild,
+                "premium"
+              );
+              if (guildPremium && guildPremium.value == "active") {
+                return { allowed: true };
+              } else {
+                return {
+                  allowed: false,
+                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                };
+              }
+            },
+            getActualSet: async ({ guild }) => {
+              let data = await levelsRepository.getlevelSettings(guild);
+
+              if (data.channelXpBoostIds)
+                return JSON.parse(data.channelXpBoostIds);
+              else return [];
+            },
+            setNew: async ({ guild, newData }) => {
+              let data = levelsRepository.getlevelSettings(guild);
+
+              if (!data) {
+                const column = "channelXpBoostIds";
+                newDataString = JSON.stringify(newData);
+                await levelsRepository.updatelevelSettings(
+                  guild,
+                  column,
+                  newDataString
+                );
+              } else {
+                const column = "channelXpBoostIds";
                 newDataString = JSON.stringify(newData);
                 await levelsRepository.updatelevelSettings(
                   guild,
@@ -2135,78 +2233,30 @@ const init = async client => {
                   "Analraupe",
                   "Analzone",
                   "Fettsau",
-                  "Arschfotzengesicht",
-                  "Arschgesicht",
-                  "Spast",
-                  "Auspuffbumser",
-                  "Bumsnuss",
-                  "Dauerlutscher",
-                  "Muschi",
                   "Fotze",
-                  "Fresse",
-                  "Hodenbussard",
-                  "Hodenkopf",
-                  "Kotlutscher",
-                  "Mongo",
-                  "Opfer",
-                  "Peniskopf",
-                  "Pimmelfresse",
-                  "Pimmelkopf",
-                  "Pimmelpapagei",
-                  "Sackfotze",
                   "Schlampe",
-                  "Schmongo",
                   "Slut",
-                  "Spastard",
-                  "spastophil",
-                  "Vollmongo",
-                  "Wichsbazille",
-                  "Wichsfisch",
                   "analritter",
                   "arschficker",
                   "arschgeburt",
-                  "arschgeige",
-                  "arschgesicht",
-                  "arschhaarfetischist",
-                  "arschhaarrasierer",
-                  "arschhöhlenforscher",
-                  "arschloch",
                   "asshole",
                   "motherfucker",
-                  "bastard",
-                  "bauernschlampe",
                   "biatch",
                   "bimbo",
                   "bitch",
                   "bitches",
-                  "cock",
                   "eierlutscher",
-                  "ficken",
-                  "ficker",
                   "fickfehler",
-                  "fickfetzen",
-                  "fickfresse",
                   "kanacke",
                   "kanake",
                   "kanaken",
-                  "kinderficker",
-                  "kinderporno",
                   "kotgeburt",
-                  "möse",
-                  "mösenficker",
-                  "mösenlecker",
                   "motherfucker",
-                  "muschilecker",
-                  "muschischlitz",
                   "mutterficker",
-                  "nazi",
-                  "nazis",
                   "neger",
                   "nigga",
                   "nigger",
-                  "nutte",
                   "nuttensohn",
-                  "nuttenstecher",
                   "nuttentochter",
                   "schwuchtel"
                 ];
