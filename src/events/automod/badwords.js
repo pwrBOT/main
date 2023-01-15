@@ -2,6 +2,7 @@ const { EmbedBuilder } = require("discord.js");
 const chalk = require("chalk");
 const guildSettings = require("../../mysql/guildsRepository");
 const warnSystem = require("../../functions/warningSystem/warnings");
+const loggingHandler = require("../../functions/fileLogging/loggingHandler");
 const ms = require("ms");
 
 module.exports = {
@@ -62,14 +63,63 @@ module.exports = {
       );
 
       if (!badwords && badwords.value.length === 0) {
-        badwords = ["hure", "hurre", "Analbaron", "Fettsau", "Arschfotzengesicht", "Arschgesicht", "Spast", "Auspuffbumser", "Bumsnuss", "Dauerlutscher", "Muschi", "Fotze", "Gay", "Fresse", "Hodenbussard", "Hodenkopf", "Kotlutscher", "Mongo", "Opfer", "Peniskopf", "Pimmelfresse", "Pimmelkopf", "Pimmelpapagei", "Sackfotze", "Schlampe", "Schmongo", "Slut", "Spastard", "spastophil", "Vollmongo", "Wichsbazille", "Wichsfisch", "analritter", "arschficker", "arschgeburt", "arschgeige", "arschgesicht", "arschhaarfetischist", "arschhaarrasierer", "arschhöhlenforscher", "arschloch", "asshole", "motherfucker", "bastard", "bauernschlampe", "biatch", "bimbo", "bitch", "bitches", "cock", "eierlutscher", "ficken", "ficker", "fickfehler", "fickfetzen", "fickfresse", "kanacke", "kanake", "kanaken", "kinderficker", "kinderporno", "kotgeburt", "möse", "mösenficker", "mösenlecker", "motherfucker", "muschilecker", "muschischlitz", "mutterficker", "nazi", "nazis", "neger", "nigga", "nigger", "nutte", "nuttensohn", "nuttenstecher", "nuttentochter", "schwuchtel"]
+        badwords = [
+          "hure",
+          "hurre",
+          "Analbaron",
+          "Fettsau",
+          "Spast",
+          "Dauerlutscher",
+          "Muschi",
+          "Fotze",
+          "Mongo",
+          "Opfer",
+          "Peniskopf",
+          "Pimmelfresse",
+          "Schlampe",
+          "Slut",
+          "analritter",
+          "arschficker",
+          "arschgeburt",
+          "arschgesicht",
+          "arschloch",
+          "asshole",
+          "motherfucker",
+          "bastard",
+          "biatch",
+          "bimbo",
+          "bitch",
+          "bitches",
+          "cock",
+          "eierlutscher",
+          "ficken",
+          "ficker",
+          "fickfehler",
+          "fickfetzen",
+          "fickfresse",
+          "kanacke",
+          "kanake",
+          "kanaken",
+          "kotgeburt",
+          "mutterficker",
+          "nazi",
+          "nazis",
+          "neger",
+          "nigga",
+          "nigger",
+          "nutte",
+          "nuttensohn",
+          "nuttenstecher",
+          "nuttentochter",
+          "schwuchtel"
+        ];
       }
 
       for (const badword of JSON.parse(badwords.value.toLowerCase())) {
         if (message.content.toLowerCase().includes(badword)) {
-            deleteMessage()
-            userTimeout()
-            autoModWarnMember()
+          deleteMessage();
+          userTimeout();
+          autoModWarnMember();
 
           return resolve(null);
         }
@@ -98,17 +148,13 @@ module.exports = {
           );
         } catch (error) {}
 
-        console.log(
-          chalk.yellow(
-            `[${new Date().toLocaleDateString(
-              "de-DE"
-            )} / ${new Date().toLocaleTimeString(
-              "de-DE"
-            )}] AUTO MOD BADWORD | Nachricht (${message.content}) von ${
-              message.member.user.tag
-            } gelöscht. Server: ${message.guild.name}.`
-          )
-        );
+        const logText = `[${new Date().toLocaleDateString(
+          "de-DE"
+        )} / ${new Date().toLocaleTimeString(
+          "de-DE"
+        )}] AUTO MOD BADWORD | Nachricht (${message.content}) von ${message
+          .member.user.tag} gelöscht. Server: ${message.guild.name} (${message.guild.id}).`;
+        loggingHandler.log(logText, "autoMod");
       }
 
       async function userTimeout() {
@@ -167,7 +213,8 @@ module.exports = {
         const embedmember = new EmbedBuilder()
           .setTitle(`⚡️ Moderation ⚡️`)
           .setDescription(
-            `Du wurdest getimeouted!\nServer: "${message.guild.name}"\nDauer: ${length}!`
+            `Du wurdest getimeouted!\nServer: "${message.guild
+              .name}"\nDauer: ${length}!`
           )
           .setColor(0x51ff00)
           .setTimestamp(Date.now())
@@ -308,8 +355,14 @@ module.exports = {
           await message.member.send({ embeds: [warnembedmember] });
         } catch (error) {}
 
-        await warnSystem.warnUser(message.guild, message.member, "Auto-Mod | Bad Word", message.client.user.tag, message.client.user.id)
-        await warnSystem.autoModWarn(message.guild, message.member)
+        await warnSystem.warnUser(
+          message.guild,
+          message.member,
+          "Auto-Mod | Bad Word",
+          message.client.user.tag,
+          message.client.user.id
+        );
+        await warnSystem.autoModWarn(message.guild, message.member);
 
         const commandLogRepository = require("../../mysql/commandLogRepository");
         // guild - command, user, affectedMember, reason
@@ -321,17 +374,13 @@ module.exports = {
           "-"
         );
 
-        console.log(
-          chalk.yellow(
-            `[${new Date().toLocaleDateString(
-              "de-DE"
-            )} / ${new Date().toLocaleTimeString(
-              "de-DE"
-            )}] AUTO MOD BADWORDS | User ${
-              message.member.user.tag
-            } wurde verwarnt. Server: ${message.guild.name}.`
-          )
-        );
+        const logText2 = `[${new Date().toLocaleDateString(
+          "de-DE"
+        )} / ${new Date().toLocaleTimeString(
+          "de-DE"
+        )}] AUTO MOD BADWORDS | User ${message.member.user
+          .tag} wurde verwarnt. Server: ${message.guild.name}.`;
+        loggingHandler.log(logText2, "autoMod");
       }
     });
   }
