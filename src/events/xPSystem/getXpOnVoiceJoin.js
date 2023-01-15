@@ -206,7 +206,7 @@ module.exports = {
           await xPSystemGiveRole.autoUserRoles(guild, member, oldLevel);
           
           const loggingHandler = require("../../functions/fileLogging/loggingHandler");
-          const logText = `GUILD: ${member.guild.id} | USER: ${member.displayName} (ID: ${member.id}) XP: ${currentXP} + ${XP} = ${newXP} | Zeit im Channel: ${minutesInChannel} | Total: ${newMinutesInChannel}`;
+          const logText = `GUILD: ${member.guild.id} | #VOICE XP --> USER: ${member.displayName} (ID: ${member.id}) XP: ${currentXP} + ${XP} = ${newXP} | Zeit im Channel: ${minutesInChannel} | Total: ${newMinutesInChannel}`;
           loggingHandler.log(logText, "xP_logging");
         }
       }

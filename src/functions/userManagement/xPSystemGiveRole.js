@@ -189,7 +189,7 @@ async function autoUserRoles(guild, member, oldLevel) {
           }, 200);
 
           const loggingHandler = require("../../functions/fileLogging/loggingHandler");
-          const logText = `GUILD: ${member.guild.id} | USER: ${member.displayName} (ID: ${member.id}) wurde zum ${newRole.name} ${statusText}`;
+          const logText = `GUILD: ${member.guild.id} | #RANK UP --> USER: ${member.displayName} (ID: ${member.id}) wurde zum ${newRole.name} ${statusText}`;
           loggingHandler.log(logText, "xP_logging");
         }
       }
