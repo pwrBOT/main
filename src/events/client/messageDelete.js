@@ -1,6 +1,6 @@
 const { EmbedBuilder, AuditLogEvent } = require("discord.js");
 const guildSettings = require("../../mysql/guildsRepository");
-const chalk = require("chalk");
+const loggingHandler = require("../../functions/fileLogging/loggingHandler");
 
 module.exports = {
   name: "messageDelete",
@@ -17,7 +17,6 @@ module.exports = {
       }
 
       if (message.guild) {
-        
         let ignoredChannels = await guildSettings.getGuildSetting(
           message.guild,
           "ignoredChannels"
@@ -33,7 +32,7 @@ module.exports = {
       }
 
       let embedMessage = "";
-      
+
       if (message.author == null) {
         return resolve(null);
       } else if (message.content == null) {
@@ -53,6 +52,9 @@ module.exports = {
           iconURL: message.client.user.displayAvatarURL(),
           text: `powered by Powerbot`
         });
+
+      const logText = `GUILD: ${message.guild.name} (${message.guild.id}) | Nachricht (ID: ${message.id}) von ${message.author.username} in ${message.channel.name} gelöscht!\n----> Nachricht: ${message.content}`;
+      loggingHandler.log(logText, "messageDelete");
 
       try {
         const logChannel = require("../../mysql/loggingChannelsRepository");

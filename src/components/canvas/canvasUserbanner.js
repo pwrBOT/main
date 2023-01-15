@@ -47,13 +47,24 @@ const generateImage = async (interaction, member, guild, guildMember) => {
     }
 
     let totalVoiceTime = "";
-    if (user.totalVoiceTime > 60) {
+    if (user.totalVoiceTime == 0) {
+      totalVoiceTime = "";
+    } else if (user.totalVoiceTime > 60) {
       const voiceTime = user.totalVoiceTime / 60;
-      totalVoiceTime = `${voiceTime.toFixed(1)} Stunden`;
+      totalVoiceTime = `Zeit im VC: ${voiceTime.toFixed(1)} Stunden`;
     } else {
       const voiceTime = user.totalVoiceTime;
-      totalVoiceTime = `${voiceTime} Minuten`;
+      totalVoiceTime = `Zeit im VC: ${voiceTime} Minuten`;
     }
+
+    let totalMessages = "";
+    if (user.messageCount == 0) {
+      totalMessages = "";
+    } else {
+      totalMessages = `Nachrichten: ${user.messageCount}
+      `
+    }
+
 
     let currentUserXp = user.xP;
     let currentLevel = user.Level;
@@ -133,8 +144,7 @@ const generateImage = async (interaction, member, guild, guildMember) => {
     );
 
     context.fillText(
-      `Nachrichten: ${user.messageCount}
-      Zeit im VC: ${totalVoiceTime}`,
+      `${totalMessages}${totalVoiceTime}`,
       200,
       170
     );

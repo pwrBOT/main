@@ -138,7 +138,7 @@ module.exports = {
           );
 
           const requiredXP = getUser.Level * getUser.Level * 100 + 100;
-
+          
           if (newXP >= requiredXP) {
             let newLevel = (getUser.Level += 1);
             await usersRepository.updateUser(
@@ -150,6 +150,10 @@ module.exports = {
           }
 
           await xPSystemGiveRole.autoUserRoles(message.guild, message.member, getUser.Level);
+
+          const loggingHandler = require("../../functions/fileLogging/loggingHandler");
+          const logText = `GUILD: ${message.guild.id} | USER: ${message.member.displayName} (ID: ${message.member.id}) XP: ${currentXP} + ${XP} = ${newXP}`;
+          loggingHandler.log(logText, "xP_logging");
         }
         return resolve(null);
       }

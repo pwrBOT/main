@@ -27,8 +27,6 @@ module.exports = {
         .setDescription("Wie lange soll der User gebannt werden?")
         .setRequired(true)
         .addChoices(
-          { name: "12 Stunden", value: "12 Stunden" },
-          { name: "1 Tag", value: "1 Tag" },
           { name: "1 Woche", value: "1 Woche" },
           { name: "2 Wochen", value: "2 Wochen" },
           { name: "1 Monat", value: "1 Monat" },
@@ -125,11 +123,7 @@ module.exports = {
       }
 
       var unbanDate = "";
-      if (length === "12 Stunden") {
-        unbanDate = moment(new Date()).add(12, "hours");
-      } else if (length === "1 Tag") {
-        unbanDate = moment(new Date()).add(1, "day");
-      } else if (length === "1 Woche") {
+      if (length === "1 Woche") {
         unbanDate = moment(new Date()).add(1, "week");
       } else if (length === "2 Wochen") {
         unbanDate = moment(new Date()).add(2, "weeks");
@@ -174,9 +168,7 @@ module.exports = {
             name: `Ban-Information:`,
             value: `Dauer: ${length}\nFreigabe: ${new Date(
               unbanDate
-            ).toLocaleDateString("de-DE")} | ${new Date(
-              unbanDate
-            ).toLocaleTimeString("de-DE")}`,
+            ).toLocaleDateString("de-DE")}`,
             inline: false,
           },
         ]);
@@ -208,12 +200,7 @@ module.exports = {
             name: `Ban-Information:`,
             value: `Dauer: ${length}\nFreigabe: ${new Date(
               unbanDate
-            ).toLocaleDateString("de-DE")} | ${new Date(
-              unbanDate
-            ).toLocaleTimeString("de-DE", {
-              hour: "2-digit",
-              minute: "2-digit",
-            })} Uhr`,
+            ).toLocaleDateString("de-DE")}`,
             inline: false,
           },
           {

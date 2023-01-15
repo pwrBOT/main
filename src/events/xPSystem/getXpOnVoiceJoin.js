@@ -3,6 +3,7 @@ const levelsRepository = require("../../mysql/levelsRepository");
 const usersRepository = require("../../mysql/usersRepository");
 const guildsRepository = require("../../mysql/guildsRepository");
 const xPSystemGiveRole = require("../../functions/userManagement/xPSystemGiveRole");
+const chalk = require("chalk");
 
 module.exports = {
   name: "voiceStateUpdate",
@@ -19,16 +20,34 @@ module.exports = {
       const guild = client.guilds.cache.get(newState.guild.id);
       const member = guild.members.cache.get(newState.id);
       const guildId = guild.id;
-      const getUser = await usersRepository.getUser(member.user.id, guildId);
+      const userCheck = await usersRepository.getUser(member.user.id, guildId);
       const levelSettings = await levelsRepository.getlevelSettings(guild);
       const channelTimeXPCategoryIds = levelSettings.channelTimeXPCategoryIds;
       let channelXpBoostIds = [];
       if (levelSettings.channelXpBoostIds) {
-        channelXpBoostIds = levelSettings.channelXpBoostIds
+        channelXpBoostIds = levelSettings.channelXpBoostIds;
       }
 
-      if (!getUser) {
-        return resolve(null);
+      let getUser;
+
+      if (!userCheck) {
+        console.log(
+          chalk.yellow(
+            `[MYSQL DATABASE] UserId: ${member.user
+              .id} bei Guild: ${guildId} nicht gefunden. User wird angelegt...`
+          )
+        );
+        await usersRepository.addUser(guildId, member.user);
+        console.log(
+          chalk.blue(
+            `[MYSQL DATABASE] User (${member.user.username}#${member.user
+              .discriminator} | ID: ${member.user
+              .id}) bei Guild: ${guildId} erfolgreich angelegt!`
+          )
+        );
+        getUser = await usersRepository.getUser(member.user.id, guildId);
+      } else {
+        getUser = await usersRepository.getUser(member.user.id, guildId);
       }
 
       if (member.user.bot == true) {
@@ -52,18 +71,16 @@ module.exports = {
         }
 
         if (channelTimeXPCategoryIds.includes(currentChannel.parentId)) {
-          if (afkChannel) {
-            if (newChannelId == afkChannel.value) {
+            if (newChannelId == afkChannelId) {
+            } else {
+              const joinTime = new Date();
+              await usersRepository.updateUser(
+                guildId,
+                member.user.id,
+                "lastChannelJoin",
+                joinTime
+              );
             }
-          } else {
-            const joinTime = new Date();
-            await usersRepository.updateUser(
-              guildId,
-              member.user.id,
-              "lastChannelJoin",
-              joinTime
-            );
-          }
         }
       }
 
@@ -91,17 +108,17 @@ module.exports = {
         } else if (afkChannel) {
           if (newChannelId == afkChannel.value) {
             userLeftChannel();
-          }
-        } else {
-          if (getUser.lastChannelJoin.length !== 0) {
           } else {
-            const joinTime = new Date();
-            await usersRepository.updateUser(
-              guildId,
-              member.user.id,
-              "lastChannelJoin",
-              joinTime
-            );
+            if (getUser.lastChannelJoin.length !== 0) {
+            } else {
+              const joinTime = new Date();
+              await usersRepository.updateUser(
+                guildId,
+                member.user.id,
+                "lastChannelJoin",
+                joinTime
+              );
+            }
           }
         }
       }
@@ -187,10 +204,10 @@ module.exports = {
           );
 
           await xPSystemGiveRole.autoUserRoles(guild, member, oldLevel);
-
-          console.log(
-            `USER: ${member.displayName} XP: ${currentXP} + ${XP} = ${newXP} | Zeit im Channel: ${minutesInChannel} | Total: ${newMinutesInChannel}`
-          );
+          
+          const loggingHandler = require("../../functions/fileLogging/loggingHandler");
+          const logText = `GUILD: ${member.guild.id} | USER: ${member.displayName} (ID: ${member.id}) XP: ${currentXP} + ${XP} = ${newXP} | Zeit im Channel: ${minutesInChannel} | Total: ${newMinutesInChannel}`;
+          loggingHandler.log(logText, "xP_logging");
         }
       }
     });

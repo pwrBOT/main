@@ -3,6 +3,8 @@ const chalk = require("chalk");
 const usersRepository = require("../../mysql/usersRepository");
 const guildsRepository = require("../../mysql/guildsRepository");
 const welcomeBanner = require("../../functions/userManagement/welcomeBanner");
+const loggingHandler = require("../../functions/fileLogging/loggingHandler");
+
 
 module.exports = {
   name: "guildMemberAdd",
@@ -17,23 +19,15 @@ module.exports = {
 
       const getUser = await usersRepository.getUser(member.user.id, guildId);
       if (!getUser) {
-        console.log(
-          chalk.yellow(
-            `[MYSQL DATABASE] UserId: ${member.user
-              .id} bei Guild: ${guildId} nicht gefunden. User wird angelegt...`
-          )
-        );
+        const logText = `[MYSQL DATABASE] UserId: ${member.user.id} bei Guild: ${guildId} nicht gefunden. User wird angelegt...`
+        loggingHandler.log(logText, "memberAdd");
+
         await usersRepository.addUser(guildId, member.user);
         const welcomeMessage = "Herzlich Willkommen";
         await welcomeBanner.createWelcomeBanner(member, welcomeMessage);
 
-        console.log(
-          chalk.blue(
-            `[MYSQL DATABASE] User (${member.user.username}#${member.user
-              .discriminator} | ID: ${member.user
-              .id}) bei Guild: ${guildId} erfolgreich angelegt!`
-          )
-        );
+        const logText2 = `[MYSQL DATABASE] User (${member.user.username}#${member.user.discriminator} | ID: ${member.user.id}) bei Guild: ${guildId} erfolgreich angelegt!`
+        loggingHandler.log(logText2, "memberAdd");
 
         // ########################## USER COUNT SPECIAL MESSAGE (EVERY 1000 MEMBERS) ########################## \\
       let nextUserCountSpecialValue = "";
@@ -45,7 +39,7 @@ module.exports = {
       );
 
       if (!nextUserCountSpecial) {
-        nextUserCountSpecialValue = 5;
+        nextUserCountSpecialValue = 1000;
         insertOrUpdate = "insert";
       } else {
         nextUserCountSpecialValue = parseInt(nextUserCountSpecial.value);
@@ -82,10 +76,9 @@ module.exports = {
         let nextUserCountSpecialValueNew = "";
         nextUserCountSpecialValueNew = nextUserCountSpecialValue + 1000;
 
-        console.log(
-          `Guild: ${member.guild
-            .name} | Next member achievement: ${newUser.ID}/${nextUserCountSpecialValueNew}`
-        );
+        const logText3 = `Guild: ${member.guild.name} (${member.guild.id}) | Next member achievement: ${newUser.ID}/${nextUserCountSpecialValueNew}`
+        loggingHandler.log(logText3, "guilds");
+
 
         if (insertOrUpdate == "insert") {
           await guildsRepository.insertGuildSetting(
@@ -101,10 +94,9 @@ module.exports = {
           );
         }
       } else {
-        console.log(
-          `Guild: ${member.guild
-            .name} | Next member achievement: ${newUser.ID}/${nextUserCountSpecialValue}`
-        );
+        const logText3 = `Guild: ${member.guild.name} (${member.guild.id}) | Next member achievement: ${newUser.ID}/${nextUserCountSpecialValueNew}`
+        loggingHandler.log(logText3, "guilds");
+
       }
       // ###################################################################################################### \\
 
@@ -112,13 +104,10 @@ module.exports = {
       } else {
         const welcomeMessage = "Willkommen zurück";
         await welcomeBanner.createWelcomeBanner(member, welcomeMessage);
-        console.log(
-          chalk.blue(
-            `[MYSQL DATABASE] User (${member.user.username}#${member.user
-              .discriminator} | ID: ${member.user
-              .id}) ist bereits bei Guild: ${guildId} registriert!`
-          )
-        );
+
+        const logText3 = `[MYSQL DATABASE] User (${member.user.username}#${member.user.discriminator} | ID: ${member.user.id}) ist bereits bei Guild: ${guildId} registriert!`
+        loggingHandler.log(logText3, "guilds");
+
       }
     });
   }
