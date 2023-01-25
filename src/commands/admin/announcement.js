@@ -1,9 +1,7 @@
 const {
   SlashCommandBuilder,
   PermissionFlagsBits,
-  PermissionsBitField,
   EmbedBuilder,
-  Guild,
   ChannelType
 } = require("discord.js");
 
@@ -16,12 +14,12 @@ module.exports = {
     .setDescription(`Ankuendigung per Bot schreiben`)
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addChannelOption(option =>
-        option
-          .setName("channel")
-          .setDescription("Channel auswählen")
-          .addChannelTypes(ChannelType.GuildAnnouncement)
-          .setRequired(true)
-      )
+      option
+        .setName("channel")
+        .setDescription("Channel auswählen")
+        .addChannelTypes(ChannelType.GuildAnnouncement)
+        .setRequired(true)
+    )
     .addStringOption(option =>
       option
         .setName("erwaehnung")
@@ -65,29 +63,33 @@ module.exports = {
       const announcement = new EmbedBuilder()
         .setAuthor({
           name: `${guild.name}`,
-          iconURL: `${guild.iconURL()}`,
+          iconURL: `${guild.iconURL()}`
         })
         .setTitle(titel)
         .setDescription(text.replaceAll("$n", "\n"))
         .setColor(0x0068f7)
-        .setTimestamp(Date.now())
+        .setTimestamp(Date.now());
 
-        if (titelbild) {
-            const titelbildLink = titelbild.url
-            announcement.setImage(titelbildLink);
-        }
+      if (titelbild) {
+        const titelbildLink = titelbild.url;
+        announcement.setImage(titelbildLink);
+      }
 
       if (erwaehnung == "yes") {
-        await newsChannel.send({ content: `@everyone`, embeds: [announcement] }).catch(console.error);
+        await newsChannel
+          .send({ content: `@everyone`, embeds: [announcement] })
+          .catch(console.error);
       } else {
         await newsChannel.send({ embeds: [announcement] }).catch(console.error);
       }
 
       await interaction.editReply("Die Ankündigung wurde veröffentlicht");
-      setTimeout(function() {
-        interaction.deleteReply();
-      }, 5000);
 
+      try {
+        setTimeout(function() {
+          interaction.deleteReply();
+        }, 5000);
+      } catch (error) {}
 
       const commandLogRepository = require("../../mysql/commandLogRepository");
       // guild - command, user, affectedMember, reason

@@ -192,8 +192,7 @@ module.exports = {
 
         member.timeout(ms(length), reason);
 
-        const newMessage = `User ${member} wurde getimeouted ✅`;
-        await interaction.editReply({ content: newMessage });
+        await interaction.editReply({ embeds: [modlogembed] });
 
         const logChannel = require("../../mysql/loggingChannelsRepository");
         await logChannel.logChannel(interaction.guild, "modLog", modlogembed);

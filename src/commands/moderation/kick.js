@@ -131,9 +131,11 @@ module.exports = {
 
       const newMessage = `User ${member} wurde gekickt ✅`;
       await interaction.editReply({ content: newMessage });
-      setTimeout(function () {
-        interaction.deleteReply();
-      }, 3000);
+      try {
+        setTimeout(function() {
+          interaction.deleteReply();
+        }, 5000);
+      } catch (error) {}
 
       const logChannel = require("../../mysql/loggingChannelsRepository");
       await logChannel.logChannel(interaction.guild, "modLog", kickembed);

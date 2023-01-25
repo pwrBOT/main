@@ -46,7 +46,10 @@ async function autoUserRoles(guild, member, oldLevel) {
     }
 
     // RANK UP
-    if (currentLevel === levelSettings.LevelUp1) {
+    if (
+      currentLevel >= levelSettings.LevelUp1 &&
+      currentLevel < levelSettings.LevelUp2
+    ) {
       newRoleId = levelSettings.level1;
       if (oldLevel < currentLevel) {
       } else {
@@ -184,12 +187,15 @@ async function autoUserRoles(guild, member, oldLevel) {
             .send(`${member}`)
             .catch(console.error);
 
-          setTimeout(function() {
-            pingMember.delete();
-          }, 200);
+          try {
+            setTimeout(function() {
+              pingMember.delete();
+            }, 200);
+          } catch (error) {}
 
           const loggingHandler = require("../../functions/fileLogging/loggingHandler");
-          const logText = `GUILD: ${member.guild.id} | #RANK UP --> USER: ${member.displayName} (ID: ${member.id}) wurde zum ${newRole.name} ${statusText}`;
+          const logText = `GUILD: ${member.guild
+            .id} | #RANK UP --> USER: ${member.displayName} (ID: ${member.id}) wurde zum ${newRole.name} ${statusText}`;
           loggingHandler.log(logText, "xP_logging");
         }
       }

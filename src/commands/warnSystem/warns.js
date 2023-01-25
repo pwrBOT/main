@@ -68,9 +68,11 @@ module.exports = {
 
         if (warns.length === 0) {
           interaction.reply(`${member.displayName} hat keine Verwarnungen!`);
-          setTimeout(function() {
-            interaction.deleteReply();
-          }, 3000);
+          try {
+            setTimeout(function() {
+              interaction.deleteReply();
+            }, 5000);
+          } catch (error) {}
           return resolve(null);
         }
 
@@ -222,9 +224,11 @@ module.exports = {
         const logChannel = require("../../mysql/loggingChannelsRepository");
         await logChannel.logChannel(interaction.guild, "modLog", delWarnembed);
         interaction.reply({ embeds: [delWarnembed] });
-        setTimeout(function() {
-          interaction.deleteReply();
-        }, 5000);
+        try {
+          setTimeout(function() {
+            interaction.deleteReply();
+          }, 5000);
+        } catch (error) {}
 
         try {
           await member.send({ embeds: [delWarnembedUser] });
@@ -295,9 +299,11 @@ module.exports = {
         const logChannel = require("../../mysql/loggingChannelsRepository");
         await logChannel.logChannel(interaction.guild, "modLog", delWarnsembed);
         interaction.reply({ embeds: [delWarnsembed] });
-        setTimeout(function() {
-          interaction.deleteReply();
-        }, 5000);
+        try {
+          setTimeout(function() {
+            interaction.deleteReply();
+          }, 5000);
+        } catch (error) {}
 
         // ############## LOGGING ############## \\
         const commandLogRepository = require("../../mysql/commandLogRepository");

@@ -53,7 +53,7 @@ module.exports = {
           text: `powered by Powerbot`
         });
 
-      const logText = `GUILD: ${message.guild.name} (${message.guild.id}) | Nachricht (ID: ${message.id}) von ${message.author.username} in ${message.channel.name} gelöscht!\n----> Nachricht: ${message.content}`;
+      const logText = `GUILD: ${message.guild.name} (${message.guild.id}) | Nachricht (ID: ${message.id}) von ${message.author.username} (${message.author.id}) in ${message.channel.name} gelöscht!\n----> Nachricht: ${message.content}`;
       loggingHandler.log(logText, "messageDelete");
 
       try {

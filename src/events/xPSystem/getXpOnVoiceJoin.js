@@ -31,20 +31,7 @@ module.exports = {
       let getUser;
 
       if (!userCheck) {
-        console.log(
-          chalk.yellow(
-            `[MYSQL DATABASE] UserId: ${member.user
-              .id} bei Guild: ${guildId} nicht gefunden. User wird angelegt...`
-          )
-        );
         await usersRepository.addUser(guildId, member.user);
-        console.log(
-          chalk.blue(
-            `[MYSQL DATABASE] User (${member.user.username}#${member.user
-              .discriminator} | ID: ${member.user
-              .id}) bei Guild: ${guildId} erfolgreich angelegt!`
-          )
-        );
         getUser = await usersRepository.getUser(member.user.id, guildId);
       } else {
         getUser = await usersRepository.getUser(member.user.id, guildId);
@@ -70,7 +57,8 @@ module.exports = {
           }
         }
 
-        if (channelTimeXPCategoryIds.includes(currentChannel.parentId)) {
+        if (currentChannel) {
+          if (channelTimeXPCategoryIds.includes(currentChannel.parentId)) {
             if (newChannelId == afkChannelId) {
             } else {
               const joinTime = new Date();
@@ -81,6 +69,7 @@ module.exports = {
                 joinTime
               );
             }
+          }
         }
       }
 
@@ -204,9 +193,10 @@ module.exports = {
           );
 
           await xPSystemGiveRole.autoUserRoles(guild, member, oldLevel);
-          
+
           const loggingHandler = require("../../functions/fileLogging/loggingHandler");
-          const logText = `GUILD: ${member.guild.id} | #VOICE XP --> USER: ${member.displayName} (ID: ${member.id}) XP: ${currentXP} + ${XP} = ${newXP} | Zeit im Channel: ${minutesInChannel} | Total: ${newMinutesInChannel}`;
+          const logText = `GUILD: ${member.guild
+            .id} | #VOICE XP --> USER: ${member.displayName} (ID: ${member.id}) XP: ${currentXP} + ${XP} = ${newXP} | Zeit im Channel: ${minutesInChannel} | Total: ${newMinutesInChannel}`;
           loggingHandler.log(logText, "xP_logging");
         }
       }

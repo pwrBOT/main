@@ -25,9 +25,12 @@ module.exports = {
       if (!getUser) {
         return resolve(null);
       }
+
       if (message.author.bot == true) {
         return resolve(null);
       }
+
+      const oldLevel = getUser.Level;
 
       const newUserMessageCount = getUser.messageCount + 1;
       await usersRepository.updateUser(
@@ -149,7 +152,7 @@ module.exports = {
             );
           }
 
-          await xPSystemGiveRole.autoUserRoles(message.guild, message.member, getUser.Level);
+          await xPSystemGiveRole.autoUserRoles(message.guild, message.member, oldLevel);
 
           const loggingHandler = require("../../functions/fileLogging/loggingHandler");
           const logText = `GUILD: ${message.guild.id} | #GET XP --> USER: ${message.member.displayName} (ID: ${message.member.id}) XP: ${currentXP} + ${XP} = ${newXP}`;

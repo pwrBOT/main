@@ -17,6 +17,7 @@ module.exports = {
       await usersRepository.createUserTable(guildId);
 
       const getUser = await usersRepository.getUser(member.user.id, guildId);
+
       if (!getUser) {
         const logText = `[MYSQL DATABASE] UserId: ${member.user
           .id} bei Guild: ${guildId} nicht gefunden. User wird angelegt...`;
@@ -38,6 +39,7 @@ module.exports = {
           member.id,
           member.guild.id
         );
+
         const nextUserCountSpecial = await guildsRepository.getGuildSetting(
           member.guild,
           "nextUserCountSpecial"
@@ -49,6 +51,10 @@ module.exports = {
         } else {
           nextUserCountSpecialValue = parseInt(nextUserCountSpecial.value);
         }
+
+        const logText5 = `Guild: ${member.guild.name} (${member.guild
+          .id}) | Next member achievement: ${newUser.ID}/${nextUserCountSpecialValue}`;
+        loggingHandler.log(logText5, "memberAdd");
 
         if (newUser.ID == nextUserCountSpecialValue) {
           const UserCountSpecialEmbed = new EmbedBuilder()
@@ -81,10 +87,6 @@ module.exports = {
           let nextUserCountSpecialValueNew = "";
           nextUserCountSpecialValueNew = nextUserCountSpecialValue + 1000;
 
-          const logText3 = `Guild: ${member.guild.name} (${member.guild
-            .id}) | Next member achievement: ${newUser.ID}/${nextUserCountSpecialValueNew}`;
-          loggingHandler.log(logText3, "guilds");
-
           if (insertOrUpdate == "insert") {
             await guildsRepository.insertGuildSetting(
               member.guild,
@@ -98,6 +100,10 @@ module.exports = {
               nextUserCountSpecialValueNew.toString()
             );
           }
+
+          const logText6 = `Guild: ${member.guild.name} (${member.guild
+            .id}) | RankUp --> Next member achievement: ${newUser.ID}/${nextUserCountSpecialValueNew}`;
+          loggingHandler.log(logText6, "memberAdd");
         }
         // ###################################################################################################### \\
       } else {
@@ -107,8 +113,9 @@ module.exports = {
         const logText3 = `[MYSQL DATABASE] User (${member.user
           .username}#${member.user.discriminator} | ID: ${member.user
           .id}) ist bereits bei Guild: ${guildId} registriert!`;
-        loggingHandler.log(logText3, "guilds");
+        loggingHandler.log(logText3, "memberAdd");
       }
+      return resolve(null);
     });
   }
 };

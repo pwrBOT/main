@@ -27,9 +27,11 @@ module.exports = {
     await channel.bulkDelete(100, true).then(messages => {
       responseembed.setDescription(`${messages.size} Nachrichten gelöscht ✅`);
       interaction.reply({embeds: [responseembed]});
-      setTimeout(function () {
-        interaction.deleteReply();
-      }, 3000);
+      try {
+        setTimeout(function() {
+          interaction.deleteReply();
+        }, 5000);
+      } catch (error) {}
   })
 
   const commandLogRepository = require("../../mysql/commandLogRepository");

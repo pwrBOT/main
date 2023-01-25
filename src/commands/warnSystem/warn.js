@@ -36,6 +36,7 @@ module.exports = {
       const reason =
         interaction.options.getString("reason") || "Kein Grund angegeben";
       const servername = interaction.guild.name;
+      const guild = interaction.guild
 
       if (member.id === interaction.user.id) {
         interaction.editReply("❌ Du kannst dich nicht selber verwarnen! ❌");
@@ -116,9 +117,6 @@ module.exports = {
         ]);
 
       await interaction.editReply({ embeds: [warnembed] });
-      setTimeout(function () {
-        interaction.deleteReply();
-      }, 5000);
 
       const logChannel = require("../../mysql/loggingChannelsRepository");
       const modLogMessage = await logChannel.logChannel(

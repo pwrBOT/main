@@ -10,6 +10,7 @@ const tempUnbanUser = require("./src/events/cronjobs/tempUnbanUser");
 const autoDeleteChannel = require("./src/events/cronjobs/autoDeleteChannel");
 const autoDeleteWarns = require("./src/events/cronjobs/autoDeleteWarns");
 const logFilesSizeCheck = require("./src/events/cronjobs/logFilesSizeCheck");
+const eventCheck = require("./src/events/cronjobs/eventCheck");
 
 // Discord Bot SetUp
 const TOKEN = config.powerbot_token;
@@ -84,6 +85,7 @@ client.on("ready", async () => {
   autoDeleteChannel.init(client);
   autoDeleteWarns.init(client);
   logFilesSizeCheck.init(client);
+  eventCheck.init(client);
 });
 
 // Discord Together
