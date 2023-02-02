@@ -9,7 +9,7 @@ const {
 } = require("discord.js");
 
 const eventRepository = require("../../mysql/eventRepository");
-const { Generator } = require("randomly-id-generator");
+var crypto = require("crypto");
 
 module.exports = {
   name: "event",
@@ -86,7 +86,7 @@ module.exports = {
       const eventEnd = new Date(options.getString("eventend"));
       const eventChannel = options.getChannel("eventchannel");
       const eventBild = options.getAttachment("eventbild");
-      const eventId = new Generator().generate();
+      const eventId = crypto.randomBytes(3).toString('hex');
       const pingRole = options.getRole("rollenerwaehnung");
       const host = user.id;
 

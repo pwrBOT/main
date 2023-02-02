@@ -1,4 +1,5 @@
 const mysqlHelper = require("./mysqlHelper");
+const autoModRepoMap = new Map();
 
 const getGuildAutoModSettings = async (guild) => {
   return new Promise((resolve) => {

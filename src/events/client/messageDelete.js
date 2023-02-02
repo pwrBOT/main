@@ -24,8 +24,15 @@ module.exports = {
 
         if (!ignoredChannels) {
         } else {
-          if (ignoredChannels.value.includes(message.channelId)) {
-            console.log("LOGGING MSG DELETE | Ignorierter Channel");
+          
+          let channelId = ""
+          if (message.channel.type == 11 || message.channel.type == 12) {
+            channelId = message.channel.parentId;
+          } else {
+            channelId = message.channelId
+          }
+
+          if (ignoredChannels.value.includes(channelId)) {
             return resolve(null);
           }
         }

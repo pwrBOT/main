@@ -78,6 +78,107 @@ const init = async client => {
     minimizedConsoleLogs: true,
     bot: client,
     theme: SoftUI({
+      locales: {
+        deDE: {
+          name: "Deutsch",
+          index: {
+            feeds: ["DIE ULTIMATIVE POWER NUTZEN:"],
+            card: {
+              category: "Welcome to PowerBot",
+              title:
+                "PowerBot - Hol dir die ultimative Power für deinen Discord Server",
+              description: "",
+              image: "https://pwr.lol/img/bot_logo_wide.png",
+              link: {
+                text: "Support Server",
+                enabled: true,
+                url: "https://discord.gg/yYq4UgRRzz"
+              }
+            },
+            feedsTitle: "Feeds",
+            graphTitle: "RAM-Auslastung"
+          },
+          manage: {
+            settings: {
+              memberCount: "Members",
+              info: {
+                info: "Info",
+                server: "Server Information"
+              }
+            }
+          },
+          privacyPolicy: {
+            title: "Privacy Policy",
+            description: "Privacy Policy and Terms of Service",
+            pp: "Complete Privacy Policy"
+          },
+          partials: {
+            sidebar: {
+              dash: "Dashboard",
+              manage: "Discord Server verwalten",
+              commands: "Bot Commands",
+              pp: "Privacy Policy",
+              admin: "Admin",
+              account: "Account Pages",
+              login: "Einloggen",
+              logout: "Ausloggen"
+            },
+            navbar: {
+              home: "Home",
+              pages: {
+                manage: "Discord Server verwalten",
+                settings: "Discord Server verwalten",
+                commands: "Commands",
+                pp: "Privacy Policy",
+                error: "Error",
+                credits: "Credits",
+                debug: "Debug",
+                leaderboard: "Leaderboard",
+                profile: "Profil",
+                maintenance: "Under Maintenance"
+              }
+            },
+            title: {
+              pages: {
+                manage: "Discord Server verwalten",
+                settings: "Discord Server verwalten",
+                commands: "Commands",
+                pp: "Privacy Policy",
+                admin: "Admin Panel",
+                error: "Error",
+                credits: "Credits",
+                debug: "Debug",
+                leaderboard: "Leaderboard",
+                profile: "Profil",
+                maintenance: "Under Maintenance"
+              }
+            },
+            preloader: {
+              image: "https://pwr.lol/img/bot_logo_wide.png",
+              spinner: true,
+              text: "Power wird geladen..."
+            },
+            premium: {
+              title: "Du möchtest Premium-Power?",
+              description:
+                "Schau dir unsere Angebote an und hol dir die ultimative Power.",
+              buttonText: "Premium holen"
+            },
+            settings: {
+              title: "Einstellungen",
+              description: "Ansichtsoptionen",
+              theme: {
+                title: "Theme",
+                description: "Wie darf es sein?"
+              },
+              language: {
+                title: "Sprache",
+                description: "Wähl Deine bevorzugte Sprache aus!"
+              }
+            }
+          }
+        }
+      },
       customThemeOptions: {
         index: async ({ req, res, config }) => {
           const cards = [
@@ -147,6 +248,18 @@ const init = async client => {
         spinner: true,
         text: "Power wird geladen..."
       },
+      admin: {
+        pterodactyl: {
+          enabled: false,
+          apiKey: "apiKey",
+          panelLink: "http://localhost:3000/",
+          serverUUIDs: []
+        },
+        logs: {
+          enabled: true,
+          key: "34geJ6!aaASD12908!"
+        }
+      },
       index: {
         card: {
           category: "Dashboard",
@@ -174,112 +287,12 @@ const init = async client => {
           login: "Erfolgreich eingeloggt =)"
         }
       },
-      admin: {
-        pterodactyl: {
-          enabled: false,
-          apiKey: "apiKey",
-          panelLink: "http://localhost:3000/",
-          serverUUIDs: []
-        }
-      },
-      locales: {
-        deDE: {
-          name: "Deutsch",
-          index: {
-            feeds: ["DIE ULTIMATIVE POWER NUTZEN:"],
-            card: {
-              category: "Welcome to PowerBot",
-              title:
-                "PowerBot - Hol dir die ultimative Power für deinen Discord Server",
-              description: "",
-              image: "https://pwr.lol/img/bot_logo_wide.png",
-              link: {
-                text: "Support Server",
-                enabled: true,
-                url: "https://discord.gg/yYq4UgRRzz"
-              }
-            },
-            feedsTitle: "Feeds",
-            graphTitle: "RAM-Auslastung"
-          },
-          manage: {
-            settings: {
-              memberCount: "Members",
-              info: {
-                info: "Info",
-                server: "Server Information"
-              }
-            }
-          },
-          privacyPolicy: {
-            title: "Privacy Policy",
-            description: "Privacy Policy and Terms of Service",
-            pp: "Complete Privacy Policy"
-          },
-          partials: {
-            sidebar: {
-              dash: "Dashboard",
-              manage: "Discord Server verwalten",
-              commands: "Bot Commands",
-              pp: "Privacy Policy",
-              account: "Account Pages",
-              login: "Einloggen",
-              logout: "Ausloggen"
-            },
-            navbar: {
-              home: "Home",
-              pages: {
-                manage: "Discord Server verwalten",
-                settings: "Discord Server verwalten",
-                commands: "Commands",
-                pp: "Privacy Policy",
-                error: "Error",
-                credits: "Credits",
-                debug: "Debug",
-                leaderboard: "Leaderboard",
-                profile: "Profil",
-                maintenance: "Under Maintenance"
-              }
-            },
-            title: {
-              pages: {
-                manage: "Discord Server verwalten",
-                settings: "Discord Server verwalten",
-                commands: "Commands",
-                pp: "Privacy Policy",
-                error: "Error",
-                credits: "Credits",
-                debug: "Debug",
-                leaderboard: "Leaderboard",
-                profile: "Profil",
-                maintenance: "Under Maintenance"
-              }
-            },
-            preloader: {
-              image: "https://pwr.lol/img/bot_logo_wide.png",
-              spinner: true,
-              text: "Power wird geladen..."
-            },
-            premium: {
-              title: "Du möchtest Premium-Power?",
-              description:
-                "Schau dir unsere Angebote an und hol dir die ultimative Power.",
-              buttonText: "Premium holen"
-            },
-            settings: {
-              title: "Einstellungen",
-              description: "Ansichtsoptionen",
-              theme: {
-                title: "Theme",
-                description: "Wie darf es sein?"
-              },
-              language: {
-                title: "Sprache",
-                description: "Wähl Deine bevorzugte Sprache aus!"
-              }
-            }
-          }
-        }
+      shardspage: {
+        enabled: true,
+        interval: 10,
+        key: "3S!Dsd2908!4geJ6!aaA",
+        backgroundUrl:
+          "https://t3.ftcdn.net/jpg/03/44/67/38/360_F_344673825_6fU6IORyipkYpfU1mg2vmxtHxDToUO6Q.jpg"
       },
       /// ################## COMMANDS ################## \\\
       commands: [
@@ -436,6 +449,46 @@ const init = async client => {
                   guild,
                   property,
                   newDataString
+                );
+              }
+              return;
+            }
+          },
+          {
+            optionId: "communityrole",
+            optionName: "",
+            optionDescription: "Community Rolle:",
+            optionType: DBD.formTypes.rolesSelect(false),
+            getActualSet: async ({ guild }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "communityrole"
+              );
+
+              if (data) return data.value;
+              else return null;
+            },
+            setNew: async ({ guild, newData }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "communityrole"
+              );
+
+              if (!newData) newData = null;
+
+              if (!data) {
+                const property = "communityrole";
+                await guildsRepository.insertGuildSetting(
+                  guild,
+                  property,
+                  newData
+                );
+              } else {
+                const property = "communityrole";
+                await guildsRepository.updateGuildSetting(
+                  guild,
+                  property,
+                  newData
                 );
               }
               return;
@@ -1310,7 +1363,8 @@ const init = async client => {
               } else {
                 return {
                   allowed: false,
-                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                  errorMessage:
+                    "Für dieses Feature benötigst du Premium Power =)"
                 };
               }
             },
@@ -1363,7 +1417,8 @@ const init = async client => {
               } else {
                 return {
                   allowed: false,
-                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                  errorMessage:
+                    "Für dieses Feature benötigst du Premium Power =)"
                 };
               }
             },
@@ -1417,7 +1472,8 @@ const init = async client => {
               } else {
                 return {
                   allowed: false,
-                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                  errorMessage:
+                    "Für dieses Feature benötigst du Premium Power =)"
                 };
               }
             },
@@ -2179,7 +2235,7 @@ const init = async client => {
             optionDescription:
               "Sollen User verwarnt werden, wenn sie Schimpfwörter posten?",
             optionType: DBD.formTypes.switch(false),
-            
+
             getActualSet: async ({ guild }) => {
               let data = await guildsRepository.getGuildSetting(
                 guild,
@@ -2359,7 +2415,8 @@ const init = async client => {
               } else {
                 return {
                   allowed: false,
-                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                  errorMessage:
+                    "Für dieses Feature benötigst du Premium Power =)"
                 };
               }
             },
@@ -2421,7 +2478,8 @@ const init = async client => {
               } else {
                 return {
                   allowed: false,
-                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                  errorMessage:
+                    "Für dieses Feature benötigst du Premium Power =)"
                 };
               }
             },
@@ -2476,7 +2534,8 @@ const init = async client => {
               } else {
                 return {
                   allowed: false,
-                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                  errorMessage:
+                    "Für dieses Feature benötigst du Premium Power =)"
                 };
               }
             },
@@ -2538,7 +2597,8 @@ const init = async client => {
               } else {
                 return {
                   allowed: false,
-                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                  errorMessage:
+                    "Für dieses Feature benötigst du Premium Power =)"
                 };
               }
             },
@@ -2600,7 +2660,8 @@ const init = async client => {
               } else {
                 return {
                   allowed: false,
-                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                  errorMessage:
+                    "Für dieses Feature benötigst du Premium Power =)"
                 };
               }
             },
@@ -2655,7 +2716,8 @@ const init = async client => {
               } else {
                 return {
                   allowed: false,
-                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                  errorMessage:
+                    "Für dieses Feature benötigst du Premium Power =)"
                 };
               }
             },
@@ -2717,7 +2779,8 @@ const init = async client => {
               } else {
                 return {
                   allowed: false,
-                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                  errorMessage:
+                    "Für dieses Feature benötigst du Premium Power =)"
                 };
               }
             },
@@ -2779,7 +2842,8 @@ const init = async client => {
               } else {
                 return {
                   allowed: false,
-                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                  errorMessage:
+                    "Für dieses Feature benötigst du Premium Power =)"
                 };
               }
             },
@@ -2834,7 +2898,8 @@ const init = async client => {
               } else {
                 return {
                   allowed: false,
-                  errorMessage: "Für dieses Feature benötigst du Premium Power =)"
+                  errorMessage:
+                    "Für dieses Feature benötigst du Premium Power =)"
                 };
               }
             },

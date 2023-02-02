@@ -52,6 +52,22 @@ const getReport = async (guildId, reportId) => {
   });
 };
 
+const getReports = async (guildId, reportedMemberId, limit) => {
+  return new Promise((resolve) => {
+    mysqlHelper
+      .query(
+        `SELECT * FROM powerbot_reports WHERE guildId=? AND reportedMemberId=? ORDER BY ID`,
+        [guildId, reportedMemberId],
+        limit)
+      .then( (result) => {
+        resolve(result ?? null);
+      })
+      .catch(() => {
+        resolve(null);
+      });
+  });
+};
+
 const getAllUserReports = async (guildId, reportedMemberId, limit=-1) => {
   return new Promise((resolve) => {
     mysqlHelper
@@ -71,4 +87,5 @@ const getAllUserReports = async (guildId, reportedMemberId, limit=-1) => {
 module.exports.addReport = addReport;
 module.exports.updateReport = updateReport;
 module.exports.getReport = getReport;
+module.exports.getReports = getReports;
 module.exports.getAllUserReports = getAllUserReports;

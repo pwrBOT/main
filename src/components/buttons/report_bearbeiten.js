@@ -11,7 +11,7 @@ module.exports = {
     name: `report_bearbeiten`
   },
   async execute(interaction, client) {
-    return new Promise(async (resolve) => {
+    return new Promise(async resolve => {
       await interaction.deferReply({
         ephemeral: true,
         fetchReply: true
@@ -34,7 +34,7 @@ module.exports = {
       let isModerator = false;
 
       const modRoleIds = JSON.parse(modRoleId.value);
-      modRoleIds.forEach((modRoleId) => {
+      modRoleIds.forEach(modRoleId => {
         if (interaction.member.roles.cache.has(modRoleId)) {
           isModerator = true;
         }
@@ -48,7 +48,6 @@ module.exports = {
         return resolve(null);
       }
 
-
       const reportId = await interaction.message.embeds[0].description.split(
         "#"
       )[1];
@@ -61,7 +60,7 @@ module.exports = {
       if (interaction.user.id != reportData.modId) {
         await interaction.editReply({
           ephemeral: true,
-          content: `❌ Du kannst den Report nicht abschließen. Du bearbeitest ihn nicht!`,
+          content: `❌ Du kannst den Report nicht abschließen. Du bearbeitest ihn nicht!`
         });
         return resolve(null);
       }
@@ -79,7 +78,7 @@ module.exports = {
         .setStyle(ButtonStyle.Success)
         .setDisabled(true);
 
-        const buttonBearbeiten = new ButtonBuilder()
+      const buttonBearbeiten = new ButtonBuilder()
         .setCustomId("report_bearbeiten")
         .setLabel(`Thread wurde erstellt`)
         .setStyle(ButtonStyle.Success)
@@ -90,16 +89,6 @@ module.exports = {
         .setLabel(`Report als erledigt markieren`)
         .setStyle(ButtonStyle.Primary)
         .setDisabled(false);
-
-      await interaction.message.edit({
-        components: [
-          new ActionRowBuilder().addComponents([
-            buttonUebernahme,
-            buttonBearbeiten,
-            buttonErledigt
-          ])
-        ]
-      });
 
       // CREATE PRIVATE THREAD \\
       const modThreadAreaId = await guildSettings.getGuildSetting(
@@ -124,6 +113,7 @@ module.exports = {
           name: `Report ${reportId}`,
           autoArchiveDuration: 60,
           type: ChannelType.PrivateThread,
+          invitable: false,
           reason: "Thread for moderation"
         });
 
@@ -157,15 +147,33 @@ module.exports = {
             }
           ]);
 
-        await newThread.members.add(interaction.member.id);
-        await newThread.members.add(reportedUserId);
+        try {
+          await newThread.members.add(interaction.member.id);
+        } catch (error) {
+          interaction.editReply({
+            ephemeral: true,
+            content: `❌ Thread konnte nicht erstellt werden! Du kannst die Mod-Area nicht sehen!`
+          });
+          return resolve(null);
+        }
+
+        try {
+          await newThread.members.add(reportedUserId);
+        } catch (error) {
+          interaction.editReply({
+            ephemeral: true,
+            content: `❌ Thread konnte nicht erstellt werden! Der User kann die Mod-Area nicht sehen!`
+          });
+          return resolve(null);
+        }
+
         await newThread.send({ embeds: [reportEmbed] });
         const tagMember = await newThread.send(
-          `${interaction.guild.members.cache.get(reportedUserId)} / ${
-            interaction.member
-          }`
+          `${interaction.guild.members.cache.get(
+            reportedUserId
+          )} / ${interaction.member}`
         );
-        setTimeout(function () {
+        setTimeout(function() {
           tagMember.delete();
         }, 100);
 
@@ -180,6 +188,7 @@ module.exports = {
         const newThread = await modThreadArea.threads.create({
           name: `Report ${reportId}`,
           autoArchiveDuration: 60,
+          invitable: false,
           reason: "Thread for moderation"
         });
 
@@ -213,15 +222,33 @@ module.exports = {
             }
           ]);
 
-        await newThread.members.add(interaction.member.id);
-        await newThread.members.add(reportedUserId);
+        try {
+          await newThread.members.add(interaction.member.id);
+        } catch (error) {
+          interaction.editReply({
+            ephemeral: false,
+            content: `✅Thread erstellt\n❌ Du konntest nicht zum Thread hinzugefügt werden, da du die Mod-Area nicht sehen kannst!`
+          });
+        }
+
+        try {
+          await newThread.members.add(reportedUserId);
+        } catch (error) {
+          interaction.editReply({
+            ephemeral: false,
+            content: `✅Thread erstellt\n❌ ${interaction.guild.members.cache.get(
+              reportedUserId
+            )} konnte nicht zum Thread hinzugefügt werden, da er die Mod-Area nicht sehen kann!`
+          });
+        }
+
         await newThread.send({ embeds: [reportEmbed] });
         const tagMember = await newThread.send(
-          `${interaction.guild.members.cache.get(reportedUserId)} / ${
-            interaction.member
-          }`
+          `${interaction.guild.members.cache.get(
+            reportedUserId
+          )} / ${interaction.member}`
         );
-        setTimeout(function () {
+        setTimeout(function() {
           tagMember.delete();
         }, 100);
 
@@ -277,6 +304,16 @@ module.exports = {
           .get(reportData.reporterId)
           .send({ embeds: [reportInArbeitEmbed] });
       } catch (error) {}
+
+      await interaction.message.edit({
+        components: [
+          new ActionRowBuilder().addComponents([
+            buttonUebernahme,
+            buttonBearbeiten,
+            buttonErledigt
+          ])
+        ]
+      });
 
       return resolve(null);
     });

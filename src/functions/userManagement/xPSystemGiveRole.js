@@ -8,6 +8,10 @@ async function autoUserRoles(guild, member, oldLevel) {
       return resolve(null);
     }
 
+    if (!member){
+      return resolve(null);
+    }
+
     let levelSettings = await levelsRepository.getlevelSettings(guild);
 
     if (levelSettings == null) {
@@ -179,7 +183,7 @@ async function autoUserRoles(guild, member, oldLevel) {
 
           await guild.client.channels.cache
             .get(rankChannel)
-            .send({ embeds: [embedBefoerderung] })
+            .send({embeds: [embedBefoerderung] })
             .catch(console.error);
 
           const pingMember = await guild.client.channels.cache

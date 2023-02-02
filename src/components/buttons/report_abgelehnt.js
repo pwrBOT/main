@@ -101,11 +101,6 @@ module.exports = {
               reportData.reportedMemberId
             )}`,
             inline: true
-          },
-          {
-            name: `Bearbeitender Moderator:`,
-            value: `${interaction.member}`,
-            inline: true
           }
         ]);
 

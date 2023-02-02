@@ -3,18 +3,20 @@ const {
   ModalBuilder,
   TextInputBuilder,
   TextInputStyle,
-  ActionRowBuilder,
+  ActionRowBuilder
 } = require("discord.js");
 
+const guildSettings = require("../../mysql/guildsRepository");
 
 module.exports = {
   name: "report",
   category: "moderation",
-  description: "User können andere User melden. Nachricht kommt in den Bot-Log Channel, sofern definiert --> Bot Setup ",
+  description:
+    "User können andere User melden. Nachricht kommt in den Bot-Log Channel, sofern definiert --> Bot Setup ",
   data: new SlashCommandBuilder()
     .setName(`report`)
     .setDescription(`User melden!`)
-    .addUserOption((option) =>
+    .addUserOption(option =>
       option
         .setName("user")
         .setDescription("User der gemeldet werden soll")
@@ -22,43 +24,76 @@ module.exports = {
     ),
 
   async execute(interaction, client) {
-    const { options } = interaction;
-    const member = options.getMember("user");
+    return new Promise(async resolve => {
+      const { options } = interaction;
+      const member = options.getMember("user");
 
-    const modal = new ModalBuilder()
-      .setCustomId("userReport")
-      .setTitle(`User ${member.user.tag} melden!`);
+      if (!member) {
+        interaction.reply({ content: "❌ Der User ist nicht mehr auf dem Server ❌", ephemeral: true });
+        return resolve(null);
+      }
 
-    const textInput = new TextInputBuilder()
-      .setCustomId("reportUserInput")
-      .setLabel("Warum möchtest du den User melden?")
-      .setRequired(true)
-      .setStyle(TextInputStyle.Paragraph);
+      if (interaction.guild.ownerId === member.id) {
+        interaction.reply({ content: "❌ Du kannst den Serverinhaber nicht reporten! ❌", ephemeral: true });
+        return resolve(null);
+      }
 
-    const reportedUserInput = new TextInputBuilder()
-      .setCustomId("reportedUserInput")
-      .setLabel("User der gemeldet wird:")
-      .setValue(`${member.user.tag}`)
-      .setRequired(true)
-      .setStyle(TextInputStyle.Short);
+      const teamRoleId = await guildSettings.getGuildSetting(
+        interaction.guild,
+        "teamRole"
+      );
+
+      if (member.roles.cache.has(teamRoleId.value)) {
+        interaction.reply({ content: "❌ Du kannst niemanden aus dem Team reporten! ❌", ephemeral: true });
+        return resolve(null);
+      }
+
+      if (member.id === client.user.id) {
+        interaction.reply({ content: '❌ Du kannst den Bot nicht reporten! ❌', ephemeral: true })
+        return resolve(null);
+      }
+
+      const modal = new ModalBuilder()
+        .setCustomId("userReport")
+        .setTitle(`User ${member.user.tag} melden!`);
+
+      const textInput = new TextInputBuilder()
+        .setCustomId("reportUserInput")
+        .setLabel("Warum möchtest du den User melden?")
+        .setRequired(true)
+        .setStyle(TextInputStyle.Paragraph);
+
+      const reportedUserInput = new TextInputBuilder()
+        .setCustomId("reportedUserInput")
+        .setLabel("User der gemeldet wird:")
+        .setValue(`${member.user.tag}`)
+        .setRequired(true)
+        .setStyle(TextInputStyle.Short);
 
       const reportedUserId = new TextInputBuilder()
-      .setCustomId("reportedUserId")
-      .setLabel("ID des Users der gemeldet wird:")
-      .setValue(`${member.user.id}`)
-      .setRequired(true)
-      .setStyle(TextInputStyle.Short);
+        .setCustomId("reportedUserId")
+        .setLabel("ID des Users der gemeldet wird:")
+        .setValue(`${member.user.id}`)
+        .setRequired(true)
+        .setStyle(TextInputStyle.Short);
 
-    modal.addComponents(
-      new ActionRowBuilder().addComponents(textInput),
-      new ActionRowBuilder().addComponents(reportedUserInput),
-      new ActionRowBuilder().addComponents(reportedUserId)
-    );
+      modal.addComponents(
+        new ActionRowBuilder().addComponents(textInput),
+        new ActionRowBuilder().addComponents(reportedUserInput),
+        new ActionRowBuilder().addComponents(reportedUserId)
+      );
 
-    const commandLogRepository = require("../../mysql/commandLogRepository");
-                                          // guild - command, user, affectedMember, reason
-    await commandLogRepository.logCommandUse(interaction.guild, "report/slashcommand", interaction.user, "-", "-")
+      const commandLogRepository = require("../../mysql/commandLogRepository");
+      // guild - command, user, affectedMember, reason
+      await commandLogRepository.logCommandUse(
+        interaction.guild,
+        "report/slashcommand",
+        interaction.user,
+        "-",
+        "-"
+      );
 
-    await interaction.showModal(modal);
-  },
+      await interaction.showModal(modal);
+    });
+  }
 };

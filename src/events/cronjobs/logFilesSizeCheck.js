@@ -13,19 +13,19 @@ const init = async () => {
     console.log("#########################################################");
     console.log("\x1b[0m");
 
-    for (const logingFile of loggingFiles) {
-      var messageDeleteStats = fs.statSync(`./logging/${logingFile}`);
+    for (const loggingFile of loggingFiles) {
+      var messageDeleteStats = fs.statSync(`./logging/${loggingFile}`);
       var messageDeleteSize = messageDeleteStats.size / (1024 * 1000);
 
       if (messageDeleteSize < 10) {
       console.log(
-        `\x1b[36m${logingFile}: \x1b[32m${messageDeleteSize.toFixed(3)} MB\x1b[0m`
+        `\x1b[36m${loggingFile}: \x1b[32m${messageDeleteSize.toFixed(3)} MB\x1b[0m`
       );
     }
 
       if (messageDeleteSize >= 10) {
         console.log(
-          `\x1b[31m ${logingFile} hat die 10 MB Grenze überschritten!\x1b[0m`
+          `\x1b[31m ${loggingFile} hat die 10 MB Grenze überschritten!\x1b[0m`
         );
       }
     }

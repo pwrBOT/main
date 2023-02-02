@@ -1,4 +1,5 @@
 const mysqlHelper = require("./mysqlHelper");
+const guildRepoMap = new Map();
 
 const getGuildSetting = async (guild, property) => {
   return new Promise((resolve) => {
@@ -23,7 +24,6 @@ const getGuildSettings = async (guild) => {
         "SELECT * FROM powerbot_guildsettings WHERE guildId = ?",
         [guild.id])
         .then((result) => {
-          // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
           resolve(result ?? null);
         })
       .catch(() => {

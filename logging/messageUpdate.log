@@ -1,0 +1,252 @@
+2023.01.31, 19:40:47 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070066106150170747) von Dannyy (539513467313455105) in bot-log bearbeitet!
+----> Alte Nachricht: .
+----->Neue Nachricht: .ä
+
+2023.01.31, 19:40:57 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070066106150170747) von Dannyy (539513467313455105) in bot-log bearbeitet!
+----> Alte Nachricht: .ä
+----->Neue Nachricht: .älöö
+
+2023.01.31, 19:48:02 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070067705379565599) von Toppijer (724344760969592923) in spielersuche bearbeitet!
+----> Alte Nachricht: 2 Person
+----->Neue Nachricht: 1 Person
+
+2023.01.31, 19:57:16 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070070246234406912) von _Leo (609057609953312789) in BST bearbeitet!
+----> Alte Nachricht: BMA lichter
+----->Neue Nachricht: BMA lichter gehen nicht
+
+2023.01.31, 20:30:59 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070077755489788017) von Ruhrpott Gaming TV (596414571636588544) in spielersuche bearbeitet!
+----> Alte Nachricht: wir suchen noch 1 kompetente Leute für eine Runde https://discord.gg/rz7V8Zcv
+----->Neue Nachricht: wir suchen noch 1 kompetenten Spieler für eine Runde https://discord.gg/rz7V8Zcv
+
+2023.01.31, 22:36:13 UTC -> GUILD: PowerBot (994975619521712219) | Nachricht (ID: 1070110255649914881) von Dannyy (539513467313455105) in error-logs bearbeitet!
+----> Alte Nachricht: BETA 31.01.2023, 23:26:03
+- LDS WIP (Wälder komplett umgebaut, Gebiete im Nord Westen komplett umgebaut)
+- LDS Neues Modell für Wache 2 (WIP Fahrzeug Plazierung)
+- LNZ Fuhrpark überarbeitet (Sosi Anpassungen)
+- Neue Objekte fürs Modular Event: ContaminationEventComponent 
+- BST Diverse Fixes
+- BST Neue Helibase
+- BST Neue Polizei Skins Wache 4
+- Neue BST Helibase
+- BST Änderungen am Event Pool
+- LDS Blocker Überarbeitung
+- LDS Reduzieren der Anfahrtszeit von Externen Einheiten
+- LDS Verbesserungen für verschiedenen Wachen
+- LDS FireMaterial-Umstellungen
+- LDS 12 Skin Updates
+- LDS Neue Wache für die Werkfeuerwehr
+- Umbau Sirenen Blocker am Krankenhaus
+- Neue WLF AB Images
+- Saugschlauch in Wachen sollte nun beim Client gesynct sein, Audio sollte keine Aussetzer mehr haben
+- Mod Version wird nun im Hauptmenü angezeigt
+- LDS GTLF Wasserwerfer Wassertank fix
+- Anzahl der Zelte vom AB-MANV und GW-SAN können nun am Fahrzeug konfiguriert werden (Editor)
+- ExitTentCommand zum Aussteigen aus Sani Zelt im MP erstellt, Client sollte nun auch die Personen aussteigen lassen können
+- Hotkeys freien nicht mehr sobald ein Modal offen ist (Wenn man z.B. im Rescue Track das f drückt, öffnet sich nicht mehr das Alarmmenü)
+- Einsatzstelle erstellen überarbeitet (Texte, Audio)
+- Einsatz Mord, Bestatter wird automatisch alarmiert und Person (Tot) muss aus Haus geborgen werden
+- Anpassungen am Eventpool
+- Neue Tags für alle Fahrzeuge inkl. anderer Fahrzeugauswahl Logik im Alarmmenü (Stichwörter, Schnellauswahl)
+- Neues Icon für Hydranten auf dem Boden (Info Icon, Hydranten zu weit von Fahrzeug entfernt)
+- Neuer Command für RTWs, Fahrt ins HQ mit SOSI, durch SHIFT + E fährt der RTW immer mit SOSI zum Krankenhaus (z.B. auch bei gebrochenem Arm)
+- Contamination Event für Modular Event
+
+LDS ist aktuell sehr viel WIP
+
+Bitte mal auf die Event Pools der Karte achten, vor allem wie ausgeglichen diese sind. Vor allem bei BST sollte dies nun angenehmer sein
+----->Neue Nachricht: BETA 31.01.2023, 23:26:03
+- LDS WIP (Wälder komplett umgebaut, Gebiete im Nord Westen komplett umgebaut)
+- LDS Neues Modell für Wache 2 (WIP Fahrzeug Plazierung)
+- LNZ Fuhrpark überarbeitet (Sosi Anpassungen)
+- Neue Objekte fürs Modular Event: ContaminationEventComponent 
+- BST Diverse Fixes
+- BST Neue Helibase
+- BST Neue Polizei Skins Wache 4
+- Neue BST Helibase
+- BST Änderungen am Event Pool
+- LDS Blocker Überarbeitung
+- LDS Reduzieren der Anfahrtszeit von Externen Einheiten
+- LDS Verbesserungen für verschiedenen Wachen
+- LDS FireMaterial-Umstellungen
+- LDS 12 Skin Updates
+- LDS Neue Wache für die Werkfeuerwehr
+- Umbau Sirenen Blocker am Krankenhaus
+- Neue WLF AB Images
+- Saugschlauch in Wachen sollte nun beim Client gesynct sein, Audio sollte keine Aussetzer mehr haben
+- Mod Version wird nun im Hauptmenü angezeigt
+- LDS GTLF Wasserwerfer Wassertank fix
+- Anzahl der Zelte vom AB-MANV und GW-SAN können nun am Fahrzeug konfiguriert werden (Editor)
+- ExitTentCommand zum Aussteigen aus Sani Zelt im MP erstellt, Client sollte nun auch die Personen aussteigen lassen können
+- Hotkeys freien nicht mehr sobald ein Modal offen ist (Wenn man z.B. im Rescue Track das f drückt, öffnet sich nicht mehr das Alarmmenü)
+- Einsatzstelle erstellen überarbeitet (Texte, Audio)
+- Einsatz Mord, Bestatter wird automatisch alarmiert und Person (Tot) muss aus Haus geborgen werden
+- Anpassungen am Eventpool
+- Neue Tags für alle Fahrzeuge inkl. anderer Fahrzeugauswahl Logik im Alarmmenü (Stichwörter, Schnellauswahl)
+- Neues Icon für Hydranten auf dem Boden (Info Icon, Hydranten zu weit von Fahrzeug entfernt)
+- Neuer Command für RTWs, Fahrt ins HQ mit SOSI, durch SHIFT + E fährt der RTW immer mit SOSI zum Krankenhaus (z.B. auch bei gebrochenem Arm)
+- Contamination Event für Modular Event
+
+LDS ist aktuell sehr viel WIP
+
+Bitte mal auf die Event Pools der Karte achten, vor allem wie ausgeglichen diese sind. Vor allem bei BST sollte dies nun angenehmer sein j
+
+2023.02.01, 17:43:18 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070398838101262346) von silverneon. ღ (718550037017264179) in modding-talk bearbeitet!
+----> Alte Nachricht: Guten Abend zusammen, ich habe eine kurze Frage...
+Gibt es die Möglichkeit in irgendeiner Config einzustellen das mehr Einsatzfahrzeuge existieren? (Werte ändern)
+Also Beispielsweise von einem Wasserwerfer auf 3 oder 4 erweitern?
+-----> Neue Nachricht: Guten Abend zusammen, ich habe eine kurze Frage...
+Gibt es die Möglichkeit in irgendeiner Config einzustellen, das mehr Einsatzfahrzeuge existieren? (Werte ändern)
+Also Beispielsweise von einem Wasserwerfer auf 3 oder 4 erweitern?
+
+2023.02.01, 18:30:47 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070410890039541780) von MCBlatt (206759835683913728) in 💬︱gaming-talk bearbeitet!
+----> Alte Nachricht: wenn wir dann eine runde spielen schreib ich dir =)+
+-----> Neue Nachricht: wenn wir dann eine runde spielen schreib ich dir 🙂
+
+2023.02.01, 19:20:26 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070422929940164750) von Yannik-kill (295529433089966091) in spielersuche bearbeitet!
+----> Alte Nachricht: suchen noch 3 leute
+-----> Neue Nachricht: suchen noch 1
+
+2023.02.01, 19:23:31 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070422929940164750) von Yannik-kill (295529433089966091) in spielersuche bearbeitet!
+----> Alte Nachricht: suchen noch 1
+-----> Neue Nachricht: suchen noch 100
+
+2023.02.01, 19:34:06 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070426714796204072) von SimuTools (399602935937368065) in spielersuche bearbeitet!
+----> Alte Nachricht: 99 Leitstellen und 1 Spieler xD
+-----> Neue Nachricht: 99 Leitstellen und 1 Spieler 😄
+
+2023.02.01, 19:56:13 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070432340683280466) von Semantikk (269897560309628928) in off-topic bearbeitet!
+----> Alte Nachricht: also ich aktiviere mal mein VPN und sage bs           .to
+-----> Neue Nachricht: also ich aktiviere mal mein VPN und sage bs||.to||
+
+2023.02.01, 19:56:37 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070432402876412025) von Offizieller_Mo (552621482123984917) in Report 0141e0 bearbeitet!
+----> Alte Nachricht: Also er hat die ganze zeit so dumme sprüche über mich fallen lassen wie, Immerhin kann ich was in gegen satz zu dir, ja die meisten Nehemen dies als Spaß aber wenn ich 10 sage das es reicht und er weiter macht sehe ich kein Spaß mehr da hinter
+-----> Neue Nachricht: Also er hat die ganze zeit so dumme sprüche über mich fallen lassen wie, Immerhin kann ich was in gegen satz zu dir, ja die meisten Nehemen dies als Spaß aber wenn ich 10x sage das es reicht und er weiter macht sehe ich kein Spaß mehr da hinter
+
+2023.02.01, 20:55:11 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070447236435169412) von Dannyy (539513467313455105) in 🎫︱lds-support bearbeitet!
+----> Alte Nachricht: https://emergency-luedenscheid.de/wiki/entry/66-mod-does-not-start-error-after-installation/
+-----> Neue Nachricht: https://emergency-luedenscheid.de/wiki/entry/66-mod-does-not-start-error-after-installation/
+
+2023.02.01, 21:33:21 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070456572456734870) von KillerConsti (340398781524738048) in modding-talk bearbeitet!
+----> Alte Nachricht: Im Basisspiel schon. In Lüdenscheid ist das schwierig, weil du kopien vom Fahrzeug machen musst... ist kompliziert
+-----> Neue Nachricht: Im Basisspiel schon. In Lüdenscheid ist das schwierig, weil du kopien vom Fahrzeug machen musst...das geht halt nicht über eine config Datei
+
+2023.02.02, 04:43:43 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070564546319757422) von JohnGamingTV_YT (299197763051192332) in einsätze bearbeitet!
+----> Alte Nachricht: Morgen
+-----> Neue Nachricht: Morgen (bissl zu spät gemerkt das falscher channel)
+
+2023.02.02, 06:58:13 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070599002040569878) von JohnGamingTV_YT (299197763051192332) in off-topic bearbeitet!
+----> Alte Nachricht: https://vm.tiktok.com/ZMYFQCxbt/
+
+F3Y Lagerhalle
+-----> Neue Nachricht: https://vm.tiktok.com/ZMYFQCxbt/
+
+F3Y Lagerhalle
+
+2023.02.02, 07:40:53 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070609611759034459) von Py291ro (463671024538353664) in einsätze bearbeitet!
+----> Alte Nachricht: Einsatzstichwort von heute Morgen:
+TH Y, Person klemmt in Bett
+
+Info über Funk von der FRL:
+Deckeneinsturz im Gebäude
+
+Lage bei Ankunft:
+Verwirrte Person am Boden im Flur. Bildete sich herabgestürzte Teilen ein.
+
+
+Und das alles um 5:30 Uhr 😮‍💨
+-----> Neue Nachricht: Einsatzstichwort von heute Morgen:
+TH Y, Person klemmt in Bett
+
+Info über Funk von der FRL:
+Deckeneinsturz im Gebäude
+
+Lage bei Ankunft:
+Türöffnung
+Verwirrte Person am Boden im Flur. Bildete sich herabgestürzte Teilen ein.
+
+
+Und das alles um 5:30 Uhr 😮‍💨
+
+2023.02.02, 12:11:13 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070677753566863420) von DasDingsBums (636908431156183041) in spielersuche bearbeitet!
+----> Alte Nachricht: suchen noch eine
+-----> Neue Nachricht: suchen noch einen
+
+2023.02.02, 12:12:12 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070678004629512262) von Dannyy (539513467313455105) in Entwickler-Blog bearbeitet!
+----> Alte Nachricht: Deckt sich alles so ziemlich. 
+
+Ich würde die neuen Wachen noch mit reingeben. Hier hat sich ja gerade bei LDS viel getan.
+Dann würde ich mal grob informieren, dass wir bald wieder mal streamen.
+
+Was jetzt auch bald vor der Türe steht: Early Access. Wie gehen wir damit um? Ich würde 20 Leuten Zugriff geben. Die Leute würde ich manuell auswählen. Auf jeden Fall keine Bewerbung. Das bringt nichts.
+-----> Neue Nachricht: Deckt sich alles so ziemlich. 
+
+Ich würde die neuen Wachen noch mit reingeben. Hier hat sich ja gerade bei LDS viel getan.
+
+Dann würde ich mal grob informieren, dass wir bald wieder mal streamen.
+
+Was jetzt auch bald vor der Türe steht: Early Access. Wie gehen wir damit um? Ich würde 20 Leuten Zugriff geben. Die Leute würde ich manuell auswählen. Auf jeden Fall keine Bewerbung. Das bringt nichts.
+
+2023.02.02, 12:12:23 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070678004629512262) von Dannyy (539513467313455105) in Entwickler-Blog bearbeitet!
+----> Alte Nachricht: Deckt sich alles so ziemlich. 
+
+Ich würde die neuen Wachen noch mit reingeben. Hier hat sich ja gerade bei LDS viel getan.
+
+Dann würde ich mal grob informieren, dass wir bald wieder mal streamen.
+
+Was jetzt auch bald vor der Türe steht: Early Access. Wie gehen wir damit um? Ich würde 20 Leuten Zugriff geben. Die Leute würde ich manuell auswählen. Auf jeden Fall keine Bewerbung. Das bringt nichts.
+-----> Neue Nachricht: Deckt sich alles so ziemlich. 
+
+Ich würde die neuen Wachen noch mit reingeben. Hier hat sich ja gerade bei LDS viel getan.
+
+Dann würde ich mal grob informieren, dass wir in Kürze wieder mal streamen.
+
+Was jetzt auch bald vor der Türe steht: Early Access. Wie gehen wir damit um? Ich würde 20 Leuten Zugriff geben. Die Leute würde ich manuell auswählen. Auf jeden Fall keine Bewerbung. Das bringt nichts.
+
+2023.02.02, 12:14:26 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070678004629512262) von Dannyy (539513467313455105) in Entwickler-Blog bearbeitet!
+----> Alte Nachricht: Deckt sich alles so ziemlich. 
+
+Ich würde die neuen Wachen noch mit reingeben. Hier hat sich ja gerade bei LDS viel getan.
+
+Dann würde ich mal grob informieren, dass wir in Kürze wieder mal streamen.
+
+Was jetzt auch bald vor der Türe steht: Early Access. Wie gehen wir damit um? Ich würde 20 Leuten Zugriff geben. Die Leute würde ich manuell auswählen. Auf jeden Fall keine Bewerbung. Das bringt nichts.
+-----> Neue Nachricht: Deckt sich alles so ziemlich. 
+
+Ich würde die neuen Wachen noch mit reingeben. Hier hat sich ja gerade bei LDS viel getan.
+
+Dann würde ich mal grob informieren, dass wir in Kürze wieder mal streamen.
+
+Was jetzt auch bald vor der Türe steht: Early Access. Wie gehen wir damit um? Ich würde 20 Leuten Zugriff geben. Die Leute würde ich manuell auswählen. Auf jeden Fall keine Bewerbung. Das brachte bisher nichts und würde auch so nichts bringen.
+
+2023.02.02, 12:18:58 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070679606186754150) von Dannyy (539513467313455105) in Entwickler-Blog bearbeitet!
+----> Alte Nachricht: ...
+-----> Neue Nachricht: ....
+
+2023.02.02, 12:19:16 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070679792015392778) von Dannyy (539513467313455105) in Entwickler-Blog bearbeitet!
+----> Alte Nachricht: .
+-----> Neue Nachricht: ..
+
+2023.02.02, 12:20:08 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070679792015392778) von Dannyy (539513467313455105) in Entwickler-Blog bearbeitet!
+----> Alte Nachricht: ...
+-----> Neue Nachricht: ....
+
+2023.02.02, 12:20:14 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070680032965562388) von Dannyy (539513467313455105) in Entwickler-Blog bearbeitet!
+----> Alte Nachricht: .
+-----> Neue Nachricht: ..
+
+2023.02.02, 12:22:05 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070680501062488095) von Dannyy (539513467313455105) in Entwickler-Blog bearbeitet!
+----> Alte Nachricht: .
+-----> Neue Nachricht: ..
+
+2023.02.02, 13:41:16 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070700432516710470) von omblitz (647858601075015690) in 🚒 Einsatz #Peanut bearbeitet!
+----> Alte Nachricht: https://vm.tiktok.com/ZMYFVtdNE/
+-----> Neue Nachricht: https://vm.tiktok.com/ZMYFVtdNE/
+
+2023.02.02, 16:57:18 UTC -> GUILD: Emergency Lüdenscheid (396282694906150913) | Nachricht (ID: 1070749763110178906) von _Leo (609057609953312789) in 🎫︱em-support bearbeitet!
+----> Alte Nachricht: https://emergency-forum.de/filebase/index.php?filebase/429-modifikationen/
+-----> Neue Nachricht: https://emergency-forum.de/filebase/index.php?filebase/429-modifikationen/
+
+2023.02.02, 17:23:51 UTC -> GUILD: PowerBot (994975619521712219) | Nachricht (ID: 1070756436767932527) von Dannyy (539513467313455105) in mod-log bearbeitet!
+----> Alte Nachricht: .
+-----> Neue Nachricht: .g
+

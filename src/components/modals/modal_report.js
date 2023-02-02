@@ -6,7 +6,7 @@ const {
   PermissionFlagsBits
 } = require("discord.js");
 const guildsRepository = require("../../mysql/guildsRepository");
-const { Generator } = require("randomly-id-generator");
+var crypto = require("crypto");
 
 module.exports = {
   data: {
@@ -23,11 +23,11 @@ module.exports = {
         "reportedUserInput"
       );
       const memberId = interaction.fields.getTextInputValue("reportedUserId");
-      const member = client.users.cache.get(memberId);
+      const member = await interaction.guild.members.fetch(memberId)
       const reporterId = interaction.member.id;
       const reporter = interaction.member;
       const reason = interaction.fields.getTextInputValue("reportUserInput");
-      const reportId = new Generator().generate();
+      const reportId = crypto.randomBytes(3).toString('hex');
 
       const reportRepository = require("../../mysql/reportRepository");
       const reportData = await reportRepository.addReport(
@@ -102,7 +102,7 @@ module.exports = {
             },
             {
               name: `Bisherige Reports:`,
-              value: `${member.username} wurde bisher\n${allUserReportsCount} mal gemeldet.`,
+              value: `${member.displayName} wurde bisher\n${allUserReportsCount} mal gemeldet.`,
               inline: true
             },
             {

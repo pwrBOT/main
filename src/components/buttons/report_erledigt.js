@@ -1,4 +1,4 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ThreadAutoArchiveDuration } = require("discord.js");
 module.exports = {
   data: {
     name: `report_erledigt`,
@@ -124,8 +124,17 @@ module.exports = {
         });
         return resolve(null);
       }
-      await thread.setLocked(true); // locked
-      await thread.setArchived(true); // archived
+
+      if (thread.archived === true) {
+        await interaction.editReply({
+          ephemeral: true,
+          content: `✅ Du hast den Report erfolgreich erledigt!`,
+        });
+        return resolve(null);
+      }
+
+      await thread.send({ content: `✅ Der Report wurde von ${interaction.member} als erledigt markiert! Der Thread wird in 24 Stunden archiviert.` });
+      await thread.setAutoArchiveDuration(ThreadAutoArchiveDuration.OneDay)
       await interaction.editReply({
         ephemeral: true,
         content: `✅ Du hast den Report erfolgreich erledigt!`,

@@ -32,6 +32,21 @@ module.exports = {
           .id}) bei Guild: ${guildId} erfolgreich angelegt!`;
         loggingHandler.log(logText2, "memberAdd");
 
+        // ########################## Give Community Role if exist ########################## \\
+        const communityroleId = await guildsRepository.getGuildSetting(
+          member.guild,
+          "communityrole"
+        );
+
+        const communityrole = await member.guild.roles.cache.get(
+          communityroleId
+        );
+
+        if (communityrole) {
+          console.log(`Auto-Role | ${communityrole} bei ${member} hinzugefügt`);
+          await member.roles.add(communityrole).catch(error);
+        }
+
         // ########################## USER COUNT SPECIAL MESSAGE (EVERY 1000 MEMBERS) ########################## \\
         let nextUserCountSpecialValue = "";
         let insertOrUpdate = "";

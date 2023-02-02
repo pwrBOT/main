@@ -1,7 +1,7 @@
 const { EmbedBuilder, ActivityType } = require("discord.js");
 const config = require(`../../../config.json`);
 const chalk = require("chalk");
-const dashboard = require("../../functions/dashboard/dashboard")
+const dashboard = require("../../functions/dashboard/dashboard");
 
 module.exports = {
   name: "ready",
@@ -134,7 +134,7 @@ module.exports = {
       });
       //// ##################### TABLE CHECK END ##################### \\\\
 
-      await dashboard.init(client)
+      await dashboard.init(client);
 
       setTimeout(function() {
         console.log(

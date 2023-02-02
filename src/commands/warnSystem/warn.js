@@ -93,6 +93,24 @@ module.exports = {
           }
         ]);
 
+        const warnembedChannel = new EmbedBuilder()
+        .setTitle(`⚡️ Warning-System ⚡️`)
+        .setDescription(`User: ${member} wurde verwarnt`)
+        .setColor(0x51ff00)
+        .setTimestamp(Date.now())
+        .setThumbnail(member.displayAvatarURL())
+        .setFooter({
+          iconURL: client.user.displayAvatarURL(),
+          text: `powered by Powerbot`
+        })
+        .addFields([
+          {
+            name: `Grund:`,
+            value: `${reason}`,
+            inline: true
+          }
+        ]);
+
       const warnembedmember = new EmbedBuilder()
         .setTitle(`⚡️ Warning-System ⚡️`)
         .setDescription(`Du wurdest soeben verwarnt!\nServer: ${servername}`)
@@ -116,7 +134,7 @@ module.exports = {
           }
         ]);
 
-      await interaction.editReply({ embeds: [warnembed] });
+      await interaction.editReply({ embeds: [warnembedChannel] });
 
       const logChannel = require("../../mysql/loggingChannelsRepository");
       const modLogMessage = await logChannel.logChannel(

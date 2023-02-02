@@ -11,6 +11,8 @@ const autoDeleteChannel = require("./src/events/cronjobs/autoDeleteChannel");
 const autoDeleteWarns = require("./src/events/cronjobs/autoDeleteWarns");
 const logFilesSizeCheck = require("./src/events/cronjobs/logFilesSizeCheck");
 const eventCheck = require("./src/events/cronjobs/eventCheck");
+const DLU = require("@dbd-soft-ui/logs");
+const DSU = require("@dbd-soft-ui/shards");
 
 // Discord Bot SetUp
 const TOKEN = config.powerbot_token;
@@ -86,6 +88,19 @@ client.on("ready", async () => {
   autoDeleteWarns.init(client);
   logFilesSizeCheck.init(client);
   eventCheck.init(client);
+
+  // Dashboard Logging
+  DLU.register(client, {
+    dashboard_url: "https://dashboard.pwr.lol/",
+    key: "34geJ6!aaASD12908!"
+  });
+});
+
+process.on("unhandledRejection", (reason, p) => {
+  DLU.send(client, {
+    title: "Unhandled Rejection",
+    description: reason
+  });
 });
 
 // Discord Together

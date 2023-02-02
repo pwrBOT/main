@@ -32,15 +32,19 @@ module.exports = {
 
           if (tempChannelToDelete) {
             if (tempChannelToDelete.members.size === 0) {
-              tempChannelToDelete
-                .delete("del temp channel")
-                .catch(console.error);
+              try {
+                setTimeout(async function() {
+                  tempChannelToDelete
+                    .delete("del temp channel")
+                    .catch(console.error);
 
-              await tempChannelsRepository.deleteTempVoiceChannel(
-                oldState.guild.id,
-                oldChannelId,
-                "temp"
-              );
+                  await tempChannelsRepository.deleteTempVoiceChannel(
+                    oldState.guild.id,
+                    oldChannelId,
+                    "temp"
+                  );
+                }, 2000);
+              } catch (error) {}
             }
           }
         }

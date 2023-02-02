@@ -135,16 +135,38 @@ module.exports = {
           let XP = 0;
 
           let oldChannel = "";
+          let parentChannelId = "";
+          let faktor = "";
+
           if (oldState) {
             oldChannel = await client.channels.cache.get(oldChannelId);
+            try {
+              parentChannelId = oldChannel.parentId;
+            } catch (error) {}
           } else {
             oldChannel = await client.channels.cache.get(newChannelId);
+            try {
+              parentChannelId = oldChannel.parentId;
+            } catch (error) {}
           }
-          if (channelXpBoostIds.includes(oldChannel.parentId)) {
-            if (minutesInChannel * 2 >= 400) {
-              XP = 400;
+
+          if (parentChannelId) {
+            if (channelXpBoostIds.includes(oldChannel.parentId)) {
+              if (minutesInChannel * 2 >= 400) {
+                XP = 400;
+              } else {
+                XP = minutesInChannel * 2;
+              }
+
+              faktor = "x2"
             } else {
-              XP = minutesInChannel * 2;
+              if (minutesInChannel * 1 >= 200) {
+                XP = 200;
+              } else {
+                XP = minutesInChannel * 1;
+              }
+
+              faktor = "x1"
             }
           } else {
             if (minutesInChannel * 1 >= 200) {
@@ -152,6 +174,8 @@ module.exports = {
             } else {
               XP = minutesInChannel * 1;
             }
+
+            faktor = "x1"
           }
 
           let newXP = currentXP + XP;
@@ -196,7 +220,7 @@ module.exports = {
 
           const loggingHandler = require("../../functions/fileLogging/loggingHandler");
           const logText = `GUILD: ${member.guild
-            .id} | #VOICE XP --> USER: ${member.displayName} (ID: ${member.id}) XP: ${currentXP} + ${XP} = ${newXP} | Zeit im Channel: ${minutesInChannel} | Total: ${newMinutesInChannel}`;
+            .id} | #VOICE XP --> USER: ${member.displayName} (ID: ${member.id}) XP: ${currentXP} + ${XP} (${faktor}) = ${newXP} | Zeit im Channel: ${minutesInChannel} | Total: ${newMinutesInChannel}`;
           loggingHandler.log(logText, "xP_logging");
         }
       }

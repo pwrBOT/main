@@ -66,13 +66,16 @@ module.exports = {
           iconURL: `${guild.iconURL()}`
         })
         .setTitle(titel)
-        .setDescription(text.replaceAll("$n", "\n"))
         .setColor(0x0068f7)
         .setTimestamp(Date.now());
 
       if (titelbild) {
         const titelbildLink = titelbild.url;
         announcement.setImage(titelbildLink);
+      }
+
+      if (text) {
+        announcement.setDescription(text.replaceAll("$n", "\n"))
       }
 
       if (erwaehnung == "yes") {
