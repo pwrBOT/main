@@ -91,12 +91,12 @@ const init = async client => {
               category: "Welcome to PowerBot",
               title:
                 "PowerBot - Hol dir die ultimative Power für deinen Discord Server",
-              description: "",
+              description: `Wir befinden uns derzeit noch in der Entwicklung, weshalb der Bot nicht allgemein Verfügbar ist.\n\nDu möchtest den Bot testen? Melde dich bei uns!`,
               image: "https://pwr.lol/img/bot_logo_wide.png",
               link: {
-                text: "Support Server",
+                text: ">>> ZUM POWER BOT DISCORD SERVER",
                 enabled: true,
-                url: "https://discord.gg/yYq4UgRRzz"
+                url: "https://discord.pwr.lol"
               }
             },
             feedsTitle: "Feeds",
@@ -162,12 +162,13 @@ const init = async client => {
               spinner: true,
               text: "Power wird geladen..."
             },
+            /** 
             premium: {
               title: "Du möchtest Premium-Power?",
               description:
                 "Schau dir unsere Angebote an und hol dir die ultimative Power.",
               buttonText: "Premium holen"
-            },
+            },*/
             settings: {
               title: "Einstellungen",
               description: "Ansichtsoptionen",
@@ -221,6 +222,7 @@ const init = async client => {
       websiteName: "PowerBot",
       colorScheme: "yellow",
       supporteMail: "power@pwr.lol",
+      /** 
       premium: {
         enabled: false,
         card: {
@@ -234,7 +236,7 @@ const init = async client => {
             url: "https://pwr.lol"
           }
         }
-      },
+      },*/
       icons: {
         favicon: "https://pwr.lol/img/bot_logo_discord.png",
         noGuildIcon: "https://pwr.lol/img/bot_logo_discord.png",
