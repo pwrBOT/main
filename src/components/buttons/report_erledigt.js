@@ -64,20 +64,6 @@ module.exports = {
         components: [new ActionRowBuilder().addComponents(buttonErledigt)],
       });
 
-      // LOCK AND ARCHIVE PRIVATE THREAD \\
-      const modThreadAreaId = await guildSettings.getGuildSetting(
-        interaction.guild,
-        "modArea"
-      );
-
-      if (!modThreadAreaId.value) {
-        await interaction.editReply({
-          ephemeral: true,
-          content: `✅ Du hast den Report erfolgreich erledigt!`,
-        });
-        return resolve(null);
-      }
-
       const reportErledigtEmbed = new EmbedBuilder()
         .setTitle(`⚡️ Reporting-System ⚡️`)
         .setDescription(`Hallo ${interaction.guild.members.cache.get(reportData.reporterId)}!\n\nDein Report wurde soeben bearbeitet und abgeschlossen.\nDanke für Deine Meldung!`)
@@ -108,6 +94,28 @@ module.exports = {
       try {
         await interaction.guild.members.cache.get(reportData.reporterId).send({ embeds: [reportErledigtEmbed] });
       } catch (error) {}
+
+      // LOCK AND ARCHIVE PRIVATE THREAD \\
+      const modThreadAreaId = await guildSettings.getGuildSetting(
+        interaction.guild,
+        "modArea"
+      );
+
+      if (modThreadAreaId) {
+        if (!modThreadAreaId.value) {
+          await interaction.editReply({
+            ephemeral: true,
+            content: `✅ Du hast den Report erfolgreich erledigt!`
+          });
+          return resolve(null);
+        }
+      } else {
+        await interaction.editReply({
+          ephemeral: true,
+          content: `✅ Du hast den Report erfolgreich erledigt!`
+        });
+        return resolve(null);
+      }
 
       const modThreadArea = await interaction.guild.channels.cache.get(
         modThreadAreaId.value

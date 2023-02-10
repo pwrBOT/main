@@ -62,66 +62,16 @@ module.exports = {
         "badwords"
       );
 
-      if (!badwords && badwords.value.length === 0) {
-        badwords = [
-          "hure",
-          "hurre",
-          "Analbaron",
-          "Fettsau",
-          "Spast",
-          "Dauerlutscher",
-          "Muschi",
-          "Fotze",
-          "Mongo",
-          "Opfer",
-          "Peniskopf",
-          "Pimmelfresse",
-          "Schlampe",
-          "Slut",
-          "analritter",
-          "arschficker",
-          "arschgeburt",
-          "arschgesicht",
-          "arschloch",
-          "asshole",
-          "motherfucker",
-          "bastard",
-          "biatch",
-          "bimbo",
-          "bitch",
-          "bitches",
-          "cock",
-          "eierlutscher",
-          "ficken",
-          "ficker",
-          "fickfehler",
-          "fickfetzen",
-          "fickfresse",
-          "kanacke",
-          "kanake",
-          "kanaken",
-          "kotgeburt",
-          "mutterficker",
-          "nazi",
-          "nazis",
-          "neger",
-          "nigga",
-          "nigger",
-          "nutte",
-          "nuttensohn",
-          "nuttenstecher",
-          "nuttentochter",
-          "schwuchtel"
-        ];
-      }
+      if (badwords == undefined) {
+      } else {
+        for (const badword of JSON.parse(badwords.value.toLowerCase())) {
+          if (message.content.toLowerCase().includes(badword)) {
+            deleteMessage();
+            userTimeout();
+            autoModWarnMember();
 
-      for (const badword of JSON.parse(badwords.value.toLowerCase())) {
-        if (message.content.toLowerCase().includes(badword)) {
-          deleteMessage();
-          userTimeout();
-          autoModWarnMember();
-
-          return resolve(null);
+            return resolve(null);
+          }
         }
       }
       async function deleteMessage() {
@@ -153,7 +103,8 @@ module.exports = {
         )} / ${new Date().toLocaleTimeString(
           "de-DE"
         )}] AUTO MOD BADWORD | Nachricht (${message.content}) von ${message
-          .member.user.tag} gelöscht. Server: ${message.guild.name} (${message.guild.id}).`;
+          .member.user.tag} gelöscht. Server: ${message.guild.name} (${message
+          .guild.id}).`;
         loggingHandler.log(logText, "autoMod");
       }
 
@@ -352,7 +303,9 @@ module.exports = {
         await logChannel.logChannel(message.guild, "modLog", warnembed);
 
         try {
-          await message.member.send({ embeds: [warnembedmember] });
+          await message.member
+            .send({ embeds: [warnembedmember] })
+            .catch(error => {});
         } catch (error) {}
 
         await warnSystem.warnUser(

@@ -27,14 +27,16 @@ GlobalFonts.registerFromPath(
 //// ##################### REGISTER END ##################### \\\\
 
 const createWelcomeBanner = async (member, welcomeMessage) => {
-  return new Promise(async (resolve) => {
+  return new Promise(async resolve => {
     const welcomeBannerStatus = await guildSettings.getGuildSetting(
       member.guild,
       "welcomeMessageStatus"
     );
 
-    if (welcomeBannerStatus.value !== "1") {
-      return resolve(null);
+    if (welcomeBannerStatus) {
+      if (welcomeBannerStatus.value !== "1") {
+        return resolve(null);
+      }
     }
 
     const av = {
@@ -58,7 +60,7 @@ const createWelcomeBanner = async (member, welcomeMessage) => {
       member.guild,
       "welcomeBannerPictureLink"
     );
-    
+
     if (welcomeImage) {
       if (isImage(welcomeImage.value)) {
         backgroundImg = welcomeImage.value;
@@ -70,7 +72,6 @@ const createWelcomeBanner = async (member, welcomeMessage) => {
       backgroundImg =
         "./src/components/canvas/img/welcome/powerbot_rankcard.jpg";
     }
-
 
     const canvas = Canvas.createCanvas(700, 350);
     const context = canvas.getContext("2d");
@@ -119,7 +120,8 @@ const createWelcomeBanner = async (member, welcomeMessage) => {
 
     context.fillStyle = "#ffffff";
 
-    const memberDisplayName = `${member.user.username}#${member.user.discriminator}`;
+    const memberDisplayName = `${member.user.username}#${member.user
+      .discriminator}`;
 
     context.textAlign = "center";
     context.font = "26px Roboto Light";
@@ -154,19 +156,22 @@ const createWelcomeBanner = async (member, welcomeMessage) => {
     let welcomeChannelMessage = "";
 
     if (!welcomeChannelMessageDB) {
-      welcomeChannelMessage = `Hey ${member} 😎 | Herzlich Willkommen bei **${member.guild.name}**!`;
+      welcomeChannelMessage = `Hey ${member} 😎 | Herzlich Willkommen bei **${member
+        .guild.name}**!`;
     } else {
       welcomeChannelMessage = welcomeChannelMessageDB.value
         .replace("{member}", `${member}`)
         .replace("{servername}", `${member.guild.name}`);
     }
 
-    if (welcomeChannelId.value) {
-      const welcomeChannel = await member.guild.client.channels.cache.get(
-        welcomeChannelId.value
-      );
-      welcomeChannel.send(welcomeChannelMessage);
-      welcomeChannel.send({ files: [attachment] }).catch(console.error);
+    if (welcomeChannelId) {
+      if (welcomeChannelId.value) {
+        const welcomeChannel = await member.guild.client.channels.cache.get(
+          welcomeChannelId.value
+        );
+        welcomeChannel.send(welcomeChannelMessage);
+        welcomeChannel.send({ files: [attachment] }).catch(console.error);
+      }
     }
     return resolve(null);
   });

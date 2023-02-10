@@ -231,7 +231,7 @@ module.exports = {
         } catch (error) {}
 
         try {
-          await member.send({ embeds: [delWarnembedUser] });
+          member.send({ embeds: [delWarnembedUser] }).catch(error => {});
         } catch (error) {}
 
         // ############## LOGGING ############## \\

@@ -11,34 +11,37 @@ module.exports = {
         return resolve(null);
       }
 
+      if (!oldMessage.guild){
+        return resolve(null);
+      }
+
       if (!oldMessage.author || !newMessage.author) {
         return resolve(null);
       } else if (oldMessage.author.bot == true) {
         return resolve(null);
       }
 
-      if (!oldMessage.content || !newMessage.content){
+      if (!oldMessage.content || !newMessage.content) {
         return resolve(null);
       }
 
-      if (oldMessage.content == newMessage.content){
+      if (oldMessage.content == newMessage.content) {
         return resolve(null);
       }
 
       if (oldMessage.guild || newMessage.guild) {
         let ignoredChannels = await guildSettings.getGuildSetting(
-            oldMessage.guild,
+          oldMessage.guild,
           "ignoredChannels"
         );
 
         if (!ignoredChannels) {
         } else {
-          
-          let channelId = ""
+          let channelId = "";
           if (oldMessage.channel.type == 11 || oldMessage.channel.type == 12) {
             channelId = oldMessage.channel.parentId;
           } else {
-            channelId = oldMessage.channelId
+            channelId = oldMessage.channelId;
           }
 
           if (ignoredChannels.value.includes(channelId)) {
@@ -47,7 +50,10 @@ module.exports = {
         }
       }
 
-      if (oldMessage.content.length >= 1024 || newMessage.content.length >= 1024){
+      if (
+        oldMessage.content.length >= 1024 ||
+        newMessage.content.length >= 1024
+      ) {
         const logText = `GUILD: ${oldMessage.guild.name} (${oldMessage.guild
           .id}) | Nachricht (ID: ${oldMessage.id}) von ${oldMessage.author
           .username} (${oldMessage.author.id}) in ${oldMessage.channel
@@ -91,15 +97,21 @@ module.exports = {
           text: `powered by Powerbot`
         });
 
-      const logText = `GUILD: ${oldMessage.guild.name} (${oldMessage.guild
-        .id}) | Nachricht (ID: ${oldMessage.id}) von ${oldMessage.author
-        .username} (${oldMessage.author.id}) in ${oldMessage.channel
-        .name} bearbeitet!\n----> Alte Nachricht: ${oldMessage.content}\n-----> Neue Nachricht: ${newMessage.content}\n`;
-      loggingHandler.log(logText, "messageUpdate");
+      try {
+        const logText = `GUILD: ${oldMessage.guild.name} (${oldMessage.guild
+          .id}) | Nachricht (ID: ${oldMessage.id}) von ${oldMessage.author
+          .username} (${oldMessage.author.id}) in ${oldMessage.channel
+          .name} bearbeitet!\n----> Alte Nachricht: ${oldMessage.content}\n-----> Neue Nachricht: ${newMessage.content}\n`;
+        loggingHandler.log(logText, "messageUpdate");
+      } catch (error) {}
 
       try {
         const logChannel = require("../../mysql/loggingChannelsRepository");
-        await logChannel.logChannel(oldMessage.guild, "botLog", delMessageEmbed);
+        await logChannel.logChannel(
+          oldMessage.guild,
+          "botLog",
+          delMessageEmbed
+        );
       } catch (error) {}
     });
   }

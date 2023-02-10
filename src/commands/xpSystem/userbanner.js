@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require(`discord.js`);
 const anvasUserbanner = require("../../components/canvas/canvasUserbanner");
+const timeOutMap = new Map()
 
 module.exports = {
   name: "userbanner",
@@ -10,6 +11,22 @@ module.exports = {
     .setDescription(`Userbanner anzeigen`),
 
   async execute(interaction) {
+
+    /** 
+    // ############ TIMEOUT COMMAND CHECK ############ \\
+    if (timeOutMap.has(interaction.member.id)){
+      interaction.reply({content:`⏰ Command Cooldown | Du kannst den Command nur alle 30 Minuten nutzen 🥱`});
+      return resolve(null)
+    } else {
+      timeOutMap.set(interaction.member.id)
+      setTimeout(() =>{
+        timeOutMap.delete(interaction.member.id)
+      }, 1800000)
+    }
+    // ################################################ \\
+
+    */
+
     const img = await anvasUserbanner.generateImage(interaction, interaction.user, interaction.guild, interaction.member);
 
     if (!img) {

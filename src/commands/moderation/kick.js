@@ -142,7 +142,7 @@ module.exports = {
 
       member.kick({ reason }).catch(console.error);
       try {
-        await member.send({ embeds: [kickembedmember] });
+        await member.send({ embeds: [kickembedmember] }).catch(error => {});
       } catch (error) {}
 
       const commandLogRepository = require("../../mysql/commandLogRepository");

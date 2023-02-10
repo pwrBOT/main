@@ -17,7 +17,7 @@ module.exports = {
       option
         .setName("channel")
         .setDescription("Channel auswählen")
-        .addChannelTypes(ChannelType.GuildAnnouncement)
+        .addChannelTypes(ChannelType.GuildText)
         .setRequired(true)
     )
     .addStringOption(option =>

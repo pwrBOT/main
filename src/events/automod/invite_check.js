@@ -181,18 +181,20 @@ module.exports = {
           "teamRole"
         );
 
-        if (message.member.roles.cache.has(teamRoleId.value)) {
-          console.log(
-            chalk.yellow(
-              `[${new Date().toLocaleDateString(
-                "de-DE"
-              )} / ${new Date().toLocaleTimeString(
-                "de-DE"
-              )}] AUTO MOD INVITE | STOPP --> TEAM MEMBER`
-            )
-          );
-          return resolve(null);
-        }
+        try {
+          if (message.member.roles.cache.has(teamRoleId.value)) {
+            console.log(
+              chalk.yellow(
+                `[${new Date().toLocaleDateString(
+                  "de-DE"
+                )} / ${new Date().toLocaleTimeString(
+                  "de-DE"
+                )}] AUTO MOD INVITE | STOPP --> TEAM MEMBER`
+              )
+            );
+            return resolve(null);
+          }
+        } catch (error) {}
 
         if (message.member.id === message.client.user.id) {
           return resolve(null);
@@ -227,9 +229,11 @@ module.exports = {
           "teamRole"
         );
 
-        if (message.member.roles.cache.has(teamRoleId.value)) {
-          return resolve(null);
-        }
+        try {
+          if (message.member.roles.cache.has(teamRoleId.value)) {
+            return resolve(null);
+          }
+        } catch (error) {}
 
         if (message.guild.ownerId === message.member.id) {
           return resolve(null);
@@ -341,9 +345,11 @@ module.exports = {
           "teamRole"
         );
 
-        if (message.member.roles.cache.has(teamRoleId.value)) {
-          return resolve(null);
-        }
+        try {
+          if (message.member.roles.cache.has(teamRoleId.value)) {
+            return resolve(null);
+          }
+        } catch (error) {}
 
         if (message.guild.ownerId === message.member.id) {
           return resolve(null);
@@ -453,7 +459,7 @@ module.exports = {
         await message.channel.send({ embeds: [warnembedChannel] });
 
         try {
-          await message.member.send({ embeds: [warnembedmember] });
+          await message.member.send({ embeds: [warnembedmember] }).catch(error => {});
         } catch (error) {}
 
         await warnSystem.warnUser(

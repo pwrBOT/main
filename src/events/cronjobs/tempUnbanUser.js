@@ -63,7 +63,7 @@ async function userTempBanUnban(tempUserToDelete) {
   const logChannel = require("../../mysql/loggingChannelsRepository");
   await logChannel.logChannel(unbanGuild, "modLog", unbanembed);
   try {
-    await unbanMember.send({ embeds: [unbanembedmember] });
+    await unbanMember.send({ embeds: [unbanembedmember] }).catch(error => {});
   } catch (error) {}
 
   await tempCommandRepository.deleteTempUser(unbanMember, unbanGuild);

@@ -237,7 +237,7 @@ module.exports = {
         .ban({ deleteMessageSeconds: days * 24 * 60 * 60, reason: reason })
         .catch(console.error);
       try {
-        await member.send({ embeds: [banembedmember] });
+        await member.send({ embeds: [banembedmember] }).catch(error => {});
       } catch (error) {}
 
       const commandLogRepository = require("../../mysql/commandLogRepository");

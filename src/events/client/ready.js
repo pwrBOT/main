@@ -56,9 +56,6 @@ module.exports = {
         const usersRepository = require("../../mysql/usersRepository");
         const getUserTable = await usersRepository.getUserTable(data.id);
         if (!getUserTable) {
-          return console.log(
-            chalk.red(`[MYSQL DATABASE] Keine Verbindung zur DB...`)
-          );
         } else if (getUserTable.length === 0) {
           console.log(
             chalk.yellow(

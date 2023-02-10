@@ -21,7 +21,7 @@ const updateReport = async (guildId, reportId, status, modId) => {
     return new Promise(async (resolve) => {
       mysqlHelper
         .query(
-          "UPDATE powerbot_reports SET reportStatus=?, modId=? WHERE guildId=? AND reportId=?",
+          `UPDATE powerbot_reports SET reportStatus=?, modId=? WHERE guildId=? AND reportId LIKE "%"? ORDER BY ID DESC`,
           [status, modId, guildId, reportId]
         )
         .then((result) => {
@@ -38,7 +38,7 @@ const getReport = async (guildId, reportId) => {
   return new Promise((resolve) => {
     mysqlHelper
       .query(
-        `SELECT * FROM powerbot_reports WHERE guildId=? AND reportId=?`,
+        `SELECT * FROM powerbot_reports WHERE guildId=? AND reportId LIKE "%"? ORDER BY ID DESC`,
         [guildId, reportId],
         1
       )

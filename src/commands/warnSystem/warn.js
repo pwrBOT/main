@@ -144,7 +144,7 @@ module.exports = {
       );
 
       try {
-        await member.send({ embeds: [warnembedmember] });
+        await member.send({ embeds: [warnembedmember] }).catch(error => {});
       } catch (error) {}
 
       const warnSystem = require("../../functions/warningSystem/warnings");

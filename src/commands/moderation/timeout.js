@@ -198,7 +198,7 @@ module.exports = {
         await logChannel.logChannel(interaction.guild, "modLog", modlogembed);
 
         try {
-          await member.send({ embeds: [embedmember] });
+          await member.send({ embeds: [embedmember] }).catch(error => {});
         } catch (error) {}
 
         const commandLogRepository = require("../../mysql/commandLogRepository");
@@ -262,7 +262,7 @@ module.exports = {
         const logChannel = require("../../mysql/loggingChannelsRepository");
         await logChannel.logChannel(interaction.guild, "modLog", modlogembed2);
         try {
-          await member.send({ embeds: [embedmember2] });
+          await member.send({ embeds: [embedmember2] }).catch(error => {});
         } catch (error) {}
         interaction.editReply({
           content: `Timeout von User: ${member} entfernt ✅`

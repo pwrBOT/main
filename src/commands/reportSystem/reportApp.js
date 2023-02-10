@@ -35,10 +35,15 @@ module.exports = {
         "teamRole"
       );
 
-      if (member.roles.cache.has(teamRoleId.value)) {
-        interaction.reply({ content: "❌ Du kannst niemanden aus dem Team reporten! ❌", ephemeral: true });
-        return resolve(null);
-      }
+      try {
+        if (member.roles.cache.has(teamRoleId.value)) {
+          interaction.reply({
+            content: "❌ Du kannst niemanden aus dem Team reporten! ❌",
+            ephemeral: true
+          });
+          return resolve(null);
+        }
+      } catch (error) {}
 
       if (member.id === client.user.id) {
         interaction.reply({ content: '❌ Du kannst den Bot nicht reporten! ❌', ephemeral: true })

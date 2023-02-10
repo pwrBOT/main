@@ -14,12 +14,11 @@
     "@dbd-soft-ui/logs": "^1.1.0",
     "@dbd-soft-ui/shards": "^1.0.0",
     "@napi-rs/canvas": "^0.1.28",
-    "ascii-table": "^0.0.9",
     "canvas": "^2.10.1",
     "chalk": "^4.1.2",
     "crypto": "^1.0.1",
     "dbd-dark-dashboard": "^1.6.592",
-    "dbd-soft-ui": "^1.6.1-beta.1",
+    "dbd-soft-ui": "^1.6.34-beta.1",
     "discord-api-types": "^0.37.18",
     "discord-dashboard": "^2.3.61",
     "discord-fetch-all": "^3.0.2",
@@ -31,6 +30,7 @@
     "mysql2": "^2.3.3",
     "node-schedule": "^2.1.0",
     "nodemon": "^2.0.20",
-    "undici": "^5.10.0"
+    "undici": "^5.10.0",
+    "uuid": "^9.0.0"
   }
 }

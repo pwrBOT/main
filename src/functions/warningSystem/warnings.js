@@ -5,22 +5,23 @@ const moment = require("moment");
 const ms = require("ms");
 
 const warnUser = async (guild, member, reason, modName, modId) => {
-  return new Promise(async (resolve) => {
+  return new Promise(async resolve => {
     await warnsRepository.addWarn(guild.id, member.id, reason, modName, modId);
     return resolve(null);
   });
 };
 
 const autoModWarn = async (guild, member) => {
-  return new Promise(async (resolve) => {
+  return new Promise(async resolve => {
     const client = guild.client;
     const servername = guild.name;
     const reason = "Zu viele Warns erhalten";
 
     // ################ PRE CHECK ############### \\
     const autoModRepository = require("../../mysql/autoModRepository");
-    const autoWarnsModSettings =
-      await autoModRepository.getGuildAutoModSettings(guild);
+    const autoWarnsModSettings = await autoModRepository.getGuildAutoModSettings(
+      guild
+    );
 
     if (autoWarnsModSettings.autoModWarnings === 0) {
       return resolve(null);
@@ -49,9 +50,11 @@ const autoModWarn = async (guild, member) => {
       "teamRole"
     );
 
-    if (member.roles.cache.has(teamRoleId.value)) {
-      return resolve(null);
-    }
+    try {
+      if (member.roles.cache.has(teamRoleId.value)) {
+        return resolve(null);
+      }
+    } catch (error) {}
 
     const modLogChannel = await guildsRepository.getGuildSetting(
       guild,
@@ -67,7 +70,7 @@ const autoModWarn = async (guild, member) => {
     }
     const tempCommandRepository = require("../../mysql/tempCommandRepository");
     const userWarns = await warnsRepository.getWarns(member, "active");
- 
+
     const warnsCount01 = autoWarnsModSettings.warnsCount01;
     let duration01 = autoWarnsModSettings.duration01;
     const sanctionType01 = autoWarnsModSettings.sanctionType01;
@@ -139,7 +142,7 @@ const autoModWarn = async (guild, member) => {
             .send({ embeds: [autoWarnModEmbed1] });
 
           try {
-            await member.send({ embeds: [autoWarnModMemberEmbed1] });
+            await member.send({ embeds: [autoWarnModMemberEmbed1] }).catch(error => {});
           } catch (error) {}
         } else if (sanctionType01 === "ban") {
           const autoWarnModEmbed1 = new EmbedBuilder()
@@ -197,7 +200,7 @@ const autoModWarn = async (guild, member) => {
             .send({ embeds: [autoWarnModEmbed1] });
 
           try {
-            await member.send({ embeds: [autoWarnModMemberEmbed1] });
+            await member.send({ embeds: [autoWarnModMemberEmbed1] }).catch(error => {});
           } catch (error) {}
         } else if (sanctionType01 === "tempban") {
           var unbanDate = "";
@@ -303,7 +306,7 @@ const autoModWarn = async (guild, member) => {
             })
             .catch(console.error);
           try {
-            await member.send({ embeds: [autoWarnModMemberEmbed1] });
+            await member.send({ embeds: [autoWarnModMemberEmbed1] }).catch(error => {});
           } catch (error) {}
 
           client.channels.cache
@@ -372,7 +375,7 @@ const autoModWarn = async (guild, member) => {
             .send({ embeds: [autoWarnModEmbed2] });
 
           try {
-            await member.send({ embeds: [autoWarnModMemberEmbed2] });
+            await member.send({ embeds: [autoWarnModMemberEmbed2] }).catch(error => {});
           } catch (error) {}
         } else if (sanctionType02 === "ban") {
           const autoWarnModEmbed2 = new EmbedBuilder()
@@ -430,7 +433,7 @@ const autoModWarn = async (guild, member) => {
             .send({ embeds: [autoWarnModEmbed2] });
 
           try {
-            await member.send({ embeds: [autoWarnModMemberEmbed2] });
+            await member.send({ embeds: [autoWarnModMemberEmbed2] }).catch(error => {});
           } catch (error) {}
         } else if (sanctionType02 === "tempban") {
           var unbanDate = "";
@@ -536,7 +539,7 @@ const autoModWarn = async (guild, member) => {
             })
             .catch(console.error);
           try {
-            await member.send({ embeds: [autoWarnModMemberEmbed2] });
+            await member.send({ embeds: [autoWarnModMemberEmbed2] }).catch(error => {});
           } catch (error) {}
 
           client.channels.cache
@@ -605,7 +608,7 @@ const autoModWarn = async (guild, member) => {
             .send({ embeds: [autoWarnModEmbed3] });
 
           try {
-            await member.send({ embeds: [autoWarnModMemberEmbed3] });
+            await member.send({ embeds: [autoWarnModMemberEmbed3] }).catch(error => {});
           } catch (error) {}
         } else if (sanctionType03 === "ban") {
           const autoWarnModEmbed3 = new EmbedBuilder()
@@ -663,7 +666,7 @@ const autoModWarn = async (guild, member) => {
             .send({ embeds: [autoWarnModEmbed3] });
 
           try {
-            await member.send({ embeds: [autoWarnModMemberEmbed3] });
+            await member.send({ embeds: [autoWarnModMemberEmbed3] }).catch(error => {});
           } catch (error) {}
         } else if (sanctionType03 === "tempban") {
           var unbanDate = "";
@@ -769,7 +772,7 @@ const autoModWarn = async (guild, member) => {
             })
             .catch(console.error);
           try {
-            await member.send({ embeds: [autoWarnModMemberEmbed3] });
+            await member.send({ embeds: [autoWarnModMemberEmbed3] }).catch(error => {});
           } catch (error) {}
 
           client.channels.cache

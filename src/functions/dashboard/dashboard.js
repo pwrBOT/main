@@ -1,5 +1,4 @@
 const { Client, ChannelType } = require("discord.js");
-const DarkDashboard = require("dbd-dark-dashboard");
 const SoftUI = require("dbd-soft-ui");
 const DBD = require("discord-dashboard");
 const config = require(`../../../config.json`);
@@ -74,6 +73,11 @@ const init = async client => {
     },
     useTheme404: true,
     bot: client,
+    requiredPermissions: [DBD.DISCORD_FLAGS.Permissions.ADMINISTRATOR],
+    supportServer: {
+      slash: "/support",
+      inviteUrl: "https://discord.gg/QfDNMCxzsN"
+    },
     acceptPrivacyPolicy: true,
     minimizedConsoleLogs: true,
     bot: client,
@@ -454,46 +458,6 @@ const init = async client => {
               return;
             }
           },
-          {
-            optionId: "communityrole",
-            optionName: "",
-            optionDescription: "Community Rolle:",
-            optionType: DBD.formTypes.rolesSelect(false),
-            getActualSet: async ({ guild }) => {
-              let data = await guildsRepository.getGuildSetting(
-                guild,
-                "communityrole"
-              );
-
-              if (data) return data.value;
-              else return null;
-            },
-            setNew: async ({ guild, newData }) => {
-              let data = await guildsRepository.getGuildSetting(
-                guild,
-                "communityrole"
-              );
-
-              if (!newData) newData = null;
-
-              if (!data) {
-                const property = "communityrole";
-                await guildsRepository.insertGuildSetting(
-                  guild,
-                  property,
-                  newData
-                );
-              } else {
-                const property = "communityrole";
-                await guildsRepository.updateGuildSetting(
-                  guild,
-                  property,
-                  newData
-                );
-              }
-              return;
-            }
-          },
           /// ########## CHANNEL SETTINGS ########## \\\
           {
             optionId: "modArea",
@@ -712,49 +676,6 @@ const init = async client => {
           },
           /// ####### Channel ####### \\\
           {
-            optionId: "welcomechannel",
-            optionName: "",
-            optionDescription: "Welcome Channel:",
-            optionType: DBD.formTypes.channelsSelect(
-              false,
-              (channelTypes = [ChannelType.GuildText])
-            ),
-            getActualSet: async ({ guild }) => {
-              let data = await guildsRepository.getGuildSetting(
-                guild,
-                "welcomechannel"
-              );
-
-              if (data) return data.value;
-              else return null;
-            },
-            setNew: async ({ guild, newData }) => {
-              let data = await guildsRepository.getGuildSetting(
-                guild,
-                "welcomechannel"
-              );
-
-              if (!newData) newData = null;
-
-              if (!data) {
-                const property = "welcomechannel";
-                await guildsRepository.insertGuildSetting(
-                  guild,
-                  property,
-                  newData
-                );
-              } else {
-                const property = "welcomechannel";
-                await guildsRepository.updateGuildSetting(
-                  guild,
-                  property,
-                  newData
-                );
-              }
-              return;
-            }
-          },
-          {
             optionId: "afkchannel",
             optionName: "",
             optionDescription: "AFK-Channel:",
@@ -971,6 +892,90 @@ const init = async client => {
         },
         categoryOptionsList: [
           {
+            optionId: "welcomechannel",
+            optionName: "",
+            optionDescription: "Welcome Channel:",
+            optionType: DBD.formTypes.channelsSelect(
+              false,
+              (channelTypes = [ChannelType.GuildText])
+            ),
+            getActualSet: async ({ guild }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "welcomechannel"
+              );
+
+              if (data) return data.value;
+              else return null;
+            },
+            setNew: async ({ guild, newData }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "welcomechannel"
+              );
+
+              if (!newData) newData = null;
+
+              if (!data) {
+                const property = "welcomechannel";
+                await guildsRepository.insertGuildSetting(
+                  guild,
+                  property,
+                  newData
+                );
+              } else {
+                const property = "welcomechannel";
+                await guildsRepository.updateGuildSetting(
+                  guild,
+                  property,
+                  newData
+                );
+              }
+              return;
+            }
+          },
+          {
+            optionId: "communityrole",
+            optionName: "",
+            optionDescription:
+              "Community Rollen (Werden automatisch vergeben, wenn ein User auf den Server joined):",
+            optionType: DBD.formTypes.rolesMultiSelect(false, false),
+            getActualSet: async ({ guild }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "communityrole"
+              );
+
+              if (data) return JSON.parse(data.value);
+              else return [];
+            },
+            setNew: async ({ guild, newData }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "communityrole"
+              );
+
+              if (!data) {
+                const property = "communityrole";
+                newDataString = JSON.stringify(newData);
+                await guildsRepository.insertGuildSetting(
+                  guild,
+                  property,
+                  newDataString
+                );
+              } else {
+                const property = "communityrole";
+                newDataString = JSON.stringify(newData);
+                await guildsRepository.updateGuildSetting(
+                  guild,
+                  property,
+                  newDataString
+                );
+              }
+              return;
+            }
+          },
+          {
             optionId: "welcomeChannelMessage",
             optionName: "",
             optionDescription:
@@ -1063,125 +1068,122 @@ const init = async client => {
               }
               return;
             }
-          }
-
-          /** EMBED BUILDER --> WIP
-            {
-              optionId: "welcomeEmbed",
-              optionName: "",
-              optionDescription: "Willkommens-Embed:",
-              optionType: DBD.formTypes.switch(false),
-              themeOptions: {
-                minimalbutton: {
-                  last: true
-                }
-              },
-              getActualSet: async ({ guild }) => {
-                let data = await embedsRepository.getEmbed(
-                  guild,
-                  "welcomeMessage"
-                );
-                if (data) return data.embed;
-                else return false;
-              },
-              setNew: async ({ guild, newData }) => {
-                let data = await embedsRepository.getEmbed(
-                  guild,
-                  "welcomeMessage"
-                );
-
-                if (!newData) newData = null;
-
-                if (!data) {
-                  const column = "embed";
-                  await embedsRepository.addEmbed(
-                    guild,
-                    "welcomeMessage",
-                    false,
-                    false,
-                    null,
-                    false,
-                    newData
-                  );
-                } else {
-                  const column = "embed";
-                  await embedsRepository.updateEmbed(
-                    column,
-                    newData,
-                    guild,
-                    "welcomeMessage"
-                  );
-                }
-                return;
+          },
+          {
+            optionId: "welcomeEmbed",
+            optionName: "",
+            optionDescription: "Willkommens DM an User senden:",
+            optionType: DBD.formTypes.switch(false),
+            themeOptions: {
+              minimalbutton: {
+                last: true
               }
             },
-            {
-              optionId: "welcomeMessagedm",
-              optionName: "",
-              optionDescription: "",
-              optionType: DBD.formTypes.embedBuilder({
-                username: user.username,
-                avatarURL: user.avatarURL(),
-                defaultJson: {
-                  embed: {
-                    title: `⚡️ Willkommen bei PowerBot ⚡️`,
-                    description: `Schön, dass du zu uns gefunden hast.\nAlle Infos zum Start bekommst du im Channel: #Welcome\n\nBei Fragen kannst du dich jederzeit an unsere Supporter wenden.`,
-                    color: "GREEN",
-                    timestamp: Date.now(),
-                    footer: {
-                      text: `powered by Powerbot`,
-                      icon_url: `${user.displayAvatarURL()}`
-                    }
+            getActualSet: async ({ guild }) => {
+              let data = await embedsRepository.getEmbed(
+                guild,
+                "welcomeMessage"
+              );
+              if (data) {
+                if (data.dm === "1") return true;
+              } else return false;
+            },
+            setNew: async ({ guild, newData }) => {
+              let data = await embedsRepository.getEmbed(
+                guild,
+                "welcomeMessage"
+              );
+
+              if (!newData) newData = null;
+
+              if (!data) {
+                const column = "dm";
+                await embedsRepository.addEmbed(
+                  guild,
+                  "welcomeMessage",
+                  false,
+                  false,
+                  null,
+                  false,
+                  newData
+                );
+              } else {
+                const column = "dm";
+                await embedsRepository.updateEmbed(
+                  column,
+                  newData,
+                  guild,
+                  "welcomeMessage"
+                );
+              }
+              return;
+            }
+          },
+          {
+            optionId: "welcomeMessagedm",
+            optionName: "",
+            optionDescription: "Bilder Upload funktioniert noch nicht --> WIP",
+            optionType: DBD.formTypes.embedBuilder({
+              username: user.username,
+              avatarURL: user.avatarURL(),
+              defaultJson: {
+                embed: {
+                  title: `⚡️ Willkommen bei PowerBot ⚡️`,
+                  description: `Schön, dass du zu uns gefunden hast.\nAlle Infos zum Start bekommst du im Channel: #Welcome\n\nBei Fragen kannst du dich jederzeit an unsere Supporter wenden.`,
+                  color: 39129,
+                  timestamp: Date.now(),
+                  footer: {
+                    text: `powered by Powerbot`,
+                    icon_url: `${user.displayAvatarURL()}`
                   }
                 }
-              }),
-
-              getActualSet: async ({ guild }) => {
-                let data = await embedsRepository.getEmbed(
-                  guild,
-                  "welcomeMessage"
-                );
-                if (!data) {
-                  return null;
-                } else {
-                  if (data.messageContent)
-                    return JSON.parse(data.messageContent);
-                  else return null;
-                }
-              },
-              setNew: async ({ guild, newData }) => {
-                let data = await embedsRepository.getEmbed(
-                  guild,
-                  "welcomeMessage"
-                );
-                newDataString = JSON.stringify(newData);
-
-                if (!newData) newData = false;
-
-                if (!data) {
-                  const column = "messageContent";
-                  await embedsRepository.addEmbed(
-                    guild,
-                    "welcomeMessage",
-                    false,
-                    false,
-                    newDataString,
-                    false,
-                    false
-                  );
-                } else {
-                  const column = "messageContent";
-                  await embedsRepository.updateEmbed(
-                    column,
-                    newDataString,
-                    guild,
-                    "welcomeMessage"
-                  );
-                }
-                return;
               }
+            }),
+
+            getActualSet: async ({ guild }) => {
+              let data = await embedsRepository.getEmbed(
+                guild,
+                "welcomeMessage"
+              );
+              if (!data) {
+                return null;
+              } else {
+                if (data.messageContent) return JSON.parse(data.messageContent);
+                else return null;
+              }
+            },
+            setNew: async ({ guild, newData }) => {
+              let data = await embedsRepository.getEmbed(
+                guild,
+                "welcomeMessage"
+              );
+              newDataString = JSON.stringify(newData);
+
+              if (!newData) newData = false;
+
+              if (!data) {
+                const column = "messageContent";
+                await embedsRepository.addEmbed(
+                  guild,
+                  "welcomeMessage",
+                  false,
+                  false,
+                  newDataString,
+                  false,
+                  false
+                );
+              } else {
+                const column = "messageContent";
+                await embedsRepository.updateEmbed(
+                  column,
+                  newDataString,
+                  guild,
+                  "welcomeMessage"
+                );
+              }
+              return;
             }
-             */
+          }
         ]
       },
       /// ################ AUTO MESSAGES END ################ \\\
@@ -2934,6 +2936,21 @@ const init = async client => {
         ]
       }
       /// ################ AUTO MOD SYSTEM END ################ \\\
+    ],
+    customPages: [
+      DBD.customPagesTypes.renderHtml(`/leaderboard`, ({ user, guild }) => {
+        return `
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>Test</title>
+            </head>
+            <body>
+                <h1>Ich werde ein Leaderboard</h1>
+            </body>
+        </html>
+        `;
+      })
     ]
   });
   Dashboard.init();

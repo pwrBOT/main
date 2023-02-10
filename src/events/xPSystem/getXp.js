@@ -32,7 +32,7 @@ module.exports = {
 
       const oldLevel = getUser.Level;
 
-      const newUserMessageCount = getUser.messageCount + 1;
+      const newUserMessageCount = parseInt(getUser.messageCount) + 1;
       await usersRepository.updateUser(
         guildId,
         message.author.id,
@@ -44,12 +44,6 @@ module.exports = {
         message.guild,
         "teamRole"
       );
-
-      /** 
-    if (message.member.roles.cache.has(teamRoleId.value)) {
-      return resolve(null);
-    }
-    */
 
       // ANTISPAM SYSTEM
       const LIMIT = 5;
@@ -131,7 +125,7 @@ module.exports = {
             currentXP = 0;
           }
           let XP = Math.floor(Math.random() * (25 - 6 + 1)) + 6;
-          var newXP = currentXP + XP;
+          var newXP = parseInt(currentXP) + XP;
 
           await usersRepository.updateUser(
             guildId,
@@ -141,7 +135,7 @@ module.exports = {
           );
 
           const requiredXP = getUser.Level * getUser.Level * 100 + 100;
-          
+
           if (newXP >= requiredXP) {
             let newLevel = (getUser.Level += 1);
             await usersRepository.updateUser(
@@ -152,10 +146,17 @@ module.exports = {
             );
           }
 
-          await xPSystemGiveRole.autoUserRoles(message.guild, message.member, oldLevel);
+          await xPSystemGiveRole.autoUserRoles(
+            message.guild,
+            message.member,
+            oldLevel
+          );
 
           const loggingHandler = require("../../functions/fileLogging/loggingHandler");
-          const logText = `GUILD: ${message.guild.id} | #GET XP --> USER: ${message.member.displayName} (ID: ${message.member.id}) XP: ${currentXP} + ${XP} = ${newXP}`;
+          const logText = `GUILD: ${message.guild
+            .id} | #GET XP --> USER: ${message.member
+            .displayName} (ID: ${message.member
+            .id}) XP: ${currentXP} + ${XP} = ${newXP}`;
           loggingHandler.log(logText, "xP_logging");
         }
         return resolve(null);
@@ -167,9 +168,11 @@ module.exports = {
           "teamRole"
         );
 
-        if (message.member.roles.cache.has(teamRoleId.value)) {
-          return resolve(null);
-        }
+        try {
+          if (message.member.roles.cache.has(teamRoleId.value)) {
+            return resolve(null);
+          }
+        } catch (error) {}
 
         if (message.guild.ownerId === message.member.id) {
           return resolve(null);
@@ -278,13 +281,15 @@ module.exports = {
           "teamRole"
         );
 
-        if (message.member.roles.cache.has(teamRoleId.value)) {
-          console.log(
-            `SPAM CHECK | ${message.author
-              .tag} Verwarnung gestoppt --> Team Mitglied`
-          );
-          return resolve(null);
-        }
+        try {
+          if (message.member.roles.cache.has(teamRoleId.value)) {
+            console.log(
+              `SPAM CHECK | ${message.author
+                .tag} Verwarnung gestoppt --> Team Mitglied`
+            );
+            return resolve(null);
+          }
+        } catch (error) {}
 
         if (message.member.id === message.client.user.id) {
           return resolve(null);
@@ -360,7 +365,7 @@ module.exports = {
         await message.channel.send({ embeds: [warnembed] });
 
         try {
-          await message.member.send({ embeds: [warnembedmember] });
+          await message.member.send({ embeds: [warnembedmember] }).catch(error => {});
         } catch (error) {}
 
         await warnSystem.warnUser(

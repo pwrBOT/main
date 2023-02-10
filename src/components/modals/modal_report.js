@@ -6,7 +6,7 @@ const {
   PermissionFlagsBits
 } = require("discord.js");
 const guildsRepository = require("../../mysql/guildsRepository");
-var crypto = require("crypto");
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = {
   data: {
@@ -23,11 +23,19 @@ module.exports = {
         "reportedUserInput"
       );
       const memberId = interaction.fields.getTextInputValue("reportedUserId");
-      const member = await interaction.guild.members.fetch(memberId)
       const reporterId = interaction.member.id;
       const reporter = interaction.member;
       const reason = interaction.fields.getTextInputValue("reportUserInput");
-      const reportId = crypto.randomBytes(3).toString('hex');
+      const reportId = uuidv4()
+      let member = "";
+      try {
+        member = await interaction.guild.members.fetch(memberId)
+      } catch (error) {
+        await interaction.editReply(
+          `Danke für Deine Meldung! Der User ist mittlerweile nicht mehr Teil des Servers ✅`
+        );
+        return resolve(null)
+      }
 
       const reportRepository = require("../../mysql/reportRepository");
       const reportData = await reportRepository.addReport(
@@ -57,7 +65,7 @@ module.exports = {
       const reportembedBase1 = new EmbedBuilder()
         .setTitle(`⚡️ Report System ⚡️`)
         .setDescription(
-          `User: ${member} wurde soeben gemeldet.\nReport ID: #${reportId}`
+          `User: ${member} wurde soeben gemeldet.\nReport ID: #${reportId.slice(-10)}`
         )
         .setThumbnail(client.user.displayAvatarURL())
         .setColor(0x51ff00)

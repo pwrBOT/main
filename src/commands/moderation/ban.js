@@ -2,7 +2,7 @@ const {
   SlashCommandBuilder,
   PermissionFlagsBits,
   PermissionsBitField,
-  EmbedBuilder,
+  EmbedBuilder
 } = require("discord.js");
 
 module.exports = {
@@ -13,13 +13,13 @@ module.exports = {
     .setName(`ban`)
     .setDescription(`User vom Server bannen`)
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
-    .addUserOption((option) =>
+    .addUserOption(option =>
       option
         .setName("user")
         .setDescription("User der gebannt werden soll")
         .setRequired(true)
     )
-    .addStringOption((option) =>
+    .addStringOption(option =>
       option
         .setName("delete")
         .setDescription(
@@ -28,15 +28,15 @@ module.exports = {
         .addChoices({ name: "Ja", value: "7" }, { name: "Nein", value: "0" })
         .setRequired(true)
     )
-    .addStringOption((option) =>
+    .addStringOption(option =>
       option.setName("reason").setDescription("Begründung").setRequired(true)
     ),
 
   async execute(interaction, client) {
-    return new Promise(async (resolve) => {
+    return new Promise(async resolve => {
       await interaction.deferReply({
         ephemeral: false,
-        fetchReply: true,
+        fetchReply: true
       });
 
       const { options, user, guild } = interaction;
@@ -61,9 +61,7 @@ module.exports = {
       }
 
       if (guild.ownerId === member.id) {
-        interaction.editReply(
-          "❌ Du kannst den Serverinhaber nicht bannen! ❌"
-        );
+        interaction.editReply("❌ Du kannst den Serverinhaber nicht bannen! ❌");
         return resolve(null);
       }
 
@@ -98,19 +96,19 @@ module.exports = {
         .setThumbnail(member.displayAvatarURL())
         .setFooter({
           iconURL: client.user.displayAvatarURL(),
-          text: `powered by Powerbot`,
+          text: `powered by Powerbot`
         })
         .addFields([
           {
             name: `Grund:`,
             value: `${reason}`,
-            inline: true,
+            inline: true
           },
           {
             name: `Moderator:`,
             value: interaction.user.tag,
-            inline: true,
-          },
+            inline: true
+          }
         ]);
 
       const banembedmember = new EmbedBuilder()
@@ -121,24 +119,24 @@ module.exports = {
         .setThumbnail(guild.iconURL())
         .setFooter({
           iconURL: client.user.displayAvatarURL(),
-          text: `powered by Powerbot`,
+          text: `powered by Powerbot`
         })
         .addFields([
           {
             name: `Grund:`,
             value: `${reason}`,
-            inline: true,
+            inline: true
           },
           {
             name: `Moderator:`,
             value: interaction.user.tag,
-            inline: true,
+            inline: true
           },
           {
             name: `Information:`,
             value: `${embedInfo}`,
-            inline: false,
-          },
+            inline: false
+          }
         ]);
 
       const newMessage = `User ${member} wurde gebannt ✅`;
@@ -157,7 +155,7 @@ module.exports = {
         .catch(console.error);
 
       try {
-        await member.send({ embeds: [banembedmember] });
+        await member.send({ embeds: [banembedmember] }).catch(error => {});
       } catch (error) {}
 
       const commandLogRepository = require("../../mysql/commandLogRepository");
@@ -172,5 +170,5 @@ module.exports = {
 
       return resolve(null);
     });
-  },
+  }
 };

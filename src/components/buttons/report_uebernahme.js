@@ -103,7 +103,7 @@ module.exports = {
 
       await interaction.editReply({
         ephemeral: true,
-        content: `✅ Du hast den Report übernommen!\nBearbeite nun den Report oder nimm vorab mit dem Melder Kontakt auf um weitere Details abzufragen.)`
+        content: `✅ Du hast den Report übernommen!\nBearbeite nun den Report oder nimm vorab mit dem Melder Kontakt auf um weitere Details abzufragen.`
       });
       return resolve(null);
     });

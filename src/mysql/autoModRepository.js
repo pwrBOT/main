@@ -34,7 +34,7 @@ const updateAutoModSettingsDashboard = async (guild, column, newData) => {
 const addAutoModSettingsGuild = async (guildId) => {
   return new Promise((resolve) => {
     mysqlHelper
-      .query("INSERT INTO powerbot_automod (guildId) VALUES (?)", [guildId])
+      .query(`INSERT INTO powerbot_automod (guildId) VALUES (?)`, [guildId])
       .then((result) => {
         resolve(null);
       })

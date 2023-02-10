@@ -111,7 +111,7 @@ module.exports = {
       interaction.guild.members.unban(member).catch(console.error);
 
       try {
-        await member.send({ embeds: [banembedmember] });
+        await member.send({ embeds: [banembedmember] }).catch(error => {});
       } catch (error) {}
 
       const commandLogRepository = require("../../mysql/commandLogRepository");

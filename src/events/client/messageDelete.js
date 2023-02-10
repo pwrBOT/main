@@ -11,7 +11,12 @@ module.exports = {
         return resolve(null);
       }
 
+      if (!message.guild) {
+        return resolve(null);
+      }
+
       if (!message.author) {
+        return resolve(null);
       } else if (message.author.bot == true) {
         return resolve(null);
       }
@@ -24,12 +29,11 @@ module.exports = {
 
         if (!ignoredChannels) {
         } else {
-          
-          let channelId = ""
+          let channelId = "";
           if (message.channel.type == 11 || message.channel.type == 12) {
             channelId = message.channel.parentId;
           } else {
-            channelId = message.channelId
+            channelId = message.channelId;
           }
 
           if (ignoredChannels.value.includes(channelId)) {
@@ -60,7 +64,10 @@ module.exports = {
           text: `powered by Powerbot`
         });
 
-      const logText = `GUILD: ${message.guild.name} (${message.guild.id}) | Nachricht (ID: ${message.id}) von ${message.author.username} (${message.author.id}) in ${message.channel.name} gelöscht!\n----> Nachricht: ${message.content}`;
+      const logText = `GUILD: ${message.guild.name} (${message.guild
+        .id}) | Nachricht (ID: ${message.id}) von ${message.author
+        .username} (${message.author.id}) in ${message.channel
+        .name} gelöscht!\n----> Nachricht: ${message.content}`;
       loggingHandler.log(logText, "messageDelete");
 
       try {

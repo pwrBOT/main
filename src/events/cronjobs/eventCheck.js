@@ -59,9 +59,7 @@ const init = async client => {
   });
 
   // TEST SHEDULE
-  schedule.scheduleJob("*/1 * * * *", async function() {
-    
-  });
+  schedule.scheduleJob("*/1 * * * *", async function() {});
 };
 
 const eventEndCheck = async client => {
@@ -145,14 +143,16 @@ const eventReminder = async client => {
         await teilnehmer.forEach(async teilnehmer => {
           const member = await client.users.fetch(teilnehmer.memberId);
 
-          await member.send({
-            content: `**📅 EVENT REMINDER**\n\nEin Event, zu dem du dich eingetragen hast, beginnt ⏱<t:${Date.parse(
-              event.eventStart
-            ) /
-              1000 -
-              3600}:R>\n`,
-            embeds: [newEmbed]
-          });
+          try {
+            await member.send({
+              content: `**📅 EVENT REMINDER**\n\nEin Event, zu dem du dich eingetragen hast, beginnt ⏱<t:${Date.parse(
+                event.eventStart
+              ) /
+                1000 -
+                3600}:R>\n`,
+              embeds: [newEmbed]
+            });
+          } catch (error) {}
         });
 
         const tentative = await allParticipants.filter(function(paricitpants) {
@@ -162,10 +162,12 @@ const eventReminder = async client => {
         await tentative.forEach(async tentative => {
           const member = await client.users.fetch(tentative.memberId);
 
-          await member.send({
-            content: `**📅  EVENT REMINDER**\n\nEin Event, für das du dich interessierst, beginnt in Kürze:`,
-            embeds: [newEmbed]
-          });
+          try {
+            await member.send({
+              content: `**📅  EVENT REMINDER**\n\nEin Event, für das du dich interessierst, beginnt in Kürze:`,
+              embeds: [newEmbed]
+            }).catch(error => {});
+          } catch (error) {}
         });
       }
     }

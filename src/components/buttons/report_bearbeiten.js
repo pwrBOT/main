@@ -96,7 +96,15 @@ module.exports = {
         "modArea"
       );
 
-      if (!modThreadAreaId.value) {
+      if (modThreadAreaId) {
+        if (!modThreadAreaId.value) {
+          await interaction.editReply({
+            ephemeral: true,
+            content: `✅ Du hast den Report übernommen!\nEs wurde kein Thread erstellt (Keine Mod-Area definiert)`
+          });
+          return resolve(null);
+        }
+      } else {
         await interaction.editReply({
           ephemeral: true,
           content: `✅ Du hast den Report übernommen!\nEs wurde kein Thread erstellt (Keine Mod-Area definiert)`
@@ -150,21 +158,19 @@ module.exports = {
         try {
           await newThread.members.add(interaction.member.id);
         } catch (error) {
-          interaction.editReply({
-            ephemeral: true,
-            content: `❌ Thread konnte nicht erstellt werden! Du kannst die Mod-Area nicht sehen!`
+          interaction.channel.send({
+            content: `✅Thread erstellt\n❌ Du konntest nicht zum Thread hinzugefügt werden, da du die Mod-Area nicht sehen kannst!`
           });
-          return resolve(null);
         }
 
         try {
           await newThread.members.add(reportedUserId);
         } catch (error) {
-          interaction.editReply({
-            ephemeral: true,
-            content: `❌ Thread konnte nicht erstellt werden! Der User kann die Mod-Area nicht sehen!`
+          interaction.channel.send({
+            content: `✅Thread erstellt\n❌ ${interaction.guild.members.cache.get(
+              reportedUserId
+            )} konnte nicht zum Thread hinzugefügt werden, da er die Mod-Area nicht sehen kann!`
           });
-          return resolve(null);
         }
 
         await newThread.send({ embeds: [reportEmbed] });
@@ -225,8 +231,7 @@ module.exports = {
         try {
           await newThread.members.add(interaction.member.id);
         } catch (error) {
-          interaction.editReply({
-            ephemeral: false,
+          interaction.channel.send({
             content: `✅Thread erstellt\n❌ Du konntest nicht zum Thread hinzugefügt werden, da du die Mod-Area nicht sehen kannst!`
           });
         }
@@ -234,8 +239,7 @@ module.exports = {
         try {
           await newThread.members.add(reportedUserId);
         } catch (error) {
-          interaction.editReply({
-            ephemeral: false,
+          interaction.channel.send({
             content: `✅Thread erstellt\n❌ ${interaction.guild.members.cache.get(
               reportedUserId
             )} konnte nicht zum Thread hinzugefügt werden, da er die Mod-Area nicht sehen kann!`
