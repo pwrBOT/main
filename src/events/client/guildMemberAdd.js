@@ -105,7 +105,7 @@ const sendWelcomeMessage = async member => {
                 embeds: [welcomeEmbed],
                 content: welcomeContent,
               })
-              .catch(console.error)
+              .catch(error => {})
           } catch (error) {}
         }
       }
@@ -125,8 +125,8 @@ const addCommunityRole = async member => {
       communityRoleIdsValue.forEach(async roleId => {
         let communityrole = "";
         try {
-          communityrole = await member.guild.roles.cache.get(roleId);
-          await member.roles.add(communityrole).catch(console.error);
+          communityrole = await member.guild.roles.fetch(roleId);
+          await member.roles.add(communityrole).catch(error => {});
           console.log(
             `Auto-Role | ${communityrole.name} bei ${member.displayName} hinzugefügt`
           );
@@ -181,7 +181,7 @@ const userCountSpecial = async member => {
         await member.client.channels.cache
           .get(achievementChannel.value)
           .send({ embeds: [UserCountSpecialEmbed] })
-          .catch(console.error);
+          .catch(error => {});
       }
     }
 

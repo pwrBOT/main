@@ -139,12 +139,12 @@ module.exports = {
           let faktor = "";
 
           if (oldState) {
-            oldChannel = await client.channels.cache.get(oldChannelId);
+            oldChannel = await client.channels.fetch(oldChannelId);
             try {
               parentChannelId = oldChannel.parentId;
             } catch (error) {}
           } else {
-            oldChannel = await client.channels.cache.get(newChannelId);
+            oldChannel = await client.channels.fetch(newChannelId);
             try {
               parentChannelId = oldChannel.parentId;
             } catch (error) {}

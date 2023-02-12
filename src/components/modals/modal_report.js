@@ -26,7 +26,7 @@ module.exports = {
       const reporterId = interaction.member.id;
       const reporter = interaction.member;
       const reason = interaction.fields.getTextInputValue("reportUserInput");
-      const reportId = uuidv4()
+      const reportId = uuidv4().slice(-12)
       let member = "";
       try {
         member = await interaction.guild.members.fetch(memberId)
@@ -119,7 +119,7 @@ module.exports = {
               inline: true
             }
           ]);
-          const modLogChannel = await client.channels.cache.get(
+          const modLogChannel = await client.channels.fetch(
             modLogChannelId
           );
 

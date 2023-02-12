@@ -24,11 +24,9 @@ async function userTempBanCheck() {
 }
 
 async function userTempBanUnban(tempUserToDelete) {
-  const guildId = tempUserToDelete.guildId;
-  const unbanGuild = await client.guilds.fetch(guildId);
+  const unbanGuild = await client.guilds.fetch(tempUserToDelete.guildId);
 
-  const memberId = tempUserToDelete.memberId;
-  const unbanMember = await client.users.fetch(memberId);
+  const unbanMember = await client.users.fetch(tempUserToDelete.memberId);
 
   unbanGuild.members.unban(unbanMember).catch(console.error);
   console.log(

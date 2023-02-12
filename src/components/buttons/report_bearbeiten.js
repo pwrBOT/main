@@ -112,7 +112,7 @@ module.exports = {
         return resolve(null);
       }
 
-      const modThreadArea = await interaction.guild.channels.cache.get(
+      const modThreadArea = await interaction.guild.channels.fetch(
         modThreadAreaId.value
       );
 
@@ -132,7 +132,7 @@ module.exports = {
         const reportEmbed = new EmbedBuilder()
           .setTitle(`⚡️ Reporting-System ⚡️`)
           .setDescription(
-            `Hallo ${interaction.guild.members.cache.get(
+            `Hallo ${await interaction.guild.members.fetch(
               reportedUserId
             )}!\n\nDu wurdest von einem User gemeldet. Was kannst du uns dazu sagen?`
           )
@@ -167,7 +167,7 @@ module.exports = {
           await newThread.members.add(reportedUserId);
         } catch (error) {
           interaction.channel.send({
-            content: `✅Thread erstellt\n❌ ${interaction.guild.members.cache.get(
+            content: `✅Thread erstellt\n❌ ${await interaction.guild.members.fetch(
               reportedUserId
             )} konnte nicht zum Thread hinzugefügt werden, da er die Mod-Area nicht sehen kann!`
           });
@@ -175,7 +175,7 @@ module.exports = {
 
         await newThread.send({ embeds: [reportEmbed] });
         const tagMember = await newThread.send(
-          `${interaction.guild.members.cache.get(
+          `${await interaction.guild.members.fetch(
             reportedUserId
           )} / ${interaction.member}`
         );
@@ -205,7 +205,7 @@ module.exports = {
         const reportEmbed = new EmbedBuilder()
           .setTitle(`⚡️ Reporting-System ⚡️`)
           .setDescription(
-            `Hallo ${interaction.guild.members.cache.get(
+            `Hallo ${await interaction.guild.members.fetch(
               reportedUserId
             )}!\n\nDu wurdest von einem User gemeldet. Was kannst du uns dazu sagen?`
           )
@@ -240,7 +240,7 @@ module.exports = {
           await newThread.members.add(reportedUserId);
         } catch (error) {
           interaction.channel.send({
-            content: `✅Thread erstellt\n❌ ${interaction.guild.members.cache.get(
+            content: `✅Thread erstellt\n❌ ${await interaction.guild.members.fetch(
               reportedUserId
             )} konnte nicht zum Thread hinzugefügt werden, da er die Mod-Area nicht sehen kann!`
           });
@@ -248,7 +248,7 @@ module.exports = {
 
         await newThread.send({ embeds: [reportEmbed] });
         const tagMember = await newThread.send(
-          `${interaction.guild.members.cache.get(
+          `${await interaction.guild.members.fetch(
             reportedUserId
           )} / ${interaction.member}`
         );
@@ -273,7 +273,7 @@ module.exports = {
       const reportInArbeitEmbed = new EmbedBuilder()
         .setTitle(`⚡️ Reporting-System ⚡️`)
         .setDescription(
-          `Hallo ${interaction.guild.members.cache.get(
+          `Hallo ${await interaction.guild.members.fetch(
             reportData.reporterId
           )}!\n\nDein Report wurde soeben übernommen und befindet sich in Bearbeitung!`
         )
@@ -291,7 +291,7 @@ module.exports = {
           },
           {
             name: `Gemeldeter User:`,
-            value: `${interaction.guild.members.cache.get(
+            value: `${interaction.guild.members.fetch(
               reportData.reportedMemberId
             )}`,
             inline: true

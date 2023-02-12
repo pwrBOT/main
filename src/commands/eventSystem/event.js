@@ -9,7 +9,7 @@ const {
 } = require("discord.js");
 
 const eventRepository = require("../../mysql/eventRepository");
-var crypto = require("crypto");
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = {
   name: "event",
@@ -86,7 +86,7 @@ module.exports = {
       const eventEnd = new Date(options.getString("eventend"));
       const eventChannel = options.getChannel("eventchannel");
       const eventBild = options.getAttachment("eventbild");
-      const eventId = crypto.randomBytes(3).toString('hex');
+      const eventId = uuidv4();
       const pingRole = options.getRole("rollenerwaehnung");
       const host = user.id;
 

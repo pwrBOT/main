@@ -1,6 +1,5 @@
 const Canvas = require("@napi-rs/canvas");
 const { AttachmentBuilder } = require("discord.js");
-const { request } = require("undici");
 const usersRepository = require("../../mysql/usersRepository");
 const guildSettings = require("../../mysql/guildsRepository");
 
@@ -106,14 +105,12 @@ const createWelcomeBanner = async (member, welcomeMessage) => {
       canvas.height
     );
 
-    const { body } = await request(
-      member.displayAvatarURL({
-        extension: "png",
-        size: av.size,
-        dynamic: false
-      })
-    );
-    const avatar = await Canvas.loadImage(await body.arrayBuffer());
+    const avURL = member.displayAvatarURL({
+      extension: "png",
+      size: av.size,
+      dynamic: false
+    });
+    const avatar = await Canvas.loadImage(await avURL);
 
     context.strokeStyle = "#414141";
     context.strokeRect(0, 0, canvas.width, canvas.height);
@@ -166,7 +163,7 @@ const createWelcomeBanner = async (member, welcomeMessage) => {
 
     if (welcomeChannelId) {
       if (welcomeChannelId.value) {
-        const welcomeChannel = await member.guild.client.channels.cache.get(
+        const welcomeChannel = await member.guild.client.channels.fetch(
           welcomeChannelId.value
         );
         welcomeChannel.send(welcomeChannelMessage);

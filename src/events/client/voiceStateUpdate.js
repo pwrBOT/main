@@ -15,8 +15,12 @@ module.exports = {
       const newChannelId = newState.channelId;
       const guild = client.guilds.cache.get(newState.guild.id);
       const member = guild.members.cache.get(newState.id);
-      const oldChannel = await oldState.guild.channels.fetch(oldChannelId);
-      const newChannel = await newState.guild.channels.fetch(newChannelId);
+      const oldChannel = await oldState.guild.channels
+        .fetch(oldChannelId)
+        .catch(console.error);
+      const newChannel = await newState.guild.channels
+        .fetch(newChannelId)
+        .catch(console.error);
 
       if (oldState) {
         const tempChannelCheckTemp = await tempChannelsRepository.getTempVoiceChannel(
@@ -34,16 +38,14 @@ module.exports = {
             if (tempChannelToDelete.members.size === 0) {
               try {
                 setTimeout(async function() {
-                  tempChannelToDelete
-                    .delete("del temp channel")
-                    .catch(console.error);
+                  tempChannelToDelete.delete("del temp channel").catch();
 
                   await tempChannelsRepository.deleteTempVoiceChannel(
                     oldState.guild.id,
                     oldChannelId,
                     "temp"
                   );
-                }, 2000);
+                }, 1000);
               } catch (error) {}
             }
           }
@@ -71,13 +73,15 @@ module.exports = {
           channelParent = newState.channel.parent;
         }
 
-        const voiceChannel = await guild.channels.create({
-          name: newChannelName,
-          type: ChannelType.GuildVoice,
-          bitrate: 384000,
-          userLimit: newChannel.userLimit,
-          parent: channelParent
-        });
+        const voiceChannel = await guild.channels
+          .create({
+            name: newChannelName,
+            type: ChannelType.GuildVoice,
+            bitrate: 384000,
+            userLimit: newChannel.userLimit,
+            parent: channelParent
+          })
+          .catch(console.error);
 
         if (tempChannelCheck.giveUserPermission == "yes") {
           voiceChannel.permissionOverwrites.edit(member.id, {
@@ -99,7 +103,7 @@ module.exports = {
         );
         // client.voiceGenerator.set(member.user.id, voiceChannel.id);  häää?
         try {
-          setTimeout(() => member.voice.setChannel(voiceChannel), 200)
+          setTimeout(() => member.voice.setChannel(voiceChannel), 200);
         } catch (error) {}
 
         return resolve(null);

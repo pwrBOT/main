@@ -79,7 +79,7 @@ module.exports = {
       const reportAbgelehntEmbed = new EmbedBuilder()
         .setTitle(`⚡️ Reporting-System ⚡️`)
         .setDescription(
-          `Hallo ${interaction.guild.members.cache.get(
+          `Hallo ${await interaction.guild.members.fetch(
             reportData.reporterId
           )}!\n\nDein Report wurde von einem Moderator überprüft und abgelehnt!\n\nDies kann verschiedene Gründe haben. Zum Beispiel, dass deine Meldung nicht gegen die Regeln verstößt, oder die Moderatoren der Meinung sind, dass es ein privates Problem ist. Private Missverständnisse sollen persönlich geklärt werden.\n\nSolltest du anderer Meinung sein, kannst du das Moderatoren-Team gerne kontaktieren.\n\nDennoch bedanken wir uns für Deine Meldung und wünschen noch einen schönen Tag 😊\n\n`
         )
@@ -97,7 +97,7 @@ module.exports = {
           },
           {
             name: `Gemeldeter User:`,
-            value: `${interaction.guild.members.cache.get(
+            value: `${await interaction.guild.members.fetch(
               reportData.reportedMemberId
             )}`,
             inline: true
@@ -105,8 +105,7 @@ module.exports = {
         ]);
 
       try {
-        await interaction.guild.members.cache
-          .get(reportData.reporterId)
+        await interaction.guild.members.fetch(reportData.reporterId)
           .send({ embeds: [reportAbgelehntEmbed] });
       } catch (error) {}
 

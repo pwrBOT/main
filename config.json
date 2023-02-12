@@ -32,7 +32,7 @@
     "port": 8010,
     "domain": "http://dashboard.pwr.lol",
     "redirectUri": "/discord/callback/",
-    "license": "348c5b8a-91b9-4aa2-b0eb-d8d2ad2fe443",
+    "license": "a4eb44fa-b3c4-4054-8c26-72db2e372255",
     "ownerIDs": ["539513467313455105"]
   },
 
@@ -45,7 +45,5 @@
   "powerbot_mysql_host": "162.55.11.41",
   "powerbot_mysql_user": "mbr_hosting_powerbot",
   "powerbot_mysql_pw": "mb4gU3*48Af78k8f3~Pm_98uc81",
-  "powerbot_mysql_database": "mbr_hosting_powerbot",
-
-  "powerbot_dashboard": "348c5b8a-91b9-4aa2-b0eb-d8d2ad2fe443"
+  "powerbot_mysql_database": "mbr_hosting_powerbot"
 }

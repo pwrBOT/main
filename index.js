@@ -12,7 +12,6 @@ const autoDeleteWarns = require("./src/events/cronjobs/autoDeleteWarns");
 const logFilesSizeCheck = require("./src/events/cronjobs/logFilesSizeCheck");
 const eventCheck = require("./src/events/cronjobs/eventCheck");
 const DLU = require("@dbd-soft-ui/logs");
-const DSU = require("@dbd-soft-ui/shards");
 
 // Discord Bot SetUp
 const TOKEN = config.powerbot_token;
@@ -29,7 +28,7 @@ const client = new Client({
     GatewayIntentBits.GuildInvites,
     GatewayIntentBits.GuildIntegrations,
     GatewayIntentBits.GuildEmojisAndStickers,
-    GatewayIntentBits.GuildBans,
+    GatewayIntentBits.GuildModeration,
     GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.DirectMessages,
     GatewayIntentBits.DirectMessageTyping,
@@ -39,7 +38,7 @@ const client = new Client({
     Partials.Channel,
     Partials.GuildMember,
     Partials.GuildScheduledEvent,
-    Partials.GuildVoiceStats,
+    Partials.GuildVoiceStates,
     Partials.Message,
     Partials.Reaction,
     Partials.ThreadMember,
@@ -82,17 +81,16 @@ client.login(TOKEN);
 
 // CLIENT ON EVENTS
 
-client.on("messageCreate", async message => {});
-
 client.on("ready", async () => {
-  tempUnbanUser.init(client);
-  autoDeleteChannel.init(client);
-  autoDeleteWarns.init(client);
-  logFilesSizeCheck.init(client);
-  eventCheck.init(client);
+  await tempUnbanUser.init(client);
+  await autoDeleteChannel.init(client);
+  await autoDeleteWarns.init(client);
+  await logFilesSizeCheck.init(client);
+  await eventCheck.init(client);
 
+  /**
   // Dashboard Logging
-  DLU.register(client, {
+  await DLU.register(client, {
     dashboard_url: "https://dashboard.pwr.lol/",
     key: "34geJ6!aaASD12908!"
   });
@@ -102,9 +100,6 @@ process.on("unhandledRejection", (reason, p) => {
   DLU.send(client, {
     title: "Unhandled Rejection",
     description: reason
-  });
+  }); 
+  */
 });
-
-// Discord Together
-const { DiscordTogether } = require("discord-together");
-client.discordTogether = new DiscordTogether(client);

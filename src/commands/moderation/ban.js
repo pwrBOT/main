@@ -155,7 +155,7 @@ module.exports = {
         .catch(console.error);
 
       try {
-        await member.send({ embeds: [banembedmember] }).catch(error => {});
+        await member.send({ embeds: [banembedmember] }).catch();
       } catch (error) {}
 
       const commandLogRepository = require("../../mysql/commandLogRepository");

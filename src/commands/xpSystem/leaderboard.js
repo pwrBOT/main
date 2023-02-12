@@ -46,7 +46,7 @@ module.exports = {
         "teamRole"
       );
 
-      const teamRole = await interaction.guild.roles.cache.get(
+      const teamRole = await interaction.guild.roles.fetch(
         teamRoleId.value
       );
 
@@ -54,7 +54,7 @@ module.exports = {
       await users.forEach(async user => {
         let member = "";
         try {
-          member = await interaction.guild.members.cache.get(user.userId);
+          member = await interaction.guild.members.fetch(user.userId);
         } catch (error) {}
 
         if (member) {

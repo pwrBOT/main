@@ -44,14 +44,15 @@ module.exports = {
 
       let embedMessage = "";
 
-      if (message.author == null) {
-        return resolve(null);
-      } else if (message.content == null) {
-        return resolve(null);
-      } else if (message.content.length === 0) {
-        return resolve(null);
-      } else {
+      try {
         embedMessage = `Nachricht von ${message.author} in ${message.channel} gelöscht!\n\nNachricht: ${message.content}\nID: ${message.id}`;
+      } catch (error) {}
+
+      if (message.embeds[0]) {
+        const embed = message.embeds[0];
+        const embedText = `\n\nEMBED:\n${embed.title}\n${embed.description}`;
+        console.log(embedText)
+        embedMessage += embedText;
       }
 
       const delMessageEmbed = new EmbedBuilder()

@@ -38,23 +38,28 @@ const init = async client => {
   schedule.scheduleJob("15 * * * *", async function() {
     await eventEndCheck(client);
     await eventReminder(client);
+    await eventReminderNow(client);
+    await eventMessageDeleteCheck(client);
   });
 
   schedule.scheduleJob("30 * * * *", async function() {
     await eventEndCheck(client);
     await eventReminder(client);
+    await eventReminderNow(client);
     await eventMessageDeleteCheck(client);
   });
 
   schedule.scheduleJob("45 * * * *", async function() {
     await eventEndCheck(client);
     await eventReminder(client);
+    await eventReminderNow(client);
     await eventMessageDeleteCheck(client);
   });
 
   schedule.scheduleJob("00 * * * *", async function() {
     await eventEndCheck(client);
     await eventReminder(client);
+    await eventReminderNow(client);
     await eventMessageDeleteCheck(client);
   });
 
@@ -113,6 +118,11 @@ const eventReminder = async client => {
 
         const channel = await client.channels.fetch(event.channelId);
         const message = await channel.messages.fetch(event.messageId);
+
+        if (!message) {
+          return
+        }
+
         const embed = await message.embeds[0];
 
         const newEmbed = new EmbedBuilder()
@@ -151,7 +161,7 @@ const eventReminder = async client => {
                 1000 -
                 3600}:R>\n`,
               embeds: [newEmbed]
-            });
+            }).catch(error => {});
           } catch (error) {}
         });
 
@@ -165,6 +175,81 @@ const eventReminder = async client => {
           try {
             await member.send({
               content: `**📅  EVENT REMINDER**\n\nEin Event, für das du dich interessierst, beginnt in Kürze:`,
+              embeds: [newEmbed]
+            }).catch(error => {});
+          } catch (error) {}
+        });
+      }
+    }
+  });
+};
+
+const eventReminderNow = async client => {
+  const allEvents = await eventRepository.getAllEvents();
+  const dateNow = new Date(Date.now() + 3600000).getTime();
+
+  allEvents.forEach(async event => {
+    const remindDate = event.eventStart - 900000;
+
+    if (event.eventReminder === 1) {
+      if (remindDate <= dateNow) {
+        await eventRepository.eventUpdate(event.eventId, "eventReminder", 2);
+
+        const channel = await client.channels.fetch(event.channelId);
+        const message = await channel.messages.fetch(event.messageId);
+
+        if (!message) {
+          return
+        }
+
+        const embed = await message.embeds[0];
+
+        const newEmbed = new EmbedBuilder()
+          .setTitle(`${embed.title}`)
+          .setDescription(
+            `${event.eventDescription}\n\n**Zeit:**\n<t:${Date.parse(
+              event.eventStart
+            ) /
+              1000 -
+              3600}:F> - <t:${Date.parse(event.eventEnd) / 1000 -
+              3600}:F>\n\n[➡️  Zum Event](${message.url})`
+          )
+          .setColor(embed.color)
+          .setFooter(embed.footer);
+
+        if (embed.image) {
+          newEmbed.setImage(embed.image.url);
+        }
+
+        const allParticipants = await eventRepository.getAllParticipants(
+          event.eventId
+        );
+
+        const teilnehmer = await allParticipants.filter(function(paricitpants) {
+          return paricitpants.status == "subscribe";
+        });
+
+        await teilnehmer.forEach(async teilnehmer => {
+          const member = await client.users.fetch(teilnehmer.memberId);
+
+          try {
+            await member.send({
+              content: `**📅 EVENT REMINDER**\n\nEin Event, zu dem du dich eingetragen hast, beginnt gleich.`,
+              embeds: [newEmbed]
+            }).catch(error => {});
+          } catch (error) {}
+        });
+
+        const tentative = await allParticipants.filter(function(paricitpants) {
+          return paricitpants.status == "tentative";
+        });
+
+        await tentative.forEach(async tentative => {
+          const member = await client.users.fetch(tentative.memberId);
+
+          try {
+            await member.send({
+              content: `**📅  EVENT REMINDER**\n\nEin Event, für das du dich interessierst, beginnt gleich:`,
               embeds: [newEmbed]
             }).catch(error => {});
           } catch (error) {}

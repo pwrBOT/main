@@ -30,11 +30,11 @@ module.exports = {
         fetchReply: true
       });
 
-      const { options, user, guild } = interaction;
+      const { options, guild } = interaction;
       const memberId = options.getString("userid");
       const reason = options.getString("reason") || "Kein Grund angegeben";
       const servername = guild.name;
-      const member = await client.users.fetch(memberId);
+      const member = await guild.bans.fetch(memberId).catch(console.error);
 
       if (!member) {
         await interaction.editReply(

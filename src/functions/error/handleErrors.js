@@ -27,10 +27,6 @@ module.exports = async (client) => {
         },
       ])
       .setTimestamp(Date.now())
-      .setFooter({
-        iconURL: client.user.displayAvatarURL(),
-        text: `powered by Powerbot`,
-      });
     errorChannel = config.powerbot_error_channel;
     client.channels.cache.get(errorChannel).send({ embeds: [errorEmbed] });
   });

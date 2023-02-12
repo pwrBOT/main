@@ -66,7 +66,7 @@ module.exports = {
 
       const reportErledigtEmbed = new EmbedBuilder()
         .setTitle(`⚡️ Reporting-System ⚡️`)
-        .setDescription(`Hallo ${interaction.guild.members.cache.get(reportData.reporterId)}!\n\nDein Report wurde soeben bearbeitet und abgeschlossen.\nDanke für Deine Meldung!`)
+        .setDescription(`Hallo ${await interaction.guild.members.fetch(reportData.reporterId)}!\n\nDein Report wurde soeben bearbeitet und abgeschlossen.\nDanke für Deine Meldung!`)
         .setColor(0x51ff00)
         .setTimestamp(Date.now())
         .setFooter({
@@ -81,7 +81,7 @@ module.exports = {
           },
           {
             name: `Gemeldeter User:`,
-            value: `${interaction.guild.members.cache.get(reportData.reportedMemberId)}`,
+            value: `${await interaction.guild.members.fetch(reportData.reportedMemberId)}`,
             inline: true
           },
           {
@@ -92,7 +92,7 @@ module.exports = {
         ]);
 
       try {
-        await interaction.guild.members.cache.get(reportData.reporterId).send({ embeds: [reportErledigtEmbed] });
+        await interaction.guild.members.fetch(reportData.reporterId).send({ embeds: [reportErledigtEmbed] });
       } catch (error) {}
 
       // LOCK AND ARCHIVE PRIVATE THREAD \\
@@ -117,7 +117,7 @@ module.exports = {
         return resolve(null);
       }
 
-      const modThreadArea = await interaction.guild.channels.cache.get(
+      const modThreadArea = await interaction.guild.channels.fetch(
         modThreadAreaId.value
       );
       const threadName = `Report ${reportId}`;

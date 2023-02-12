@@ -200,7 +200,7 @@ module.exports = {
         } catch (error) {}
 
         try {
-          await message.member.send({ embeds: [embedmember] });
+          await message.member.send({ embeds: [embedmember] }).catch(error => {});
         } catch (error) {}
 
         const commandLogRepository = require("../../mysql/commandLogRepository");

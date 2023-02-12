@@ -18,7 +18,7 @@ module.exports = client => {
       );
       premiumGuilds.forEach(async guildId => {
         let premiumGuild = guildId.value;
-        const guild = client.guilds.fetch(premiumGuild);
+        const guild = client.guilds.cache.get(premiumGuild);
 
         console.log(
           `\x1b[33mÜbertrage Premium Slash-Commands zu Test-Guild: ${premiumGuild}\x1b[0m`

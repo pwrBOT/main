@@ -1,6 +1,5 @@
 const Canvas = require("@napi-rs/canvas");
 const { AttachmentBuilder } = require("discord.js");
-const { request } = require("undici");
 const usersRepository = require("../../mysql/usersRepository");
 const guildsRepository = require("../../mysql/guildsRepository");
 
@@ -98,14 +97,12 @@ const generateImage = async (interaction, member, guild, guildMember) => {
     const background = await Canvas.loadImage(backgroundImg);
     context.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-    const { body } = await request(
-      member.displayAvatarURL({
+    const avURL = member.displayAvatarURL({
         extension: "png",
         size: av.size,
         dynamic: false
       })
-    );
-    const avatar = await Canvas.loadImage(await body.arrayBuffer());
+    const avatar = await Canvas.loadImage(await avURL);
 
     const memberDisplayNameRaw = `${guildMember.displayName}`;
     const memberDisplayName = memberDisplayNameRaw.normalize("NFKD");
