@@ -48,10 +48,9 @@ const client = new Client({
 
 client.commands = new Collection();
 client.commandArray = [];
-client.premiumCommands = new Collection();
-client.premiumCommandArray = [];
-client.globalCommands = new Collection();
-client.globalCommandArray = [];
+client.ldsCommandArray = [];
+client.pwrCommandArray = [];
+
 client.buttons = new Collection();
 client.selectMenus = new Collection();
 client.modals = new Collection();
@@ -74,10 +73,12 @@ console.log(
 );
 
 // BOT HANDLER
+client.login(TOKEN);
 client.handleEvents();
 client.handleCommands();
+//client.handleLDSCommands();
 client.handleComponents();
-client.login(TOKEN);
+
 
 // CLIENT ON EVENTS
 

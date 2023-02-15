@@ -14,6 +14,7 @@ module.exports = {
     .setName(`info`)
     .setDescription(`Informationen ausgeben lassen`)
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
+    .setDMPermission(false)
     .addSubcommand((subcommand) =>
       subcommand
         .setName(`user`)

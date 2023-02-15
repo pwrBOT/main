@@ -13,6 +13,7 @@ module.exports = {
     .setName(`reports`)
     .setDescription(`Reports eines Users anzeigen oder löschen`)
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
+    .setDMPermission(false)
     .addSubcommand(subcommand =>
       subcommand
         .setName(`show`)

@@ -16,6 +16,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName(`report`)
     .setDescription(`User melden!`)
+    .setDMPermission(false)
     .addUserOption(option =>
       option
         .setName("user")

@@ -175,7 +175,7 @@ module.exports = {
           .setColor(0xffba0f);
 
         const achievementChannel = await guildsRepository.getGuildSetting(
-          member.guild,
+          newMember.guild,
           "achievementChannel"
         );
 

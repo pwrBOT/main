@@ -13,6 +13,7 @@ module.exports = {
     .setName(`ban`)
     .setDescription(`User vom Server bannen`)
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
+    .setDMPermission(false)
     .addUserOption(option =>
       option
         .setName("user")

@@ -19,6 +19,7 @@ module.exports = {
     .setName(`event`)
     .setDescription(`Event-Verwaltung`)
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageEvents)
+    .setDMPermission(false)
     .addSubcommand(subcommand =>
       subcommand
         .setName(`create`)

@@ -13,6 +13,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName(`leaderboard`)
     .setDescription(`Leaderboard anzeigen`)
+    .setDMPermission(false)
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
   async execute(interaction, client) {

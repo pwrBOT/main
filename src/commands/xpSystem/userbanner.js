@@ -8,6 +8,7 @@ module.exports = {
   description: "Banner mit eigenen Informationen generieren.",
   data: new SlashCommandBuilder()
     .setName(`userbanner`)
+    .setDMPermission(false)
     .setDescription(`Userbanner anzeigen`),
 
   async execute(interaction) {

@@ -11,8 +11,9 @@ module.exports = {
   description: "Verwalte Temp-Voice-Channels",
   data: new SlashCommandBuilder()
     .setName(`tempvoicechannel`)
-    .setDescription(`Erstelle einen`)
+    .setDescription(`Temp Voice Channel Verwaltung`)
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .setDMPermission(false)
     .addSubcommand((subcommand) =>
       subcommand
         .setName(`add`)

@@ -9,7 +9,8 @@ module.exports = {
   data: new ContextMenuCommandBuilder()
     .setName("Clear Channel")
     .setType(ApplicationCommandType.User)
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .setDMPermission(false),
   async execute(interaction, client) {
 
     const {options, channel } = interaction;

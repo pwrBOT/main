@@ -15,6 +15,7 @@ module.exports = {
     .setName(`tempban`)
     .setDescription(`User temporär vom Server bannen`)
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
+    .setDMPermission(false)
     .addUserOption((option) =>
       option
         .setName("user")

@@ -15,6 +15,7 @@ module.exports = {
     .setName(`xp`)
     .setDescription(`Member XP Verwaltung`)
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
+    .setDMPermission(false)
     .addSubcommand(subcommand =>
       subcommand
         .setName(`give`)

@@ -16,6 +16,7 @@ module.exports = {
     .setName(`warn`)
     .setDescription(`User verwarnen`)
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
+    .setDMPermission(false)
     .addUserOption((option) =>
       option
         .setName("member")

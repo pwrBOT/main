@@ -13,6 +13,7 @@ module.exports = {
     .setName(`ankuendigung`)
     .setDescription(`Ankuendigung per Bot schreiben`)
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .setDMPermission(false)
     .addChannelOption(option =>
       option
         .setName("channel")

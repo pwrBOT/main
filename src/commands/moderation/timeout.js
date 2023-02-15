@@ -14,6 +14,7 @@ module.exports = {
     .setName(`timeout`)
     .setDescription(`User timeouten / Timeout entfernen`)
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
+    .setDMPermission(false)
     .addSubcommand(subcommand =>
       subcommand
         .setName(`add`)

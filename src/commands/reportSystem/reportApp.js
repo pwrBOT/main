@@ -14,7 +14,8 @@ module.exports = {
   data: new ContextMenuCommandBuilder()
     .setName("User melden")
     .setType(ApplicationCommandType.User)
-    .setDefaultMemberPermissions(PermissionFlagsBits.ViewChannel),
+    .setDefaultMemberPermissions(PermissionFlagsBits.ViewChannel)
+    .setDMPermission(false),
   async execute(interaction, client) {
     return new Promise(async resolve => {
       const { options } = interaction;

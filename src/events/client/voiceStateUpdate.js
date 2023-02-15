@@ -38,7 +38,7 @@ module.exports = {
             if (tempChannelToDelete.members.size === 0) {
               try {
                 setTimeout(async function() {
-                  tempChannelToDelete.delete("del temp channel").catch();
+                  tempChannelToDelete.delete("del temp channel").catch(error => {});
 
                   await tempChannelsRepository.deleteTempVoiceChannel(
                     oldState.guild.id,

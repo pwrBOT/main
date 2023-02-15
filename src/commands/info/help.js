@@ -14,6 +14,7 @@ module.exports = {
     .setName(`help`)
     .setDescription(`Hilfe zu Bot Funktionen erhalten`)
     .setDefaultMemberPermissions(PermissionFlagsBits.ViewChannel)
+    .setDMPermission(false)
     .addSubcommand(subcommand =>
       subcommand
         .setName(`reportsystem`)

@@ -12,6 +12,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName(`unban`)
     .setDescription(`User entbannen`)
+    .setDMPermission(false)
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
     .addStringOption(option =>
       option

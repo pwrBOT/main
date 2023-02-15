@@ -12,6 +12,7 @@ module.exports = {
     .setName(`clear`)
     .setDescription(`Nachrichten löschen`)
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
+    .setDMPermission(false)
     .addNumberOption(option =>
       option
         .setName("amount")
