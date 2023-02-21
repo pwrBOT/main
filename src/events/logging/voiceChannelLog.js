@@ -10,7 +10,7 @@ module.exports = {
    */
 
   async execute(oldState, newState, client) {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       const oldChannelId = oldState.channelId;
       const newChannelId = newState.channelId;
       const guild = await client.guilds.cache.get(newState.guild.id);
@@ -26,14 +26,16 @@ module.exports = {
           "JOIN",
           "VC",
           "-",
-          newChannelId
+          "-",
+          newState.channelId,
+          newState.channel.name
         );
       }
       // USER LEFT CHANNEL
       if (oldChannelId !== null && newChannelId === null) {
         const oldMember = await guild.members.fetch(oldState.id);
 
-        let kicked = false
+        let kicked = false;
 
         try {
           const fetchedLogs = await oldMember.guild.fetchAuditLogs({
@@ -41,30 +43,34 @@ module.exports = {
             type: AuditLogEvent.MemberDisconnect
           });
 
-          const log = await fetchedLogs.entries.first()
+          const log = await fetchedLogs.entries.first();
 
           const { executor } = log;
           if (executor && Date.now() - log.createdTimestamp < 4000) {
-            kicked = true
-      
+            kicked = true;
+
             await userlogRepository.addLog(
               guild.id,
               oldMember.id,
               `KICKED BY ${executor?.tag ?? "Unkown"}`,
               "VC",
-              oldChannelId,
+              oldState.channelId,
+              oldState.channel.name,
+              "-",
               "-"
             );
-        }
+          }
         } catch (error) {}
 
-        if (!kicked){
+        if (!kicked) {
           await userlogRepository.addLog(
             guild.id,
             member.id,
             "LEAVE",
             "VC",
-            oldChannelId,
+            oldState.channelId,
+            oldState.channel.name,
+            "-",
             "-"
           );
         }
@@ -80,8 +86,10 @@ module.exports = {
           member.id,
           "SWITCH",
           "VC",
-          oldChannelId,
-          newChannelId
+          oldState.channelId,
+          oldState.channel.name,
+          newState.channelId,
+          newState.channel.name,
         );
       }
 

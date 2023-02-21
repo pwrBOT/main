@@ -5,7 +5,7 @@ module.exports = {
   name: "messageDelete",
   once: false,
   async execute(message) {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       if (!message) {
         return resolve(null);
       }
@@ -21,8 +21,17 @@ module.exports = {
       }
 
       if (message.guild) {
-        const messageContent = message.content ?? "-"
-        await userlogRepository.addLog(message.guild.id, message.author.id, "DELETE", "MESSAGE", messageContent, "-")
+        const messageContent = message.content ?? "-";
+        await userlogRepository.addLog(
+          message.guild.id,
+          message.author.id,
+          "DELETE",
+          "MESSAGE",
+          message.id,
+          messageContent,
+          "-",
+          "-"
+        );
       }
     });
   }

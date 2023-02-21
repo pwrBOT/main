@@ -114,6 +114,8 @@ module.exports = {
           "BADWORD",
           "AUTOMOD",
           message.content,
+          "-",
+          "-",
           "-"
         );
       }

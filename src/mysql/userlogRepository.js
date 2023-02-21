@@ -33,7 +33,7 @@ const getLogsByAction = async (member, action, limit) => {
   });
 }
 
-const addLog = async (guildId_, userId_, action_, type_, oldState_, newState_) => {
+const addLog = async (guildId_, userId_, action_, type_, oldState_, oldStateName_, newState_, newStateName_) => {
   return new Promise((resolve) => {
 
     const guildId = guildId_ ?? "-"
@@ -41,10 +41,12 @@ const addLog = async (guildId_, userId_, action_, type_, oldState_, newState_) =
     const action = action_ ?? "-"
     const type = type_ ?? "-"
     const oldState = oldState_ ?? "-"
+    const oldStateName = oldStateName_ ?? "-"
     const newState = newState_ ?? "-"
+    const newStateName = newStateName_ ?? "-"
 
     mysqlHelper
-      .query('INSERT INTO powerbot_userlog (guildId, userId, action, type, oldState, newState) VALUES ( ?, ?, ?, ?, ?, ?)', [guildId, userId, action, type, oldState, newState])
+      .query('INSERT INTO powerbot_userlog (guildId, userId, action, type, oldState, oldStateName, newState, newStateName) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)', [guildId, userId, action, type, oldState, oldStateName, newState, newStateName])
       .then( (result) => {
         // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
         resolve(null);

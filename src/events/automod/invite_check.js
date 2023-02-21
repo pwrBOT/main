@@ -230,6 +230,8 @@ module.exports = {
           "INVITECHECK",
           "AUTOMOD",
           message.content,
+          "-",
+          "-",
           "-"
         );
       }

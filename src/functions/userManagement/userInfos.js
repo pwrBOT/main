@@ -24,28 +24,22 @@ const getUserVCActivity = async (member, guild) => {
 
       let channel = "";
       if (activity.action == "JOIN") {
-        channel = await guild.channels
-          .fetch(activity.newState)
-          .catch((error) => {});
+        channel = activity.newStateName;
       } else if (activity.action == "LEAVE") {
-        channel = await guild.channels
-          .fetch(activity.oldState)
-          .catch((error) => {});
+        channel = activity.oldStateName;
       } else if (activity.action == "SWITCH") {
-        channel = await guild.channels
-          .fetch(activity.newState)
-          .catch((error) => {});
+        channel = activity.newStateName;
       } else if (activity.action.startsWith("KICKED BY")) {
-        channel = await guild.channels
-          .fetch(activity.oldState)
-          .catch((error) => {});
+        channel = activity.oldStateName;
       } else {
-        channel = "unbekannt";
+        channel = "*unbekannt*";
       }
 
-      userVCActivity += `${date} ${time}:\u00A0${
-        activity.action
-      }\u00A0\u00A0\u00A0(${channel?.name ?? "Nicht mehr vorhanden"})\n`;
+      if ((channel.length == 0)) {
+        channel = "*unbekannt*";
+      }
+
+      userVCActivity += `${date} ${time}:\u00A0${activity.action}\u00A0\u00A0\u00A0(${channel})\n`;
     }
 
     return resolve(userVCActivity);
@@ -89,7 +83,7 @@ const getOldWarns = async (member, guild, userData) => {
       oldWarnsText += `${date}\u00A0•\u00A0${time}h:${spacer}Warngrund: ${oldWarn.warnReason}\u00A0|\u00A0\nLöschgrund: ${oldWarn.delReason}\n\n`;
     });
   }
-  return oldWarnsText
+  return oldWarnsText;
 };
 
 const getVoiceTime = (userData) => {
