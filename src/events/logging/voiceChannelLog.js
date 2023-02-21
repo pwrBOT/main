@@ -31,7 +31,7 @@ module.exports = {
       }
       // USER LEFT CHANNEL
       if (oldChannelId !== null && newChannelId === null) {
-        const oldMember = await guild.members.cache.get(oldState.id);
+        const oldMember = await guild.members.fetch(oldState.id);
 
         let kicked = false
 

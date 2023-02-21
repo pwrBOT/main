@@ -3,9 +3,8 @@ const {
   PermissionFlagsBits,
   EmbedBuilder
 } = require(`discord.js`);
-const warnsRepository = require("../../mysql/warnsRepository");
+const userInfos = require("../../functions/userManagement/userInfos");
 const usersRepository = require("../../mysql/usersRepository");
-const userlogRepository = require("../../mysql/userlogRepository");
 
 module.exports = {
   name: "userinfo",
@@ -16,11 +15,11 @@ module.exports = {
     .setDescription(`Informationen ausgeben lassen`)
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
     .setDMPermission(false)
-    .addSubcommand(subcommand =>
+    .addSubcommand((subcommand) =>
       subcommand
         .setName(`user`)
         .setDescription(`Infos über User ausgeben`)
-        .addUserOption(option =>
+        .addUserOption((option) =>
           option
             .setName("user")
             .setDescription("User auswählen")
@@ -29,17 +28,15 @@ module.exports = {
     ),
 
   async execute(interaction, client) {
-    return new Promise(async resolve => {
-      const message = await interaction.deferReply({
-        ephemeral: true,
-        fetchReply: true
-      });
-
+    return new Promise(async (resolve) => {
       if (interaction.options.getSubcommand() === "user") {
         const { options, guild } = interaction;
         const member = options.getMember("user");
         if (!member) {
-          interaction.editReply("❌ Der User ist nicht mehr auf dem Server ❌");
+          interaction.reply({
+            content: "❌ Der User ist nicht mehr auf dem Server ❌",
+            ephemeral: true
+          });
           return resolve(null);
         }
 
@@ -48,110 +45,24 @@ module.exports = {
         let userData = await usersRepository.getUser(userId, guildId);
 
         if (!userData) {
-          interaction.editReply(`❌ Kein Daten zu ${member} verfügbar! ❌`);
+          interaction.reply({
+            content: `❌ Kein Daten zu ${member} verfügbar! ❌`,
+            ephemeral: true
+          });
           return resolve(null);
         }
 
-        let totalVoiceTime = "";
-        if (userData.totalVoiceTime > 60) {
-          const voiceTime = userData.totalVoiceTime / 60;
-          totalVoiceTime = `${voiceTime.toFixed(1)} Stunden`;
-        } else {
-          const voiceTime = userData.totalVoiceTime;
-          totalVoiceTime = `${voiceTime} Minuten`;
-        }
-
+        const totalVoiceTime = userInfos.getVoiceTime(userData);
         let totalVoiceTimeDays = (userData.totalVoiceTime / 60 / 24).toFixed(1);
 
-        let currentUserXp = 0;
-        let currentLevel = 0;
-        let nextLevelXP = 0;
+        let currentUserXp = userData?.xP ?? 0;
+        let currentLevel = userData?.Level ?? 0;
+        let nextLevelXP = userData.Level * userData.Level * 100 + 100;
 
-        if (userData == null) {
-          currentUserXp = 0;
-          currentLevel = 0;
-          nextLevelXP = 100;
-        } else {
-          currentUserXp = userData.xP;
-          currentLevel = userData.Level;
-          nextLevelXP = userData.Level * userData.Level * 100 + 100;
-        }
+        const warnsText = await userInfos.getCurrentWarns(member);
+        const oldWarnsText = await userInfos.getOldWarns(member);
+        const userVCActivity = await userInfos.getUserVCActivity(member, guild);
 
-        // GET CURRENT WARNS
-        let warnsText = "";
-        let warns = await warnsRepository.getWarns(member, "active", -1);
-
-        if (warns.length === 0) {
-          warnsText = `Der User hat keine Verwarnungen!`;
-        } else {
-          await warns.forEach(warn => {
-            const date = new Date(warn.warnAdd).toLocaleDateString("de-DE");
-            const time = new Date(warn.warnAdd).toLocaleTimeString("de-DE", {
-              hour: "2-digit",
-              minute: "2-digit"
-            });
-            const spacer = `\u00A0\u00A0\u00A0\u00A0`;
-            warnsText += `${date}  •  ${time}h:${spacer}${warn.warnReason}\n`;
-          });
-        }
-
-        // GET OLD WARNS
-        let oldWarnsText = "";
-        let oldWarns = await warnsRepository.getWarns(member, "removed", -1);
-
-        if (oldWarns.length === 0) {
-          oldWarnsText = `Der User hat keine gelöschten Verwarnungen!`;
-        } else {
-          await oldWarns.forEach(oldWarn => {
-            const date = new Date(oldWarn.warnAdd).toLocaleDateString("de-DE");
-            const time = new Date(oldWarn.warnAdd).toLocaleTimeString("de-DE", {
-              hour: "2-digit",
-              minute: "2-digit"
-            });
-            const spacer = `\u00A0\u00A0\u00A0\u00A0`;
-            oldWarnsText += `${date}\u00A0•\u00A0${time}h:${spacer}Warngrund: ${oldWarn.warnReason}\u00A0|\u00A0\nLöschgrund: ${oldWarn.delReason}\n\n`;
-          });
-        }
-
-        // ###################### GET LAST 10 VC JOIN/LEAVE/SWITCH ###################### \\
-        let userVCActivity = "";
-        const lastUserVCActivity = await userlogRepository.getLogsByType(
-          member,
-          "VC",
-          10
-        );
-
-        if (lastUserVCActivity.length === 0) {
-          userVCActivity = "Keine Aktivität vorhanden";
-        } else {
-          await lastUserVCActivity.forEach(async activity => {
-            const date = new Date(activity.timestamp).toLocaleDateString(
-              "de-DE"
-            );
-            const time = new Date(
-              activity.timestamp
-            ).toLocaleTimeString("de-DE", {
-              hour: "2-digit",
-              minute: "2-digit"
-            });
-            const tab = `\u0009`;
-
-            let channel = "";
-            if (activity.action == "JOIN") {
-              channel = await guild.channels.fetch(activity.newState);
-            } else if (activity.action == "LEAVE") {
-              channel = await guild.channels.fetch(activity.oldState);
-            } else if (activity.action == "SWITCH") {
-              channel = await guild.channels.fetch(activity.newState);
-            } else if (activity.action.startsWith("KICKED BY")) {
-              channel = await guild.channels.fetch(activity.oldState);
-            }
-
-            userVCActivity += `${date} ${time}:\u00A0${activity.action}\u00A0\u00A0\u00A0(${channel.name ?? "Nicht mehr vorhanden"})\n`;
-          });
-        }
-
-        // ########################################################## \\
 
         const userembed = new EmbedBuilder()
           .setTitle(`⚡️ User Info ⚡️`)
@@ -237,7 +148,7 @@ module.exports = {
             {
               name: `Rollen:`,
               value: `${member.roles.cache
-                .map(r => r)
+                .map((r) => r)
                 .join(" ")
                 .replace("@everyone", " " || "None")}`,
               inline: false
@@ -254,12 +165,12 @@ module.exports = {
             },
             {
               name: `VoiceChannel Aktivität:`,
-              value: `${userVCActivity}`,
+              value: `${userVCActivity ?? "-"}`,
               inline: false
             }
           ]);
 
-        await interaction.editReply({ embeds: [userembed] });
+        await interaction.reply({ embeds: [userembed], ephemeral: true });
 
         const commandLogRepository = require("../../mysql/commandLogRepository");
         // guild - command, user, affectedMember, reason

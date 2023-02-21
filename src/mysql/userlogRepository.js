@@ -3,8 +3,12 @@ const mysqlHelper = require("./mysqlHelper");
 
 const getLogsByType = async (member, type, limit) => {
   return new Promise((resolve) => {
+    const now = new Date()
+    let dateOffset = new Date()
+    dateOffset = new Date(dateOffset.setDate(dateOffset.getDate()-1))
+
     mysqlHelper
-      .query('SELECT * FROM powerbot_userlog WHERE guildId = ? AND userId = ? AND type = ? ORDER BY ID DESC', [member.guild.id, member.user.id, type], limit)
+      .query(`SELECT * FROM powerbot_userlog WHERE guildId = ? AND userId = ? AND type = ? ORDER BY ID DESC`, [member.guild.id, member.user.id, type], limit)
       .then( (result) => {
         // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
         resolve(result ?? null);

@@ -31,7 +31,7 @@ module.exports = {
       if (oldMessage.guild || newMessage.guild) {
         const oldMessageContent = oldMessage.content ?? "-"
         const newMessageContent = newMessage.content ?? "-" 
-        await userlogRepository.addLog(newMessage.guild.id, newMessage.author.id, "UPDATE", "MESSAGE", oldMessageContent, newMessageContent)
+        await userlogRepository.addLog(newMessage.guild.id, newMessage.author.id, "UPDATE", "MESSAGE", `BEFORE: ${oldMessageContent}`, `AFTER: ${newMessageContent}`)
       }
     });
   }
