@@ -215,7 +215,7 @@ module.exports = {
       await interaction.editReply({ content: newMessage });
       try {
         setTimeout(function() {
-          interaction.deleteReply();
+          interaction.deleteReply().catch(error => {});;
         }, 5000);
       } catch (error) {}
 

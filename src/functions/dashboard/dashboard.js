@@ -2936,8 +2936,145 @@ const init = async client => {
             }
           }
         ]
-      }
+      },
       /// ################ AUTO MOD SYSTEM END ################ \\\
+      /// ################## SOCIAL CHECK SYSTEM ################## \\\
+      {
+        categoryId: "socialfeed",
+        categoryName: "Social Alerts",
+        categoryDescription:
+          "Erstellt automatische Ankündigungen, wenn ein Video bei YouTube hochgeladen oder ein Post bei Insta, Facebook, ... veröffentlicht worden ist.",
+        categoryImageURL: "",
+        refreshOnSave: true,
+        categoryOptionsList: [
+          {
+            optionId: "socialPostChannel",
+            optionName: "",
+            optionDescription: "Social-Alert Channel:",
+            optionType: DBD.formTypes.channelsSelect(
+              false,
+              (channelTypes = [ChannelType.GuildText, ChannelType.GuildAnnouncement])
+            ),
+            getActualSet: async ({ guild }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "socialPostChannel"
+              );
+
+              if (data) return data.value;
+              else return null;
+            },
+            setNew: async ({ guild, newData }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "socialPostChannel"
+              );
+
+              if (!newData) newData = null;
+
+              if (!data) {
+                const property = "socialPostChannel";
+                await guildsRepository.insertGuildSetting(
+                  guild,
+                  property,
+                  newData
+                );
+              } else {
+                const property = "socialPostChannel";
+                await guildsRepository.updateGuildSetting(
+                  guild,
+                  property,
+                  newData
+                );
+              }
+              return;
+            }
+          },
+          {
+            optionId: "socialPingRole",
+            optionName: "",
+            optionDescription: "Soll eine Rolle gepingt werden?:",
+            optionType: DBD.formTypes.rolesSelect(false),
+            getActualSet: async ({ guild }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "socialPingRole"
+              );
+
+              if (data) return data.value;
+              else return null;
+            },
+            setNew: async ({ guild, newData }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "socialPingRole"
+              );
+
+              if (!newData) newData = null;
+
+              if (!data) {
+                const property = "socialPingRole";
+                await guildsRepository.insertGuildSetting(
+                  guild,
+                  property,
+                  newData
+                );
+              } else {
+                const property = "socialPingRole";
+                await guildsRepository.updateGuildSetting(
+                  guild,
+                  property,
+                  newData
+                );
+              }
+              return;
+            }
+          },
+          {
+            optionId: "ytChannelLinks",
+            optionName: "",
+            optionDescription:
+              "Links zu YouTube Channeln, von denen du Benachrichtigungen erhalten möchtest.\nWICHTIG: Es muss immer die vollständige Kanal-URL inkl. Channel-ID angegeben werden.\nBeispiel: https://www.youtube.com/channel/UCeo4KWMuoe6U31SCeb_Wnxg",
+              optionType: SoftUI.formTypes.tagInput(false),
+              getActualSet: async ({ guild }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "ytChannelLinks"
+                );
+  
+                if (data) return JSON.parse(data.value);
+                else
+                  return [];
+              },
+              setNew: async ({ guild, newData }) => {
+                let data = await guildsRepository.getGuildSetting(
+                  guild,
+                  "ytChannelLinks"
+                );
+  
+                if (!data) {
+                  const property = "ytChannelLinks";
+                  newDataString = JSON.stringify(newData);
+                  await guildsRepository.insertGuildSetting(
+                    guild,
+                    property,
+                    newDataString
+                  );
+                } else {
+                  const property = "ytChannelLinks";
+                  newDataString = JSON.stringify(newData);
+                  await guildsRepository.updateGuildSetting(
+                    guild,
+                    property,
+                    newDataString
+                  );
+                }
+                return;
+              }
+          },
+        ]
+      }
+      /// ################ SOCIAL CHECK SYSTEM END ################ \\\
     ],
     customPages: [
       DBD.customPagesTypes.renderHtml(`/leaderboard`, ({ user, guild }) => {

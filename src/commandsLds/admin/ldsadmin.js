@@ -42,9 +42,10 @@ module.exports = {
         return resolve(null);
       }
 
-      if (channel.id != "909114701219242034") {
+      if (channel.id != "963759674300178492") {
+        const channel = await interaction.guild.channels.fetch("963759674300178492")
         interaction.reply(
-          `❌ Der Befehl kann nur im Channel "entwicklung" ausgeführt werden!`
+          `❌ Der Befehl kann nur im Channel ${channel} ausgeführt werden!`
         );
         setTimeout(() => {
           interaction.deleteReply().catch(error => {});
@@ -103,7 +104,7 @@ module.exports = {
                       msg = await channel.send(
                         "⚠️ Die Generierung der Locals wurde angestoßen..."
                       );
-                      start()
+                      start();
                     } else {
                       msg = await channel.send(
                         "❌ FEHLER | Die Generierung der Locals konnte nicht gestartet werden!"
@@ -122,16 +123,21 @@ module.exports = {
                         .then(res => {
                           if (res && !res.data.running) {
                             if (res.data.successful) {
-                              clearInterval(intervalId);
                               msg.delete();
-                              end()
+                              end();
                               channel.send(
                                 `✅ Die Generierung der Locals wurde erfolgreich in ${duration} abgeschlossen!`
                               );
+                            } else {
+                              msg.delete();
+                              channel.send(
+                                "⚠️ FEHLER | Die Generierung der Locals war nicht erfolgreich!"
+                              );
                             }
+                            clearInterval(intervalId);
                           }
                         })
-                        .catch(e => {
+                        .catch(error => {
                           console.log(error);
                         });
                     }, 10000);
@@ -163,7 +169,7 @@ module.exports = {
 
       if (interaction.options.getSubcommand() === "generateaudio") {
         const activeCheck = await fetch(
-          "https://dev.app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Locales/branch/master/status?token=6IlQnelRwGa18jynvwRfZg=="
+          "https://dev.app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Audio/branch/master/status?token=6IlQnelRwGa18jynvwRfZg=="
         )
           .then(res => res.json())
           .then(async res => {
@@ -177,7 +183,7 @@ module.exports = {
               await interaction.reply("-");
               await interaction.deleteReply().catch(error => {});
               const checkMessage = await channel.send(
-                "Möchtest du die Generierung der Locals wirklich anstoßen?"
+                "Möchtest du die Generierung der Sprachansagen wirklich anstoßen?"
               );
               checkMessage.react("✅").then(r => {
                 checkMessage.react("❌");
@@ -210,12 +216,12 @@ module.exports = {
                     let msg = "";
 
                     if (response.status < 300) {
-                      const msg = await channel.send(
+                      msg = await channel.send(
                         "⚠️ Die Generierung der Sprachansagen wurde erfolgreich angestoßen..."
                       );
-                      start()
+                      start();
                     } else {
-                      const msg = await channel.send(
+                      msg = await channel.send(
                         "❌ FEHLER | Die Generierung der Sprachansagen konnte nicht gestartet werden!"
                       );
                       setTimeout(() => {
@@ -232,16 +238,21 @@ module.exports = {
                         .then(res => {
                           if (res && !res.data.running) {
                             if (res.data.successful) {
-                              clearInterval(intervalId);
                               msg.delete();
-                              end()
+                              end();
                               channel.send(
-                                `✅ Die Generierung der Locals wurde erfolgreich in ${duration} abgeschlossen!`
+                                `✅ Die Generierung der Sprachansagen wurde erfolgreich in ${duration} abgeschlossen!`
+                              );
+                            } else {
+                              msg.delete();
+                              channel.send(
+                                "⚠️ FEHLER | Die Generierung der Sprachansagen war nicht erfolgreich!"
                               );
                             }
+                            clearInterval(intervalId);
                           }
                         })
-                        .catch(e => {
+                        .catch(error => {
                           console.log(error);
                         });
                     }, 10000);
@@ -282,7 +293,7 @@ module.exports = {
 
         // get seconds
         var seconds = Math.round(timeDiff);
-        duration = seconds + " Sekunden"
+        duration = seconds + " Sekunden";
       }
     });
   }

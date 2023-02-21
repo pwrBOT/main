@@ -5,6 +5,8 @@ const {
   ChannelType
 } = require("discord.js");
 
+const imgUpload = require("../../functions/fileUpload/imgUpload")
+
 module.exports = {
   name: "Announcement",
   category: "admintools",
@@ -18,7 +20,6 @@ module.exports = {
       option
         .setName("channel")
         .setDescription("Channel auswählen")
-        .addChannelTypes(ChannelType.GuildText)
         .setRequired(true)
     )
     .addStringOption(option =>
@@ -71,8 +72,8 @@ module.exports = {
         .setTimestamp(Date.now());
 
       if (titelbild) {
-        const titelbildLink = titelbild.url;
-        announcement.setImage(titelbildLink);
+        const upload = await imgUpload.upload(titelbild.url)
+        announcement.setImage(upload.link);
       }
 
       if (text) {
@@ -91,7 +92,7 @@ module.exports = {
 
       try {
         setTimeout(function() {
-          interaction.deleteReply();
+          interaction.deleteReply().catch(error => {});
         }, 5000);
       } catch (error) {}
 

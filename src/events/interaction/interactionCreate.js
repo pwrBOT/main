@@ -22,7 +22,7 @@ module.exports = {
       const { commands } = client;
       const { commandName } = interaction;
       const contextCommand = commands.get(commandName);
-      if (!contextCommand) return;
+      if (!contextCommand) return new Error("Diese App hat noch keine Power.");
 
       try {
         await contextCommand.execute(interaction, client);

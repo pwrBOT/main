@@ -1,5 +1,6 @@
 const { VoiceState, ChannelType } = require("discord.js");
 const tempChannelsRepository = require("../../mysql/tempChannelsRepository");
+const userlogRepository = require("../../mysql/userlogRepository");
 
 module.exports = {
   name: "voiceStateUpdate",
@@ -13,14 +14,14 @@ module.exports = {
     return new Promise(async resolve => {
       const oldChannelId = oldState.channelId;
       const newChannelId = newState.channelId;
-      const guild = client.guilds.cache.get(newState.guild.id);
-      const member = guild.members.cache.get(newState.id);
+      const guild = await client.guilds.cache.get(newState.guild.id);
+      const member = await guild.members.cache.get(newState.id);
       const oldChannel = await oldState.guild.channels
         .fetch(oldChannelId)
         .catch(console.error);
       const newChannel = await newState.guild.channels
         .fetch(newChannelId)
-        .catch(console.error);
+        .catch(error => {});
 
       if (oldState) {
         const tempChannelCheckTemp = await tempChannelsRepository.getTempVoiceChannel(
@@ -83,13 +84,18 @@ module.exports = {
           })
           .catch(console.error);
 
+
+        try {
+          setTimeout(() => member.voice.setChannel(voiceChannel), 200);
+        } catch (error) {}
+
         if (tempChannelCheck.giveUserPermission == "yes") {
-          voiceChannel.permissionOverwrites.edit(member.id, {
+          await voiceChannel.permissionOverwrites.edit(member.id, {
             ManageChannels: true,
             MoveMembers: true,
             ManageMessages: true,
             MuteMembers: true
-          });
+          }).catch(error => {});
         }
 
         await tempChannelsRepository.addTempVoiceChannel(
@@ -101,11 +107,6 @@ module.exports = {
           "-",
           "-"
         );
-        // client.voiceGenerator.set(member.user.id, voiceChannel.id);  häää?
-        try {
-          setTimeout(() => member.voice.setChannel(voiceChannel), 200);
-        } catch (error) {}
-
         return resolve(null);
       }
     });

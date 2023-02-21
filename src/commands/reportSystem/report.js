@@ -6,7 +6,7 @@ const {
   ActionRowBuilder
 } = require("discord.js");
 
-const guildSettings = require("../../mysql/guildsRepository");
+const guildsRepository = require("../../mysql/guildsRepository");
 
 module.exports = {
   name: "report",
@@ -45,7 +45,7 @@ module.exports = {
         return resolve(null);
       }
 
-      const teamRoleId = await guildSettings.getGuildSetting(
+      const teamRoleId = await guildsRepository.getGuildSetting(
         interaction.guild,
         "teamRole"
       );

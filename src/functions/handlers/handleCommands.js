@@ -28,11 +28,31 @@ module.exports = client => {
       }
     }
 
+    // GLOBAL COMMANDS
+    /** 
     console.log(`\x1b[33mÜbertrage Global Slash-Commands...\x1b[0m`);
+    
     await rest.put(Routes.applicationCommands(clientId), {
-      body: client.commandArray
+      body: []
     });
     console.log(`\x1b[32mGlobal Slash-Commands erfolgreich übertragen!\x1b[0m`);
+    */
+
+    // ####################### WHITELIST ####################### \\
+    const whitelistGuilds = await powerbotManagement.getValues("whitelist");
+
+    await whitelistGuilds.forEach(async whitelistGuild => {
+      const guildId = whitelistGuild.value
+      const guild = await client.guilds.fetch(guildId);
+
+      console.log(`\x1b[33mÜbertrage Slash-Commands zu Whitelist Guild: ${guild.name}\x1b[0m`);
+
+      rest.put(Routes.applicationGuildCommands(clientId, guildId), {
+        body: client.commandArray
+      });
+
+      console.log(`\x1b[32mSlash-Commands zu Whitelist Guild: ${guild.name} übertragen!\x1b[0m`);
+    });
 
     // ####################### LDS COMMANDS ####################### \\
     let { ldsCommandArray } = client;
@@ -54,10 +74,11 @@ module.exports = client => {
     }
 
     const guildLDS = "396282694906150913";
+    const ldsCommandArrayFull = client.ldsCommandArray.concat(client.commandArray)
     console.log(`\x1b[33mÜbertrage Lüdenscheid Slash-Commands\x1b[0m`);
 
-    await rest.put(Routes.applicationGuildCommands(clientId, guildLDS), {
-      body: client.ldsCommandArray
+    rest.put(Routes.applicationGuildCommands(clientId, guildLDS), {
+      body: ldsCommandArrayFull
     });
     console.log(
       `\x1b[32mLüdenscheid Slash-Commands erfolgreich übertragen!\x1b[0m`
@@ -83,13 +104,14 @@ module.exports = client => {
     }
 
     const guildPWR = "994975619521712219";
+    const pwrBotCommandArrayFull = client.pwrCommandArray.concat(client.commandArray)
     console.log(`\x1b[33mÜbertrage PowerBot-Dev Slash-Commands\x1b[0m`);
 
-    await rest.put(Routes.applicationGuildCommands(clientId, guildPWR), {
-      body: client.pwrCommandArray
+    rest.put(Routes.applicationGuildCommands(clientId, guildPWR), {
+      body: pwrBotCommandArrayFull
     });
     console.log(
-      `\x1b[32mLPowerBot-Dev Slash-Commands erfolgreich übertragen!\x1b[0m`
+      `\x1b[32mPowerBot-Dev Slash-Commands erfolgreich übertragen!\x1b[0m`
     );
     // ################################################################# \\
   };

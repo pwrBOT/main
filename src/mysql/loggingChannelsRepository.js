@@ -1,5 +1,6 @@
 const guildsRepository = require("./guildsRepository");
 
+
 const logChannel = async (guild, property, logEmbed) => {
   return new Promise(async (resolve) => {
     const data = await guildsRepository.getGuildSetting(guild, property);

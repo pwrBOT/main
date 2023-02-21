@@ -30,7 +30,7 @@ module.exports = {
       interaction.reply({embeds: [responseembed]});
       try {
         setTimeout(function() {
-          interaction.deleteReply();
+          interaction.deleteReply().catch(error => {});;
         }, 5000);
       } catch (error) {}
   })

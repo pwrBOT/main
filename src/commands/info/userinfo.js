@@ -5,6 +5,7 @@ const {
 } = require(`discord.js`);
 const warnsRepository = require("../../mysql/warnsRepository");
 const usersRepository = require("../../mysql/usersRepository");
+const userlogRepository = require("../../mysql/userlogRepository");
 
 module.exports = {
   name: "userinfo",
@@ -15,11 +16,11 @@ module.exports = {
     .setDescription(`Informationen ausgeben lassen`)
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
     .setDMPermission(false)
-    .addSubcommand((subcommand) =>
+    .addSubcommand(subcommand =>
       subcommand
         .setName(`user`)
         .setDescription(`Infos über User ausgeben`)
-        .addUserOption((option) =>
+        .addUserOption(option =>
           option
             .setName("user")
             .setDescription("User auswählen")
@@ -28,7 +29,7 @@ module.exports = {
     ),
 
   async execute(interaction, client) {
-    return new Promise(async (resolve) => {
+    return new Promise(async resolve => {
       const message = await interaction.deferReply({
         ephemeral: true,
         fetchReply: true
@@ -48,46 +49,42 @@ module.exports = {
 
         if (!userData) {
           interaction.editReply(`❌ Kein Daten zu ${member} verfügbar! ❌`);
-          return resolve(null)
+          return resolve(null);
         }
 
-        let totalVoiceTime = ""
-         if (userData.totalVoiceTime > 60) {
-          const voiceTime = userData.totalVoiceTime / 60
-          totalVoiceTime = `${voiceTime.toFixed(1)} Stunden`
+        let totalVoiceTime = "";
+        if (userData.totalVoiceTime > 60) {
+          const voiceTime = userData.totalVoiceTime / 60;
+          totalVoiceTime = `${voiceTime.toFixed(1)} Stunden`;
         } else {
-          const voiceTime = userData.totalVoiceTime
-          totalVoiceTime = `${voiceTime} Minuten`
+          const voiceTime = userData.totalVoiceTime;
+          totalVoiceTime = `${voiceTime} Minuten`;
         }
 
-        let totalVoiceTimeDays = ((userData.totalVoiceTime / 60) / 24).toFixed(1)
+        let totalVoiceTimeDays = (userData.totalVoiceTime / 60 / 24).toFixed(1);
 
         let currentUserXp = 0;
         let currentLevel = 0;
         let nextLevelXP = 0;
 
         if (userData == null) {
-          currentUserXp = 0
-          currentLevel = 0
-          nextLevelXP = 100
+          currentUserXp = 0;
+          currentLevel = 0;
+          nextLevelXP = 100;
         } else {
           currentUserXp = userData.xP;
           currentLevel = userData.Level;
           nextLevelXP = userData.Level * userData.Level * 100 + 100;
         }
-        
+
         // GET CURRENT WARNS
         let warnsText = "";
         let warns = await warnsRepository.getWarns(member, "active", -1);
 
-        if (!warns) {
-          return resolve(null);
-        }
-
         if (warns.length === 0) {
           warnsText = `Der User hat keine Verwarnungen!`;
         } else {
-          warns.forEach((warn) => {
+          await warns.forEach(warn => {
             const date = new Date(warn.warnAdd).toLocaleDateString("de-DE");
             const time = new Date(warn.warnAdd).toLocaleTimeString("de-DE", {
               hour: "2-digit",
@@ -102,14 +99,10 @@ module.exports = {
         let oldWarnsText = "";
         let oldWarns = await warnsRepository.getWarns(member, "removed", -1);
 
-        if (!oldWarns) {
-          return resolve(null);
-        }
-
         if (oldWarns.length === 0) {
           oldWarnsText = `Der User hat keine gelöschten Verwarnungen!`;
         } else {
-          oldWarns.forEach((oldWarn) => {
+          await oldWarns.forEach(oldWarn => {
             const date = new Date(oldWarn.warnAdd).toLocaleDateString("de-DE");
             const time = new Date(oldWarn.warnAdd).toLocaleTimeString("de-DE", {
               hour: "2-digit",
@@ -119,6 +112,46 @@ module.exports = {
             oldWarnsText += `${date}\u00A0•\u00A0${time}h:${spacer}Warngrund: ${oldWarn.warnReason}\u00A0|\u00A0\nLöschgrund: ${oldWarn.delReason}\n\n`;
           });
         }
+
+        // ###################### GET LAST 10 VC JOIN/LEAVE/SWITCH ###################### \\
+        let userVCActivity = "";
+        const lastUserVCActivity = await userlogRepository.getLogsByType(
+          member,
+          "VC",
+          10
+        );
+
+        if (lastUserVCActivity.length === 0) {
+          userVCActivity = "Keine Aktivität vorhanden";
+        } else {
+          await lastUserVCActivity.forEach(async activity => {
+            const date = new Date(activity.timestamp).toLocaleDateString(
+              "de-DE"
+            );
+            const time = new Date(
+              activity.timestamp
+            ).toLocaleTimeString("de-DE", {
+              hour: "2-digit",
+              minute: "2-digit"
+            });
+            const tab = `\u0009`;
+
+            let channel = "";
+            if (activity.action == "JOIN") {
+              channel = await guild.channels.fetch(activity.newState);
+            } else if (activity.action == "LEAVE") {
+              channel = await guild.channels.fetch(activity.oldState);
+            } else if (activity.action == "SWITCH") {
+              channel = await guild.channels.fetch(activity.newState);
+            } else if (activity.action.startsWith("KICKED BY")) {
+              channel = await guild.channels.fetch(activity.oldState);
+            }
+
+            userVCActivity += `${date} ${time}:\u00A0${activity.action}\u00A0\u00A0\u00A0(${channel.name ?? "Nicht mehr vorhanden"})\n`;
+          });
+        }
+
+        // ########################################################## \\
 
         const userembed = new EmbedBuilder()
           .setTitle(`⚡️ User Info ⚡️`)
@@ -204,7 +237,7 @@ module.exports = {
             {
               name: `Rollen:`,
               value: `${member.roles.cache
-                .map((r) => r)
+                .map(r => r)
                 .join(" ")
                 .replace("@everyone", " " || "None")}`,
               inline: false
@@ -217,6 +250,11 @@ module.exports = {
             {
               name: `Abgelaufene / gelöschte Verwarnungen:`,
               value: `${oldWarnsText}`,
+              inline: false
+            },
+            {
+              name: `VoiceChannel Aktivität:`,
+              value: `${userVCActivity}`,
               inline: false
             }
           ]);

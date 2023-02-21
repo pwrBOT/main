@@ -9,7 +9,7 @@ const {
 } = require("discord.js");
 
 const eventRepository = require("../../mysql/eventRepository");
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 
 module.exports = {
   name: "event",
@@ -106,14 +106,14 @@ module.exports = {
           return resolve(null);
         }
 
+        const eventStartTime = Date.parse(eventStart) / 1000 - 3600;
+        const eventEndTime = Date.parse(eventEnd) / 1000 - 3600;
+
         // DEFINE EMBED
         const eventEmbed = new EmbedBuilder()
           .setTitle(`${eventTitle}`)
           .setDescription(
-            `${eventDescription}\n\n**Zeit:**\n<t:${Date.parse(eventStart) /
-              1000 -
-              3600}:F> - <t:${Date.parse(eventEnd) / 1000 -
-              3600}:F>\n⏱ <t:${Date.parse(eventStart) / 1000 - 3600}:R>\n\n`
+            `${eventDescription}\n\n**Zeit:**\n<t:${eventStartTime}:F> - <t:${eventEndTime}:F>\n⏱ <t:${eventStartTime}:R>\n\n`
           )
           .setColor(0x03b6fc)
           .setFooter({

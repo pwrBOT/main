@@ -70,39 +70,41 @@ const init = async client => {
 const eventEndCheck = async client => {
   const allEvents = await eventRepository.getAllEvents();
 
-  allEvents.forEach(async event => {
-    if (event.eventEnd < new Date(Date.now() + 3600000)) {
-      const channel = await client.channels.fetch(event.channelId);
-      const message = await channel.messages.fetch(event.messageId);
-      const embed = await message.embeds[0];
-      const eventId = await embed.footer.text.split("#")[1];
+  if (allEvents) {
+    allEvents.forEach(async event => {
+      if (event.eventEnd < new Date(Date.now() + 3600000)) {
+        const channel = await client.channels.fetch(event.channelId);
+        const message = await channel.messages.fetch(event.messageId);
+        const embed = await message.embeds[0];
+        const eventId = await embed.footer.text.split("#")[1];
 
-      const newEmbed = new EmbedBuilder()
-        .setTitle(`${embed.title} [Event beendet]`)
-        .setDescription(embed.description)
-        .setColor(embed.color)
-        .setFooter(embed.footer)
-        .addFields(embed.fields);
+        const newEmbed = new EmbedBuilder()
+          .setTitle(`${embed.title} [Event beendet]`)
+          .setDescription(embed.description)
+          .setColor(embed.color)
+          .setFooter(embed.footer)
+          .addFields(embed.fields);
 
-      if (embed.image) {
-        newEmbed.setImage(embed.image.url);
+        if (embed.image) {
+          newEmbed.setImage(embed.image.url);
+        }
+
+        await message.edit({
+          embeds: [newEmbed],
+          components: [
+            new ActionRowBuilder().addComponents([
+              buttonSubscribeHidden,
+              buttonTentativeHidden,
+              buttonUnsubscribeHidden,
+              buttonReactivate
+            ])
+          ]
+        });
+
+        await eventRepository.eventUpdate(eventId, "eventStatus", "ended");
       }
-
-      await message.edit({
-        embeds: [newEmbed],
-        components: [
-          new ActionRowBuilder().addComponents([
-            buttonSubscribeHidden,
-            buttonTentativeHidden,
-            buttonUnsubscribeHidden,
-            buttonReactivate
-          ])
-        ]
-      });
-
-      await eventRepository.eventUpdate(eventId, "eventStatus", "ended");
-    }
-  });
+    });
+  }
 };
 
 const eventReminder = async client => {
@@ -120,7 +122,7 @@ const eventReminder = async client => {
         const message = await channel.messages.fetch(event.messageId);
 
         if (!message) {
-          return
+          return;
         }
 
         const embed = await message.embeds[0];
@@ -154,14 +156,16 @@ const eventReminder = async client => {
           const member = await client.users.fetch(teilnehmer.memberId);
 
           try {
-            await member.send({
-              content: `**📅 EVENT REMINDER**\n\nEin Event, zu dem du dich eingetragen hast, beginnt ⏱<t:${Date.parse(
-                event.eventStart
-              ) /
-                1000 -
-                3600}:R>\n`,
-              embeds: [newEmbed]
-            }).catch(error => {});
+            await member
+              .send({
+                content: `**📅 EVENT REMINDER**\n\nEin Event, zu dem du dich eingetragen hast, beginnt ⏱<t:${Date.parse(
+                  event.eventStart
+                ) /
+                  1000 -
+                  3600}:R>\n`,
+                embeds: [newEmbed]
+              })
+              .catch(error => {});
           } catch (error) {}
         });
 
@@ -173,10 +177,12 @@ const eventReminder = async client => {
           const member = await client.users.fetch(tentative.memberId);
 
           try {
-            await member.send({
-              content: `**📅  EVENT REMINDER**\n\nEin Event, für das du dich interessierst, beginnt in Kürze:`,
-              embeds: [newEmbed]
-            }).catch(error => {});
+            await member
+              .send({
+                content: `**📅  EVENT REMINDER**\n\nEin Event, für das du dich interessierst, beginnt in Kürze:`,
+                embeds: [newEmbed]
+              })
+              .catch(error => {});
           } catch (error) {}
         });
       }
@@ -199,7 +205,7 @@ const eventReminderNow = async client => {
         const message = await channel.messages.fetch(event.messageId);
 
         if (!message) {
-          return
+          return;
         }
 
         const embed = await message.embeds[0];
@@ -233,10 +239,12 @@ const eventReminderNow = async client => {
           const member = await client.users.fetch(teilnehmer.memberId);
 
           try {
-            await member.send({
-              content: `**📅 EVENT REMINDER**\n\nEin Event, zu dem du dich eingetragen hast, beginnt gleich.`,
-              embeds: [newEmbed]
-            }).catch(error => {});
+            await member
+              .send({
+                content: `**📅 EVENT REMINDER**\n\nEin Event, zu dem du dich eingetragen hast, beginnt gleich.`,
+                embeds: [newEmbed]
+              })
+              .catch(error => {});
           } catch (error) {}
         });
 
@@ -248,10 +256,12 @@ const eventReminderNow = async client => {
           const member = await client.users.fetch(tentative.memberId);
 
           try {
-            await member.send({
-              content: `**📅  EVENT REMINDER**\n\nEin Event, für das du dich interessierst, beginnt gleich:`,
-              embeds: [newEmbed]
-            }).catch(error => {});
+            await member
+              .send({
+                content: `**📅  EVENT REMINDER**\n\nEin Event, für das du dich interessierst, beginnt gleich:`,
+                embeds: [newEmbed]
+              })
+              .catch(error => {});
           } catch (error) {}
         });
       }

@@ -16,7 +16,7 @@ module.exports = {
               "de-DE"
             )} / ${new Date().toLocaleTimeString(
               "de-DE"
-            )}] AUTO MOD INVITE | STOPP --> NO MESSAGE DEFINED`
+            )}] AUTO MOD INVITE | STOPP --> NO MESSAGE`
           )
         );
         return resolve(null);
@@ -30,7 +30,7 @@ module.exports = {
                 "de-DE"
               )} / ${new Date().toLocaleTimeString(
                 "de-DE"
-              )}] AUTO MOD INVITE | STOPP --> NO MESSAGE.MEMBER DEFINED`
+              )}] AUTO MOD INVITE | STOPP --> NO MESSAGE.MEMBER`
             )
           );
         }
@@ -45,7 +45,7 @@ module.exports = {
                 "de-DE"
               )} / ${new Date().toLocaleTimeString(
                 "de-DE"
-              )}] AUTO MOD INVITE | STOPP --> NO MESSAGE.GUILD DEFINED`
+              )}] AUTO MOD INVITE | STOPP --> NO MESSAGE.GUILD`
             )
           );
         }
@@ -80,7 +80,9 @@ module.exports = {
             var inviteCode = "";
             inviteCode = link.split("/").pop();
 
-            if (inviteCode.length >= 8) {
+            const invite =  await message.guild.fetchVanityData()
+            
+            if (!inviteCode || inviteCode == invite.code) {
               isGuildInvite = true;
             } else {
               await message.guild.invites
@@ -220,6 +222,15 @@ module.exports = {
             )}] AUTO MOD INVITE | Nachricht (${message.content}) von ${message
               .member.user.tag} gelöscht. Server: ${message.guild.name}.`
           )
+        );
+
+        await userlogRepository.addLog(
+          message.guild.id,
+          message.member.user.tag,
+          "INVITECHECK",
+          "AUTOMOD",
+          message.content,
+          "-"
         );
       }
 

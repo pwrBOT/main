@@ -3,6 +3,7 @@ const chalk = require("chalk");
 const guildSettings = require("../../mysql/guildsRepository");
 const warnSystem = require("../../functions/warningSystem/warnings");
 const loggingHandler = require("../../functions/fileLogging/loggingHandler");
+const userlogRepository = require("../../mysql/userlogRepository");
 const ms = require("ms");
 
 module.exports = {
@@ -106,6 +107,15 @@ module.exports = {
           .member.user.tag} gelöscht. Server: ${message.guild.name} (${message
           .guild.id}).`;
         loggingHandler.log(logText, "autoMod");
+
+        await userlogRepository.addLog(
+          message.guild.id,
+          message.member.user.tag,
+          "BADWORD",
+          "AUTOMOD",
+          message.content,
+          "-"
+        );
       }
 
       async function userTimeout() {
@@ -200,7 +210,9 @@ module.exports = {
         } catch (error) {}
 
         try {
-          await message.member.send({ embeds: [embedmember] }).catch(error => {});
+          await message.member
+            .send({ embeds: [embedmember] })
+            .catch(error => {});
         } catch (error) {}
 
         const commandLogRepository = require("../../mysql/commandLogRepository");

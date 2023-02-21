@@ -71,7 +71,7 @@ module.exports = {
           interaction.reply(`${member.displayName} hat keine Verwarnungen!`);
           try {
             setTimeout(function() {
-              interaction.deleteReply();
+              interaction.deleteReply().catch(error => {});;
             }, 5000);
           } catch (error) {}
           return resolve(null);
@@ -227,7 +227,7 @@ module.exports = {
         interaction.reply({ embeds: [delWarnembed] });
         try {
           setTimeout(function() {
-            interaction.deleteReply();
+            interaction.deleteReply().catch(error => {});;
           }, 5000);
         } catch (error) {}
 
@@ -302,7 +302,7 @@ module.exports = {
         interaction.reply({ embeds: [delWarnsembed] });
         try {
           setTimeout(function() {
-            interaction.deleteReply();
+            interaction.deleteReply().catch(error => {});;
           }, 5000);
         } catch (error) {}
 

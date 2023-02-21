@@ -22,11 +22,17 @@ module.exports = {
       const guildId = guild.id;
       const userCheck = await usersRepository.getUser(member.user.id, guildId);
       const levelSettings = await levelsRepository.getlevelSettings(guild);
-      const channelTimeXPCategoryIds = levelSettings.channelTimeXPCategoryIds;
+
+      let channelTimeXPCategoryIds = []
       let channelXpBoostIds = [];
+      try {
+      if (levelSettings.channelTimeXPCategoryIds) {
+        channelTimeXPCategoryIds = levelSettings.channelTimeXPCategoryIds;
+      }
+
       if (levelSettings.channelXpBoostIds) {
         channelXpBoostIds = levelSettings.channelXpBoostIds;
-      }
+      }} catch (error) {}
 
       let getUser;
 
@@ -41,7 +47,8 @@ module.exports = {
         return resolve(null);
       }
 
-      const oldLevel = getUser.Level;
+      const oldLevel = getUser?.Level ?? 0;
+
 
       // USER JOINED CHANNEL
       if (oldChannelId === null && newChannelId !== null) {
@@ -79,7 +86,7 @@ module.exports = {
       }
 
       // USER CHANGED CHANNEL
-      if (oldChannelId !== null && newChannelId !== null) {
+      if (oldChannelId !== null && newChannelId !== null && oldChannelId != newChannelId) {
         const currentChannel = await client.channels.cache.get(newChannelId);
         const afkChannel = await guildsRepository.getGuildSetting(
           guild,
@@ -139,12 +146,16 @@ module.exports = {
           let faktor = "";
 
           if (oldState) {
-            oldChannel = await client.channels.fetch(oldChannelId).catch(error => {});
+            oldChannel = await client.channels
+              .fetch(oldChannelId)
+              .catch(error => {});
             try {
               parentChannelId = oldChannel.parentId;
             } catch (error) {}
           } else {
-            oldChannel = await client.channels.fetch(newChannelId).catch(error => {});
+            oldChannel = await client.channels
+              .fetch(newChannelId)
+              .catch(error => {});
             try {
               parentChannelId = oldChannel.parentId;
             } catch (error) {}
@@ -158,7 +169,7 @@ module.exports = {
                 XP = minutesInChannel * 2;
               }
 
-              faktor = "x2"
+              faktor = "x2";
             } else {
               if (minutesInChannel * 1 >= 200) {
                 XP = 200;
@@ -166,7 +177,7 @@ module.exports = {
                 XP = minutesInChannel * 1;
               }
 
-              faktor = "x1"
+              faktor = "x1";
             }
           } else {
             if (minutesInChannel * 1 >= 200) {
@@ -175,7 +186,7 @@ module.exports = {
               XP = minutesInChannel * 1;
             }
 
-            faktor = "x1"
+            faktor = "x1";
           }
 
           let newXP = currentXP + XP;

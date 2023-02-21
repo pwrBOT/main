@@ -123,7 +123,7 @@ module.exports = {
             .editReply("❌ Wähle einen gültigen Zeitraum aus! ❌")
             .then(
               setTimeout(function() {
-                interaction.deleteReply();
+                interaction.deleteReply().catch(error => {});;
               }, 3000)
             );
 
