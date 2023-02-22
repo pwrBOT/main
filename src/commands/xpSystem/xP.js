@@ -16,34 +16,34 @@ module.exports = {
     .setDescription(`Member XP Verwaltung`)
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
     .setDMPermission(false)
-    .addSubcommand(subcommand =>
+    .addSubcommand((subcommand) =>
       subcommand
         .setName(`give`)
         .setDescription(`Member XP geben`)
-        .addUserOption(option =>
+        .addUserOption((option) =>
           option.setName("member").setDescription("Member").setRequired(true)
         )
-        .addNumberOption(option =>
+        .addNumberOption((option) =>
           option.setName("xp").setDescription("Anzahl der XP").setRequired(true)
         )
-        .addStringOption(option =>
+        .addStringOption((option) =>
           option
             .setName("reason")
             .setDescription("Begründung")
             .setRequired(true)
         )
     )
-    .addSubcommand(subcommand =>
+    .addSubcommand((subcommand) =>
       subcommand
         .setName(`remove`)
         .setDescription(`XP von Member entfernen`)
-        .addUserOption(option =>
+        .addUserOption((option) =>
           option.setName("member").setDescription("Member").setRequired(true)
         )
-        .addNumberOption(option =>
+        .addNumberOption((option) =>
           option.setName("xp").setDescription("Anzahl der XP").setRequired(true)
         )
-        .addStringOption(option =>
+        .addStringOption((option) =>
           option
             .setName("reason")
             .setDescription("Begründung")
@@ -52,7 +52,7 @@ module.exports = {
     ),
 
   async execute(interaction, client) {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       const message = await interaction.deferReply({
         ephemeral: false,
         fetchReply: true
@@ -94,8 +94,13 @@ module.exports = {
         }
 
         await usersRepository.updateUser(guild.id, member.user.id, "xP", newXP);
-        await usersRepository.updateUser(guild.id, member.user.id, "Level", newLevel);
-        await xPSystemGiveRole.autoUserRoles(guild, member, getMember.Level)
+        await usersRepository.updateUser(
+          guild.id,
+          member.user.id,
+          "Level",
+          newLevel
+        );
+        await xPSystemGiveRole.autoUserRoles(guild, member, getMember.Level);
 
         const xPembed = new EmbedBuilder()
           .setTitle(`⚡️ Moderation ⚡️`)
@@ -131,6 +136,9 @@ module.exports = {
 
         await interaction.editReply({ embeds: [xPembed] });
 
+        xPembed.setDescription(`Du hast soeben ${xP} XP erhalten.`);
+        await member.send({ embeds: [xPembed] }).catch((error) => {});
+
         const LoggingChannels = require("../../mysql/loggingChannelsRepository");
         await LoggingChannels.logChannel(interaction.guild, "botLog", xPembed);
 
@@ -160,8 +168,13 @@ module.exports = {
 
         newLevel += 1;
         await usersRepository.updateUser(guild.id, member.user.id, "xP", newXP);
-        await usersRepository.updateUser(guild.id, member.user.id, "Level", newLevel);
-        await xPSystemGiveRole.autoUserRoles(guild, member, getMember.Level)
+        await usersRepository.updateUser(
+          guild.id,
+          member.user.id,
+          "Level",
+          newLevel
+        );
+        await xPSystemGiveRole.autoUserRoles(guild, member, getMember.Level);
 
         const xPembed = new EmbedBuilder()
           .setTitle(`⚡️ Moderation ⚡️`)
@@ -196,6 +209,9 @@ module.exports = {
           ]);
 
         await interaction.editReply({ embeds: [xPembed] });
+
+        xPembed.setDescription(`Dir wurden soeben ${xP} XP abgezogen.`);
+        await member.send({ embeds: [xPembed] }).catch((error) => {});
 
         const LoggingChannels = require("../../mysql/loggingChannelsRepository");
         await LoggingChannels.logChannel(interaction.guild, "botLog", xPembed);

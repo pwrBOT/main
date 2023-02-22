@@ -4,8 +4,8 @@ const addReport = async (interaction, reporterId, memberId, reason, status, modI
   return new Promise((resolve) => {
     mysqlHelper
       .query(
-        `INSERT INTO powerbot_reports (guildId, reporterId, reportedMemberId, reportReason, reportStatus, modId, reportId) VALUES ( ?, ?, ?, ?, ?, ?, ?)`,
-        [interaction.guild.id, reporterId, memberId, reason, status, modId, reportId]
+        `INSERT INTO powerbot_reports (guildId, reporterId, reportedMemberId, reportReason, reportStatus, modId, modMessage, reportId) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [interaction.guild.id, reporterId, memberId, reason, status, modId, "-", reportId]
       )
       .then((result) => {
         // GIBT DEN ERSTEN WERT DES ARRAYS ZURÜCK
@@ -17,12 +17,12 @@ const addReport = async (interaction, reporterId, memberId, reason, status, modI
   });
 };
 
-const updateReport = async (guildId, reportId, status, modId) => {
-    return new Promise(async (resolve) => {
+const updateReport = async (guildId, reportId, status, modId, modMessage) => {
+    return new Promise(async (resolve) => {   
       mysqlHelper
         .query(
-          `UPDATE powerbot_reports SET reportStatus=?, modId=? WHERE guildId=? AND reportId LIKE "%"? ORDER BY ID DESC`,
-          [status, modId, guildId, reportId]
+          `UPDATE powerbot_reports SET reportStatus=?, modId=?, modMessage=? WHERE guildId=? AND reportId LIKE "%"? ORDER BY ID DESC`,
+          [status, modId, modMessage, guildId, reportId]
         )
         .then((result) => {
           // GIBT DEN ERSTEN WERT DES ARRAYS ZURÜCK

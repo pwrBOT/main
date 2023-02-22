@@ -2,26 +2,24 @@ const {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  EmbedBuilder
+  EmbedBuilder,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle
 } = require("discord.js");
 module.exports = {
   data: {
     name: `report_abgelehnt`
   },
   async execute(interaction, client) {
-    return new Promise(async resolve => {
-      await interaction.deferReply({
-        ephemeral: true,
-        fetchReply: true
-      });
-
+    return new Promise(async (resolve) => {
       const guildSettings = require("../../mysql/guildsRepository");
       const modRoleId = await guildSettings.getGuildSetting(
         interaction.guild,
         "modRole"
       );
       if (!modRoleId) {
-        interaction.editReply({
+        interaction.reply({
           ephemeral: true,
           content: "❌ Keine Moderator-Rolle definiert! ❌"
         });
@@ -31,14 +29,14 @@ module.exports = {
       let isModerator = false;
 
       const modRoleIds = JSON.parse(modRoleId.value);
-      modRoleIds.forEach(modRoleId => {
+      modRoleIds.forEach((modRoleId) => {
         if (interaction.member.roles.cache.has(modRoleId)) {
           isModerator = true;
         }
       });
 
       if (!isModerator) {
-        interaction.editReply({
+        interaction.reply({
           ephemeral: true,
           content: "❌ Du bist kein Moderator! ❌"
         });
@@ -48,66 +46,30 @@ module.exports = {
       const reportId = await interaction.message.embeds[0].description.split(
         "#"
       )[1];
-      const reportRepository = require("../../mysql/reportRepository");
-      const reportData = await reportRepository.getReport(
-        interaction.guild.id,
-        reportId
+
+      const modal = new ModalBuilder()
+        .setCustomId("userReportAbgelehnt")
+        .setTitle(`Report ${reportId} ablehnen!`);
+
+      const modMessageInput = new TextInputBuilder()
+        .setCustomId("modMessage")
+        .setLabel("Ablehngrund:")
+        .setRequired(true)
+        .setStyle(TextInputStyle.Paragraph);
+
+      const reportIdInput = new TextInputBuilder()
+        .setCustomId("reportId")
+        .setLabel("Report-ID (nicht ändern):")
+        .setValue(`${reportId}`)
+        .setRequired(true)
+        .setStyle(TextInputStyle.Short);
+
+      modal.addComponents(
+        new ActionRowBuilder().addComponents(modMessageInput),
+        new ActionRowBuilder().addComponents(reportIdInput)
       );
 
-      await reportRepository.updateReport(
-        interaction.guild.id,
-        reportId,
-        `Rejected ${interaction.user.tag}`,
-        interaction.user.id
-      );
-
-      const buttonAbgelehnt = new ButtonBuilder()
-        .setCustomId("report_abgelehnt")
-        .setLabel(`Report abgelehnt durch ${interaction.user.tag}`)
-        .setStyle(ButtonStyle.Danger)
-        .setDisabled(true);
-
-      await interaction.message.edit({
-        components: [new ActionRowBuilder().addComponents(buttonAbgelehnt)]
-      });
-
-      await interaction.editReply({
-        ephemeral: true,
-        content: `✅ Du hast den Report abgelehnt!`
-      });
-
-      const reportAbgelehntEmbed = new EmbedBuilder()
-        .setTitle(`⚡️ Reporting-System ⚡️`)
-        .setDescription(
-          `Hallo ${await interaction.guild.members.fetch(
-            reportData.reporterId
-          )}!\n\nDein Report wurde von einem Moderator überprüft und abgelehnt!\n\nDies kann verschiedene Gründe haben. Zum Beispiel, dass deine Meldung nicht gegen die Regeln verstößt, oder die Moderatoren der Meinung sind, dass es ein privates Problem ist. Private Missverständnisse sollen persönlich geklärt werden.\n\nSolltest du anderer Meinung sein, kannst du das Moderatoren-Team gerne kontaktieren.\n\nDennoch bedanken wir uns für Deine Meldung und wünschen noch einen schönen Tag 😊\n\n`
-        )
-        .setColor(0x51ff00)
-        .setTimestamp(Date.now())
-        .setFooter({
-          iconURL: client.user.displayAvatarURL(),
-          text: `powered by Powerbot`
-        })
-        .addFields([
-          {
-            name: `Beschwerdemeldung:`,
-            value: `${reportData.reportReason}`,
-            inline: false
-          },
-          {
-            name: `Gemeldeter User:`,
-            value: `${await interaction.guild.members.fetch(
-              reportData.reportedMemberId
-            )}`,
-            inline: true
-          }
-        ]);
-
-      try {
-        await interaction.guild.members.fetch(reportData.reporterId)
-          .send({ embeds: [reportAbgelehntEmbed] });
-      } catch (error) {}
+      await interaction.showModal(modal);
 
       return resolve(null);
     });

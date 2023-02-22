@@ -11,7 +11,7 @@ module.exports = {
     name: `report_bearbeiten`
   },
   async execute(interaction, client) {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       await interaction.deferReply({
         ephemeral: true,
         fetchReply: true
@@ -34,7 +34,7 @@ module.exports = {
       let isModerator = false;
 
       const modRoleIds = JSON.parse(modRoleId.value);
-      modRoleIds.forEach(modRoleId => {
+      modRoleIds.forEach((modRoleId) => {
         if (interaction.member.roles.cache.has(modRoleId)) {
           isModerator = true;
         }
@@ -69,12 +69,13 @@ module.exports = {
         interaction.guild.id,
         reportId,
         `In process by ${interaction.user.tag}`,
-        interaction.user.id
+        interaction.user.id,
+        "-"
       );
 
       const buttonUebernahme = new ButtonBuilder()
         .setCustomId("report_uebernahme")
-        .setLabel(`Report in Bearbeitung von ${interaction.user.tag}`)
+        .setLabel(`Report in Bearbeitung von ${interaction.member.displayName}`)
         .setStyle(ButtonStyle.Success)
         .setDisabled(true);
 
@@ -175,11 +176,11 @@ module.exports = {
 
         await newThread.send({ embeds: [reportEmbed] });
         const tagMember = await newThread.send(
-          `${await interaction.guild.members.fetch(
-            reportedUserId
-          )} / ${interaction.member}`
+          `${await interaction.guild.members.fetch(reportedUserId)} / ${
+            interaction.member
+          }`
         );
-        setTimeout(function() {
+        setTimeout(function () {
           tagMember.delete();
         }, 100);
 
@@ -248,11 +249,11 @@ module.exports = {
 
         await newThread.send({ embeds: [reportEmbed] });
         const tagMember = await newThread.send(
-          `${await interaction.guild.members.fetch(
-            reportedUserId
-          )} / ${interaction.member}`
+          `${await interaction.guild.members.fetch(reportedUserId)} / ${
+            interaction.member
+          }`
         );
-        setTimeout(function() {
+        setTimeout(function () {
           tagMember.delete();
         }, 100);
 
@@ -304,9 +305,10 @@ module.exports = {
         ]);
 
       try {
-        await interaction.guild.members.cache
-          .get(reportData.reporterId)
-          .send({ embeds: [reportInArbeitEmbed] });
+        const reporter = await interaction.guild.members.fetch(
+          reportData.reporterId
+        );
+        reporter.send({ embeds: [reportInArbeitEmbed] });
       } catch (error) {}
 
       await interaction.message.edit({

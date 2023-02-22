@@ -1,24 +1,29 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ThreadAutoArchiveDuration } = require("discord.js");
+const {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  EmbedBuilder,
+  ThreadAutoArchiveDuration,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle
+} = require("discord.js");
+
 module.exports = {
   data: {
-    name: `report_erledigt`,
+    name: `report_erledigt`
   },
   async execute(interaction, client) {
     return new Promise(async (resolve) => {
-      await interaction.deferReply({
-        ephemeral: true,
-        fetchReply: true,
-      });
-
       const guildSettings = require("../../mysql/guildsRepository");
       const modRoleId = await guildSettings.getGuildSetting(
         interaction.guild,
         "modRole"
       );
       if (!modRoleId) {
-        interaction.editReply({
+        interaction.reply({
           ephemeral: true,
-          content: "❌ Keine Moderator-Rolle definiert! ❌",
+          content: "❌ Keine Moderator-Rolle definiert! ❌"
         });
         return resolve(null);
       }
@@ -33,123 +38,55 @@ module.exports = {
       });
 
       if (!isModerator) {
-        interaction.editReply({
+        interaction.reply({
           ephemeral: true,
-          content: "❌ Du bist kein Moderator! ❌",
+          content: "❌ Du bist kein Moderator! ❌"
         });
         return resolve(null);
       }
 
-      const reportId = await interaction.message.embeds[0].description.split("#")[1]
+      const reportId = await interaction.message.embeds[0].description.split(
+        "#"
+      )[1];
       const reportRepository = require("../../mysql/reportRepository");
-      const reportData = await reportRepository.getReport(interaction.guild.id, reportId);
+      const reportData = await reportRepository.getReport(
+        interaction.guild.id,
+        reportId
+      );
 
       if (interaction.user.id != reportData.modId) {
-        await interaction.editReply({
+        await interaction.reply({
           ephemeral: true,
-          content: `❌ Du kannst den Report nicht abschließen. Du bearbeitest ihn nicht!`,
+          content: `❌ Du kannst den Report nicht abschließen. Du bearbeitest ihn nicht!`
         });
         return resolve(null);
       }
 
-      await reportRepository.updateReport(interaction.guild.id, reportId, `Resolved ${interaction.user.tag}`, interaction.user.id);
+      const modal = new ModalBuilder()
+        .setCustomId("userReportErledigt")
+        .setTitle(`Report ${reportId} abschließen!`);
 
-      const buttonErledigt = new ButtonBuilder()
-        .setCustomId("report_erledigt")
-        .setLabel(`Report erledigt durch ${interaction.user.tag}`)
-        .setStyle(ButtonStyle.Success)
-        .setDisabled(true);
+      const modMessageInput = new TextInputBuilder()
+        .setCustomId("modMessage")
+        .setLabel("Moderator Abschlussmeldung:")
+        .setRequired(true)
+        .setStyle(TextInputStyle.Paragraph);
 
-      await interaction.message.edit({
-        components: [new ActionRowBuilder().addComponents(buttonErledigt)],
-      });
+      const reportIdInput = new TextInputBuilder()
+        .setCustomId("reportId")
+        .setLabel("Report-ID (nicht ändern):")
+        .setValue(`${reportId}`)
+        .setRequired(true)
+        .setStyle(TextInputStyle.Short);
 
-      const reportErledigtEmbed = new EmbedBuilder()
-        .setTitle(`⚡️ Reporting-System ⚡️`)
-        .setDescription(`Hallo ${await interaction.guild.members.fetch(reportData.reporterId)}!\n\nDein Report wurde soeben bearbeitet und abgeschlossen.\nDanke für Deine Meldung!`)
-        .setColor(0x51ff00)
-        .setTimestamp(Date.now())
-        .setFooter({
-          iconURL: client.user.displayAvatarURL(),
-          text: `powered by Powerbot`
-        })
-        .addFields([
-          {
-            name: `Beschwerdemeldung:`,
-            value: `${reportData.reportReason}`,
-            inline: false
-          },
-          {
-            name: `Gemeldeter User:`,
-            value: `${await interaction.guild.members.fetch(reportData.reportedMemberId)}`,
-            inline: true
-          },
-          {
-            name: `Bearbeitender Moderator:`,
-            value: `${interaction.member}`,
-            inline: true
-          }
-        ]);
-
-      try {
-        await interaction.guild.members.fetch(reportData.reporterId).send({ embeds: [reportErledigtEmbed] });
-      } catch (error) {}
-
-      // LOCK AND ARCHIVE PRIVATE THREAD \\
-      const modThreadAreaId = await guildSettings.getGuildSetting(
-        interaction.guild,
-        "modArea"
+      modal.addComponents(
+        new ActionRowBuilder().addComponents(modMessageInput),
+        new ActionRowBuilder().addComponents(reportIdInput)
       );
 
-      if (modThreadAreaId) {
-        if (!modThreadAreaId.value) {
-          await interaction.editReply({
-            ephemeral: true,
-            content: `✅ Du hast den Report erfolgreich erledigt!`
-          });
-          return resolve(null);
-        }
-      } else {
-        await interaction.editReply({
-          ephemeral: true,
-          content: `✅ Du hast den Report erfolgreich erledigt!`
-        });
-        return resolve(null);
-      }
+      await interaction.showModal(modal);
 
-      const modThreadArea = await interaction.guild.channels.fetch(
-        modThreadAreaId.value
-      );
-      const threadName = `Report ${reportId}`;
-      const thread = modThreadArea.threads.cache.find(
-        (x) => x.name === threadName
-      );
-
-      if (!thread) {
-        await interaction.editReply({
-          ephemeral: true,
-          content: `✅ Du hast den Report erfolgreich erledigt!`,
-        });
-        return resolve(null);
-      }
-
-      if (thread.archived === true) {
-        await interaction.editReply({
-          ephemeral: true,
-          content: `✅ Du hast den Report erfolgreich erledigt!`,
-        });
-        return resolve(null);
-      }
-
-      await thread.send({ content: `✅ Der Report wurde von ${interaction.member} als erledigt markiert! Der Thread wird in 24 Stunden archiviert.` });
-      await thread.setAutoArchiveDuration(ThreadAutoArchiveDuration.OneDay)
-      await interaction.editReply({
-        ephemeral: true,
-        content: `✅ Du hast den Report erfolgreich erledigt!`,
-      });
-
-      // LOCK AND ARCHIVE PRIVATE THREAD END \\
       return resolve(null);
     });
-  },
+  }
 };

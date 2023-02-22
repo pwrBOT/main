@@ -26,7 +26,7 @@ module.exports = {
       const reporterId = interaction.member.id;
       const reporter = interaction.member;
       const reason = interaction.fields.getTextInputValue("reportUserInput");
-      const reportId = uuidv4().slice(-12)
+      const reportId = uuidv4()
       let member = "";
       try {
         member = await interaction.guild.members.fetch(memberId)

@@ -60,12 +60,13 @@ module.exports = {
         interaction.guild.id,
         reportId,
         `Taken from ${interaction.user.tag}`,
-        interaction.user.id
+        interaction.user.id,
+        "-"
       );
 
       const buttonUebernahme = new ButtonBuilder()
         .setCustomId("report_uebernahme")
-        .setLabel(`Report in Bearbeitung von ${interaction.user.tag}`)
+        .setLabel(`Report in Bearbeitung von ${interaction.member.displayName}`)
         .setStyle(ButtonStyle.Success)
         .setDisabled(true);
 
