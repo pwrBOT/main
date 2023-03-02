@@ -9,7 +9,7 @@ const guildsRepository = require("../../mysql/guildsRepository");
 
 module.exports = {
   data: new ContextMenuCommandBuilder()
-    .setName("Warn/Fremdwerbung")
+    .setName("Warn/Spam")
     .setType(ApplicationCommandType.Message)
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
     .setDMPermission(false),
@@ -84,7 +84,7 @@ module.exports = {
         .addFields([
           {
             name: `Grund:`,
-            value: `Eigen- / Fremdwerbung`,
+            value: `Spam`,
             inline: true
           },
           {
@@ -112,7 +112,7 @@ module.exports = {
         .addFields([
           {
             name: `Grund:`,
-            value: `Eigen- / Fremdwerbung`,
+            value: `Spam`,
             inline: true
           },
           {
@@ -124,7 +124,7 @@ module.exports = {
 
       await message.delete().catch(error => {});
       await interaction.channel
-        .send(`*Nachricht von ${member} entfernt! Eigen- / Fremdwerbung 😒*`)
+        .send(`*Nachricht von ${member} entfernt! Spam 😒*`)
         .catch(error => {});
 
       const logChannel = require("../../mysql/loggingChannelsRepository");
@@ -142,7 +142,7 @@ module.exports = {
       await warnSystem.warnUser(
         interaction.guild,
         member,
-        "warn - Eigen- / Fremdwerbung App",
+        "warn - Spam App",
         interaction.member.user.tag,
         interaction.member.user.id
       );
@@ -154,7 +154,7 @@ module.exports = {
       // guild - command, user, affectedMember, reason
       await commandLogRepository.logCommandUse(
         interaction.guild,
-        "warn - FremdwerbungApp",
+        "warn - Spam",
         interaction.user,
         member.user,
         "-"

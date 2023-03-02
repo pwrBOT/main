@@ -18,7 +18,7 @@ module.exports = {
       const member = await guild.members.cache.get(newState.id);
       const oldChannel = await oldState.guild.channels
         .fetch(oldChannelId)
-        .catch(console.error);
+        .catch(error => {});
       const newChannel = await newState.guild.channels
         .fetch(newChannelId)
         .catch(error => {});

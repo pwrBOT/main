@@ -2,13 +2,15 @@ const { EmbedBuilder } = require("discord.js");
 const chalk = require("chalk");
 const guildSettings = require("../../mysql/guildsRepository");
 const warnSystem = require("../../functions/warningSystem/warnings");
+const userlogRepository = require("../../mysql/userlogRepository");
+const fetch = require("node-fetch");
 const ms = require("ms");
 
 module.exports = {
   name: "messageCreate",
 
   async execute(message) {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       if (!message) {
         console.log(
           chalk.yellow(
@@ -74,15 +76,16 @@ module.exports = {
         const links = getFullUrls(message.content);
 
         for (const link of links) {
+
           if (link.includes("discord.gg/")) {
             let isGuildInvite = false;
 
             var inviteCode = "";
             inviteCode = link.split("/").pop();
 
-            const invite =  await message.guild.fetchVanityData()
-            
-            if (!inviteCode || inviteCode == invite.code) {
+            const invite = await message.guild.fetchVanityData().catch(error => {});
+
+            if (!inviteCode || inviteCode == invite?.code) {
               isGuildInvite = true;
             } else {
               await message.guild.invites
@@ -219,8 +222,9 @@ module.exports = {
               "de-DE"
             )} / ${new Date().toLocaleTimeString(
               "de-DE"
-            )}] AUTO MOD INVITE | Nachricht (${message.content}) von ${message
-              .member.user.tag} gelöscht. Server: ${message.guild.name}.`
+            )}] AUTO MOD INVITE | Nachricht (${message.content}) von ${
+              message.member.user.tag
+            } gelöscht. Server: ${message.guild.name}.`
           )
         );
 
@@ -298,8 +302,7 @@ module.exports = {
         const embedmember = new EmbedBuilder()
           .setTitle(`⚡️ Moderation ⚡️`)
           .setDescription(
-            `Du wurdest getimeouted!\nServer: "${message.guild
-              .name}"\nDauer: ${length}!`
+            `Du wurdest getimeouted!\nServer: "${message.guild.name}"\nDauer: ${length}!`
           )
           .setColor(0x51ff00)
           .setTimestamp(Date.now())
@@ -336,7 +339,9 @@ module.exports = {
         } catch (error) {}
 
         try {
-          await message.member.send({ embeds: [embedmember] }).catch(error => {});
+          await message.member
+            .send({ embeds: [embedmember] })
+            .catch((error) => {});
         } catch (error) {}
 
         const commandLogRepository = require("../../mysql/commandLogRepository");
@@ -472,7 +477,9 @@ module.exports = {
         await message.channel.send({ embeds: [warnembedChannel] });
 
         try {
-          await message.member.send({ embeds: [warnembedmember] }).catch(error => {});
+          await message.member
+            .send({ embeds: [warnembedmember] })
+            .catch((error) => {});
         } catch (error) {}
 
         await warnSystem.warnUser(
@@ -500,8 +507,9 @@ module.exports = {
               "de-DE"
             )} / ${new Date().toLocaleTimeString(
               "de-DE"
-            )}] AUTO MOD INVITE | User ${message.member.user
-              .tag} wurde verwarnt. Server: ${message.guild.name}.`
+            )}] AUTO MOD INVITE | User ${
+              message.member.user.tag
+            } wurde verwarnt. Server: ${message.guild.name}.`
           )
         );
       }

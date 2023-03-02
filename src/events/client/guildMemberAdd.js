@@ -61,9 +61,7 @@ module.exports = {
           .id}) ist bereits bei Guild: ${member.guild.id} registriert!`;
         loggingHandler.log(logText3, "memberAdd");
 
-        console.log("add Com Role")
         await addCommunityRole(member);
-        console.log("send Welcome Message")
         await sendWelcomeMessage(member);
 
         return resolve(null);
@@ -127,9 +125,6 @@ const addCommunityRole = async member => {
         try {
           communityrole = await member.guild.roles.fetch(roleId);
           await member.roles.add(communityrole).catch(error => {});
-          console.log(
-            `Auto-Role | ${communityrole.name} bei ${member.displayName} hinzugefügt`
-          );
         } catch (error) {}
       });
     }

@@ -6,6 +6,7 @@ const levelsRepository = require("../../mysql/levelsRepository");
 const embedsRepository = require("../../mysql/embedsRepository");
 const autoModRepository = require("../../mysql/autoModRepository");
 const guildsRepository = require("../../mysql/guildsRepository");
+const powerbotManagement = require("../../mysql/powerbotManagement");
 const os = require("os");
 let values = [0, null, null, null, null, null, null, null, null, null];
 
@@ -1358,11 +1359,12 @@ const init = async client => {
               }
             },
             allowedCheck: async ({ guild }) => {
-              let guildPremium = await guildsRepository.getGuildSetting(
+              const guildPremium = await powerbotManagement.getValue(
                 guild,
                 "premium"
               );
-              if (guildPremium && guildPremium.value == "active") {
+
+              if (guildPremium) {
                 return { allowed: true };
               } else {
                 return {
@@ -1412,11 +1414,12 @@ const init = async client => {
               (channelTypes = [ChannelType.GuildCategory])
             ),
             allowedCheck: async ({ guild }) => {
-              let guildPremium = await guildsRepository.getGuildSetting(
+              const guildPremium = await powerbotManagement.getValue(
                 guild,
                 "premium"
               );
-              if (guildPremium && guildPremium.value == "active") {
+
+              if (guildPremium) {
                 return { allowed: true };
               } else {
                 return {
@@ -1467,11 +1470,12 @@ const init = async client => {
               (channelTypes = [ChannelType.GuildCategory])
             ),
             allowedCheck: async ({ guild }) => {
-              let guildPremium = await guildsRepository.getGuildSetting(
+              const guildPremium = await powerbotManagement.getValue(
                 guild,
                 "premium"
               );
-              if (guildPremium && guildPremium.value == "active") {
+
+              if (guildPremium) {
                 return { allowed: true };
               } else {
                 return {
@@ -2410,11 +2414,12 @@ const init = async client => {
               false
             ),
             allowedCheck: async ({ guild }) => {
-              let guildPremium = await guildsRepository.getGuildSetting(
+              const guildPremium = await powerbotManagement.getValue(
                 guild,
                 "premium"
               );
-              if (guildPremium && guildPremium.value == "active") {
+
+              if (guildPremium) {
                 return { allowed: true };
               } else {
                 return {
@@ -2473,11 +2478,12 @@ const init = async client => {
               false
             ),
             allowedCheck: async ({ guild }) => {
-              let guildPremium = await guildsRepository.getGuildSetting(
+              const guildPremium = await powerbotManagement.getValue(
                 guild,
                 "premium"
               );
-              if (guildPremium && guildPremium.value == "active") {
+
+              if (guildPremium) {
                 return { allowed: true };
               } else {
                 return {
@@ -2529,11 +2535,12 @@ const init = async client => {
               false
             ),
             allowedCheck: async ({ guild }) => {
-              let guildPremium = await guildsRepository.getGuildSetting(
+              const guildPremium = await powerbotManagement.getValue(
                 guild,
                 "premium"
               );
-              if (guildPremium && guildPremium.value == "active") {
+
+              if (guildPremium) {
                 return { allowed: true };
               } else {
                 return {
@@ -2592,11 +2599,12 @@ const init = async client => {
               false
             ),
             allowedCheck: async ({ guild }) => {
-              let guildPremium = await guildsRepository.getGuildSetting(
+              const guildPremium = await powerbotManagement.getValue(
                 guild,
                 "premium"
               );
-              if (guildPremium && guildPremium.value == "active") {
+
+              if (guildPremium) {
                 return { allowed: true };
               } else {
                 return {
@@ -2655,11 +2663,12 @@ const init = async client => {
               false
             ),
             allowedCheck: async ({ guild }) => {
-              let guildPremium = await guildsRepository.getGuildSetting(
+              const guildPremium = await powerbotManagement.getValue(
                 guild,
                 "premium"
               );
-              if (guildPremium && guildPremium.value == "active") {
+
+              if (guildPremium) {
                 return { allowed: true };
               } else {
                 return {
@@ -2711,11 +2720,12 @@ const init = async client => {
               false
             ),
             allowedCheck: async ({ guild }) => {
-              let guildPremium = await guildsRepository.getGuildSetting(
+              const guildPremium = await powerbotManagement.getValue(
                 guild,
                 "premium"
               );
-              if (guildPremium && guildPremium.value == "active") {
+
+              if (guildPremium) {
                 return { allowed: true };
               } else {
                 return {
@@ -2774,11 +2784,12 @@ const init = async client => {
               false
             ),
             allowedCheck: async ({ guild }) => {
-              let guildPremium = await guildsRepository.getGuildSetting(
+              const guildPremium = await powerbotManagement.getValue(
                 guild,
                 "premium"
               );
-              if (guildPremium && guildPremium.value == "active") {
+
+              if (guildPremium) {
                 return { allowed: true };
               } else {
                 return {
@@ -2837,11 +2848,12 @@ const init = async client => {
               false
             ),
             allowedCheck: async ({ guild }) => {
-              let guildPremium = await guildsRepository.getGuildSetting(
+              const guildPremium = await powerbotManagement.getValue(
                 guild,
                 "premium"
               );
-              if (guildPremium && guildPremium.value == "active") {
+
+              if (guildPremium) {
                 return { allowed: true };
               } else {
                 return {
@@ -2893,11 +2905,12 @@ const init = async client => {
               false
             ),
             allowedCheck: async ({ guild }) => {
-              let guildPremium = await guildsRepository.getGuildSetting(
+              const guildPremium = await powerbotManagement.getValue(
                 guild,
                 "premium"
               );
-              if (guildPremium && guildPremium.value == "active") {
+
+              if (guildPremium) {
                 return { allowed: true };
               } else {
                 return {

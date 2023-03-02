@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require(`discord.js`);
-const anvasUserbanner = require("../../components/canvas/canvasUserbanner");
+const canvasUserbanner = require("../../components/canvas/canvasUserbanner");
 const timeOutMap = new Map()
 
 module.exports = {
@@ -28,7 +28,7 @@ module.exports = {
 
     */
 
-    const img = await anvasUserbanner.generateImage(interaction, interaction.user, interaction.guild, interaction.member);
+    const img = await canvasUserbanner.generateImage(interaction, interaction.user, interaction.guild, interaction.member);
 
     if (!img) {
       return interaction.reply(`❌ Kein Userbanner verfügbar! Möglicherweise hast du bisher noch keine Nachricht geschrieben! ❌`);

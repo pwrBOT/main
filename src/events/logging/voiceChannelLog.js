@@ -69,7 +69,7 @@ module.exports = {
             "LEAVE",
             "VC",
             oldState.channelId,
-            oldState.channel.name,
+            oldState.channel?.name ?? "*unknown Channel-Name*",
             "-",
             "-"
           );

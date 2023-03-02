@@ -1,10 +1,11 @@
 const {
   SlashCommandBuilder,
   PermissionFlagsBits,
+  PermissionsBitField,
   EmbedBuilder
 } = require(`discord.js`);
 const guildSettings = require("../../mysql/guildsRepository");
-const timeOutMap = new Map()
+const timeOutMap = new Map();
 
 module.exports = {
   name: "leaderboard",
@@ -17,21 +18,27 @@ module.exports = {
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
   async execute(interaction, client) {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       await interaction.deferReply({
         fetchReply: true,
         ephemeral: false
       });
 
       // ############ TIMEOUT COMMAND CHECK ############ \\
-      if (timeOutMap.has(interaction.member.id)){
-        interaction.editReply({content:`⏰ Command Cooldown | Du kannst den Command nur alle 60 Minuten nutzen 🥱`});
-        return resolve(null)
-      } else {
-        timeOutMap.set(interaction.member.id)
-        setTimeout(() =>{
-          timeOutMap.delete(interaction.member.id)
-        }, 3600000)
+      if (
+        !interaction.member.permissions.has(PermissionsBitField.Administrator)
+      ) {
+        if (timeOutMap.has(interaction.member.id)) {
+          interaction.editReply({
+            content: `⏰ Command Cooldown | Du kannst den Command nur alle 60 Minuten nutzen 🥱`
+          });
+          return resolve(null);
+        } else {
+          timeOutMap.set(interaction.member.id);
+          setTimeout(() => {
+            timeOutMap.delete(interaction.member.id);
+          }, 3600000);
+        }
       }
       // ################################################ \\
 
@@ -47,12 +54,10 @@ module.exports = {
         "teamRole"
       );
 
-      const teamRole = await interaction.guild.roles.fetch(
-        teamRoleId.value
-      );
+      const teamRole = await interaction.guild.roles.fetch(teamRoleId.value);
 
       let usersWOTeam = [];
-      await users.forEach(async user => {
+      await users.forEach(async (user) => {
         let member = "";
         try {
           member = await interaction.guild.members.fetch(user.userId);
@@ -60,8 +65,10 @@ module.exports = {
 
         if (member) {
           if (
-            member.roles.cache.find(role => role.id == teamRole.id) ||
-            member.roles.cache.find(role => role.id == "947612291833143337") ||
+            member.roles.cache.find((role) => role.id == teamRole.id) ||
+            member.roles.cache.find(
+              (role) => role.id == "947612291833143337"
+            ) ||
             member.user.bot === true
           ) {
           } else {
@@ -84,12 +91,14 @@ module.exports = {
         const userIndex = index + 1;
         leaderboardIndex += `${userIndex}\n`;
         leaderboardUsername += `${user.userName}\n`;
-        
+
         if (user.totalVoiceTime == 0) {
           leaderboardXP += `${user.xP} XP\t/\t"-"\n`;
         } else if (user.totalVoiceTime > 60) {
           const voiceTime = user.totalVoiceTime / 60;
-          leaderboardXP += `${user.xP} XP\t/\t${voiceTime.toFixed(1)} Stunden\n`;
+          leaderboardXP += `${user.xP} XP\t/\t${voiceTime.toFixed(
+            1
+          )} Stunden\n`;
         } else {
           const voiceTime = user.totalVoiceTime;
           leaderboardXP += `${user.xP} XP\t/\t${voiceTime} Minuten\n`;
@@ -126,8 +135,7 @@ module.exports = {
           }
         ]);
 
-      interaction.editReply({ embeds: [leaderboardEmbed]});
-
+      interaction.editReply({ embeds: [leaderboardEmbed] });
 
       const commandLogRepository = require("../../mysql/commandLogRepository");
       // guild - command, user, affectedMember, reason

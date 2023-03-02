@@ -240,6 +240,16 @@ module.exports = {
         interaction.editReply({
           embeds: [levelEmbed]
         });
+
+        const commandLogRepository = require("../../mysql/commandLogRepository");
+        // guild - command, user, affectedMember, reason
+        commandLogRepository.logCommandUse(
+          interaction.guild,
+          "help level-system",
+          interaction.user,
+          member.user,
+          "-"
+        );
         return resolve(null);
       }
 
@@ -270,6 +280,16 @@ module.exports = {
           ephemeral: true,
           embeds: [reportSystemEmbed]
         });
+
+        const commandLogRepository = require("../../mysql/commandLogRepository");
+        // guild - command, user, affectedMember, reason
+        commandLogRepository.logCommandUse(
+          interaction.guild,
+          "help report-system",
+          interaction.user,
+          member.user,
+          "-"
+        );
         return resolve(null);
       }
 

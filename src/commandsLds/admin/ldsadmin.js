@@ -12,19 +12,19 @@ module.exports = {
     .setDescription(`Lüdenscheid Mod - Admin Commands`)
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
     .setDMPermission(false)
-    .addSubcommand(subcommand =>
+    .addSubcommand((subcommand) =>
       subcommand
         .setName(`generatelocales`)
         .setDescription(`Locale-Generierung anstoßen`)
     )
-    .addSubcommand(subcommand =>
+    .addSubcommand((subcommand) =>
       subcommand
         .setName(`generateaudio`)
         .setDescription(`Audio-Generierung anstoßen`)
     ),
 
   async execute(interaction, client) {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       const { member, channel, message } = interaction;
 
       if (
@@ -37,18 +37,20 @@ module.exports = {
           `❌ Nope! Du bist nicht berechtigt, diesen Befehl auszuführen!`
         );
         setTimeout(() => {
-          interaction.deleteReply().catch(error => {});
+          interaction.deleteReply().catch((error) => {});
         }, 4000);
         return resolve(null);
       }
 
       if (channel.id != "963759674300178492") {
-        const channel = await interaction.guild.channels.fetch("963759674300178492")
+        const channel = await interaction.guild.channels.fetch(
+          "963759674300178492"
+        );
         interaction.reply(
           `❌ Der Befehl kann nur im Channel ${channel} ausgeführt werden!`
         );
         setTimeout(() => {
-          interaction.deleteReply().catch(error => {});
+          interaction.deleteReply().catch((error) => {});
         }, 4000);
         return resolve(null);
       }
@@ -57,21 +59,21 @@ module.exports = {
         const activeCheck = await fetch(
           "https://dev.app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Locales/branch/master/status?token=6IlQnelRwGa18jynvwRfZg=="
         )
-          .then(res => res.json())
-          .then(async res => {
+          .then((res) => res.json())
+          .then(async (res) => {
             if (res.data.running) {
               await interaction.reply("⚠️ Es läuft bereits eine Generierung!");
               setTimeout(() => {
-                interaction.deleteReply().catch(error => {});
+                interaction.deleteReply().catch((error) => {});
               }, 4000);
               return resolve(null);
             } else {
               await interaction.reply("-");
-              await interaction.deleteReply().catch(error => {});
+              await interaction.deleteReply().catch((error) => {});
               const checkMessage = await channel.send(
                 "Möchtest du die Generierung der Locals wirklich anstoßen?"
               );
-              checkMessage.react("✅").then(r => {
+              checkMessage.react("✅").then((r) => {
                 checkMessage.react("❌");
               });
 
@@ -89,11 +91,11 @@ module.exports = {
                   time: 10000,
                   errors: ["time"]
                 })
-                .then(async collected => {
+                .then(async (collected) => {
                   const reaction = collected.first();
 
                   if (reaction.emoji.name === "✅") {
-                    checkMessage.delete().catch(error => {});
+                    checkMessage.delete().catch((error) => {});
                     // ########################################################### \\
                     const response = await fetch(
                       "https://dev.app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Locales/branch/master/build?token=6IlQnelRwGa18jynvwRfZg=="
@@ -110,7 +112,7 @@ module.exports = {
                         "❌ FEHLER | Die Generierung der Locals konnte nicht gestartet werden!"
                       );
                       setTimeout(() => {
-                        msg.delete().catch(error => {});
+                        msg.delete().catch((error) => {});
                       }, 4000);
                       return resolve(null);
                     }
@@ -119,8 +121,8 @@ module.exports = {
                       fetch(
                         "https://dev.app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Locales/branch/master/status?token=6IlQnelRwGa18jynvwRfZg=="
                       )
-                        .then(res => res.json())
-                        .then(res => {
+                        .then((res) => res.json())
+                        .then((res) => {
                           if (res && !res.data.running) {
                             if (res.data.successful) {
                               msg.delete();
@@ -137,7 +139,7 @@ module.exports = {
                             clearInterval(intervalId);
                           }
                         })
-                        .catch(error => {
+                        .catch((error) => {
                           console.log(error);
                         });
                     }, 10000);
@@ -146,19 +148,19 @@ module.exports = {
                     const msg = await channel.send(
                       "❌ Locals Generierung abgebrochen"
                     );
-                    checkMessage.delete().catch(error => {});
+                    checkMessage.delete().catch((error) => {});
                     setTimeout(() => {
-                      msg.delete().catch(error => {});
+                      msg.delete().catch((error) => {});
                     }, 4000);
                   }
                 })
-                .catch(async collected => {
+                .catch(async (collected) => {
                   const msg = await channel.send(
                     "❌ Locals Generierung abgebrochen! Keine Reaktion innerhalb von 10 Sekunden ❌"
                   );
-                  checkMessage.delete().catch(error => {});
+                  checkMessage.delete().catch((error) => {});
                   setTimeout(() => {
-                    msg.delete().catch(error => {});
+                    msg.delete().catch((error) => {});
                   }, 4000);
                 });
             }
@@ -171,21 +173,21 @@ module.exports = {
         const activeCheck = await fetch(
           "https://dev.app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Audio/branch/master/status?token=6IlQnelRwGa18jynvwRfZg=="
         )
-          .then(res => res.json())
-          .then(async res => {
+          .then((res) => res.json())
+          .then(async (res) => {
             if (res.data.running) {
               await interaction.reply("⚠️ Es läuft bereits eine Generierung!");
               setTimeout(() => {
-                interaction.deleteReply().catch(error => {});
+                interaction.deleteReply().catch((error) => {});
               }, 4000);
               return resolve(null);
             } else {
               await interaction.reply("-");
-              await interaction.deleteReply().catch(error => {});
+              await interaction.deleteReply().catch((error) => {});
               const checkMessage = await channel.send(
                 "Möchtest du die Generierung der Sprachansagen wirklich anstoßen?"
               );
-              checkMessage.react("✅").then(r => {
+              checkMessage.react("✅").then((r) => {
                 checkMessage.react("❌");
               });
 
@@ -203,11 +205,11 @@ module.exports = {
                   time: 10000,
                   errors: ["time"]
                 })
-                .then(async collected => {
+                .then(async (collected) => {
                   const reaction = collected.first();
 
                   if (reaction.emoji.name === "✅") {
-                    checkMessage.delete().catch(error => {});
+                    checkMessage.delete().catch((error) => {});
                     // ########################################################### \\
                     const response = await fetch(
                       "https://dev.app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Audio/branch/master/build?token=6IlQnelRwGa18jynvwRfZg=="
@@ -225,7 +227,7 @@ module.exports = {
                         "❌ FEHLER | Die Generierung der Sprachansagen konnte nicht gestartet werden!"
                       );
                       setTimeout(() => {
-                        msg.delete().catch(error => {});
+                        msg.delete().catch((error) => {});
                       }, 4000);
                       return resolve(null);
                     }
@@ -234,8 +236,8 @@ module.exports = {
                       fetch(
                         "https://dev.app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Audio/branch/master/status?token=6IlQnelRwGa18jynvwRfZg=="
                       )
-                        .then(res => res.json())
-                        .then(res => {
+                        .then((res) => res.json())
+                        .then((res) => {
                           if (res && !res.data.running) {
                             if (res.data.successful) {
                               msg.delete();
@@ -252,7 +254,7 @@ module.exports = {
                             clearInterval(intervalId);
                           }
                         })
-                        .catch(error => {
+                        .catch((error) => {
                           console.log(error);
                         });
                     }, 10000);
@@ -261,19 +263,19 @@ module.exports = {
                     const msg = await channel.send(
                       "❌ Sprachansagen Generierung Abgebrochen"
                     );
-                    checkMessage.delete().catch(error => {});
+                    checkMessage.delete().catch((error) => {});
                     setTimeout(() => {
-                      msg.delete().catch(error => {});
+                      msg.delete().catch((error) => {});
                     }, 4000);
                   }
                 })
-                .catch(async collected => {
+                .catch(async (collected) => {
                   const msg = await channel.send(
                     "❌ Sprachansagen Generierung Abgebrochen! Keine Reaktion innerhalb von 10 Sekunden ❌"
                   );
-                  checkMessage.delete().catch(error => {});
+                  checkMessage.delete().catch((error) => {});
                   setTimeout(() => {
-                    msg.delete().catch(error => {});
+                    msg.delete().catch((error) => {});
                   }, 4000);
                 });
             }

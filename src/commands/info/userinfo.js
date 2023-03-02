@@ -178,7 +178,7 @@ module.exports = {
           interaction.guild,
           "info user",
           interaction.user,
-          member.user,
+          interaction.member.user,
           "-"
         );
 

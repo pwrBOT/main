@@ -12,6 +12,7 @@ const autoDeleteWarns = require("./src/events/cronjobs/autoDeleteWarns");
 const logFilesSizeCheck = require("./src/events/cronjobs/logFilesSizeCheck");
 const eventCheck = require("./src/events/cronjobs/eventCheck");
 const socialCheck = require("./src/events/cronjobs/socialMediaNews");
+const uptimeCheck = require("./src/events/cronjobs/uptimeCheck");
 const DLU = require("@dbd-soft-ui/logs");
 
 // Discord Bot SetUp
@@ -88,6 +89,7 @@ client.on("ready", async () => {
   await logFilesSizeCheck.init(client);
   await eventCheck.init(client);
   await socialCheck.init(client);
+  await uptimeCheck.init(client);
 
   /**
   // Dashboard Logging

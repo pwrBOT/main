@@ -37,7 +37,17 @@ module.exports = {
         .setStyle(ButtonStyle.Danger)
         .setDisabled(true);
 
+      const newEmbed = new EmbedBuilder(interaction.message.embeds[0]);
+      newEmbed.addFields([
+        {
+          name: `Moderator Abschlussmeldung:`,
+          value: `${modMessage}`,
+          inline: false
+        }
+      ]);
+
       await interaction.message.edit({
+        embeds: [newEmbed],
         components: [new ActionRowBuilder().addComponents(buttonAbgelehnt)]
       });
 

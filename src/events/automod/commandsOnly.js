@@ -16,7 +16,7 @@ module.exports = {
         return resolve(null);
       }
 
-      const pictureChannelIds = ["1018087459013271564"];
+      const pictureChannelIds = ["1018087459013271564","978210408387198988"];
       if (pictureChannelIds.includes(message.channel.id)) {
         if (
           message.member.permissions.has(

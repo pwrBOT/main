@@ -3,8 +3,10 @@ const {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
+  ThreadAutoArchiveDuration,
   PermissionFlagsBits
 } = require("discord.js");
+
 const guildsRepository = require("../../mysql/guildsRepository");
 const reportRepository = require("../../mysql/reportRepository");
 
@@ -39,7 +41,17 @@ module.exports = {
         .setStyle(ButtonStyle.Success)
         .setDisabled(true);
 
+      const newEmbed = new EmbedBuilder(interaction.message.embeds[0])
+      newEmbed.addFields([
+        {
+          name: `Moderator Abschlussmeldung:`,
+          value: `${modMessage}`,
+          inline: false
+        }
+      ]);
+
       await interaction.message.edit({
+        embeds: [newEmbed],
         components: [new ActionRowBuilder().addComponents(buttonErledigt)]
       });
 
@@ -64,7 +76,7 @@ module.exports = {
           },
           {
             name: `Gemeldeter User:`,
-            value: `${await interaction.guild.members.fetch(
+            value: `${await interaction.client.users.fetch(
               reportData.reportedMemberId
             )}`,
             inline: true

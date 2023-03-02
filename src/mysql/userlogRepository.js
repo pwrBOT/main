@@ -33,6 +33,20 @@ const getLogsByAction = async (member, action, limit) => {
   });
 }
 
+const getLogsByChannelId = async (guildId, channelId, limit=-1) => {
+  return new Promise((resolve) => {
+    mysqlHelper
+      .query('SELECT * FROM powerbot_userlog WHERE guildId = ? AND oldState = ? OR newState = ? ORDER BY ID DESC', [guildId, channelId, channelId], limit)
+      .then( (result) => {
+        // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
+        resolve(result ?? null);
+      })
+      .catch(() => {
+        resolve(null);
+      });
+  });
+}
+
 const addLog = async (guildId_, userId_, action_, type_, oldState_, oldStateName_, newState_, newStateName_) => {
   return new Promise((resolve) => {
 
@@ -61,4 +75,5 @@ const addLog = async (guildId_, userId_, action_, type_, oldState_, oldStateName
 
 
 module.exports.getLogsByType = getLogsByType;
+module.exports.getLogsByChannelId = getLogsByChannelId
 module.exports.addLog = addLog;
