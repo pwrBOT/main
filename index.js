@@ -13,6 +13,7 @@ const logFilesSizeCheck = require("./src/events/cronjobs/logFilesSizeCheck");
 const eventCheck = require("./src/events/cronjobs/eventCheck");
 const socialCheck = require("./src/events/cronjobs/socialMediaNews");
 const uptimeCheck = require("./src/events/cronjobs/uptimeCheck");
+const birthdayCheck = require("./src/events/cronjobs/birthdayCheck");
 const DLU = require("@dbd-soft-ui/logs");
 
 // Discord Bot SetUp
@@ -90,6 +91,7 @@ client.on("ready", async () => {
   await eventCheck.init(client);
   await socialCheck.init(client);
   await uptimeCheck.init(client);
+  await birthdayCheck.init(client);
 
   /**
   // Dashboard Logging

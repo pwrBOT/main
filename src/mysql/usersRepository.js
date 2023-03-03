@@ -58,10 +58,25 @@ const getUser = async (memberId, guildId) => {
   });
 };
 
+
 const getUsers = async (guildId) => {
   return new Promise((resolve) => {
     mysqlHelper
       .query(`SELECT * FROM ${guildId}_users`)
+      .then( (result) => {
+        // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
+        resolve(result ?? null);
+      })
+      .catch(() => {
+        resolve(null);
+      });
+  });
+};
+
+const getBirthdayUsers = async (guildId) => {
+  return new Promise((resolve) => {
+    mysqlHelper
+      .query(`SELECT * FROM ${guildId}_users WHERE birthdate >= DATE_SUB(SYSDATE(), INTERVAL 100 YEAR)`)
       .then( (result) => {
         // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
         resolve(result ?? null);
@@ -92,7 +107,7 @@ const createUserTable = async (guildId) => {
   return new Promise((resolve) => {
     mysqlHelper
       .query(
-        `CREATE TABLE IF NOT EXISTS mbr_hosting_powerbot. ${tabelle} ( ID INT NOT NULL AUTO_INCREMENT , userId TEXT NOT NULL , userName TEXT NOT NULL , userAdd DATETIME NOT NULL , lastChannelJoin TEXT NOT NULL , totalVoiceTime BIGINT DEFAULT 0 NOT NULL , xP BIGINT DEFAULT 0 NOT NULL , Level INT DEFAULT 0 NOT NULL , messageCount TEXT DEFAULT 0 NOT NULL , PRIMARY KEY (ID)) ENGINE = InnoDB`,
+        `CREATE TABLE IF NOT EXISTS mbr_hosting_powerbot. ${tabelle} ( ID INT NOT NULL AUTO_INCREMENT , userId TEXT NOT NULL , userName TEXT NOT NULL , userAdd DATETIME NOT NULL , lastChannelJoin TEXT NOT NULL , totalVoiceTime BIGINT DEFAULT 0 NOT NULL , xP BIGINT DEFAULT 0 NOT NULL , Level INT DEFAULT 0 NOT NULL , messageCount TEXT DEFAULT 0 NOT NULL , birthdate DATE NOT NULL, PRIMARY KEY (ID)) ENGINE = InnoDB`,
         [tabelle]
       )
       .then((result) => {
@@ -126,6 +141,7 @@ module.exports.updateUser = updateUser;
 module.exports.getUser = getUser;
 module.exports.getUsers = getUsers;
 module.exports.getUserTable = getUserTable;
+module.exports.getBirthdayUsers = getBirthdayUsers;
 module.exports.createUserTable = createUserTable;
 module.exports.importUserXp = importUserXp;
 
