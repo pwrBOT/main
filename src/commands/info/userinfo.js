@@ -33,7 +33,7 @@ module.exports = {
         const { options, guild } = interaction;
         const member = options.getMember("user");
         if (!member) {
-          interaction.reply({
+          await interaction.reply({
             content: "❌ Der User ist nicht mehr auf dem Server ❌",
             ephemeral: true
           });
@@ -45,7 +45,7 @@ module.exports = {
         let userData = await usersRepository.getUser(userId, guildId);
 
         if (!userData) {
-          interaction.reply({
+          await interaction.reply({
             content: `❌ Kein Daten zu ${member} verfügbar! ❌`,
             ephemeral: true
           });

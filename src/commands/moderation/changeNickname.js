@@ -43,8 +43,8 @@ module.exports = {
         if (member.permissions.has(PermissionsBitField.Flags.ChangeNickname)) {
           await member
             .setNickname(newNickname, "Wunsch des Users")
-            .catch((error) => {
-              interaction.reply({
+            .catch(async (error) => {
+              await interaction.reply({
                 content: `Sry. Dein Nickname konnte aus einem unbekannten Grund nicht geändert werden.`,
                 ephemeral: true
               });

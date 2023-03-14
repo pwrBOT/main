@@ -63,7 +63,7 @@ module.exports = {
       const waitMapCheck = await waitMap.init(member, interaction);
 
       if (waitMapCheck == "stop") {
-        interaction.reply({
+        await interaction.reply({
           content: `Ey... Ändere nicht so schnell deine Meinung ;) Du kannst deine Auswahl nur alle 2 Sekunden ändern.`,
           ephemeral: true
         });

@@ -68,7 +68,7 @@ module.exports = {
         }
 
         if (warns.length === 0) {
-          interaction.reply(`${member.displayName} hat keine Verwarnungen!`);
+          await interaction.reply(`${member.displayName} hat keine Verwarnungen!`);
           try {
             setTimeout(function() {
               interaction.deleteReply().catch(error => {});;
@@ -138,7 +138,7 @@ module.exports = {
               inline: false
             }
           ]);
-        interaction.reply({ embeds: [warnsembed] });
+          await interaction.reply({ embeds: [warnsembed] });
 
         const commandLogRepository = require("../../mysql/commandLogRepository");
         // guild - command, user, affectedMember, reason
@@ -160,7 +160,7 @@ module.exports = {
         );
 
         if (!delWarnData) {
-          interaction.reply(
+          await interaction.reply(
             `Kein Warn mit ID: ${warnId} bei ${member} gefunden!`
           );
           return resolve(null);
@@ -224,7 +224,7 @@ module.exports = {
 
         const logChannel = require("../../mysql/loggingChannelsRepository");
         await logChannel.logChannel(interaction.guild, "modLog", delWarnembed);
-        interaction.reply({ embeds: [delWarnembed] });
+        await interaction.reply({ embeds: [delWarnembed] });
         try {
           setTimeout(function() {
             interaction.deleteReply().catch(error => {});;
@@ -251,7 +251,7 @@ module.exports = {
 
       if (interaction.options.getSubcommand() === "clearall") {
         if (warns.length === 0) {
-          interaction.reply(
+          await interaction.reply(
             `${member} hat keine Verwarnungen die gelöscht werden können!`
           );
           return resolve(null);
@@ -299,7 +299,7 @@ module.exports = {
 
         const logChannel = require("../../mysql/loggingChannelsRepository");
         await logChannel.logChannel(interaction.guild, "modLog", delWarnsembed);
-        interaction.reply({ embeds: [delWarnsembed] });
+        await interaction.reply({ embeds: [delWarnsembed] });
         try {
           setTimeout(function() {
             interaction.deleteReply().catch(error => {});;

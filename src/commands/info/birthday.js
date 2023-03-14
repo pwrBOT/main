@@ -43,7 +43,7 @@ module.exports = {
       if (interaction.options.getSubcommand() === "hinzufügen") {
         const birthdate = new Date(options.getString("date"));
         if (birthdate == "Invalid Date") {
-          interaction.reply({
+          await interaction.reply({
             content: `❌ Dein Geburtsdatum ist kein reales Datum! ❌`,
             ephemeral: true
           });
@@ -56,7 +56,7 @@ module.exports = {
         );
 
         if (birthdate >= new Date(minimumYears)) {
-          interaction.reply({
+          await interaction.reply({
             content: `❌ Du bist leider noch keine 14 Jahre alt. Sry. ❌`,
             ephemeral: true
           });
@@ -66,12 +66,17 @@ module.exports = {
         let userData = await usersRepository.getUser(member.id, guild.id);
 
         if (!userData) {
-          interaction.reply({
+          await interaction.reply({
             content: `❌ Wir haben leider noch keinerlei Einträge zu dir. Schreib erstmal eine Nachricht und versuche es dann erneut! ❌`,
             ephemeral: true
           });
           return resolve(null);
         }
+
+        await interaction.reply({
+          content: `Hey ${member} :) Dein Geburtstag wurde vermerkt. Wir freuen uns dir, an deinem ganz besonderen Tag, zu gratulieren`,
+          ephemeral: true
+        });
 
         await usersRepository.updateUser(
           guild.id,
@@ -79,15 +84,10 @@ module.exports = {
           "birthdate",
           birthdate
         );
-
-        interaction.reply({
-          content: `Hey ${member} :) Dein Geburtstag wurde vermerkt. Wir freuen uns dir, an deinem ganz besonderen Tag, zu gratulieren`,
-          ephemeral: true
-        });
       }
 
       if (interaction.options.getSubcommand() === "entfernen") {
-        interaction.reply({
+        await interaction.reply({
           content: `❌ Hier passiert NOCH nichts. WIP :) ❌`,
           ephemeral: true
         });

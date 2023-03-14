@@ -86,7 +86,7 @@ module.exports = {
           }
         ]);
 
-      interaction.reply({ embeds: [channelEmbed], ephemeral: true});
+        await interaction.reply({ embeds: [channelEmbed], ephemeral: true});
 
       const commandLogRepository = require("../../mysql/commandLogRepository");
         // guild - command, user, affectedMember, reason

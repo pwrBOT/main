@@ -31,10 +31,10 @@ const updateUser = async (guildId, userId, column, value) => {
     const tabelle = `${guildId}_users`;
 
     mysqlHelper
-      .query(
-        `UPDATE ${tabelle} SET ${column}=? WHERE userId = ?`,
-        [value, userId]
-      )
+      .query(`UPDATE ${tabelle} SET ${column}=? WHERE userId = ?`, [
+        value,
+        userId
+      ])
       .then((result) => {
         resolve(null);
       })
@@ -58,12 +58,11 @@ const getUser = async (memberId, guildId) => {
   });
 };
 
-
 const getUsers = async (guildId) => {
   return new Promise((resolve) => {
     mysqlHelper
       .query(`SELECT * FROM ${guildId}_users`)
-      .then( (result) => {
+      .then((result) => {
         // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
         resolve(result ?? null);
       })
@@ -75,10 +74,16 @@ const getUsers = async (guildId) => {
 
 const getBirthdayUsers = async (guildId) => {
   return new Promise((resolve) => {
+    const today = new Date();
+    const todayDay = today.getDate();
+    const todayMonth = today.getMonth() + 1;
+
     mysqlHelper
-      .query(`SELECT * FROM ${guildId}_users WHERE birthdate >= DATE_SUB(SYSDATE(), INTERVAL 100 YEAR)`)
-      .then( (result) => {
-        // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
+      .query(
+        `SELECT * FROM ${guildId}_users WHERE DAY(birthdate) = ? AND MONTH(birthdate) = ? AND birthdate >= DATE_SUB(SYSDATE(), INTERVAL 100 YEAR)`,
+        [todayDay, todayMonth]
+      )
+      .then((result) => {
         resolve(result ?? null);
       })
       .catch(() => {
@@ -125,7 +130,7 @@ const importUserXp = async (xpImport, username) => {
     mysqlHelper
       .query(`UPDATE 396282694906150913_users SET xP=? WHERE userName LIKE ?`, [
         xpImport,
-        username,
+        username
       ])
       .then((result) => {
         resolve(null);
@@ -144,4 +149,3 @@ module.exports.getUserTable = getUserTable;
 module.exports.getBirthdayUsers = getBirthdayUsers;
 module.exports.createUserTable = createUserTable;
 module.exports.importUserXp = importUserXp;
-

@@ -22,12 +22,12 @@ module.exports = {
       const member = options.getMember("user");
 
       if (!member) {
-        interaction.reply({ content: "❌ Der User ist nicht mehr auf dem Server ❌", ephemeral: true });
+        await interaction.reply({ content: "❌ Der User ist nicht mehr auf dem Server ❌", ephemeral: true });
         return resolve(null);
       }
 
       if (interaction.guild.ownerId === member.id) {
-        interaction.reply({ content: "❌ Du kannst den Serverinhaber nicht reporten! ❌", ephemeral: true });
+        await interaction.reply({ content: "❌ Du kannst den Serverinhaber nicht reporten! ❌", ephemeral: true });
         return resolve(null);
       }
 
@@ -38,7 +38,7 @@ module.exports = {
 
       try {
         if (member.roles.cache.has(teamRoleId.value)) {
-          interaction.reply({
+          await interaction.reply({
             content: "❌ Du kannst niemanden aus dem Team reporten! ❌",
             ephemeral: true
           });
@@ -47,7 +47,7 @@ module.exports = {
       } catch (error) {}
 
       if (member.id === client.user.id) {
-        interaction.reply({ content: '❌ Du kannst den Bot nicht reporten! ❌', ephemeral: true })
+        await interaction.reply({ content: '❌ Du kannst den Bot nicht reporten! ❌', ephemeral: true })
         return resolve(null);
       }
 

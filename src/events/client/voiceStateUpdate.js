@@ -64,7 +64,7 @@ module.exports = {
         }
 
         const joinToCreate = tempChannelCheck.guildChannelId;
-        const newChannelName = `${tempChannelCheck.tempChannelName} #${member.user.username}`;
+        const newChannelName = `${tempChannelCheck.tempChannelName} #${member.displayName}`;
 
         if (oldChannel !== newChannel && newState.channelId === joinToCreate) {
           let channelParent = "";
@@ -94,7 +94,7 @@ module.exports = {
                 ManageChannels: true,
                 MoveMembers: true,
                 ManageMessages: true,
-                MuteMembers: true
+                MuteMembers: false
               })
               .catch((error) => {});
           }

@@ -1,23 +1,18 @@
-const { PermissionsBitField } = require("discord.js");
+const { PermissionsBitField, messageLink } = require("discord.js");
 const guildSettings = require("../../mysql/guildsRepository");
 const warnSystem = require("../../functions/warningSystem/warnings");
-const ms = require("ms");
 
 module.exports = {
   name: "messageCreate",
 
   async execute(message) {
     return new Promise(async resolve => {
-      if (!message) {
+      if (!message || message.author.bot || !message.member) {
         return resolve(null);
       }
 
-      if (message.author.bot) {
-        return resolve(null);
-      }
-
-      const pictureChannelIds = ["1018087459013271564","978210408387198988"];
-      if (pictureChannelIds.includes(message.channel.id)) {
+      const commandChannelIds = ["1018087459013271564","978210408387198988"];
+      if (commandChannelIds.includes(message.channel.id)) {
         if (
           message.member.permissions.has(
             PermissionsBitField.Flags.Administrator

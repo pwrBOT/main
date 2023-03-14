@@ -35,9 +35,9 @@ module.exports = {
       const memberId = options.getString("userid");
       const reason = options.getString("reason") || "Kein Grund angegeben";
       const servername = guild.name;
-      const member = await guild.bans.fetch(memberId).catch(console.error);
+      const user = await guild.client.users.fetch(memberId).catch(console.error);
 
-      if (!member) {
+      if (!user) {
         await interaction.editReply(
           `User mit ID: memberId wurde nicht gefunden!`
         );
@@ -55,7 +55,7 @@ module.exports = {
 
       const banembed = new EmbedBuilder()
         .setTitle(`⚡️ Moderation ⚡️`)
-        .setDescription(`User: ${member} wurde entbannt`)
+        .setDescription(`User: ${user} wurde entbannt`)
         .setColor(0x51ff00)
         .setTimestamp(Date.now())
         .setFooter({
@@ -103,16 +103,16 @@ module.exports = {
           }
         ]);
 
-      const newMessage = `User ${member} wurde entbannt ✅`;
+      const newMessage = `User ${user} wurde entbannt ✅`;
       await interaction.editReply({ content: newMessage });
 
       const logChannel = require("../../mysql/loggingChannelsRepository");
       await logChannel.logChannel(interaction.guild, "modLog", banembed);
 
-      interaction.guild.members.unban(member).catch(console.error);
+      interaction.guild.members.unban(user.id).catch(console.error);
 
       try {
-        await member.send({ embeds: [banembedmember] }).catch(error => {});
+        await user.send({ embeds: [banembedmember] }).catch(error => {});
       } catch (error) {}
 
       const commandLogRepository = require("../../mysql/commandLogRepository");
@@ -121,7 +121,7 @@ module.exports = {
         interaction.guild,
         "unban",
         interaction.user,
-        member.tag,
+        user,
         reason
       );
 

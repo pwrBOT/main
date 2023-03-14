@@ -39,13 +39,14 @@ const eventAdd = async (
   host,
   eventTitle,
   eventDescription,
+  maxSubscribers,
   eventStart,
   eventEnd
 ) => {
   return new Promise(resolve => {
     mysqlHelper
       .query(
-        "INSERT INTO powerbot_events (eventId, guildId, channelId, messageId, host, eventTitle, eventDescription, eventStart, eventEnd, eventStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO powerbot_events (eventId, guildId, channelId, messageId, host, eventTitle, eventDescription, maxSubscribers, eventStart, eventEnd, eventStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
           eventId,
           guildId,
@@ -54,6 +55,7 @@ const eventAdd = async (
           host,
           eventTitle,
           eventDescription,
+          maxSubscribers,
           eventStart,
           eventEnd,
           "active"

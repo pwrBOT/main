@@ -63,17 +63,16 @@ module.exports = {
       const waitMapCheck = await waitMap.init(member, interaction);
 
       if (waitMapCheck == "stop") {
-        interaction.reply({
+        await interaction.reply({
           content: `Ey... Ändere nicht so schnell deine Meinung ;) Du kannst deine Auswahl nur alle 2 Sekunden ändern.`,
           ephemeral: true
         });
         return resolve(null);
-      } else {
-        interaction.deferUpdate().then().catch();
       }
 
       const embed = await message.embeds[0];
       const eventId = await embed.footer.text.split("#")[1];
+      const event = await eventRepository.eventGet(eventId)
 
       // ########################## GET DB-DATA ########################## \\
       const allParticipants = await eventRepository.getAllParticipants(eventId);
@@ -119,6 +118,17 @@ module.exports = {
 
         await eventRepository.delParticipant(eventId, member.id);
       } else {
+
+        if (teilnehmerListe.length == event.maxSubscribers){
+          await interaction.reply({
+            content: `Die maximale Teilnehmeranzahl wurde schon erreicht.`,
+            ephemeral: true
+          });
+          return resolve(null);
+        }
+
+        interaction.deferUpdate().then().catch();
+
         await eventRepository.delParticipant(eventId, member.id);
         await eventRepository.addParticipant(
           eventId,

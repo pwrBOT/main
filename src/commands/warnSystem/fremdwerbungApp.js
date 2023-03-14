@@ -23,7 +23,7 @@ module.exports = {
       const guild = interaction.guild;
 
       if (!message) {
-        interaction.reply({
+        await interaction.reply({
           content: "❌ Die Nachricht existiert nicht mehr ❌",
           ephemeral: true
         });
@@ -31,7 +31,7 @@ module.exports = {
       }
 
       if (interaction.guild.ownerId === member.id) {
-        interaction.reply({
+        await interaction.reply({
           content:
             "❌ Du kannst Nachrichten des Serverinhabers nicht moderieren! ❌",
           ephemeral: true
@@ -46,7 +46,7 @@ module.exports = {
 
       try {
         if (member.roles.cache.has(teamRoleId.value)) {
-          interaction.reply({
+          await interaction.reply({
             content:
               "❌ Du kannst Nachrichten von Teammitgliedern nicht moderieren! ❌",
             ephemeral: true
@@ -56,7 +56,7 @@ module.exports = {
       } catch (error) {}
 
       if (member.id === client.user.id) {
-        interaction.reply({
+        await interaction.reply({
           content: "❌ Du kannst Nachrichten des Bots nicht moderieren! ❌",
           ephemeral: true
         });
@@ -148,7 +148,7 @@ module.exports = {
       );
       await warnSystem.autoModWarn(interaction.guild, member);
 
-      interaction.reply({ content: `✅ Die Nachricht von ${member} wurde gelöscht und der User verwarnt.`, ephemeral: true })
+      await interaction.reply({ content: `✅ Die Nachricht von ${member} wurde gelöscht und der User verwarnt.`, ephemeral: true })
 
       const commandLogRepository = require("../../mysql/commandLogRepository");
       // guild - command, user, affectedMember, reason

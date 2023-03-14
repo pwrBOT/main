@@ -4,7 +4,7 @@ const guildsRepository = require("../../mysql/guildsRepository");
 module.exports = {
   name: "guildMemberUpdate",
   async execute(oldMember, newMember, client) {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       if (oldMember.user.bot === true || newMember.user.bot === true) {
         return resolve(null);
       }
@@ -19,11 +19,11 @@ module.exports = {
         .setTimestamp(Date.now())
         .setFooter({
           iconURL: client.user.displayAvatarURL(),
-          text: `powered by PowerBot`,
+          text: `powered by PowerBot`
         });
 
       const removedRoles = await oldMember.roles.cache.filter(
-        role => !newMember.roles.cache.has(role.id)
+        (role) => !newMember.roles.cache.has(role.id)
       );
 
       if (removedRoles.size > 0) {
@@ -33,9 +33,9 @@ module.exports = {
           .addFields([
             {
               name: `Entfernte Rollen:`,
-              value: `⛔️ ${removedRoles.map(r => r.name)}`,
-              inline: true,
-            },
+              value: `⛔️ ${removedRoles.map((r) => r.name)}`,
+              inline: true
+            }
           ]);
 
         const logChannel = require("../../mysql/loggingChannelsRepository");
@@ -55,13 +55,13 @@ module.exports = {
         try {
           oldMember
             .send({ embeds: [guildMemberUpdateEmbed] })
-            .catch(error => {});
+            .catch((error) => {});
         } catch (error) {}
       }
 
       // If the role(s) are present on the new member object but are not on the old one (i.e role(s) were added)
       const addedRoles = await newMember.roles.cache.filter(
-        role => !oldMember.roles.cache.has(role.id)
+        (role) => !oldMember.roles.cache.has(role.id)
       );
 
       const communityRoleId = await guildsRepository.getGuildSetting(
@@ -73,7 +73,7 @@ module.exports = {
 
       if (communityRoleId) {
         const communityRoleIds = JSON.parse(communityRoleId.value);
-        await communityRoleIds.forEach(communityRoleId => {
+        await communityRoleIds.forEach((communityRoleId) => {
           if (addedRoles.has(communityRoleId)) {
             isCommunitryRole = true;
           }
@@ -87,9 +87,9 @@ module.exports = {
           .addFields([
             {
               name: `Hinzugefügte Rollen:`,
-              value: `✅ ${addedRoles.map(r => r.name)}`,
-              inline: true,
-            },
+              value: `✅ ${addedRoles.map((r) => r.name)}`,
+              inline: true
+            }
           ]);
 
         const logChannel = require("../../mysql/loggingChannelsRepository");
@@ -109,7 +109,7 @@ module.exports = {
         try {
           newMember
             .send({ embeds: [guildMemberUpdateEmbed] })
-            .catch(error => {});
+            .catch((error) => {});
         } catch (error) {}
       }
 
@@ -149,30 +149,23 @@ module.exports = {
             {
               name: `Avatar alt:`,
               value: `[LINK](${oldMember.displayAvatarURL()})`,
-              inline: true,
+              inline: true
             },
             {
               name: `Avatar neu:`,
               value: `[LINK](${newMember.displayAvatarURL()})`,
-              inline: true,
-            },
+              inline: true
+            }
           ]);
         await logChannel.logChannel(guild, "botLog", guildMemberUpdateEmbed);
       }
 
       // #######################  BOOST FINDER  ####################### \\
       if (!oldMember.premiumSince && newMember.premiumSince) {
-        console.log(`########### BOOST DETECTOR CHECK ###########`);
-        console.log(`oldMember premiumSince: ${oldMember.premiumSince}`);
-        console.log(`newMember premiumSince: ${newMember.premiumSince}`);
-        console.log(
-          `${newMember.displayName} boostet nun ${newMember.guild.name}!`
-        );
-        console.log(`############################################`);
 
         const userBoostEmbed = new EmbedBuilder()
           .setTitle(`${newMember} ist nun Booster 💎`)
-          .setColor(0xffba0f);
+          .setColor(0xd503ff);
 
         const achievementChannel = await guildsRepository.getGuildSetting(
           newMember.guild,
@@ -182,15 +175,17 @@ module.exports = {
         if (achievementChannel) {
           if (achievementChannel.value) {
             try {
-              await member.client.channels.cache
-                .get(achievementChannel.value)
-                .send({ embeds: [userBoostEmbed] });
+              const channel = await newMember.guild.channels.fetch(
+                achievementChannel.value
+              );
+              channel.send({ embeds: [userBoostEmbed] });
             } catch (error) {}
           }
         }
       }
+      
 
       return resolve(null);
     });
-  },
+  }
 };

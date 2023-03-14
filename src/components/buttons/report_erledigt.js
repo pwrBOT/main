@@ -21,7 +21,7 @@ module.exports = {
         "modRole"
       );
       if (!modRoleId) {
-        interaction.reply({
+        await interaction.reply({
           ephemeral: true,
           content: "❌ Keine Moderator-Rolle definiert! ❌"
         });
@@ -38,7 +38,7 @@ module.exports = {
       });
 
       if (!isModerator) {
-        interaction.reply({
+        await interaction.reply({
           ephemeral: true,
           content: "❌ Du bist kein Moderator! ❌"
         });

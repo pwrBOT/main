@@ -7,6 +7,7 @@ module.exports = {
   once: false,
   async execute(message) {
     return new Promise(async (resolve) => {
+
       if (!message) return resolve(null);
 
       if (!message.guild) return resolve(null);
@@ -65,13 +66,7 @@ module.exports = {
           }
         }
 
-        let embedMessage = "";
-
-        if (target?.id === message?.author?.id) {
-          embedMessage = `Nachricht von ${message?.author} in ${message?.channel} durch ${executor?.tag} gelöscht!\n\nNachricht: ${message?.content}\nID: ${message?.id}`;
-        } else {
-          embedMessage = `Nachricht von ${message?.author} in ${message?.channel} gelöscht!\n\nNachricht: ${message?.content}\nID: ${message?.id}`;
-        }
+        let embedMessage = `Nachricht von ${message?.author} in ${message?.channel} gelöscht!\n\nNachricht: ${message?.content}\nID: ${message?.id}`;
 
         if (message.embeds[0]) {
           const embed = message.embeds[0];

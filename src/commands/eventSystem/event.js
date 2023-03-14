@@ -20,23 +20,23 @@ module.exports = {
     .setDescription(`Event-Verwaltung`)
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageEvents)
     .setDMPermission(false)
-    .addSubcommand(subcommand =>
+    .addSubcommand((subcommand) =>
       subcommand
         .setName(`create`)
         .setDescription(`Event erstellen`)
-        .addStringOption(option =>
+        .addStringOption((option) =>
           option
             .setName("eventtitle")
             .setDescription("Gib einen Eventnamen ein")
             .setRequired(true)
         )
-        .addStringOption(option =>
+        .addStringOption((option) =>
           option
             .setName("eventdescription")
             .setDescription("Gib eine Beschreibung für dein Event ein")
             .setRequired(true)
         )
-        .addStringOption(option =>
+        .addStringOption((option) =>
           option
             .setName("eventstart")
             .setDescription(
@@ -44,7 +44,7 @@ module.exports = {
             )
             .setRequired(true)
         )
-        .addStringOption(option =>
+        .addStringOption((option) =>
           option
             .setName("eventend")
             .setDescription(
@@ -52,20 +52,28 @@ module.exports = {
             )
             .setRequired(true)
         )
-        .addChannelOption(option =>
+        .addChannelOption((option) =>
           option
             .setName("eventchannel")
             .setDescription("Wo soll die Ankündigung gepostet werden?")
             .addChannelTypes(ChannelType.GuildText)
             .setRequired(true)
         )
-        .addAttachmentOption(option =>
+        .addIntegerOption((option) =>
+          option
+            .setName("maxsubscribers")
+            .setDescription(
+              "Event auf eine maximale Teilnehmeranzahl begrenzen."
+            )
+            .setRequired(false)
+        )
+        .addAttachmentOption((option) =>
           option
             .setName("eventbild")
             .setDescription("Eventbild auswählen")
             .setRequired(false)
         )
-        .addRoleOption(option =>
+        .addRoleOption((option) =>
           option
             .setName("rollenerwaehnung")
             .setDescription("Rolle auswählen, die gepingt wird")
@@ -74,7 +82,7 @@ module.exports = {
     ),
 
   async execute(interaction, client) {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       await interaction.deferReply({
         ephemeral: true,
         fetchReply: true
@@ -83,6 +91,7 @@ module.exports = {
       const { options, user, guild } = interaction;
       const eventTitle = options.getString("eventtitle");
       const eventDescription = options.getString("eventdescription");
+      let maxSubscribers = options.getInteger("maxsubscribers");
       const eventStart = new Date(options.getString("eventstart"));
       const eventEnd = new Date(options.getString("eventend"));
       const eventChannel = options.getChannel("eventchannel");
@@ -91,8 +100,10 @@ module.exports = {
       const pingRole = options.getRole("rollenerwaehnung");
       const host = user.id;
 
+      if (maxSubscribers == null) maxSubscribers = -1;
+
       if (eventBild) {
-        if (!["jpg", "png", "gif"].some(url => eventBild.url.includes(url))) {
+        if (!["jpg", "png", "gif"].some((url) => eventBild.url.includes(url))) {
           interaction.editReply(
             `❌ Die hochgeladene Datei ist keine JPG / PNG / GIF`
           );
@@ -126,6 +137,12 @@ module.exports = {
             { name: `❌ Abgesagt:`, value: `> \u200B`, inline: true }
           );
 
+          if (maxSubscribers >= 1){
+            eventEmbed.setDescription(
+              `${eventDescription}\n\n**Zeit:**\n<t:${eventStartTime}:F> - <t:${eventEndTime}:F>\n⏱ <t:${eventStartTime}:R>\n\n**Maximale Teilnehmeranzahl:** ${maxSubscribers}\n\n`
+            )
+          }
+
         if (eventBild) {
           eventEmbed.setImage(eventBild.url);
         }
@@ -156,7 +173,7 @@ module.exports = {
 
         // SEND MESSAGE
         interaction.editReply({
-          content: `Event (ID: #${eventId}) wurde angelegt und in ${eventChannel} veröffentlicht`,
+          content: `Event wurde angelegt und in ${eventChannel} veröffentlicht.\nID: #${eventId} `,
           embeds: [eventEmbed]
         });
 
@@ -197,23 +214,21 @@ module.exports = {
           host,
           eventTitle,
           eventDescription,
+          maxSubscribers,
           eventStart,
           eventEnd
         );
       }
 
-      // ############################ COMMAND LOGGING ############################ \\
-      /** 
       const commandLogRepository = require("../../mysql/commandLogRepository");
-      // guild - command, user, affectedMember, reason
+      // guild - command, user, affectedMember, 
       await commandLogRepository.logCommandUse(
         interaction.guild,
         "event create",
         interaction.user,
-        member.user,
-        reason
+        interaction.member.user,
+        "-"
       );
-      */
 
       return resolve(null);
     });

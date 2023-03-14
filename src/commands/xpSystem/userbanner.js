@@ -16,7 +16,7 @@ module.exports = {
     /** 
     // ############ TIMEOUT COMMAND CHECK ############ \\
     if (timeOutMap.has(interaction.member.id)){
-      interaction.reply({content:`⏰ Command Cooldown | Du kannst den Command nur alle 30 Minuten nutzen 🥱`});
+      await interaction.reply({content:`⏰ Command Cooldown | Du kannst den Command nur alle 30 Minuten nutzen 🥱`});
       return resolve(null)
     } else {
       timeOutMap.set(interaction.member.id)
@@ -31,10 +31,10 @@ module.exports = {
     const img = await canvasUserbanner.generateImage(interaction, interaction.user, interaction.guild, interaction.member);
 
     if (!img) {
-      return interaction.reply(`❌ Kein Userbanner verfügbar! Möglicherweise hast du bisher noch keine Nachricht geschrieben! ❌`);
+      return await interaction.reply(`❌ Kein Userbanner verfügbar! Möglicherweise hast du bisher noch keine Nachricht geschrieben! ❌`);
     }
 
-    interaction.reply({ files: [img] });
+    await interaction.reply({ files: [img] });
 
     const commandLogRepository = require("../../mysql/commandLogRepository");
                                           // guild - command, user, affectedMember, reason

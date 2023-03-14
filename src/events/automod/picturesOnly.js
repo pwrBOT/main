@@ -8,15 +8,7 @@ module.exports = {
 
   async execute(message) {
     return new Promise(async resolve => {
-      if (!message) {
-        return resolve(null);
-      }
-
-      if (message.author.bot) {
-        return resolve(null);
-      }
-
-      if (!message.member) {
+      if (!message || message.author.bot || !message.member) {
         return resolve(null);
       }
 
@@ -37,7 +29,7 @@ module.exports = {
         await message.delete();
 
         const answer = await message.channel.send(
-          `Sry ${message.member} 🙂 In diesem Channel sind nur Bilder erlaubt. Du kannst jedoch einen öffentlichen Thread öffenen!`
+          `Sry ${message.member} 🙂 In diesem Channel sind nur Bilder erlaubt. Du kannst jedoch einen öffentlichen Thread erstellen!`
         );
         try {
           setTimeout(function() {

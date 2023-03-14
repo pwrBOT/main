@@ -18,33 +18,46 @@ async function birthdayCheck(client) {
     for (const guild of allBotGuilds) {
       const userData = await usersRepository.getBirthdayUsers(guild.id);
 
+      let birthdaynames1 = "";
+      let birthdaynames2 = "";
+      let birthdaynames3 = "";
+      let birthdaynames4 = "";
+
       if (userData) {
-        const user = await client.users.fetch(userData.userId);
+        // FOR SCHLEIFE!
+        const user = await client.users
+          .fetch(userData.userId)
+          .catch((error) => {});
 
-        const today = new Date();
-        const birthdate = new Date(userData.birthdate);
+          console.log(`${userData.userName}`)
 
-        if (
-          today.getMonth() == birthdate.getMonth() &&
-          today.getDay() == birthdate.getDay()
-        ) {
-          console.log(`${user} hat heute Geburtstag`);
+        if (birthdaynames1.length <= 1000) {
+          birthdaynames1 += `${userData.userName}\n`;
+        } else if (birthdaynames2.length <= 1000) {
+          birthdaynames2 += `${userData.userName}\n`;
+        } else if (birthdaynames3.length <= 1000) {
+          birthdaynames3 += `${userData.userName}\n`;
+        } else if (birthdaynames4.length <= 1000) {
+          birthdaynames4 += `${userData.userName}\n`;
         }
+      }
 
-        const birthdayRoleId = await guildsRepository.getGuildSetting(
-          guild,
-          "birthdayRole"
-        );
-        if (birthdayRoleId?.value?.length == 0) {
-          console.log(`Keine Birthdayrole bei ${guild.name}`);
-          return resolve(null);
-        }
+      console.log(birthdaynames1);
+      console.log(birthdaynames2);
+      console.log(birthdaynames3);
+      console.log(birthdaynames4);
 
-        const birthdayRole = await guild.roles.fetch(birthdayRoleId.value);
+      const birthdayRoleId = await guildsRepository.getGuildSetting(
+        guild,
+        "birthdayRole"
+      );
 
-        if (!birthdayRole) {
-          return resolve(null);
-        }
+      const birthdayRole = await guild.roles
+        .fetch(birthdayRoleId?.value)
+        .catch((error) => {});
+
+      if (!birthdayRole) {
+        return resolve(null);
       }
     }
   });

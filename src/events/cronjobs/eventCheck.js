@@ -73,8 +73,8 @@ const eventEndCheck = async client => {
   if (allEvents) {
     allEvents.forEach(async event => {
       if (event.eventEnd < new Date(Date.now() + 3600000)) {
-        const channel = await client.channels.fetch(event.channelId);
-        const message = await channel.messages.fetch(event.messageId);
+        const channel = await client.channels.fetch(event.channelId).catch(error => {});
+        const message = await channel.messages.fetch(event.messageId).catch(error => {});
         const embed = await message.embeds[0];
         const eventId = await embed.footer.text.split("#")[1];
 
@@ -118,8 +118,8 @@ const eventReminder = async client => {
       if (remindDate <= dateNow) {
         await eventRepository.eventUpdate(event.eventId, "eventReminder", 1);
 
-        const channel = await client.channels.fetch(event.channelId);
-        const message = await channel.messages.fetch(event.messageId);
+        const channel = await client.channels.fetch(event.channelId).catch(error => {});
+        const message = await channel.messages.fetch(event.messageId).catch(error => {});
 
         if (!message) {
           return;
@@ -201,8 +201,8 @@ const eventReminderNow = async client => {
       if (remindDate <= dateNow) {
         await eventRepository.eventUpdate(event.eventId, "eventReminder", 2);
 
-        const channel = await client.channels.fetch(event.channelId);
-        const message = await channel.messages.fetch(event.messageId);
+        const channel = await client.channels.fetch(event.channelId).catch(error => {});
+        const message = await channel.messages.fetch(event.messageId).catch(error => {});
 
         if (!message) {
           return;
@@ -273,7 +273,7 @@ const eventMessageDeleteCheck = async client => {
   const allEvents = await eventRepository.getAllEvents();
 
   allEvents.forEach(async event => {
-    const channel = await client.channels.fetch(event.channelId);
+    const channel = await client.channels.fetch(event.channelId).catch(error => {});
     let message = "";
 
     try {

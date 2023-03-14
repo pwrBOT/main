@@ -25,9 +25,9 @@ module.exports = {
       text: `powered by Powerbot`,
     });
 
-    await channel.bulkDelete(100, true).then(messages => {
+    await channel.bulkDelete(100, true).then(async messages => {
       responseembed.setDescription(`${messages.size} Nachrichten gelöscht ✅`);
-      interaction.reply({embeds: [responseembed]});
+      await interaction.reply({embeds: [responseembed]});
       try {
         setTimeout(function() {
           interaction.deleteReply().catch(error => {});;

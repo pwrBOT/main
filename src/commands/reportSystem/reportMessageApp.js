@@ -21,7 +21,7 @@ module.exports = {
       const member = message.member;
 
       if (!message) {
-        interaction.reply({
+        await interaction.reply({
           content: "❌ Die Nachricht existiert nicht mehr ❌",
           ephemeral: true
         });
@@ -29,7 +29,7 @@ module.exports = {
       }
 
       if (interaction.guild.ownerId === member.id) {
-        interaction.reply({
+        await interaction.reply({
           content:
             "❌ Du kannst Nachrichten des Serverinhabers nicht reporten! ❌",
           ephemeral: true
@@ -44,7 +44,7 @@ module.exports = {
 
       try {
         if (member.roles.cache.has(teamRoleId.value)) {
-          interaction.reply({
+          await interaction.reply({
             content:
               "❌ Du kannst Nachrichten von Teammitgliedern nicht reporten! ❌",
             ephemeral: true
@@ -54,7 +54,7 @@ module.exports = {
       } catch (error) {}
 
       if (member.id === client.user.id) {
-        interaction.reply({
+        await interaction.reply({
           content: "❌ Du kannst Nachrichten des Bots nicht reporten! ❌",
           ephemeral: true
         });
@@ -91,7 +91,7 @@ module.exports = {
         reportedMessageEmbed
       );
 
-      interaction.reply({
+      await interaction.reply({
         content: `✅ Die Nachricht von ${member} wurde an die Moderatoren übermittelt. Danke für deine Meldung 🙂`,
         ephemeral: true
       });

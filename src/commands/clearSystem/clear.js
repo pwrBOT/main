@@ -28,7 +28,7 @@ module.exports = {
     const amount = options.getNumber("amount");
 
     if (amount > 100)
-      return interaction
+      return await interaction
         .reply("❌ Du kannst nur maximal 100 Nachrichten auf einmal löschen ❌")
         .then(
           setTimeout(function() {
@@ -47,9 +47,9 @@ module.exports = {
       });
 
     try {
-      await channel.bulkDelete(amount, true).then(messages => {
+      await channel.bulkDelete(amount, true).then(async messages => {
         responseembed.setDescription(`${messages.size} Nachrichten gelöscht ✅`);
-        interaction.reply({ embeds: [responseembed] });
+        await interaction.reply({ embeds: [responseembed] });
         try {
           setTimeout(function() {
             interaction.deleteReply().catch(error => {});;
