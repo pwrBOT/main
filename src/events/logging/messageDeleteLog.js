@@ -71,7 +71,6 @@ module.exports = {
         if (message.embeds[0]) {
           const embed = message.embeds[0];
           const embedText = `\n\nEMBED:\n${embed.title}\n${embed.description}`;
-          console.log(embedText);
           embedMessage += embedText;
         }
 

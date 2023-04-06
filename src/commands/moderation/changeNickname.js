@@ -35,7 +35,13 @@ module.exports = {
 
   async execute(interaction, client) {
     return new Promise(async (resolve) => {
+      await interaction.deferReply({
+        ephemeral: true,
+        fetchReply: true
+      });
+
       const { member, guild, options } = interaction;
+      let failed = false;
 
       if (interaction.options.getSubcommand() === "change") {
         const newNickname = options.getString("nickname");
@@ -44,21 +50,25 @@ module.exports = {
           await member
             .setNickname(newNickname, "Wunsch des Users")
             .catch(async (error) => {
-              await interaction.reply({
-                content: `Sry. Dein Nickname konnte aus einem unbekannten Grund nicht geändert werden.`,
-                ephemeral: true
-              });
-              return resolve(null);
+              failed = true;
             });
 
-          await interaction.reply({
+          if (failed == true) {
+            await interaction.editReply({
+              content: `Sry. Dein Nickname konnte aus einem unbekannten Grund nicht geändert werden.`,
+              ephemeral: true
+            });
+            return resolve(null);
+          }
+
+          await interaction.editReply({
             content: `Dein Nickname wurde geändert.\nAlt: ${member.displayName}\nNeu: ${newNickname}`,
             ephemeral: true
           });
           return resolve(null);
         } else {
           if (waitMap.has(member.id)) {
-            await interaction.reply({
+            await interaction.editReply({
               content: `Du musst ein wenig warten bis du eine erneute Nickname-Änderung beantragen kannst.`,
               ephemeral: true
             });
@@ -71,7 +81,7 @@ module.exports = {
             const modLogChannelId = data?.value ?? null;
 
             if (modLogChannelId == null) {
-              await interaction.reply({
+              await interaction.editReply({
                 content: `Dieser Discord-Server hat keinen Moderations-Channel definiert. Wende dich bitte direkt an die Serverleitung!`,
                 ephemeral: true
               });
@@ -82,7 +92,7 @@ module.exports = {
 
             const nicknameEmbed = new EmbedBuilder()
               .setTitle(`⚡️ Nickname Änderungsanfrage ⚡️`)
-              .setDescription(`User: ${member} möchte seinen Nickname ändern`)
+              .setDescription(`User: ${member} möchte seinen Nickname ändern.`)
               .setColor(0x51ff00)
               .setTimestamp(Date.now())
               .setThumbnail(member.displayAvatarURL())
@@ -92,36 +102,50 @@ module.exports = {
               })
               .addFields([
                 {
+                  name: `Nickname:`,
+                  value: `${member.displayName}`,
+                  inline: true
+                },
+                {
                   name: `Neuer Wunsch-Nickname:`,
                   value: `${newNickname}`,
+                  inline: true
+                },
+                {
+                  name: `User ID:`,
+                  value: member.id,
                   inline: false
                 }
               ]);
 
-            const buttonErledigt = new ButtonBuilder()
-              .setCustomId("erledigt")
-              .setLabel(`Erledigt`)
+            const buttonAkzeptieren = new ButtonBuilder()
+              .setCustomId("nicknameChange_accept")
+              .setLabel(`Akzeptieren`)
               .setStyle(ButtonStyle.Success)
+              .setDisabled(false);
+
+            const buttonAblehnen = new ButtonBuilder()
+              .setCustomId("nicknameChange_decline")
+              .setLabel(`Ablehnen`)
+              .setStyle(ButtonStyle.Danger)
               .setDisabled(false);
 
             await modLogChannel.send({
               embeds: [nicknameEmbed],
               components: [
-                new ActionRowBuilder().addComponents([buttonErledigt])
+                new ActionRowBuilder().addComponents([buttonAkzeptieren, buttonAblehnen])
               ]
             });
 
-            await interaction.reply({
+            await interaction.editReply({
               content: `Dein Nickname-Änderungswunsch wurde an das Team übermittelt.`,
               ephemeral: true
             });
 
             waitMap.set(member.id);
-            console.log(waitMap);
 
             setTimeout(() => {
               waitMap.delete(member.id);
-              console.log(waitMap);
             }, 60000);
           }
         }

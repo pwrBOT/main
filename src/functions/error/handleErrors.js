@@ -9,15 +9,12 @@ const config = require("../../../config.json");
 
 module.exports = async (client) => {
   process.on("unhandledRejection", (reason, promise) => {
-    console.error(reason, promise)
-
-
-    console.log(chalk.red(`[ERROR LOGGING] :: Unhandled Error`));
+     console.log(chalk.red(`[ERROR LOGGING] :: Unhandled Rejection`));
     console.log(chalk.red(reason, promise));
 
     const errorEmbed = new EmbedBuilder()
       .setTitle(`⚡️ Error Management ⚡️`)
-      .setDescription(`Es ist ein Fehler aufgetreten1:`)
+      .setDescription(`Unhandled Rejection:`)
       .setColor(0xff0000)
       .addFields([
         {
@@ -32,14 +29,12 @@ module.exports = async (client) => {
   });
 
   process.on("uncaughtException", (err, origin) => {
-    console.error(err, origin)
-
-    console.log(chalk.red(`[ERROR LOGGING] :: Unhandled Error`));
+    console.log(chalk.red(`[ERROR LOGGING] :: Unhandled Exception`));
     console.log(chalk.red(err, origin));
 
     const errorEmbed = new EmbedBuilder()
       .setTitle(`⚡️ Error Management ⚡️`)
-      .setDescription(`Es ist ein Fehler aufgetreten2:`)
+      .setDescription(`Unhandled Exception:`)
       .setColor(0xff0000)
       .addFields([
         {
@@ -60,12 +55,12 @@ module.exports = async (client) => {
   process.on("uncaughtExceptionMonitor", (err, origin) => {
     console.error(err, origin)
 
-    console.log(chalk.red(`[ERROR LOGGING] :: Unhandled Error`));
+    console.log(chalk.red(`[ERROR LOGGING] :: Unhandled Exception Monitor`));
     console.log(chalk.red(err, origin));
 
     const errorEmbed = new EmbedBuilder()
       .setTitle(`⚡️ Error Management ⚡️`)
-      .setDescription(`Es ist ein Fehler aufgetreten3:`)
+      .setDescription(`Unhandled Exception Monitor:`)
       .setColor(0xff0000)
       .addFields([
         {
@@ -86,12 +81,12 @@ module.exports = async (client) => {
   process.on("rejectionHandled", (err, origin) => {
     console.error(err, origin)
     
-    console.log(chalk.red(`[ERROR LOGGING] :: Unhandled Error`));
+    console.log(chalk.red(`[ERROR LOGGING] :: Handled Error`));
     console.log(chalk.red(err, origin));
 
     const errorEmbed = new EmbedBuilder()
       .setTitle(`⚡️ Error Management ⚡️`)
-      .setDescription(`Es ist ein Fehler aufgetreten4:`)
+      .setDescription(`Es ist ein Fehler aufgetreten:`)
       .setColor(0xff0000)
       .addFields([
         {

@@ -21,7 +21,7 @@ async function warnCheck() {
     return;
   }
 
-  let expiredWarnIds = "-";
+  let expiredWarnIds = "";
 
   allObsoleteWarns.forEach(async warn => {
     currentDate = new Date();

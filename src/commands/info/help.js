@@ -15,19 +15,19 @@ module.exports = {
     .setDescription(`Hilfe zu Bot Funktionen erhalten`)
     .setDefaultMemberPermissions(PermissionFlagsBits.ViewChannel)
     .setDMPermission(false)
-    .addSubcommand(subcommand =>
+    .addSubcommand((subcommand) =>
       subcommand
         .setName(`reportsystem`)
         .setDescription(`Informationen über das Report-System ausgeben lassen`)
     )
-    .addSubcommand(subcommand =>
+    .addSubcommand((subcommand) =>
       subcommand
         .setName(`levelsystem`)
         .setDescription(`Informationen über das Level-System ausgeben lassen`)
     ),
 
   async execute(interaction, client) {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       await interaction.deferReply({
         ephemeral: false,
         fetchReply: true
@@ -57,7 +57,7 @@ module.exports = {
         } catch (error) {}
 
         if (voiceChannelIds) {
-          voiceChannelIds.forEach(async channel => {
+          voiceChannelIds.forEach(async (channel) => {
             const categorys = await guild.channels.fetch(channel);
             voiceXPCategorys += `${categorys}\n`;
           });
@@ -72,8 +72,9 @@ module.exports = {
         } catch (error) {}
 
         if (voiceBoostChannelIds) {
-          voiceBoostChannelIds.forEach(async channel => {
-            voiceXPBoostCategorys += `${await guild.channels.fetch(channel)}\n`;
+          voiceBoostChannelIds.forEach(async (channel) => {
+            const categorys = await guild.channels.fetch(channel);
+            voiceXPBoostCategorys += `${categorys}\n`;
           });
         } else {
           voiceXPBoostCategorys = "-";
@@ -94,92 +95,84 @@ module.exports = {
 
         if (levelSettings.level1) {
           roleLevel1 = await guild.roles.fetch(levelSettings.level1);
-          levelRoles += `Level ${levelSettings.LevelUp1} (XP: ${(levelSettings.LevelUp1 -
-            1) *
-            (levelSettings.LevelUp1 - 1) *
-            100 +
-            100}): ${roleLevel1}\n`;
+          levelRoles += `Level ${levelSettings.LevelUp1} (XP: ${
+            (levelSettings.LevelUp1 - 1) * (levelSettings.LevelUp1 - 1) * 100 +
+            100
+          }): ${roleLevel1}\n`;
         }
 
         if (levelSettings.level2) {
           roleLevel2 = await guild.roles.fetch(levelSettings.level2);
-          levelRoles += `Level ${levelSettings.LevelUp2} (XP: ${(levelSettings.LevelUp2 -
-            1) *
-            (levelSettings.LevelUp2 - 1) *
-            100 +
-            100}): ${roleLevel2}\n`;
+          levelRoles += `Level ${levelSettings.LevelUp2} (XP: ${
+            (levelSettings.LevelUp2 - 1) * (levelSettings.LevelUp2 - 1) * 100 +
+            100
+          }): ${roleLevel2}\n`;
         }
 
         if (levelSettings.level3) {
           roleLevel3 = await guild.roles.fetch(levelSettings.level3);
-          levelRoles += `Level ${levelSettings.LevelUp3} (XP: ${(levelSettings.LevelUp3 -
-            1) *
-            (levelSettings.LevelUp3 - 1) *
-            100 +
-            100}): ${roleLevel3}\n`;
+          levelRoles += `Level ${levelSettings.LevelUp3} (XP: ${
+            (levelSettings.LevelUp3 - 1) * (levelSettings.LevelUp3 - 1) * 100 +
+            100
+          }): ${roleLevel3}\n`;
         }
 
         if (levelSettings.level4) {
           roleLevel4 = await guild.roles.fetch(levelSettings.level4);
-          levelRoles += `Level ${levelSettings.LevelUp4} (XP: ${(levelSettings.LevelUp4 -
-            1) *
-            (levelSettings.LevelUp4 - 1) *
-            100 +
-            100}): ${roleLevel4}\n`;
+          levelRoles += `Level ${levelSettings.LevelUp4} (XP: ${
+            (levelSettings.LevelUp4 - 1) * (levelSettings.LevelUp4 - 1) * 100 +
+            100
+          }): ${roleLevel4}\n`;
         }
 
         if (levelSettings.level5) {
           roleLevel5 = await guild.roles.fetch(levelSettings.level5);
-          levelRoles += `Level ${levelSettings.LevelUp5} (XP: ${(levelSettings.LevelUp5 -
-            1) *
-            (levelSettings.LevelUp5 - 1) *
-            100 +
-            100}): ${roleLevel5}\n`;
+          levelRoles += `Level ${levelSettings.LevelUp5} (XP: ${
+            (levelSettings.LevelUp5 - 1) * (levelSettings.LevelUp5 - 1) * 100 +
+            100
+          }): ${roleLevel5}\n`;
         }
 
         if (levelSettings.level6) {
           roleLevel6 = await guild.roles.fetch(levelSettings.level6);
-          levelRoles += `Level ${levelSettings.LevelUp6} (XP: ${(levelSettings.LevelUp6 -
-            1) *
-            (levelSettings.LevelUp6 - 1) *
-            100 +
-            100}): ${roleLevel6}\n`;
+          levelRoles += `Level ${levelSettings.LevelUp6} (XP: ${
+            (levelSettings.LevelUp6 - 1) * (levelSettings.LevelUp6 - 1) * 100 +
+            100
+          }): ${roleLevel6}\n`;
         }
 
         if (levelSettings.level7) {
           roleLevel7 = await guild.roles.fetch(levelSettings.level7);
-          levelRoles += `Level ${levelSettings.LevelUp7} (XP: ${(levelSettings.LevelUp7 -
-            1) *
-            (levelSettings.LevelUp7 - 1) *
-            100 +
-            100}): ${roleLevel7}\n`;
+          levelRoles += `Level ${levelSettings.LevelUp7} (XP: ${
+            (levelSettings.LevelUp7 - 1) * (levelSettings.LevelUp7 - 1) * 100 +
+            100
+          }): ${roleLevel7}\n`;
         }
 
         if (levelSettings.level8) {
           roleLevel8 = await guild.roles.fetch(levelSettings.level8);
-          levelRoles += `Level ${levelSettings.LevelUp8} (XP: ${(levelSettings.LevelUp8 -
-            1) *
-            (levelSettings.LevelUp8 - 1) *
-            100 +
-            100}): ${roleLevel8}\n`;
+          levelRoles += `Level ${levelSettings.LevelUp8} (XP: ${
+            (levelSettings.LevelUp8 - 1) * (levelSettings.LevelUp8 - 1) * 100 +
+            100
+          }): ${roleLevel8}\n`;
         }
 
         if (levelSettings.level9) {
           roleLevel9 = await guild.roles.fetch(levelSettings.level9);
-          levelRoles += `Level ${levelSettings.LevelUp9} (XP: ${(levelSettings.LevelUp9 -
-            1) *
-            (levelSettings.LevelUp9 - 1) *
-            100 +
-            100}): ${roleLevel9}\n`;
+          levelRoles += `Level ${levelSettings.LevelUp9} (XP: ${
+            (levelSettings.LevelUp9 - 1) * (levelSettings.LevelUp9 - 1) * 100 +
+            100
+          }): ${roleLevel9}\n`;
         }
 
         if (levelSettings.level10) {
           roleLevel10 = await guild.roles.fetch(levelSettings.level10);
-          levelRoles += `Level ${levelSettings.LevelUp10} (XP: ${(levelSettings.LevelUp10 -
-            1) *
+          levelRoles += `Level ${levelSettings.LevelUp10} (XP: ${
             (levelSettings.LevelUp10 - 1) *
-            100 +
-            100}): ${roleLevel10}`;
+              (levelSettings.LevelUp10 - 1) *
+              100 +
+            100
+          }): ${roleLevel10}`;
         }
 
         // EMBED

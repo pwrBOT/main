@@ -32,7 +32,37 @@ const update = async (guildId, link, status) => {
   });
 };
 
-const get = async () => {
+const lastCheck = async (guildId, link) => {
+  return new Promise(async (resolve) => {
+    mysqlHelper
+      .query(
+        `UPDATE powerbot_monitoring SET lastCheck=? WHERE guildId=? AND link=?`,
+        [new Date(), guildId, link]
+      )
+      .then((result) => {
+        resolve(null);
+      })
+      .catch(() => {
+        resolve(null);
+      });
+  });
+};
+
+const get = async (guildId) => {
+  return new Promise((resolve) => {
+    mysqlHelper
+      .query(`SELECT * FROM powerbot_monitoring WHERE guildId=? ORDER BY ID ASC`,[guildId])
+      .then((result) => {
+        // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
+        resolve(result ?? null);
+      })
+      .catch(() => {
+        resolve(null);
+      });
+  });
+};
+
+const getAll = async () => {
   return new Promise((resolve) => {
     mysqlHelper
       .query(`SELECT * FROM powerbot_monitoring`)
@@ -47,5 +77,7 @@ const get = async () => {
 };
 
 module.exports.add = add;
+module.exports.lastCheck = lastCheck;
 module.exports.update = update;
 module.exports.get = get;
+module.exports.getAll = getAll;

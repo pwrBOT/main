@@ -12,11 +12,11 @@ module.exports = {
 
   async execute(oldState, newState, client) {
     return new Promise(async (resolve) => {
-      const guild = oldState.guild || newState.guild
-      const member = oldState.member || newState.member
+      const guild = oldState.guild || newState.guild;
+      const member = oldState.member || newState.member;
 
-      const oldChannel = oldState.channel
-      const newChannel = newState.channel
+      const oldChannel = oldState.channel;
+      const newChannel = newState.channel;
 
       if (oldState) {
         const tempChannelCheckTemp =
@@ -27,20 +27,20 @@ module.exports = {
           );
 
         if (tempChannelCheckTemp) {
-          tempChannelToDelete = await oldState.guild.channels.fetch(
-            tempChannelCheckTemp.guildChannelId
-          ).catch(error =>{});
+          tempChannelToDelete = await oldState.guild.channels
+            .fetch(tempChannelCheckTemp.guildChannelId)
+            .catch((error) => {});
 
           if (tempChannelToDelete) {
             if (tempChannelToDelete.members.size === 0) {
               try {
                 setTimeout(async function () {
-                  tempChannelToDelete
+                  await tempChannelToDelete
                     .delete("del temp channel")
                     .catch((error) => {});
 
                   await tempChannelsRepository.deleteTempVoiceChannel(
-                    oldState.guild.id,
+                    guild.id,
                     oldState.channelId,
                     "temp"
                   );
@@ -73,7 +73,7 @@ module.exports = {
           } else {
             channelParent = newState.channel.parent;
           }
-  
+
           const voiceChannel = await guild.channels
             .create({
               name: newChannelName,
@@ -83,11 +83,11 @@ module.exports = {
               parent: channelParent
             })
             .catch(console.error);
-  
+
           try {
             setTimeout(() => member.voice.setChannel(voiceChannel), 200);
           } catch (error) {}
-  
+
           if (tempChannelCheck.giveUserPermission == "yes") {
             await voiceChannel.permissionOverwrites
               .edit(member.id, {
@@ -98,7 +98,7 @@ module.exports = {
               })
               .catch((error) => {});
           }
-  
+
           await tempChannelsRepository.addTempVoiceChannel(
             guild.id,
             voiceChannel.id,
@@ -111,8 +111,6 @@ module.exports = {
           return resolve(null);
         }
       }
-
-      
     });
   }
 };

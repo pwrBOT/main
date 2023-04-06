@@ -13,7 +13,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName(`geburtstag`)
     .setDescription(`Geburtstagsliste`)
-    .setDefaultMemberPermissions(PermissionFlagsBits.ViewChannel)
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .setDMPermission(false)
     .addSubcommand((subcommand) =>
       subcommand
@@ -47,6 +47,7 @@ module.exports = {
             content: `❌ Dein Geburtsdatum ist kein reales Datum! ❌`,
             ephemeral: true
           });
+          return resolve(null);
         }
 
         const now = new Date();

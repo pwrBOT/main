@@ -17,10 +17,8 @@ module.exports = {
 
   async execute(interaction, client) {
     return new Promise(async (resolve) => {
-        
       const reportId = interaction.fields.getTextInputValue("reportId");
-      const modMessage =
-        interaction.fields.getTextInputValue("modMessage");
+      const modMessage = interaction.fields.getTextInputValue("modMessage");
 
       const reportData = await reportRepository.getReport(
         interaction.guild.id,
@@ -41,7 +39,7 @@ module.exports = {
         .setStyle(ButtonStyle.Success)
         .setDisabled(true);
 
-      const newEmbed = new EmbedBuilder(interaction.message.embeds[0])
+      const newEmbed = new EmbedBuilder(interaction.message.embeds[0]);
       newEmbed.addFields([
         {
           name: `Moderator Abschlussmeldung:`,
@@ -85,8 +83,7 @@ module.exports = {
             name: `Bearbeitender Moderator:`,
             value: `${interaction.member}`,
             inline: true
-          }
-          ,
+          },
           {
             name: `Moderator Abschlussmeldung:`,
             value: `${modMessage}`,
@@ -151,6 +148,11 @@ module.exports = {
         content: `✅ Der Report wurde von ${interaction.member} als erledigt markiert! Der Thread wird in 24 Stunden archiviert.`
       });
       await thread.setAutoArchiveDuration(ThreadAutoArchiveDuration.OneDay);
+
+      setTimeout(function () {
+        thread.setArchived(true).catch((error) => {});
+      }, 900000);
+
       await interaction.reply({
         ephemeral: true,
         content: `✅ Du hast den Report erfolgreich erledigt!`

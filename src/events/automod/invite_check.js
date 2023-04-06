@@ -329,11 +329,6 @@ module.exports = {
             }
           ]);
 
-        /** 
-          const logChannel = require("../../mysql/loggingChannelsRepository");
-          await logChannel.logChannel(message.guild, "modLog", modlogembed);
-          */
-
         try {
           message.member.timeout(ms(length), "Auto-Mod | Invite Check");
         } catch (error) {}

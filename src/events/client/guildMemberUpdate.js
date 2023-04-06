@@ -163,8 +163,10 @@ module.exports = {
       // #######################  BOOST FINDER  ####################### \\
       if (!oldMember.premiumSince && newMember.premiumSince) {
 
+        const boostMember = await guild.members.fetch(newMember.id)
+
         const userBoostEmbed = new EmbedBuilder()
-          .setTitle(`${newMember} ist nun Booster 💎`)
+          .setTitle(`${boostMember.displayName} ist nun Booster 💎`)
           .setColor(0xd503ff);
 
         const achievementChannel = await guildsRepository.getGuildSetting(

@@ -10,24 +10,24 @@ const powerbotManagement = require("../../mysql/powerbotManagement");
 const os = require("os");
 let values = [0, null, null, null, null, null, null, null, null, null];
 
-setInterval(function() {
+setInterval(function () {
   values.unshift(
     ((os.totalmem() - os.freemem()) / (1000 * 1000 * 1000)).toFixed(2) * 100
   );
   values.pop();
 }, 60 * 1000);
 
-const init = async client => {
+const init = async (client) => {
   let info = [];
   let moderation = [];
   let warning = [];
   let admintools = [];
 
   const { user } = client;
-  const information = client.commands.filter(x => x.category === "info");
-  const mod = client.commands.filter(x => x.category === "moderation");
-  const warnsystem = client.commands.filter(x => x.category === "warning");
-  const admin = client.commands.filter(x => x.category === "admintools");
+  const information = client.commands.filter((x) => x.category === "info");
+  const mod = client.commands.filter((x) => x.category === "moderation");
+  const warnsystem = client.commands.filter((x) => x.category === "warning");
+  const admin = client.commands.filter((x) => x.category === "admintools");
 
   CommandPush(information, info);
   CommandPush(mod, moderation);
@@ -78,6 +78,10 @@ const init = async client => {
     supportServer: {
       slash: "/support",
       inviteUrl: "https://discord.gg/QfDNMCxzsN"
+    },
+    guildAfterAuthorization: {
+      use: true,
+      guildId: "994975619521712219"
     },
     acceptPrivacyPolicy: true,
     minimizedConsoleLogs: true,
@@ -2966,7 +2970,10 @@ const init = async client => {
             optionDescription: "Social-Alert Channel:",
             optionType: DBD.formTypes.channelsSelect(
               false,
-              (channelTypes = [ChannelType.GuildText, ChannelType.GuildAnnouncement])
+              (channelTypes = [
+                ChannelType.GuildText,
+                ChannelType.GuildAnnouncement
+              ])
             ),
             getActualSet: async ({ guild }) => {
               let data = await guildsRepository.getGuildSetting(
@@ -3048,43 +3055,42 @@ const init = async client => {
             optionName: "",
             optionDescription:
               "Links zu YouTube Channeln, von denen du Benachrichtigungen erhalten möchtest.\nWICHTIG: Es muss immer die vollständige Kanal-URL inkl. Channel-ID angegeben werden.\nBeispiel: https://www.youtube.com/channel/UCeo4KWMuoe6U31SCeb_Wnxg",
-              optionType: SoftUI.formTypes.tagInput(false),
-              getActualSet: async ({ guild }) => {
-                let data = await guildsRepository.getGuildSetting(
+            optionType: SoftUI.formTypes.tagInput(false),
+            getActualSet: async ({ guild }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "ytChannelLinks"
+              );
+
+              if (data) return JSON.parse(data.value);
+              else return [];
+            },
+            setNew: async ({ guild, newData }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "ytChannelLinks"
+              );
+
+              if (!data) {
+                const property = "ytChannelLinks";
+                newDataString = JSON.stringify(newData);
+                await guildsRepository.insertGuildSetting(
                   guild,
-                  "ytChannelLinks"
+                  property,
+                  newDataString
                 );
-  
-                if (data) return JSON.parse(data.value);
-                else
-                  return [];
-              },
-              setNew: async ({ guild, newData }) => {
-                let data = await guildsRepository.getGuildSetting(
+              } else {
+                const property = "ytChannelLinks";
+                newDataString = JSON.stringify(newData);
+                await guildsRepository.updateGuildSetting(
                   guild,
-                  "ytChannelLinks"
+                  property,
+                  newDataString
                 );
-  
-                if (!data) {
-                  const property = "ytChannelLinks";
-                  newDataString = JSON.stringify(newData);
-                  await guildsRepository.insertGuildSetting(
-                    guild,
-                    property,
-                    newDataString
-                  );
-                } else {
-                  const property = "ytChannelLinks";
-                  newDataString = JSON.stringify(newData);
-                  await guildsRepository.updateGuildSetting(
-                    guild,
-                    property,
-                    newDataString
-                  );
-                }
-                return;
               }
-          },
+              return;
+            }
+          }
         ]
       }
       /// ################ SOCIAL CHECK SYSTEM END ################ \\\
@@ -3109,7 +3115,7 @@ const init = async client => {
 };
 
 function CommandPush(filteredArray, CategoryArray) {
-  filteredArray.forEach(obj => {
+  filteredArray.forEach((obj) => {
     let cmdObject = {
       commandName: obj.name,
       commandUsage: "/" + obj.name,

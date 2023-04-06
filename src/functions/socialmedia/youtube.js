@@ -13,7 +13,7 @@ const check = async (client, guild, ytchannellink) => {
     .replaceAll(`"`, ``);
 
   const feedurl = `https://youtube.com/feeds/videos.xml?channel_id=${channelid}`;
-  const feedurlCheck = await fetch(feedurl);
+  const feedurlCheck = await fetch(feedurl).catch(error => {});
 
   if (feedurlCheck.status == "404") {
     return;

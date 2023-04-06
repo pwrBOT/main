@@ -136,11 +136,11 @@ module.exports = {
 
         await interaction.editReply({ embeds: [xPembed] });
 
-        xPembed.setDescription(`Du hast soeben ${xP} XP erhalten.`);
-        await member.send({ embeds: [xPembed] }).catch((error) => {});
-
         const LoggingChannels = require("../../mysql/loggingChannelsRepository");
         await LoggingChannels.logChannel(interaction.guild, "botLog", xPembed);
+
+        xPembed.setDescription(`Du hast soeben ${xP} XP erhalten.`);
+        await member.send({ embeds: [xPembed] }).catch((error) => {});
 
         const commandLogRepository = require("../../mysql/commandLogRepository");
         // guild - command, user, affectedMember, reason
