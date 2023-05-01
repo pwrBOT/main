@@ -136,7 +136,7 @@ module.exports = {
         const channel = await client.channels.cache.get(
           config.powerbot_status_channel
         );
-        channel.send({ embeds: [onlineEmbed] });
+        channel.send({ embeds: [onlineEmbed] }).catch(error => {});
       }, 5000);
 
       setTimeout(function() {

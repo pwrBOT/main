@@ -11,7 +11,7 @@ module.exports = {
   data: new ContextMenuCommandBuilder()
     .setName("Nachricht melden")
     .setType(ApplicationCommandType.Message)
-    .setDefaultMemberPermissions(PermissionFlagsBits.ViewChannel)
+    .setDefaultMemberPermissions(PermissionFlagsBits.SendMessages)
     .setDMPermission(false),
   async execute(interaction, client) {
     return new Promise(async resolve => {

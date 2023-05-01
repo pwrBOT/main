@@ -50,6 +50,7 @@ const client = new Client({
 });
 
 client.commands = new Collection();
+client.comandGlobalArray = [];
 client.commandArray = [];
 client.ldsCommandArray = [];
 client.pwrCommandArray = [];
@@ -77,8 +78,10 @@ console.log(
 
 // BOT HANDLER
 client.login(TOKEN);
+client.pushCommands();
+client.handleGuildCommands();
+client.handleGlobalCommands();
 client.handleEvents();
-client.handleCommands();
 client.handleComponents();
 
 // CLIENT ON EVENTS

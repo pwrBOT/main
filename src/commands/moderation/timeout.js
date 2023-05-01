@@ -128,7 +128,7 @@ module.exports = {
             );
 
         const guildsRepository = require("../../mysql/guildsRepository");
-        const embedInfo = await guildsRepository.getGuildSetting(
+        let embedInfo = await guildsRepository.getGuildSetting(
           guild,
           "embedinfo"
         );

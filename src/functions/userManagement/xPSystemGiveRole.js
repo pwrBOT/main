@@ -155,7 +155,7 @@ async function autoUserRoles(guild, member, oldLevel) {
       if (member.roles.cache.get(newRoleId)) {
       } else {
         let newRole = guild.roles.cache.get(newRoleId);
-        await member.roles.add(newRole).catch(console.error);
+        await member.roles.add(newRole).catch(error => {});
 
         const rankChannel = levelSettings.rankChannel;
 

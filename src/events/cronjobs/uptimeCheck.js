@@ -24,7 +24,7 @@ const domainCheck = async (client) => {
     );
     const pingRoleId = domain.pingRoleId;
 
-    await fetch(domain.link).then(async (res) => {
+    await fetch(domain.link).catch(error => {}).then(async (res) => {
       await monitoringRepository.lastCheck(domain.guildId, domain.link);
 
       // ONLINE

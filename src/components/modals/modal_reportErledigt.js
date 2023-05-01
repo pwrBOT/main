@@ -95,7 +95,7 @@ module.exports = {
         const reporter = await interaction.guild.members.fetch(
           reportData.reporterId
         );
-        reporter.send({ embeds: [reportErledigtEmbed] });
+        reporter.send({ embeds: [reportErledigtEmbed] }).catch(error => {});
       } catch (error) {}
 
       // LOCK AND ARCHIVE PRIVATE THREAD \\

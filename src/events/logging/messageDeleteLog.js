@@ -66,7 +66,7 @@ module.exports = {
           }
         }
 
-        let embedMessage = `Nachricht von ${message?.author} in ${message?.channel} gelöscht!\n\nNachricht: ${message?.content}\nID: ${message?.id}`;
+        let embedMessage = `Nachricht von <@${message?.author.id}> in ${message?.channel} gelöscht!\n\nNachricht: ${message?.content}\nID: ${message?.id}`;
 
         if (message.embeds[0]) {
           const embed = message.embeds[0];

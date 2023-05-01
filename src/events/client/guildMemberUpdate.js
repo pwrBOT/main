@@ -1,21 +1,25 @@
 const { EmbedBuilder } = require("discord.js");
 const guildsRepository = require("../../mysql/guildsRepository");
+const logChannel = require("../../mysql/loggingChannelsRepository");
 
 module.exports = {
   name: "guildMemberUpdate",
   async execute(oldMember, newMember, client) {
     return new Promise(async (resolve) => {
-      if (oldMember.user.bot === true || newMember.user.bot === true) {
+      const memberId = oldMember.id || newMember.id;
+      const guild = oldMember.guild || newMember.guild;
+      const member = await guild.members
+        .fetch({ user: memberId, cache: false })
+        .catch((error) => {});
+
+      if (member.user.bot === true || member.user.bot === true) {
         return resolve(null);
       }
-
-      const { guild, user } = newMember;
-      const logChannel = require("../../mysql/loggingChannelsRepository");
 
       // #######################  UPDATE ROLES  ####################### \\
       const guildMemberUpdateEmbed = new EmbedBuilder()
         .setTitle(`⚡️ Logging ⚡️`)
-        .setThumbnail(oldMember.displayAvatarURL())
+        .setThumbnail(member.displayAvatarURL())
         .setTimestamp(Date.now())
         .setFooter({
           iconURL: client.user.displayAvatarURL(),
@@ -28,7 +32,9 @@ module.exports = {
 
       if (removedRoles.size > 0) {
         guildMemberUpdateEmbed
-          .setDescription(`Die Rollen von ${oldMember} haben sich verändert!`)
+          .setDescription(
+            `Die Rollen von <@${member.id}> haben sich verändert!`
+          )
           .setColor("Red")
           .addFields([
             {
@@ -46,14 +52,14 @@ module.exports = {
         );
 
         guildMemberUpdateEmbed
-          .setThumbnail(oldMember.guild.iconURL())
+          .setThumbnail(member.guild.iconURL())
           .setDescription(
-            `Deine Rollen bei ${oldMember.guild.name} haben sich verändert`
+            `Deine Rollen bei ${member.guild.name} haben sich verändert`
           );
-        if (oldMember.user.bot == true) {
+        if (member.user.bot == true) {
         }
         try {
-          oldMember
+          member
             .send({ embeds: [guildMemberUpdateEmbed] })
             .catch((error) => {});
         } catch (error) {}
@@ -65,7 +71,7 @@ module.exports = {
       );
 
       const communityRoleId = await guildsRepository.getGuildSetting(
-        newMember.guild,
+        member.guild,
         "communityrole"
       );
 
@@ -82,7 +88,9 @@ module.exports = {
 
       if (addedRoles.size > 0 && isCommunitryRole == false) {
         guildMemberUpdateEmbed
-          .setDescription(`Die Rollen von ${newMember} haben sich verändert!`)
+          .setDescription(
+            `Die Rollen von <@${member.id}> haben sich verändert!`
+          )
           .setColor("Green")
           .addFields([
             {
@@ -100,14 +108,14 @@ module.exports = {
         );
 
         guildMemberUpdateEmbed
-          .setThumbnail(oldMember.guild.iconURL())
+          .setThumbnail(member.guild.iconURL())
           .setDescription(
-            `Deine Rollen bei ${newMember.guild.name} haben sich verändert`
+            `Deine Rollen bei <@${member.id}> haben sich verändert`
           );
-        if (newMember.user.bot == true) {
+        if (member.user.bot == true) {
         }
         try {
-          newMember
+          member
             .send({ embeds: [guildMemberUpdateEmbed] })
             .catch((error) => {});
         } catch (error) {}
@@ -132,9 +140,10 @@ module.exports = {
 
         guildMemberUpdateEmbed
           .setDescription(
-            `${newMember} hat seinen Nickname von "${oldmemberName}" zu "${newmemberName}" geändert.`
+            `<@${member.id}> hat seinen Nickname von "${oldmemberName}" zu "${newmemberName}" geändert.`
           )
           .setColor("Green");
+
         await logChannel.logChannel(guild, "botLog", guildMemberUpdateEmbed);
       }
 
@@ -142,7 +151,7 @@ module.exports = {
 
       if (newMember.displayAvatarURL() !== oldMember.displayAvatarURL()) {
         guildMemberUpdateEmbed
-          .setDescription(`${newMember} hat seinen Avatar geändert.`)
+          .setDescription(`<@${member.id}> hat seinen Avatar geändert.`)
           .setColor("Green")
           .setThumbnail(newMember.displayAvatarURL())
           .addFields([
@@ -160,13 +169,27 @@ module.exports = {
         await logChannel.logChannel(guild, "botLog", guildMemberUpdateEmbed);
       }
 
+      // #######################  TIMEOUT ADD / REMOVE  ####################### \\
+      if (
+        !oldMember.communicationDisabledUntil &&
+        newMember.communicationDisabledUntil
+      ) {
+        let timeoutTimestamp = Date.parse(newMember.communicationDisabledUntil) / 1000
+
+        guildMemberUpdateEmbed
+          .setDescription(
+            `Neuer Timeout für <@${member.id}>
+            Ablauf: <t:${timeoutTimestamp}>`
+          )
+          .setColor("Red");
+
+        await logChannel.logChannel(guild, "botLog", guildMemberUpdateEmbed);
+      }
+
       // #######################  BOOST FINDER  ####################### \\
       if (!oldMember.premiumSince && newMember.premiumSince) {
-
-        const boostMember = await guild.members.fetch(newMember.id)
-
         const userBoostEmbed = new EmbedBuilder()
-          .setTitle(`${boostMember.displayName} ist nun Booster 💎`)
+          .setTitle(`${member.displayName} ist nun Booster 💎`)
           .setColor(0xd503ff);
 
         const achievementChannel = await guildsRepository.getGuildSetting(
@@ -185,7 +208,6 @@ module.exports = {
           }
         }
       }
-      
 
       return resolve(null);
     });

@@ -81,11 +81,11 @@ module.exports = {
             let isGuildInvite = false;
 
             var inviteCode = "";
-            inviteCode = link.split("/").pop();
+            inviteCode = link.split("/").pop().replaceAll(/[^a-zA-Z0-9]/g, "");
 
             const invite = await message.guild.fetchVanityData().catch(error => {});
 
-            if (!inviteCode || inviteCode == invite?.code) {
+            if (!inviteCode || inviteCode == invite?.code.replaceAll(/[^a-zA-Z0-9]/g, "")) {
               isGuildInvite = true;
             } else {
               await message.guild.invites
@@ -124,7 +124,7 @@ module.exports = {
             let isGuildInvite = false;
 
             var inviteCode = "";
-            inviteCode = link.split("/").pop();
+            inviteCode = link.split("/").pop().replaceAll(/[^a-zA-Z0-9]/g, "");
 
             await message.guild.invites
               .fetch({ code: inviteCode, cache: true })

@@ -74,7 +74,7 @@ module.exports = {
       ) {
         return resolve(null);
       } else {
-        embedMessage = `${newMessage.author} hat seine Nachricht in ${newMessage.channel} bearbeitet!`;
+        embedMessage = `<@${newMessage.author.id}> hat seine Nachricht in ${newMessage.channel} bearbeitet!`;
       }
 
       const delMessageEmbed = new EmbedBuilder()

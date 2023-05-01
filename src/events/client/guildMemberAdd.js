@@ -175,7 +175,7 @@ const userCountSpecial = async member => {
       if (achievementChannel.value) {
         await member.client.channels.cache
           .get(achievementChannel.value)
-          .send({ embeds: [UserCountSpecialEmbed] })
+          .send({ content: `@here`, embeds: [UserCountSpecialEmbed] })
           .catch(error => {});
       }
     }

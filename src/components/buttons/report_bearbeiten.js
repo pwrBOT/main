@@ -97,6 +97,18 @@ module.exports = {
         "modArea"
       );
 
+      const reportedMember = await interaction.guild.members
+        .fetch(reportedUserId)
+        .catch((error) => {});
+
+      if (!reportedMember) {
+        await interaction.editReply({
+          ephemeral: true,
+          content: `❌ Der User scheint nicht mehr auf diesem Discord zu sein und konnte nicht gefunden werden.\nEs wurde kein Thread erstellt!`
+        });
+        return resolve(null);
+      }
+
       if (modThreadAreaId) {
         if (!modThreadAreaId.value) {
           await interaction.editReply({
@@ -133,9 +145,7 @@ module.exports = {
         const reportEmbed = new EmbedBuilder()
           .setTitle(`⚡️ Reporting-System ⚡️`)
           .setDescription(
-            `Hallo ${await interaction.guild.members.fetch(
-              reportedUserId
-            )}!\n\nDu wurdest von einem User gemeldet. Was kannst du uns dazu sagen?`
+            `Hallo ${reportedMember}!\n\nDu wurdest von einem User gemeldet. Was kannst du uns dazu sagen?`
           )
           .setColor(0x51ff00)
           .setTimestamp(Date.now())
@@ -168,17 +178,13 @@ module.exports = {
           await newThread.members.add(reportedUserId);
         } catch (error) {
           interaction.channel.send({
-            content: `✅Thread erstellt\n❌ ${await interaction.guild.members.fetch(
-              reportedUserId
-            )} konnte nicht zum Thread hinzugefügt werden, da er die Mod-Area nicht sehen kann!`
+            content: `✅Thread erstellt\n❌ ${reportedMember} konnte nicht zum Thread hinzugefügt werden, da er die Mod-Area nicht sehen kann!`
           });
         }
 
         await newThread.send({ embeds: [reportEmbed] });
         const tagMember = await newThread.send(
-          `${await interaction.guild.members.fetch(reportedUserId)} / ${
-            interaction.member
-          }`
+          `${reportedMember} / ${interaction.member}`
         );
         setTimeout(function () {
           tagMember.delete();
@@ -206,9 +212,7 @@ module.exports = {
         const reportEmbed = new EmbedBuilder()
           .setTitle(`⚡️ Reporting-System ⚡️`)
           .setDescription(
-            `Hallo ${await interaction.guild.members.fetch(
-              reportedUserId
-            )}!\n\nDu wurdest von einem User gemeldet. Was kannst du uns dazu sagen?`
+            `Hallo ${reportedMember}!\n\nDu wurdest von einem User gemeldet. Was kannst du uns dazu sagen?`
           )
           .setColor(0x51ff00)
           .setTimestamp(Date.now())
@@ -241,17 +245,13 @@ module.exports = {
           await newThread.members.add(reportedUserId);
         } catch (error) {
           interaction.channel.send({
-            content: `✅Thread erstellt\n❌ ${await interaction.guild.members.fetch(
-              reportedUserId
-            )} konnte nicht zum Thread hinzugefügt werden, da er die Mod-Area nicht sehen kann!`
+            content: `✅Thread erstellt\n❌ ${reportedMember} konnte nicht zum Thread hinzugefügt werden, da er die Mod-Area nicht sehen kann!`
           });
         }
 
         await newThread.send({ embeds: [reportEmbed] });
         const tagMember = await newThread.send(
-          `${await interaction.guild.members.fetch(reportedUserId)} / ${
-            interaction.member
-          }`
+          `${reportedMember} / ${interaction.member}`
         );
         setTimeout(function () {
           tagMember.delete();
@@ -292,9 +292,7 @@ module.exports = {
           },
           {
             name: `Gemeldeter User:`,
-            value: `${interaction.guild.members.fetch(
-              reportData.reportedMemberId
-            )}`,
+            value: `${reportedMember}`,
             inline: true
           },
           {

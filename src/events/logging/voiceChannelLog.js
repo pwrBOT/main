@@ -14,7 +14,11 @@ module.exports = {
       const oldChannelId = oldState.channelId;
       const newChannelId = newState.channelId;
       const guild = await client.guilds.cache.get(newState.guild.id);
-      const member = await guild.members.cache.get(newState.id);
+      const member = oldState.member || newState.member
+
+      if (member == null) {
+        return resolve(null)
+      }
 
       // ############# USER-LOGGING ############## \\
 
@@ -33,17 +37,15 @@ module.exports = {
       }
       // USER LEFT CHANNEL
       if (oldChannelId !== null && newChannelId === null) {
-        const oldMember = await guild.members.fetch(oldState.id);
-
         let kicked = false;
 
         try {
-          const fetchedLogs = await oldMember.guild.fetchAuditLogs({
+          const fetchedLogs = await member.guild.fetchAuditLogs({
             limit: 1,
             type: AuditLogEvent.MemberDisconnect
           });
 
-          const log = await fetchedLogs.entries.first();
+          const log = fetchedLogs.entries.first();
 
           const { executor } = log;
           if (executor && Date.now() - log.createdTimestamp < 4000) {
@@ -51,7 +53,7 @@ module.exports = {
 
             await userlogRepository.addLog(
               guild.id,
-              oldMember.id,
+              member.id,
               `KICKED BY ${executor?.tag ?? "Unkown"}`,
               "VC",
               oldState.channelId,

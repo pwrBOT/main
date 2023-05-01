@@ -74,6 +74,12 @@ const init = async (client) => {
     },
     useTheme404: true,
     bot: client,
+    invite: {
+      clientId: config.discord.client.id,
+      permissions: "8",
+      redirectUri: `${config.dbd.domain}${config.dbd.redirectUri}`,
+      scopes: ["bot", "applications.commands"]
+    },
     requiredPermissions: [DBD.DISCORD_FLAGS.Permissions.ADMINISTRATOR],
     supportServer: {
       slash: "/support",
@@ -1436,7 +1442,7 @@ const init = async (client) => {
             getActualSet: async ({ guild }) => {
               let data = await levelsRepository.getlevelSettings(guild);
 
-              if (data.channelTimeXPCategoryIds)
+              if (data?.channelTimeXPCategoryIds)
                 return JSON.parse(data.channelTimeXPCategoryIds);
               else return [];
             },

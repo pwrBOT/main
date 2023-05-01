@@ -7,7 +7,7 @@ module.exports = {
   name: "guildCreate",
 
   async execute(guild, client) {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       /// CHECK IF GUILD IS BLOCKED \\\
       const guildOwner = await guild.fetchOwner();
       const guildsWhitelist = await powerbotManagement.getValues("whitelist");
@@ -16,7 +16,7 @@ module.exports = {
       let whitelistAccess = 0;
       let blacklistGuild = 0;
 
-      await guildsWhitelist.forEach(async guildsWhitelistId => {
+      await guildsWhitelist.forEach(async (guildsWhitelistId) => {
         if (guildsWhitelistId.value.includes(newGuildId)) {
           whitelistAccess = 1;
         }
@@ -26,18 +26,28 @@ module.exports = {
         await guild.leave().catch(console.error);
         console.log(
           chalk.red(
-            `WHITELIST CHECK NEGATIV | GUILD: ${guild.name}(${guild.id})`
+            `WHITELIST CHECK NEGATIV | GUILD: ${guild.name}(${guild.id}) | Owner: ${guildOwner}`
           )
         );
 
-        try {
-          await guildOwner.send(
+        await guildOwner
+          .send(
             `Dein Discord Server ist nicht Teil des Beta Programms. Du kannst den Bot nicht nutzen. Sry :(`
-          );
-        } catch (error) {}
+          )
+          .catch((error) => {});
+
+        const danny = await client.users.fetch("539513467313455105");
+
+        danny
+          .send(
+            `WHITELIST CHECK NEGATIV | GUILD: ${guild.name}(${guild.id}) | Owner: ${guildOwner}`
+          )
+          .catch((error) => {});
+
+        return resolve(null);
       }
 
-      await guildsBlacklist.forEach(async guildsBlacklistId => {
+      await guildsBlacklist.forEach(async (guildsBlacklistId) => {
         if (guildsBlacklistId.value.includes(newGuildId)) {
           blacklistGuild = 1;
         }
@@ -47,14 +57,23 @@ module.exports = {
         await guild.leave().catch(console.error);
         console.log(
           chalk.red(
-            `BLACKLIST CHECK POSITIV | GUILD: ${guild.name}(${guild.id})`
+            `BLACKLIST CHECK POSITIV | GUILD: ${guild.name}(${guild.id}) | Owner: ${guildOwner}`
           )
         );
-        try {
-          await guildOwner.send(
+        await guildOwner
+          .send(
             `Dein Discord Server ist auf der Blacklist gelandet. Du kannst den Bot nicht mehr nutzen!`
-          );
-        } catch (error) {}
+          )
+          .catch((error) => {});
+
+        const danny = await client.users.fetch("539513467313455105");
+
+        danny
+          .send(
+            `BLACKLIST CHECK POSITIV  | GUILD: ${guild.name}(${guild.id}) | Owner: ${guildOwner}`
+          )
+          .catch((error) => {});
+
         return resolve(null);
       }
 
@@ -79,9 +98,8 @@ module.exports = {
 
         //// CHECK / ADD GUILD-ID TO AUTO-MOD TABLE
         const autoModRepository = require("../../mysql/autoModRepository");
-        const getAutoModGuildSettings = await autoModRepository.getGuildAutoModSettings(
-          guild
-        );
+        const getAutoModGuildSettings =
+          await autoModRepository.getGuildAutoModSettings(guild);
         if (!getAutoModGuildSettings) {
           console.log(
             chalk.yellow(
@@ -115,13 +133,13 @@ module.exports = {
         //// ##################### TABLE CHECK END ##################### \\\\
 
         //// ##################### IMPORT GUILD USER TO DB ##################### \\\\
-        await guild.members.fetch().then(async members => {
+        await guild.members.fetch().then(async (members) => {
           const sorting = (a, b) => {
             return a.joinedTimestamp - b.joinedTimestamp;
           };
           const sortedMembers = await members.sort(sorting);
 
-          sortedMembers.forEach(async member => {
+          sortedMembers.forEach(async (member) => {
             const getUser = await usersRepository.getUser(
               member.user.id,
               member.guild.id
@@ -135,33 +153,37 @@ module.exports = {
                 member.joinedTimestamp
               );
             }
-          }), console.log(
-            chalk.blue(
-              `[MYSQL DATABASE] Alle vorhandenen User von Guild: ${guild.name}(${guild.id}) in User Tabelle importiert.`
-            )
-          );
+          }),
+            console.log(
+              chalk.blue(
+                `[MYSQL DATABASE] Alle vorhandenen User von Guild: ${guild.name}(${guild.id}) in User Tabelle importiert.`
+              )
+            );
         });
 
         //// ##################### IMPORT GUILD USER TO DB END ##################### \\\\
+        //// ####################### DEPLOY SLASH COMMANDS TO NEW GUILD ####################### \\\\
+
+        //// ##################### DEPLOY SLASH COMMANDS TO NEW GUILD END ##################### \\\\
 
         const newGuildEmbed = new EmbedBuilder()
           .setTitle(`⚡️ Welcome to PowerBot ⚡️`)
           .setDescription(
             `Du hast nun volle Power bei: 
-      ${guild.name} 💪\n
-      Schön, dass du bei deinem Discord Server die ultimative Power haben möchtest 🙋‍♂️ Damit alles reibungslos funktioniert, solltest du ein paar Dinge beachten 😎\n`
+          ${guild.name} 💪\n
+          Schön, dass du bei deinem Discord Server die ultimative Power haben möchtest 🙋‍♂️ Damit alles reibungslos funktioniert, solltest du ein paar Dinge beachten 😎\n`
           )
           .setFields([
             {
               name: `1️⃣ Schritt 1:`,
               value: `Verschiebe die Bot-Rolle nach ganz oben. Lasse sie aber unter deiner Inhaber-Rolle. Der Bot kann nur User moderieren, deren Rolle UNTER der Bot-Rolle ist.\n
-          Aber keine Angst: Es gibt Schutzmechanismen die es verbieten, dass der Server-Inhaber, Administratoren oder Team-Member moderiert werden können.\n`,
+              Aber keine Angst: Es gibt Schutzmechanismen die es verbieten, dass der Server-Inhaber, Administratoren oder Team-Member moderiert werden können.\n`,
               inline: true
             },
             {
               name: `2️⃣ Schritt 2:`,
               value: `Am Besten gibst du dem Bot Admin-Rechte. So kann er automatisch alle Channel sehen und du kannst ihn überall nutzen.\n
-          Möchtest du dem Bot keine Adminrechte geben, musst du die Bot-Rolle allen Kategorien / Channeln einzeln hinzufügen. Sonst kann er diese nicht sehen.\n`,
+              Möchtest du dem Bot keine Adminrechte geben, musst du die Bot-Rolle allen Kategorien / Channeln einzeln hinzufügen. Sonst kann er diese nicht sehen.\n`,
               inline: true
             },
             {
@@ -178,7 +200,7 @@ module.exports = {
             {
               name: `✅ Danke und Viel Spaß:`,
               value: `Nun wünschen wir die viel Spaß mit dem PowerBot und bedanken uns vorab, dass du uns in der Erstphase unterstützt und den Bot nutzt.
-          Gerade in der Anfangszeit ist dies sehr wichtig, damit Fehler schnell gefunden und ausgebessert werden können.\n`,
+              Gerade in der Anfangszeit ist dies sehr wichtig, damit Fehler schnell gefunden und ausgebessert werden können.\n`,
               inline: false
             }
           ])
@@ -236,10 +258,25 @@ module.exports = {
             }
           ]);
 
-        const powerbotGuildLogChannelId = config.powerbot_guildlog_channel;
-        client.channels.cache
-          .get(powerbotGuildLogChannelId)
-          .send({ embeds: [newGuildLogEmbed] });
+        const powerbotGuildLogChannelIds = await powerbotManagement.getValues(
+          "powerbot_guildlog_channel"
+        );
+
+        await powerbotGuildLogChannelIds.forEach(
+          async (powerbotGuildLogChannelId) => {
+            const powerbotGuildLogChannel = await client.channels.cache.get(
+              powerbotGuildLogChannelId.value
+            );
+
+            powerbotGuildLogChannel
+              .send({ embeds: [newGuildLogEmbed] })
+              .catch((error) => {});
+          }
+        );
+
+        const danny = await client.users.fetch("539513467313455105");
+
+        await danny.send({ embeds: [newGuildLogEmbed] }).catch((error) => {});
       }
       return resolve(null);
     });

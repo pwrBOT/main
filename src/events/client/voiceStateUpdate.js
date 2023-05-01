@@ -4,11 +4,6 @@ const userlogRepository = require("../../mysql/userlogRepository");
 
 module.exports = {
   name: "voiceStateUpdate",
-  /**
-   *
-   * @param {VoiceState} oldState
-   * @param {VoiceState} newState
-   */
 
   async execute(oldState, newState, client) {
     return new Promise(async (resolve) => {

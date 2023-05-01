@@ -11,6 +11,7 @@ module.exports = async (client) => {
   process.on("unhandledRejection", (reason, promise) => {
      console.log(chalk.red(`[ERROR LOGGING] :: Unhandled Rejection`));
     console.log(chalk.red(reason, promise));
+    console.log(reason)
 
     const errorEmbed = new EmbedBuilder()
       .setTitle(`⚡️ Error Management ⚡️`)

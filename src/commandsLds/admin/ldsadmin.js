@@ -166,6 +166,16 @@ module.exports = {
             }
           });
 
+        const commandLogRepository = require("../../mysql/commandLogRepository");
+        // guild - command, user, affectedMember, reason
+        commandLogRepository.logCommandUse(
+          interaction.guild,
+          "generate locales",
+          interaction.user,
+          interaction.member.user,
+          "-"
+        );
+
         return resolve(null);
       }
 
@@ -280,6 +290,17 @@ module.exports = {
                 });
             }
           });
+
+        const commandLogRepository = require("../../mysql/commandLogRepository");
+        // guild - command, user, affectedMember, reason
+        commandLogRepository.logCommandUse(
+          interaction.guild,
+          "generate audios",
+          interaction.user,
+          interaction.member.user,
+          "-"
+        );
+
         return resolve(null);
       }
 
