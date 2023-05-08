@@ -71,6 +71,8 @@ module.exports = {
         embedInfo = "Bei Fragen wende dich an die Communityleitung!";
       }
 
+      let messageContent = message?.content || "*Kein Nachrichtentext - Nur Bild*"
+
       const warnembed = new EmbedBuilder()
         .setTitle(`⚡️ Warning-System ⚡️`)
         .setDescription(`User: ${member} wurde verwarnt`)
@@ -94,7 +96,7 @@ module.exports = {
           },
           {
             name: `Nachricht:`,
-            value: message.content,
+            value: messageContent,
             inline: false
           },
         ]);

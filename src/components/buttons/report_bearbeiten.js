@@ -97,6 +97,10 @@ module.exports = {
         "modArea"
       );
 
+      const reportedUserId = await interaction.message.embeds[0].description
+          .split("<@")[1]
+          .split(">")[0];
+
       const reportedMember = await interaction.guild.members
         .fetch(reportedUserId)
         .catch((error) => {});

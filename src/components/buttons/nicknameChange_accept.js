@@ -1,4 +1,12 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
+const {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  PermissionFlagsBits,
+  PermissionsBitField,
+  EmbedBuilder
+} = require("discord.js");
+const guildsRepository = require("../../mysql/guildsRepository");
 
 module.exports = {
   data: {
@@ -11,11 +19,23 @@ module.exports = {
         fetchReply: true
       });
 
+      if (
+        !interaction.member.permissions.has(
+          PermissionsBitField.Flags.ManageNicknames
+        )
+      ) {
+        await interaction.editReply({
+          content: `Du hast zu wenig Moderationsrechte um die Nickname-Änderungsanfrage zu bearbeiten!`,
+          ephemeral: true
+        });
+        return resolve(null);
+      }
+
       const embed = await interaction.message.embeds[0];
       const newNickname = await embed.fields[1].value;
       const memberId = await embed.fields[2].value;
       const member = await interaction.guild.members.fetch(memberId);
-      const oldNickname = member.displayName
+      const oldNickname = member.displayName;
       let failed = false;
 
       await member
@@ -29,27 +49,33 @@ module.exports = {
 
       const buttonErledigt = new ButtonBuilder()
         .setCustomId("nicknameChange_accept")
-        .setLabel(`Nickname Änderungswunsch von ${interaction.member.displayName} akzeptiert`)
+        .setLabel(
+          `Nickname Änderungswunsch von ${interaction.member.displayName} akzeptiert`
+        )
         .setStyle(ButtonStyle.Secondary)
         .setDisabled(true);
 
-        const buttonNoPermissions = new ButtonBuilder()
+      const buttonNoPermissions = new ButtonBuilder()
         .setCustomId("nicknameChange_accept")
-        .setLabel(`Nickname wurde nicht geändert. User kann nicht moderiert werden...!`)
+        .setLabel(
+          `Nickname wurde nicht geändert. User kann nicht moderiert werden...!`
+        )
         .setStyle(ButtonStyle.Secondary)
         .setDisabled(true);
 
-        if (failed == true) {
-          await interaction.editReply({
-            content: `Der Nickname konnte aus einem unbekannten Grund nicht geändert werden.`,
-            ephemeral: true
-          });
+      if (failed == true) {
+        await interaction.editReply({
+          content: `Der Nickname konnte aus einem unbekannten Grund nicht geändert werden.`,
+          ephemeral: true
+        });
 
-          await interaction.message.edit({
-            components: [new ActionRowBuilder().addComponents([buttonNoPermissions])]
-          });
-          return resolve(null);
-        }
+        await interaction.message.edit({
+          components: [
+            new ActionRowBuilder().addComponents([buttonNoPermissions])
+          ]
+        });
+        return resolve(null);
+      }
 
       await interaction.message.edit({
         components: [new ActionRowBuilder().addComponents([buttonErledigt])]
@@ -62,7 +88,9 @@ module.exports = {
 
       const userEmbed = new EmbedBuilder()
         .setTitle(`✅ Nickname Änderungswunsch akzeptiert`)
-        .setDescription(`Dein Nickname Änderungswunsch bei ${member.guild} wurde von einem Moderator bestätigt.`)
+        .setDescription(
+          `Dein Nickname Änderungswunsch bei ${member.guild} wurde von einem Moderator bestätigt.`
+        )
         .setColor(0x51ff00)
         .setTimestamp(Date.now())
         .setThumbnail(interaction.guild.iconURL())
@@ -80,10 +108,10 @@ module.exports = {
             name: `Neuer Nickname:`,
             value: newNickname,
             inline: true
-          },
+          }
         ]);
 
-      await member.send({ embeds: [userEmbed] }).catch(error => {});
+      await member.send({ embeds: [userEmbed] }).catch((error) => {});
 
       return resolve(null);
     });

@@ -43,7 +43,7 @@ module.exports = {
     } else if (interaction.isStringSelectMenu()) {
       const { selectMenus } = client;
       const { customId } = interaction;
-      const button = selectMenus.get(customId);
+      const menu = selectMenus.get(customId);
       if (!menu) return new Error("Dieses Select Menü hat noch keine Power.");
 
       try {

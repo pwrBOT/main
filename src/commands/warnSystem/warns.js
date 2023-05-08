@@ -1,6 +1,9 @@
 const {
   SlashCommandBuilder,
   PermissionFlagsBits,
+  StringSelectMenuBuilder,
+  StringSelectMenuOptionBuilder,
+  ActionRowBuilder,
   EmbedBuilder
 } = require("discord.js");
 const warnsRepository = require("../../mysql/warnsRepository");
@@ -14,39 +17,36 @@ module.exports = {
     .setDescription(`Warns eines Users anzeigen oder löschen`)
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
     .setDMPermission(false)
-    .addSubcommand(subcommand =>
+    .addSubcommand((subcommand) =>
       subcommand
         .setName(`show`)
         .setDescription(`Warns eines Users anzeigen`)
-        .addUserOption(option =>
+        .addUserOption((option) =>
           option.setName("user").setDescription("User").setRequired(true)
         )
     )
-    .addSubcommand(subcommand =>
+    .addSubcommand((subcommand) =>
       subcommand
         .setName(`delete`)
         .setDescription(`Warn eines Users löschen`)
-        .addUserOption(option =>
+        .addUserOption((option) =>
           option.setName("user").setDescription("User").setRequired(true)
         )
-        .addNumberOption(option =>
-          option.setName("id").setDescription("Warn ID").setRequired(true)
-        )
-        .addStringOption(option =>
+        .addStringOption((option) =>
           option
             .setName("delreason")
             .setDescription("Begründung")
             .setRequired(true)
         )
     )
-    .addSubcommand(subcommand =>
+    .addSubcommand((subcommand) =>
       subcommand
         .setName(`clearall`)
         .setDescription(`Alle Warns eines Users löschen`)
-        .addUserOption(option =>
+        .addUserOption((option) =>
           option.setName("user").setDescription("User").setRequired(true)
         )
-        .addStringOption(option =>
+        .addStringOption((option) =>
           option
             .setName("delreason")
             .setDescription("Begründung")
@@ -55,9 +55,8 @@ module.exports = {
     ),
 
   async execute(interaction, client) {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       const member = interaction.options.getMember("user");
-      const warnId = interaction.options.getNumber("id");
       const warns = await warnsRepository.getWarns(member, "active", 10);
       const delreason =
         interaction.options.getString("delreason") || "Kein Grund angegeben";
@@ -67,37 +66,28 @@ module.exports = {
           return resolve(null);
         }
 
-        if (warns.length === 0) {
-          await interaction.reply(`${member.displayName} hat keine Verwarnungen!`);
-          try {
-            setTimeout(function() {
-              interaction.deleteReply().catch(error => {});;
-            }, 5000);
-          } catch (error) {}
-          return resolve(null);
-        }
+        let warnsText = "";
 
-        var warnsText = "";
-        warns.forEach(warn => {
-          const date = new Date(warn.warnAdd).toLocaleDateString("de-DE");
-          const time = new Date(warn.warnAdd).toLocaleTimeString("de-DE", {
-            hour: "2-digit",
-            minute: "2-digit"
+        if (warns.length === 0) {
+          warnsText = "Der User hat keine Verwarnungen 😊";
+        } else {
+          warns.forEach((warn) => {
+            const date = new Date(warn.warnAdd).toLocaleDateString("de-DE");
+            const time = new Date(warn.warnAdd).toLocaleTimeString("de-DE", {
+              hour: "2-digit",
+              minute: "2-digit"
+            });
+            const spacer = `\u00A0\u00A0\u00A0\u00A0`;
+            warnsText += `ID: ${warn.ID} | ${date}  •  ${time}h:${spacer}${warn.warnReason}\n`;
           });
-          const spacer = `\u00A0\u00A0\u00A0\u00A0`;
-          warnsText += `ID: ${warn.ID} | ${date}  •  ${time}h:${spacer}${warn.warnReason}\n`;
-        });
+        }
 
         // GET OLD WARNS
         let oldWarnsText = "";
         let oldWarns = await warnsRepository.getWarns(member, "removed", 10);
 
-        if (!oldWarns) {
-          return resolve(null);
-        }
-
         if (oldWarns.length === 0) {
-          oldWarnsText = `Der User hat keine gelöschten Verwarnungen!`;
+          oldWarnsText = `Der User hat keine gelöschten Verwarnungen 😊`;
         } else {
           oldWarns.forEach((oldWarn) => {
             const date = new Date(oldWarn.warnAdd).toLocaleDateString("de-DE");
@@ -138,7 +128,7 @@ module.exports = {
               inline: false
             }
           ]);
-          await interaction.reply({ embeds: [warnsembed] });
+        await interaction.reply({ embeds: [warnsembed] });
 
         const commandLogRepository = require("../../mysql/commandLogRepository");
         // guild - command, user, affectedMember, reason
@@ -153,99 +143,54 @@ module.exports = {
       }
 
       if (interaction.options.getSubcommand() === "delete") {
-        const delWarnData = await warnsRepository.getWarn(
-          warnId,
-          interaction.guild.id,
-          member.user.id
+        const activeWarns = await warnsRepository.getWarns(
+          member,
+          "active",
+          20
         );
 
-        if (!delWarnData) {
-          await interaction.reply(
-            `Kein Warn mit ID: ${warnId} bei ${member} gefunden!`
-          );
+        if (activeWarns.length === 0) {
+          await interaction.reply({
+            content: `Der User hat keine Verwarnungen!`,
+            ephemeral: true
+          });
           return resolve(null);
         }
 
-        const delWarnembed = new EmbedBuilder()
-          .setTitle(`⚡️ Warning-System ⚡️`)
-          .setDescription(`Warn von ${member} entfernt!`)
-          .setColor(0x51ff00)
-          .setTimestamp(Date.now())
-          .setFooter({
-            iconURL: client.user.displayAvatarURL(),
-            text: `powered by Powerbot`
-          })
-          .addFields([
-            {
-              name: `Gelöschte Verwarnung:`,
-              value: `Grund: ${delWarnData.warnReason}\nGewarnt von: ${delWarnData.warnModName}\n`,
-              inline: false
-            },
-            {
-              name: `Gelöscht von Moderator:`,
-              value: `${interaction.user.tag}`,
-              inline: true
-            },
-            {
-              name: `Begründung:`,
-              value: `${delreason}`,
-              inline: true
-            }
-          ]);
+        const sm_warns_del = new StringSelectMenuBuilder()
+          .setCustomId(`sm_warns_del`)
+          .setMinValues(1)
+          .setMaxValues(1)
+          .addOptions(
+            new StringSelectMenuOptionBuilder({
+              label: `Abbrechen`,
+              value: `Abbrechen`
+            })
+          );
 
-        const delWarnembedUser = new EmbedBuilder()
-          .setTitle(`⚡️ Warning-System ⚡️`)
-          .setDescription(`Ein Warn von dir wurde gelöscht!`)
-          .setColor(0x51ff00)
-          .setTimestamp(Date.now())
-          .setFooter({
-            iconURL: client.user.displayAvatarURL(),
-            text: `powered by Powerbot`
-          })
-          .addFields([
-            {
-              name: `Gelöschte Verwarnung:`,
-              value: `Grund: ${delWarnData.warnReason}\nGewarnt von: ${delWarnData.warnModName}\n`,
-              inline: false
-            },
-            {
-              name: `Gelöscht von Moderator:`,
-              value: `${interaction.user.tag}`,
-              inline: true
-            },
-            {
-              name: `Begründung:`,
-              value: `${delreason}`,
-              inline: true
-            }
-          ]);
+        for (const warn of activeWarns) {
+          const date = new Date(warn.warnAdd).toLocaleDateString("de-DE");
+          const spacer = `\u00A0\u00A0\u00A0\u00A0`;
+          let reason = "";
 
-        await warnsRepository.delWarn(warnId, member.user.id, delreason);
+          if (warn.warnReason.length > 10) {
+            reason = warn.warnReason.slice(0, 10) + "...";
+          } else {
+            reason = warn.warnReason;
+          }
 
-        const logChannel = require("../../mysql/loggingChannelsRepository");
-        await logChannel.logChannel(interaction.guild, "modLog", delWarnembed);
-        await interaction.reply({ embeds: [delWarnembed] });
-        try {
-          setTimeout(function() {
-            interaction.deleteReply().catch(error => {});;
-          }, 5000);
-        } catch (error) {}
+          sm_warns_del.addOptions(
+            new StringSelectMenuOptionBuilder({
+              label: `ID: #${warn.ID} | ${date}  • ${warn.warnReason}`,
+              value: `${warn.ID} | ${member.id} | ${delreason}`
+            })
+          );
+        }
 
-        try {
-          member.send({ embeds: [delWarnembedUser] }).catch(error => {});
-        } catch (error) {}
+        await interaction.reply({
+          components: [new ActionRowBuilder().addComponents(sm_warns_del)]
+        });
 
-        // ############## LOGGING ############## \\
-        const commandLogRepository = require("../../mysql/commandLogRepository");
-        // guild - command, user, affectedMember, reason
-        await commandLogRepository.logCommandUse(
-          interaction.guild,
-          "warns delete",
-          interaction.user,
-          member.user,
-          "-"
-        );
-        // ############## LOGGING END ############## \\
         return resolve(null);
       }
 
@@ -258,7 +203,7 @@ module.exports = {
         }
 
         var warnsText = "";
-        warns.forEach(warn => {
+        warns.forEach((warn) => {
           const date = new Date(warn.warnAdd).toLocaleDateString("de-DE");
           const time = new Date(warn.warnAdd).toLocaleTimeString("de-DE", {
             hour: "2-digit",
@@ -295,14 +240,18 @@ module.exports = {
             }
           ]);
 
-        await warnsRepository.delAllWarns(interaction.guild.id, member.user.id, delreason);
+        await warnsRepository.delAllWarns(
+          interaction.guild.id,
+          member.user.id,
+          delreason
+        );
 
         const logChannel = require("../../mysql/loggingChannelsRepository");
         await logChannel.logChannel(interaction.guild, "modLog", delWarnsembed);
         await interaction.reply({ embeds: [delWarnsembed] });
         try {
-          setTimeout(function() {
-            interaction.deleteReply().catch(error => {});;
+          setTimeout(function () {
+            interaction.deleteReply().catch((error) => {});
           }, 5000);
         } catch (error) {}
 

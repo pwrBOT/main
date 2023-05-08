@@ -16,6 +16,18 @@ module.exports = {
         fetchReply: true
       });
 
+      if (
+        !interaction.member.permissions.has(
+          PermissionsBitField.Flags.ManageNicknames
+        )
+      ) {
+        await interaction.editReply({
+          content: `Du hast zu wenig Moderationsrechte um die Nickname-Änderungsanfrage zu bearbeiten!`,
+          ephemeral: true
+        });
+        return resolve(null);
+      }
+
       const embed = await interaction.message.embeds[0];
       const newNickname = await embed.fields[1].value;
       const memberId = await embed.fields[2].value;

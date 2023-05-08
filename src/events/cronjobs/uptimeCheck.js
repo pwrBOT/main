@@ -28,7 +28,7 @@ const domainCheck = async (client) => {
       await monitoringRepository.lastCheck(domain.guildId, domain.link);
 
       // ONLINE
-      if (res.status >= 200 && res.status <= 399) {
+      if (res?.status >= 200 && res?.status <= 399) {
         if (domain.status == "DOWN" || domain.status == "-") {
           console.log(`${domain.name} --> UP (${res.status})`);
           status = "UP";
@@ -53,7 +53,7 @@ const domainCheck = async (client) => {
       }
 
       // OFFLINE
-      if (res.status >= 400 && res.status <= 599) {
+      if (res?.status >= 400 && res?.status <= 599) {
         if (domain.status == "UP" || domain.status == "-") {
           console.log(`${domain.name} --> DOWN (${res.status})`);
           status = "DOWN";
