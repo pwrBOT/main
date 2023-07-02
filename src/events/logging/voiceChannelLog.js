@@ -54,7 +54,7 @@ module.exports = {
             await userlogRepository.addLog(
               guild.id,
               member.id,
-              `KICKED BY ${executor?.tag ?? "Unkown"}`,
+              `KICKED`,
               "VC",
               oldState.channelId,
               oldState.channel.name,

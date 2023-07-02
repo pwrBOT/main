@@ -76,16 +76,23 @@ module.exports = {
         const links = getFullUrls(message.content);
 
         for (const link of links) {
-
           if (link.includes("discord.gg/")) {
             let isGuildInvite = false;
 
             var inviteCode = "";
-            inviteCode = link.split("/").pop().replaceAll(/[^a-zA-Z0-9]/g, "");
+            inviteCode = link
+              .split("/")
+              .pop()
+              .replaceAll(/[^a-zA-Z0-9]/g, "");
 
-            const invite = await message.guild.fetchVanityData().catch(error => {});
+            const invite = await message.guild
+              .fetchVanityData()
+              .catch((error) => {});
 
-            if (!inviteCode || inviteCode == invite?.code.replaceAll(/[^a-zA-Z0-9]/g, "")) {
+            if (
+              !inviteCode ||
+              inviteCode == invite?.code.replaceAll(/[^a-zA-Z0-9]/g, "")
+            ) {
               isGuildInvite = true;
             } else {
               await message.guild.invites
@@ -124,7 +131,10 @@ module.exports = {
             let isGuildInvite = false;
 
             var inviteCode = "";
-            inviteCode = link.split("/").pop().replaceAll(/[^a-zA-Z0-9]/g, "");
+            inviteCode = link
+              .split("/")
+              .pop()
+              .replaceAll(/[^a-zA-Z0-9]/g, "");
 
             await message.guild.invites
               .fetch({ code: inviteCode, cache: true })
@@ -176,7 +186,12 @@ module.exports = {
       }
 
       function getFullUrls(text) {
-        const urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g;
+        let urlRegex = ""
+        if (text.includes("http")) {
+          urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g;
+        } else {
+          urlRegex = /(((https?:\/\/)|(www\.)|(discord?.\.))[^\s]+)/g;
+        }
         return text.match(urlRegex);
       }
 
@@ -382,7 +397,7 @@ module.exports = {
 
         const warnembed = new EmbedBuilder()
           .setTitle(`⚡️ Warning-System ⚡️`)
-          .setDescription(`User: ${message.member} wurde verwarnt`)
+          .setDescription(`User: ${message.member.displayName} (${message.member}) wurde verwarnt`)
           .setColor(0x51ff00)
           .setTimestamp(Date.now())
           .setThumbnail(message.member.displayAvatarURL())
@@ -410,7 +425,7 @@ module.exports = {
 
         const warnembedChannel = new EmbedBuilder()
           .setTitle(`⚡️ Warning-System ⚡️`)
-          .setDescription(`User: ${message.member} wurde verwarnt`)
+          .setDescription(`User: ${message.member.displayName} (${message.member}) wurde verwarnt`)
           .setColor(0x51ff00)
           .setTimestamp(Date.now())
           .setThumbnail(message.member.displayAvatarURL())

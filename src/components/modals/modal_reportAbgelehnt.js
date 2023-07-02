@@ -26,14 +26,14 @@ module.exports = {
       await reportRepository.updateReport(
         interaction.guild.id,
         reportId,
-        `Rejected ${interaction.user.tag}`,
+        `Rejected ${interaction.member.displayName}`,
         interaction.user.id,
         modMessage
       );
 
       const buttonAbgelehnt = new ButtonBuilder()
         .setCustomId("report_abgelehnt")
-        .setLabel(`Report abgelehnt durch ${interaction.user.tag}`)
+        .setLabel(`Report abgelehnt durch ${interaction.member.displayName}`)
         .setStyle(ButtonStyle.Danger)
         .setDisabled(true);
 
@@ -93,7 +93,7 @@ module.exports = {
         const reporter = await interaction.guild.members.fetch(
           reportData.reporterId
         );
-        reporter.send({ embeds: [reportAbgelehntEmbed] });
+        reporter.send({ embeds: [reportAbgelehntEmbed] }).catch(error => {});;
       } catch (error) {}
     });
   }

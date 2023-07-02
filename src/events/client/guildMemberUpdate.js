@@ -1,6 +1,7 @@
 const { EmbedBuilder } = require("discord.js");
 const guildsRepository = require("../../mysql/guildsRepository");
 const logChannel = require("../../mysql/loggingChannelsRepository");
+const usersRepository = require("../../mysql/usersRepository");
 
 module.exports = {
   name: "guildMemberUpdate",
@@ -44,7 +45,6 @@ module.exports = {
             }
           ]);
 
-        const logChannel = require("../../mysql/loggingChannelsRepository");
         await logChannel.logChannel(
           oldMember.guild,
           "botLog",
@@ -100,7 +100,6 @@ module.exports = {
             }
           ]);
 
-        const logChannel = require("../../mysql/loggingChannelsRepository");
         await logChannel.logChannel(
           newMember.guild,
           "botLog",
@@ -145,6 +144,32 @@ module.exports = {
           .setColor("Green");
 
         await logChannel.logChannel(guild, "botLog", guildMemberUpdateEmbed);
+
+        await usersRepository.updateUser(
+          guild.id,
+          member.id,
+          "username",
+          newMember.user.tag
+        );
+      }
+
+      // #######################  UPDATE USER TAG  ####################### \\
+
+      if (newMember.user.tag !== oldMember.user.tag) {
+        guildMemberUpdateEmbed
+          .setDescription(
+            `<@${member.id}> hat seinen User-TAG von "${oldMember.user.tag}" zu "${newMember.user.tag}" geändert.`
+          )
+          .setColor("Green");
+
+        await logChannel.logChannel(guild, "botLog", guildMemberUpdateEmbed);
+
+        await usersRepository.updateUser(
+          guild.id,
+          member.id,
+          "username",
+          newMember.user.tag
+        );
       }
 
       // #######################  UPDATE AVATAR  ####################### \\
@@ -174,7 +199,8 @@ module.exports = {
         !oldMember.communicationDisabledUntil &&
         newMember.communicationDisabledUntil
       ) {
-        let timeoutTimestamp = Date.parse(newMember.communicationDisabledUntil) / 1000
+        let timeoutTimestamp =
+          Date.parse(newMember.communicationDisabledUntil) / 1000;
 
         guildMemberUpdateEmbed
           .setDescription(

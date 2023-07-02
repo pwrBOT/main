@@ -70,6 +70,15 @@ module.exports = {
           /// SPAM SYSTEM SCHLAEGT AN \\\
           ++msgCount;
           if (parseInt(msgCount) === LIMIT) {
+            try {
+              if (message.member.roles.cache.has(teamRoleId.value)) {
+                console.log(
+                  `SPAM CHECK | Nachricht von ${message.author.tag} nicht gelöscht --> Team Mitglied`
+                );
+                return resolve(null);
+              }
+            } catch (error) {}
+            
             userTimeout();
             autoModWarnMember();
 
@@ -163,11 +172,6 @@ module.exports = {
         if (message.member.isCommunicationDisabled()) {
           return resolve(null);
         }
-
-        const teamRoleId = await guildSettings.getGuildSetting(
-          message.guild,
-          "teamRole"
-        );
 
         try {
           if (message.member.roles.cache.has(teamRoleId.value)) {
@@ -276,10 +280,7 @@ module.exports = {
       }
 
       async function autoModWarnMember() {
-        const teamRoleId = await guildSettings.getGuildSetting(
-          message.guild,
-          "teamRole"
-        );
+        
 
         try {
           if (message.member.roles.cache.has(teamRoleId.value)) {
@@ -303,7 +304,7 @@ module.exports = {
 
         const warnembed = new EmbedBuilder()
           .setTitle(`⚡️ Warning-System ⚡️`)
-          .setDescription(`User: ${message.member} wurde verwarnt`)
+          .setDescription(`User: ${message.member.displayName} (${message.member}) wurde verwarnt`)
           .setColor(0x51ff00)
           .setTimestamp(Date.now())
           .setThumbnail(message.member.displayAvatarURL())

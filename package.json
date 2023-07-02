@@ -19,7 +19,7 @@
     "dbd-soft-ui": "^1.6.44-beta.1",
     "discord-api-types": "^0.37.41",
     "discord-dashboard": "^2.3.61",
-    "discord.js": "^14.9.0",
+    "discord.js": "^14.11.0",
     "distube": "^4.0.4",
     "imgur": "^2.2.0",
     "lsof": "^0.1.0",

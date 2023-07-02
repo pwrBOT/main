@@ -29,7 +29,7 @@ const getUserVCActivity = async (member, guild) => {
         channel = activity.oldStateName;
       } else if (activity.action == "SWITCH") {
         channel = activity.newStateName;
-      } else if (activity.action.startsWith("KICKED BY")) {
+      } else if (activity.action.startsWith("KICKED")) {
         channel = activity.oldStateName;
       } else {
         channel = "*unbekannt*";

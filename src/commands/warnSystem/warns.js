@@ -35,7 +35,7 @@ module.exports = {
         .addStringOption((option) =>
           option
             .setName("delreason")
-            .setDescription("Begründung")
+            .setDescription("Begründung (max. 60 Zeichen)")
             .setRequired(true)
         )
     )
@@ -143,6 +143,15 @@ module.exports = {
       }
 
       if (interaction.options.getSubcommand() === "delete") {
+
+        if (delreason.length > 60) {
+          await interaction.reply({
+            content: `Die Begründung darf max 60 Zeichen lang sein!`,
+            ephemeral: true
+          });
+          return resolve(null);
+        }
+
         const activeWarns = await warnsRepository.getWarns(
           member,
           "active",
@@ -188,7 +197,8 @@ module.exports = {
         }
 
         await interaction.reply({
-          components: [new ActionRowBuilder().addComponents(sm_warns_del)]
+          components: [new ActionRowBuilder().addComponents(sm_warns_del)],
+          ephemeral: true
         });
 
         return resolve(null);

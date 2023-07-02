@@ -20,7 +20,7 @@ const updateAutoModSettingsDashboard = async (guild, column, newData) => {
     mysqlHelper
       .query(`UPDATE powerbot_automod SET ${column}=? WHERE guildId = ?`, [
         newData,
-        guild.id,
+        guild.id
       ])
       .then((result) => {
         resolve(null);
@@ -38,12 +38,11 @@ const addAutoModSettingsGuild = async (guildId) => {
       .then((result) => {
         resolve(null);
       })
-      .catch(() => {
+      .catch((error) => {
         resolve(null);
       });
   });
 };
-
 
 module.exports.getGuildAutoModSettings = getGuildAutoModSettings;
 module.exports.updateAutoModSettingsDashboard = updateAutoModSettingsDashboard;

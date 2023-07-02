@@ -8,7 +8,7 @@ const embedsRepository = require("../../mysql/embedsRepository");
 module.exports = {
   name: "guildMemberAdd",
   async execute(member) {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       if (!member) {
         return resolve(null);
       }
@@ -32,18 +32,14 @@ module.exports = {
       );
 
       if (!getUser) {
-        const logText = `[MYSQL DATABASE] UserId: ${member.user
-          .id} bei Guild: ${member.guild
-          .id} nicht gefunden. User wird angelegt...`;
+        const logText = `[MYSQL DATABASE] UserId: ${member.user.id} bei Guild: ${member.guild.id} nicht gefunden. User wird angelegt...`;
         loggingHandler.log(logText, "memberAdd");
 
         await usersRepository.addUser(member.guild.id, member.user);
         const welcomeMessage = "Herzlich Willkommen";
         await welcomeBanner.createWelcomeBanner(member, welcomeMessage);
 
-        const logText2 = `[MYSQL DATABASE] User (${member.user
-          .username}#${member.user.discriminator} | ID: ${member.user
-          .id}) bei Guild: ${member.guild.id} erfolgreich angelegt!`;
+        const logText2 = `[MYSQL DATABASE] User (${member.user.username}#${member.user.discriminator} | ID: ${member.user.id}) bei Guild: ${member.guild.id} erfolgreich angelegt!`;
         loggingHandler.log(logText2, "memberAdd");
 
         await addCommunityRole(member);
@@ -56,9 +52,7 @@ module.exports = {
         const welcomeMessage = "Willkommen zurück";
         await welcomeBanner.createWelcomeBanner(member, welcomeMessage);
 
-        const logText3 = `[MYSQL DATABASE] User (${member.user
-          .username}#${member.user.discriminator} | ID: ${member.user
-          .id}) ist bereits bei Guild: ${member.guild.id} registriert!`;
+        const logText3 = `[MYSQL DATABASE] User (${member.user.username}#${member.user.discriminator} | ID: ${member.user.id}) ist bereits bei Guild: ${member.guild.id} registriert!`;
         loggingHandler.log(logText3, "memberAdd");
 
         await addCommunityRole(member);
@@ -67,11 +61,11 @@ module.exports = {
         return resolve(null);
       }
     });
-  },
+  }
 };
 
-const sendWelcomeMessage = async member => {
-  setTimeout(async function() {
+const sendWelcomeMessage = async (member) => {
+  setTimeout(async function () {
     const welcomeEmbedData = await embedsRepository.getEmbed(
       member.guild,
       "welcomeMessage"
@@ -101,9 +95,9 @@ const sendWelcomeMessage = async member => {
             member
               .send({
                 embeds: [welcomeEmbed],
-                content: welcomeContent,
+                content: welcomeContent
               })
-              .catch(error => {})
+              .catch((error) => {});
           } catch (error) {}
         }
       }
@@ -111,27 +105,29 @@ const sendWelcomeMessage = async member => {
   }, 5000);
 };
 
-const addCommunityRole = async member => {
-  setTimeout(async function() {
+const addCommunityRole = async (member) => {
+  setTimeout(async function () {
     const communityroleIds = await guildsRepository.getGuildSetting(
       member.guild,
       "communityrole"
     );
 
-    if (communityroleIds.value != `[""]`) {
-      const communityRoleIdsValue = JSON.parse(communityroleIds.value);
-      communityRoleIdsValue.forEach(async roleId => {
-        let communityrole = "";
-        try {
-          communityrole = await member.guild.roles.fetch(roleId);
-          await member.roles.add(communityrole).catch(error => {});
-        } catch (error) {}
-      });
+    if (communityroleIds) {
+      if (communityroleIds?.value != `[""]`) {
+        const communityRoleIdsValue = JSON.parse(communityroleIds.value);
+        communityRoleIdsValue.forEach(async (roleId) => {
+          let communityrole = "";
+          try {
+            communityrole = await member.guild.roles.fetch(roleId);
+            await member.roles.add(communityrole).catch((error) => {});
+          } catch (error) {}
+        });
+      }
     }
   }, 5000);
 };
 
-const userCountSpecial = async member => {
+const userCountSpecial = async (member) => {
   let nextUserCountSpecialValue = "";
   let insertOrUpdate = "";
   const newUser = await usersRepository.getUser(member.id, member.guild.id);
@@ -148,8 +144,7 @@ const userCountSpecial = async member => {
     nextUserCountSpecialValue = parseInt(nextUserCountSpecial.value);
   }
 
-  const logText5 = `Guild: ${member.guild.name} (${member.guild
-    .id}) | Next member achievement: ${newUser.ID}/${nextUserCountSpecialValue}`;
+  const logText5 = `Guild: ${member.guild.name} (${member.guild.id}) | Next member achievement: ${newUser.ID}/${nextUserCountSpecialValue}`;
   loggingHandler.log(logText5, "memberAdd");
 
   if (newUser.ID == nextUserCountSpecialValue) {
@@ -163,7 +158,7 @@ const userCountSpecial = async member => {
       .setImage("https://pwr.lol/img/memberAchievement.jpg")
       .setFooter({
         iconURL: member.client.user.displayAvatarURL(),
-        text: `powered by Powerbot`,
+        text: `powered by Powerbot`
       });
 
     const achievementChannel = await guildsRepository.getGuildSetting(
@@ -176,7 +171,7 @@ const userCountSpecial = async member => {
         await member.client.channels.cache
           .get(achievementChannel.value)
           .send({ content: `@here`, embeds: [UserCountSpecialEmbed] })
-          .catch(error => {});
+          .catch((error) => {});
       }
     }
 
@@ -197,8 +192,7 @@ const userCountSpecial = async member => {
       );
     }
 
-    const logText6 = `Guild: ${member.guild.name} (${member.guild
-      .id}) | RankUp --> Next member achievement: ${newUser.ID}/${nextUserCountSpecialValueNew}`;
+    const logText6 = `Guild: ${member.guild.name} (${member.guild.id}) | RankUp --> Next member achievement: ${newUser.ID}/${nextUserCountSpecialValueNew}`;
     loggingHandler.log(logText6, "memberAdd");
   }
 };

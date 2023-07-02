@@ -61,6 +61,14 @@ module.exports = {
         return resolve(null);
       }
 
+      let messageContent = ""
+
+      if (message.content.length > 800) {
+        messageContent = (message.content).slice(0,800) + "....."
+      } else {
+        messageContent = message.content
+      }
+
       const reportedMessageEmbed = new EmbedBuilder()
         .setTitle(`⚡️ Report System ⚡️`)
         .setDescription(`Eine Nachricht von ${member} wurde soeben gemeldet.`)
@@ -72,7 +80,7 @@ module.exports = {
           },
           {
             name: `Nachricht:`,
-            value: `${message.content}\n\n[>>> Link zur Nachricht <<<](${message.url})`,
+            value: `${messageContent}\n\n[---> Zur Nachricht](${message.url})`,
             inline: false
           }
         ])

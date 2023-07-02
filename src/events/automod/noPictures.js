@@ -21,29 +21,29 @@ module.exports = {
         return resolve(null);
       }
 
-      let pictureChannel = await guildSettings.getGuildSetting(
+      let nopictureChannel = await guildSettings.getGuildSetting(
         message.guild,
-        "picturyOnlyChannel"
+        "noPicturesChannel"
       );
 
-      if (!pictureChannel || pictureChannel == "[]" || pictureChannel == null) {
+      if (!nopictureChannel || nopictureChannel == "[]" || nopictureChannel == null) {
         return resolve(null);
       }
 
-      const pictureChannelIds = pictureChannel.value
+      const nopictureChannelIds = nopictureChannel.value
 
       if (
-        pictureChannelIds.includes(message.channel.id) &&
-        message.attachments.size == 0
+        nopictureChannelIds.includes(message.channel.id) &&
+        message.attachments.size == 1
       ) {
-        await message.delete();
+        await message.delete().catch(error => {});
 
         const answer = await message.channel.send(
-          `Sry ${message.member} 🙂 In diesem Channel sind nur Bilder erlaubt. Du kannst jedoch einen öffentlichen Thread erstellen!`
+          `Sry ${message.member} 🙂 In diesem Channel sind keine Bilder erlaubt!`
         );
         try {
           setTimeout(function() {
-            answer.delete()
+            answer.delete().catch(error => {})
           }, 10000);
         } catch (error) {}
 

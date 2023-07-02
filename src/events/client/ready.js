@@ -7,12 +7,11 @@ module.exports = {
   name: "ready",
   once: true,
   async execute(client) {
-    return new Promise(async resolve => {
-      
+    return new Promise(async (resolve) => {
       var botGuilds = "";
-      const allBotGuilds = client.guilds.cache.map(guild => guild);
+      const allBotGuilds = client.guilds.cache.map((guild) => guild);
 
-      allBotGuilds.forEach(guilds => {
+      allBotGuilds.forEach((guilds) => {
         const date = new Date(guilds.joinedTimestamp).toLocaleDateString(
           "de-DE"
         );
@@ -21,7 +20,7 @@ module.exports = {
 
       //// ##################### TABLE CHECK ##################### \\\\
 
-      await allBotGuilds.forEach(async guilds => {
+      await allBotGuilds.forEach(async (guilds) => {
         //// CHECK / CREATE USER TABLE
         let data = client.guilds.cache.get(guilds.id);
         const usersRepository = require("../../mysql/usersRepository");
@@ -50,12 +49,19 @@ module.exports = {
 
         //// CHECK / ADD GUILD-ID TO AUTO-MOD TABLE
         const autoModRepository = require("../../mysql/autoModRepository");
-        const getAutoModGuildSettings = await autoModRepository.getGuildAutoModSettings(
-          data
-        );
+        const getAutoModGuildSettings =
+          await autoModRepository.getGuildAutoModSettings(data);
         if (!getAutoModGuildSettings) {
-          return console.log(
-            chalk.red(`[MYSQL DATABASE] Keine Verbindung zur DB...`)
+          console.log(
+            chalk.yellow(
+              `[MYSQL DATABASE] Guild: ${data.name}(${data.id}) in AutoMod Tabelle nicht gefunden. Guild wird hinzugefügt...`
+            )
+          );
+          await autoModRepository.addAutoModSettingsGuild(data.id);
+          console.log(
+            chalk.blue(
+              `[MYSQL DATABASE] Guild: ${data.name}(${data.id}) bei AutoMod Tabelle erfolgreich angelegt!`
+            )
           );
         } else if (getAutoModGuildSettings.length === 0) {
           console.log(
@@ -109,7 +115,7 @@ module.exports = {
         status: "online"
       });
 
-      setTimeout(async function() {
+      setTimeout(async function () {
         const onlineEmbed = new EmbedBuilder()
           .setTitle(`⚡️ PowerBot ⚡️ | Status: 🟢`)
           .setDescription(`Ich bin da, wer noch?`)
@@ -136,10 +142,10 @@ module.exports = {
         const channel = await client.channels.cache.get(
           config.powerbot_status_channel
         );
-        channel.send({ embeds: [onlineEmbed] }).catch(error => {});
+        channel.send({ embeds: [onlineEmbed] }).catch((error) => {});
       }, 5000);
 
-      setTimeout(function() {
+      setTimeout(function () {
         console.log(
           `\x1b[32m
             #########################################################

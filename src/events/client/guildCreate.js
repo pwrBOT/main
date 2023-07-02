@@ -26,7 +26,7 @@ module.exports = {
         await guild.leave().catch(console.error);
         console.log(
           chalk.red(
-            `WHITELIST CHECK NEGATIV | GUILD: ${guild.name}(${guild.id}) | Owner: ${guildOwner}`
+            `WHITELIST CHECK NEGATIV | GUILD: ${guild.name}(${guild.id})\nOwner: ${guildOwner} (${guildOwner.displayName})`
           )
         );
 
@@ -38,9 +38,9 @@ module.exports = {
 
         const danny = await client.users.fetch("539513467313455105");
 
-        danny
+        await danny
           .send(
-            `WHITELIST CHECK NEGATIV | GUILD: ${guild.name}(${guild.id}) | Owner: ${guildOwner}`
+            `WHITELIST CHECK NEGATIV | GUILD: ${guild.name} (${guild.id})\nOwner: ${guildOwner} (${guildOwner.displayName})`
           )
           .catch((error) => {});
 

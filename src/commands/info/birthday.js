@@ -4,6 +4,8 @@ const {
   EmbedBuilder
 } = require("discord.js");
 
+const birthdayCheck = require("../../events/cronjobs/birthdayCheck")
+
 const usersRepository = require("../../mysql/usersRepository");
 
 module.exports = {
@@ -34,6 +36,11 @@ module.exports = {
       subcommand
         .setName(`entfernen`)
         .setDescription(`Eigenen Geburtstag aus dem System entfernen`)
+    )
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName(`geburtstagsliste`)
+        .setDescription(`Erzwingt die Generierung der Geburtstagsliste`)
     ),
 
   async execute(interaction, client) {
@@ -74,22 +81,56 @@ module.exports = {
           return resolve(null);
         }
 
-        await interaction.reply({
-          content: `Hey ${member} :) Dein Geburtstag wurde vermerkt. Wir freuen uns dir, an deinem ganz besonderen Tag, zu gratulieren`,
-          ephemeral: true
-        });
+        if (userData.birthdate.getFullYear() < 1900) {
+          await interaction.reply({
+            content: `Dein Geburtstag wurde vermerkt 🥳`,
+            ephemeral: true
+          });
 
-        await usersRepository.updateUser(
-          guild.id,
-          member.id,
-          "birthdate",
-          birthdate
-        );
+          await usersRepository.updateUser(
+            guild.id,
+            member.id,
+            "birthdate",
+            birthdate
+          );
+        } else {
+
+          if (userData.birthdate.toLocaleDateString('de-DE') == birthdate.toLocaleDateString('de-DE')) {
+            await interaction.reply({
+              content: `Dein Geburtsdatum ist bereits eingetragen 🥳`,
+              ephemeral: true
+            });
+            return resolve(null);
+          }
+
+          await interaction.reply({
+            content: `Dein Geburtstag wurde aktualisiert 🥳\nVorher: ${userData.birthdate.toLocaleDateString('de-DE')} / Neu: ${birthdate.toLocaleDateString('de-DE')}`,
+            ephemeral: true
+          });
+
+          await usersRepository.updateUser(
+            guild.id,
+            member.id,
+            "birthdate",
+            birthdate
+          );
+        }
       }
 
       if (interaction.options.getSubcommand() === "entfernen") {
         await interaction.reply({
           content: `❌ Hier passiert NOCH nichts. WIP :) ❌`,
+          ephemeral: true
+        });
+        return resolve(null);
+      }
+
+      if (interaction.options.getSubcommand() === "geburtstagsliste") {
+
+        await birthdayCheck.generate(client)
+
+        await interaction.reply({
+          content: `TEST: Generierung der Geburtstagsliste angestoßen --> Siehe Console`,
           ephemeral: true
         });
         return resolve(null);

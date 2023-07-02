@@ -48,6 +48,9 @@ const generateImage = async (interaction, member, guild, guildMember) => {
     let totalVoiceTime = "";
     if (user.totalVoiceTime == 0) {
       totalVoiceTime = "";
+    } else if (user.totalVoiceTime >= 1440) {
+      const voiceTime = user.totalVoiceTime / 60 / 24;
+      totalVoiceTime = `Zeit im VC: ≈ ${(voiceTime).toFixed(0)} Tage`;
     } else if (user.totalVoiceTime > 60) {
       const voiceTime = user.totalVoiceTime / 60;
       totalVoiceTime = `Zeit im VC: ${voiceTime.toFixed(1)} Stunden`;
@@ -134,7 +137,7 @@ const generateImage = async (interaction, member, guild, guildMember) => {
 
     context.fillText(
       `Auf dem Server seit: ${new Date(
-        interaction.member.joinedTimestamp
+        user.userAdd
       ).toLocaleDateString("de-DE")}`,
       200,
       140

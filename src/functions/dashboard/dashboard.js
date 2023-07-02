@@ -305,7 +305,7 @@ const init = async (client) => {
         }
       },
       shardspage: {
-        enabled: true,
+        enabled: false,
         interval: 10,
         key: "3S!Dsd2908!4geJ6!aaA",
         backgroundUrl:
@@ -627,6 +627,8 @@ const init = async (client) => {
                 "ignoredChannels"
               );
 
+              if (!newData) newData = [];
+
               if (!data) {
                 const property = "ignoredChannels";
                 newDataString = JSON.stringify(newData);
@@ -769,6 +771,147 @@ const init = async (client) => {
                   guild,
                   property,
                   newData
+                );
+              }
+              return;
+            }
+          },
+          {
+            optionId: "picturyOnlyChannel",
+            optionName: "",
+            optionDescription:
+              "Channels in denen nur Bilder erlaubt sind:",
+            optionType: DBD.formTypes.channelsMultiSelect(
+              false,
+              true,
+              (channelTypes = [ChannelType.GuildText])
+            ),
+            getActualSet: async ({ guild }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "picturyOnlyChannel"
+              );
+
+              if (data) return JSON.parse(data.value);
+              else return [];
+            },
+            setNew: async ({ guild, newData }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "picturyOnlyChannel"
+              );
+
+              if (!newData) newData = [];
+
+              if (!data) {
+                const property = "picturyOnlyChannel";
+                newDataString = JSON.stringify(newData);
+                await guildsRepository.insertGuildSetting(
+                  guild,
+                  property,
+                  newDataString
+                );
+              } else {
+                const property = "picturyOnlyChannel";
+                newDataString = JSON.stringify(newData);
+                await guildsRepository.updateGuildSetting(
+                  guild,
+                  property,
+                  newDataString
+                );
+              }
+              return;
+            }
+          },
+          {
+            optionId: "commandOnlyChannel",
+            optionName: "",
+            optionDescription:
+              "Channels in denen nur Commands erlaubt sind:",
+            optionType: DBD.formTypes.channelsMultiSelect(
+              false,
+              true,
+              (channelTypes = [ChannelType.GuildText])
+            ),
+            getActualSet: async ({ guild }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "commandOnlyChannel"
+              );
+
+              if (data) return JSON.parse(data.value);
+              else return [];
+            },
+            setNew: async ({ guild, newData }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "commandOnlyChannel"
+              );
+
+              if (!newData) newData = [];
+
+              if (!data) {
+                const property = "commandOnlyChannel";
+                newDataString = JSON.stringify(newData);
+                await guildsRepository.insertGuildSetting(
+                  guild,
+                  property,
+                  newDataString
+                );
+              } else {
+                const property = "commandOnlyChannel";
+                newDataString = JSON.stringify(newData);
+                await guildsRepository.updateGuildSetting(
+                  guild,
+                  property,
+                  newDataString
+                );
+              }
+              return;
+            }
+          },
+          {
+            optionId: "noPicturesChannel",
+            optionName: "",
+            optionDescription:
+              "Channels in denen keine Bilder erlaubt sind:",
+            optionType: DBD.formTypes.channelsMultiSelect(
+              false,
+              true,
+              (channelTypes = [ChannelType.GuildText])
+            ),
+            getActualSet: async ({ guild }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "noPicturesChannel"
+              );
+
+              if (data) return JSON.parse(data.value);
+              else return [];
+            },
+            setNew: async ({ guild, newData }) => {
+              let data = await guildsRepository.getGuildSetting(
+                guild,
+                "noPicturesChannel"
+              );
+
+              if (!newData) newData = [];
+
+              if (!data) {
+                const property = "noPicturesChannel";
+                newDataString = JSON.stringify(newData);
+                await guildsRepository.insertGuildSetting(
+                  guild,
+                  property,
+                  newDataString
+                );
+              } else {
+                const property = "noPicturesChannel";
+                newDataString = JSON.stringify(newData);
+                await guildsRepository.updateGuildSetting(
+                  guild,
+                  property,
+                  newDataString
                 );
               }
               return;
@@ -967,6 +1110,8 @@ const init = async (client) => {
                 guild,
                 "communityrole"
               );
+
+              if (!newData) newData = []
 
               if (!data) {
                 const property = "communityrole";
@@ -1449,6 +1594,8 @@ const init = async (client) => {
             setNew: async ({ guild, newData }) => {
               let data = levelsRepository.getlevelSettings(guild);
 
+              if (!newData) newData = []
+
               if (!data) {
                 const column = "channelTimeXPCategoryIds";
                 newDataString = JSON.stringify(newData);
@@ -1504,6 +1651,8 @@ const init = async (client) => {
             },
             setNew: async ({ guild, newData }) => {
               let data = levelsRepository.getlevelSettings(guild);
+
+              if (!newData) newData = []
 
               if (!data) {
                 const column = "channelXpBoostIds";
@@ -3076,6 +3225,8 @@ const init = async (client) => {
                 guild,
                 "ytChannelLinks"
               );
+
+              if (!newData) newData = [];
 
               if (!data) {
                 const property = "ytChannelLinks";

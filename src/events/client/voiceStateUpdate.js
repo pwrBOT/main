@@ -28,19 +28,7 @@ module.exports = {
 
           if (tempChannelToDelete) {
             if (tempChannelToDelete.members.size === 0) {
-              try {
-                setTimeout(async function () {
-                  await tempChannelToDelete
-                    .delete("del temp channel")
-                    .catch((error) => {});
-
-                  await tempChannelsRepository.deleteTempVoiceChannel(
-                    guild.id,
-                    oldState.channelId,
-                    "temp"
-                  );
-                }, 500);
-              } catch (error) {}
+              await deleteTempChannel(tempChannelToDelete);
             }
           }
         }
@@ -54,10 +42,12 @@ module.exports = {
             "master"
           );
 
-        if (!tempChannelCheck) {
-          return resolve(null);
+        if (tempChannelCheck) {
+          await createTempChannel(tempChannelCheck);
         }
+      }
 
+      async function createTempChannel(tempChannelCheck) {
         const joinToCreate = tempChannelCheck.guildChannelId;
         const newChannelName = `${tempChannelCheck.tempChannelName} #${member.displayName}`;
 
@@ -83,16 +73,18 @@ module.exports = {
             setTimeout(() => member.voice.setChannel(voiceChannel), 200);
           } catch (error) {}
 
-          if (tempChannelCheck.giveUserPermission == "yes") {
-            await voiceChannel.permissionOverwrites
-              .edit(member.id, {
-                ManageChannels: true,
-                MoveMembers: true,
-                ManageMessages: true,
-                MuteMembers: false
-              })
-              .catch((error) => {});
-          }
+          setTimeout(async () => {
+            if (tempChannelCheck.giveUserPermission == "yes") {
+              await voiceChannel.permissionOverwrites
+                .edit(member, {
+                  ManageChannels: true,
+                  MoveMembers: true,
+                  ManageMessages: true,
+                  MuteMembers: false
+                })
+                .catch((error) => {});
+            }
+          }, 2000);
 
           await tempChannelsRepository.addTempVoiceChannel(
             guild.id,
@@ -103,9 +95,25 @@ module.exports = {
             "-",
             "-"
           );
-          return resolve(null);
         }
       }
+
+      async function deleteTempChannel(tempChannelToDelete) {
+        setTimeout(async function () {
+          await tempChannelToDelete
+            .delete("del temp channel")
+            .catch((error) => {})
+            .then(
+              await tempChannelsRepository.deleteTempVoiceChannel(
+                guild.id,
+                oldState.channelId,
+                "temp"
+              )
+            );
+        }, 250);
+      }
+
+      return resolve(null);
     });
   }
 };

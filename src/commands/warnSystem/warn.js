@@ -63,7 +63,7 @@ module.exports = {
         return resolve(null);
       }
 
-      const embedInfo = await guildsRepository.getGuildSetting(
+      let embedInfo = await guildsRepository.getGuildSetting(
         guild,
         "embedinfo"
       );
@@ -73,7 +73,7 @@ module.exports = {
 
       const warnembed = new EmbedBuilder()
         .setTitle(`⚡️ Warning-System ⚡️`)
-        .setDescription(`User: ${member} wurde verwarnt`)
+        .setDescription(`User: ${member.displayName} (${member}) wurde verwarnt`)
         .setColor(0x51ff00)
         .setTimestamp(Date.now())
         .setThumbnail(member.displayAvatarURL())
@@ -96,7 +96,7 @@ module.exports = {
 
         const warnembedChannel = new EmbedBuilder()
         .setTitle(`⚡️ Warning-System ⚡️`)
-        .setDescription(`User: ${member} wurde verwarnt`)
+        .setDescription(`User: ${member.displayName} (${member}) wurde verwarnt`)
         .setColor(0x51ff00)
         .setTimestamp(Date.now())
         .setThumbnail(member.displayAvatarURL())

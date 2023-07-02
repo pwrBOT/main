@@ -75,7 +75,7 @@ module.exports = {
 
       const warnembed = new EmbedBuilder()
         .setTitle(`⚡️ Warning-System ⚡️`)
-        .setDescription(`User: ${member} wurde verwarnt`)
+        .setDescription(`User: ${member.displayName} (${member}) wurde verwarnt`)
         .setColor(0x51ff00)
         .setTimestamp(Date.now())
         .setThumbnail(member.displayAvatarURL())

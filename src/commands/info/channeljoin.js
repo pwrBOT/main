@@ -45,7 +45,7 @@ module.exports = {
           member = await client.users.fetch(channelConnection.userId);
         }
 
-        const timestamp = Date.parse(channelConnection.timestamp) / 1000 - 3600;
+        const timestamp = Date.parse(channelConnection.timestamp) / 1000 - 7200;
         const action = channelConnection.action.replaceAll("JOIN", "➡️").replaceAll("LEAVE", "⬅️").replaceAll("SWITCH", "🔄")
 
         if (message.length >= 900) {

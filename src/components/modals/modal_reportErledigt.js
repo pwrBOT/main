@@ -145,13 +145,13 @@ module.exports = {
       }
 
       await thread.send({
-        content: `✅ Der Report wurde von ${interaction.member} als erledigt markiert! Der Thread wird in 24 Stunden archiviert.`
+        content: `✅ Der Report wurde von ${interaction.member} als erledigt markiert! Der Thread wird in 90 Minuten archiviert.`
       });
       await thread.setAutoArchiveDuration(ThreadAutoArchiveDuration.OneDay);
 
       setTimeout(function () {
         thread.setArchived(true).catch((error) => {});
-      }, 900000);
+      }, 5400000);
 
       await interaction.reply({
         ephemeral: true,

@@ -30,6 +30,9 @@ module.exports = {
       const warnId = valueData[0];
       const userId = valueData[1];
       const delreason = valueData[2];
+
+      console.log(warnId, userId, delreason)
+
       const member = await interaction.guild.members
         .fetch(userId)
         .catch((error) => {});
@@ -118,7 +121,7 @@ module.exports = {
         member.send({ embeds: [delWarnembedUser] }).catch((error) => {});
       } catch (error) {}
 
-      await interaction.message.delete();
+      await interaction.message.delete().catch(error =>{});
 
       // ############## LOGGING ############## \\
       const commandLogRepository = require("../../mysql/commandLogRepository");

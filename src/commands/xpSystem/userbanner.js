@@ -34,7 +34,7 @@ module.exports = {
       return await interaction.reply(`❌ Kein Userbanner verfügbar! Möglicherweise hast du bisher noch keine Nachricht geschrieben! ❌`);
     }
 
-    await interaction.reply({ files: [img] });
+    await interaction.reply({ files: [img] }).catch(error =>{});
 
     const commandLogRepository = require("../../mysql/commandLogRepository");
                                           // guild - command, user, affectedMember, reason

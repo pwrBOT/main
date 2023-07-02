@@ -11,7 +11,27 @@ module.exports = {
         return resolve(null);
       }
 
-      const commandChannelIds = ["1018087459013271564","978210408387198988"];
+      if (
+        message.member.permissions.has(
+          PermissionsBitField.Flags.Administrator
+        ) ||
+        message.member.permissions.has(PermissionsBitField.Flags.KickMembers)
+      ) {
+        return resolve(null);
+      }
+
+      let commandChannel = await guildSettings.getGuildSetting(
+        message.guild,
+        "commandOnlyChannel"
+      );
+
+      if (!commandChannel || commandChannel == "[]" || commandChannel == null) {
+        return resolve(null);
+      }
+
+      const commandChannelIds = commandChannel.value
+
+
       if (commandChannelIds.includes(message.channel.id)) {
         if (
           message.member.permissions.has(
@@ -24,7 +44,7 @@ module.exports = {
         ) {
           return resolve(null);
         } else {
-          await message.delete();
+          await message.delete().catch(error => {});
 
           const answer = await message.channel.send(
             `Sry ${message.member} 🙂 In diesem Channel sind nur Commands erlaubt!`
