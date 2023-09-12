@@ -11,6 +11,7 @@ module.exports = (client) => {
     const commandFoldersGlobal = fs.readdirSync("./src/commands");
     const commandFoldersLds = fs.readdirSync("./src/commandsLds");
     const commandFoldersPwr = fs.readdirSync("./src/commandsPwr");
+    const commandFoldersGgn = fs.readdirSync("./src/commandsGgn");
 
     for (const folder of commandFoldersGlobal) {
       const commandFiles = fs
@@ -53,6 +54,20 @@ module.exports = (client) => {
         );
       }
     }
+
+    for (const folder of commandFoldersGgn) {
+      const commandFiles = fs
+        .readdirSync(`./src/commandsGgn/${folder}`)
+        .filter((file) => file.endsWith(".js"));
+
+      for (const file of commandFiles) {
+        const command = require(`../../commandsGgn/${folder}/${file}`);
+        commands.set(command.data.name, command);
+        console.log(
+          `\x1b[36mGGN Command: ${command.data.name} has been passed through the handler\x1b[0m`
+        );
+      }
+    }
   };
 
   client.handleGlobalCommands = async () => {
@@ -75,7 +90,9 @@ module.exports = (client) => {
     await rest.put(Routes.applicationCommands(clientId), {
       body: comandGlobalArray
     });
-    console.log(`\x1b[32mGlobal Slash-Commands erfolgreich aktualisiert!\x1b[0m`);
+    console.log(
+      `\x1b[32mGlobal Slash-Commands erfolgreich aktualisiert!\x1b[0m`
+    );
   };
 
   client.handleGuildCommands = async () => {
@@ -134,6 +151,35 @@ module.exports = (client) => {
     });
     console.log(
       `\x1b[32mPowerBot-Dev Slash-Commands erfolgreich übertragen!\x1b[0m`
+    );
+    // ################################################################# \\
+    // ####################### GGN COMMANDS ####################### \\
+    let { ggnCommandArray } = client;
+    const commandGGNFolders = fs.readdirSync("./src/commandsGgn");
+    for (const folder of commandGGNFolders) {
+      const commandGGNFiles = fs
+        .readdirSync(`./src/commandsGgn/${folder}`)
+        .filter((file) => file.endsWith(".js"));
+
+      for (const file of commandGGNFiles) {
+        const commandGgn = require(`../../commandsGgn/${folder}/${file}`);
+        ggnCommandArray.push(commandGgn.data.toJSON());
+      }
+    }
+
+    const guildGGN = "1135188214093729832";
+    const ggnCommandArrayFull = client.ggnCommandArray.concat(
+      client.commandArray
+    );
+    console.log(
+      `\x1b[33mÜbertrage German Gaming Network Slash-Commands\x1b[0m`
+    );
+
+    rest.put(Routes.applicationGuildCommands(clientId, guildPWR), {
+      body: ggnCommandArrayFull
+    });
+    console.log(
+      `\x1b[32mGerman Gaming Network Slash-Commands erfolgreich übertragen!\x1b[0m`
     );
     // ################################################################# \\
   };

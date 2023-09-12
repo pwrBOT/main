@@ -157,7 +157,7 @@ module.exports = {
         .addFields([
           {
             name: `Moderator:`,
-            value: interaction.user.tag,
+            value: interaction.user.username,
             inline: true,
           },
           {
@@ -194,7 +194,7 @@ module.exports = {
           },
           {
             name: `Moderator:`,
-            value: interaction.user.tag,
+            value: interaction.user.username,
             inline: true,
           },
           {
@@ -227,7 +227,7 @@ module.exports = {
       await tempCommandRepository.addTempCommandUser(
         interaction.guild.id,
         member.id,
-        member.user.tag,
+        member.user.username,
         reason,
         interaction.user.username,
         interaction.user.id,

@@ -124,7 +124,7 @@ module.exports = {
           .addFields([
             {
               name: `Angefordert von:`,
-              value: `${interaction.user.tag}`,
+              value: `${interaction.user.username}`,
               inline: false
             }
           ]);
@@ -235,7 +235,7 @@ module.exports = {
           .addFields([
             {
               name: `Gelöscht von Moderator:`,
-              value: `${interaction.user.tag}`,
+              value: `${interaction.user.username}`,
               inline: false
             },
             {

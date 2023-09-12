@@ -156,7 +156,7 @@ module.exports = {
             },
             {
               name: `Moderator:`,
-              value: interaction.user.tag,
+              value: interaction.user.username,
               inline: true
             }
           ]);
@@ -181,7 +181,7 @@ module.exports = {
             },
             {
               name: `Moderator:`,
-              value: interaction.user.tag,
+              value: interaction.user.username,
               inline: true
             },
             {
@@ -226,7 +226,7 @@ module.exports = {
           .setTitle(`⚡️ Moderation ⚡️`)
           .setDescription(
             `Timeout von User: ${member} entfernt ✅\n\nModerator: ${interaction
-              .user.tag}`
+              .user.username}`
           )
           .setColor(0x51ff00)
           .setTimestamp(Date.now())
@@ -239,7 +239,7 @@ module.exports = {
           .setTitle(`⚡️ Moderation ⚡️`)
           .setDescription(
             `Dein Timeout wurde entfernt. \nDu wurdest freigegeben ✅\n\nServer: "${servername}"\n\nModerator: ${interaction
-              .user.tag}`
+              .user.username}`
           )
           .addFields([
             {
@@ -249,7 +249,7 @@ module.exports = {
             },
             {
               name: `Moderator:`,
-              value: interaction.user.tag,
+              value: interaction.user.username,
               inline: true
             }
           ])

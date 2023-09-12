@@ -9,6 +9,9 @@ const {
 } = require("discord.js");
 
 const guildSettings = require("../../mysql/guildsRepository");
+const reportWaitMap = require("../../functions/warningSystem/reportWaitMap")
+
+
 
 module.exports = {
   data: new ContextMenuCommandBuilder()
@@ -17,17 +20,34 @@ module.exports = {
     .setDefaultMemberPermissions(PermissionFlagsBits.ViewChannel)
     .setDMPermission(false),
   async execute(interaction, client) {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       const { options } = interaction;
       const member = options.getMember("user");
 
       if (!member) {
-        await interaction.reply({ content: "❌ Der User ist nicht mehr auf dem Server ❌", ephemeral: true });
+        await interaction.reply({
+          content: "❌ Der User ist nicht mehr auf dem Server ❌",
+          ephemeral: true
+        });
         return resolve(null);
       }
 
+      let reportWaitMapStatus = await reportWaitMap.check(member, interaction)
+
+      if (reportWaitMapStatus === true) {
+        await interaction.reply({
+          content: `Der User wurde gerade von jemanden gemeldet.\nDie Moderatoren kümmern sich asap darum! Bitte habe ein wenig Geduld.\nMehrfachmeldugnen erschweren nur die Arbeit und führen zu keiner schnelleren Bearbeitung :)`,
+          ephemeral: true
+        });
+        return resolve(null);
+      }
+
+
       if (interaction.guild.ownerId === member.id) {
-        await interaction.reply({ content: "❌ Du kannst den Serverinhaber nicht reporten! ❌", ephemeral: true });
+        await interaction.reply({
+          content: "❌ Du kannst den Serverinhaber nicht reporten! ❌",
+          ephemeral: true
+        });
         return resolve(null);
       }
 
@@ -47,24 +67,27 @@ module.exports = {
       } catch (error) {}
 
       if (member.id === client.user.id) {
-        await interaction.reply({ content: '❌ Du kannst den Bot nicht reporten! ❌', ephemeral: true })
+        await interaction.reply({
+          content: "❌ Du kannst den Bot nicht reporten! ❌",
+          ephemeral: true
+        });
         return resolve(null);
       }
 
       const modal = new ModalBuilder()
         .setCustomId("userReport")
-        .setTitle(`User ${member.user.tag} melden!`);
+        .setTitle(`User ${member.displayName} melden!`);
 
       const textInput = new TextInputBuilder()
         .setCustomId("reportUserInput")
-        .setLabel("Warum möchtest du den User melden?")
+        .setLabel("Grund der Meldung? (max. 1024 Zeichen)")
         .setRequired(true)
         .setStyle(TextInputStyle.Paragraph);
 
       const reportedUserInput = new TextInputBuilder()
         .setCustomId("reportedUserInput")
         .setLabel("User der gemeldet wird:")
-        .setValue(`${member.user.tag}`)
+        .setValue(`${member.displayName}`)
         .setRequired(true)
         .setStyle(TextInputStyle.Short);
 

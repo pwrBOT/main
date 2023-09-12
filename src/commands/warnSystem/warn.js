@@ -89,7 +89,7 @@ module.exports = {
           },
           {
             name: `Moderator:`,
-            value: interaction.user.tag,
+            value: interaction.user.username,
             inline: true
           }
         ]);
@@ -153,7 +153,7 @@ module.exports = {
         interaction.guild,
         member,
         reason,
-        interaction.member.user.tag,
+        interaction.member.user.username,
         interaction.member.user.id
       );
       await warnSystem.autoModWarn(interaction.guild, member);

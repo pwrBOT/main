@@ -3,12 +3,12 @@ const usersRepository = require("../../mysql/usersRepository");
 const levelsRepository = require("../../mysql/levelsRepository");
 
 async function autoUserRoles(guild, member, oldLevel) {
-  return new Promise(async resolve => {
+  return new Promise(async (resolve) => {
     if (guild == null) {
       return resolve(null);
     }
 
-    if (!member){
+    if (!member) {
       return resolve(null);
     }
 
@@ -44,6 +44,18 @@ async function autoUserRoles(guild, member, oldLevel) {
     let currentLevel = await getUser.Level;
     let newRoleId = "";
     let oldRoleId = "";
+
+    let levelsystemRoleIds = [];
+    levelsystemRoleIds.push(levelSettings.level1);
+    levelsystemRoleIds.push(levelSettings.level2);
+    levelsystemRoleIds.push(levelSettings.level3);
+    levelsystemRoleIds.push(levelSettings.level4);
+    levelsystemRoleIds.push(levelSettings.level5);
+    levelsystemRoleIds.push(levelSettings.level6);
+    levelsystemRoleIds.push(levelSettings.level7);
+    levelsystemRoleIds.push(levelSettings.level8);
+    levelsystemRoleIds.push(levelSettings.level9);
+    levelsystemRoleIds.push(levelSettings.level10);
 
     if (currentUserXp < 100) {
       return resolve(null);
@@ -155,7 +167,7 @@ async function autoUserRoles(guild, member, oldLevel) {
       if (member.roles.cache.get(newRoleId)) {
       } else {
         let newRole = guild.roles.cache.get(newRoleId);
-        await member.roles.add(newRole).catch(error => {});
+        await member.roles.add(newRole).catch((error) => {});
 
         const rankChannel = levelSettings.rankChannel;
 
@@ -183,7 +195,7 @@ async function autoUserRoles(guild, member, oldLevel) {
 
           await guild.client.channels.cache
             .get(rankChannel)
-            .send({embeds: [embedBefoerderung] })
+            .send({ embeds: [embedBefoerderung] })
             .catch(console.error);
 
           const pingMember = await guild.client.channels.cache
@@ -192,14 +204,13 @@ async function autoUserRoles(guild, member, oldLevel) {
             .catch(console.error);
 
           try {
-            setTimeout(function() {
+            setTimeout(function () {
               pingMember.delete();
             }, 200);
           } catch (error) {}
 
           const loggingHandler = require("../../functions/fileLogging/loggingHandler");
-          const logText = `GUILD: ${member.guild
-            .id} | #RANK UP --> USER: ${member.displayName} (ID: ${member.id}) wurde zum ${newRole.name} ${statusText}`;
+          const logText = `GUILD: ${member.guild.id} | #RANK UP --> USER: ${member.displayName} (ID: ${member.id}) wurde zum ${newRole.name} ${statusText}`;
           loggingHandler.log(logText, "xP_logging");
         }
       }
@@ -213,12 +224,26 @@ async function autoUserRoles(guild, member, oldLevel) {
       return resolve(null);
     }
 
-    if (member.roles.cache.get(oldRoleId)) {
-      let oldRole = guild.roles.cache.get(oldRoleId);
-      await member.roles.remove(oldRole).catch(console.error);
-    } else {
-      return resolve(null);
+    function removeValue(value, index, arr) {
+      // If the value at the current array index matches the specified value (2)
+      if (value === newRoleId) {
+        // Removes the value from the original array
+        arr.splice(index, 1);
+        return true;
+      }
+      return false;
     }
+
+    levelsystemRoleIds.filter(removeValue);
+
+    levelsystemRoleIds.forEach(async (roleId) => {
+      if (member.roles.cache.get(roleId)) {
+        let oldRole = guild.roles.cache.get(roleId);
+        await member.roles.remove(oldRole).catch(console.error);
+      } else {
+        return resolve(null);
+      }
+    });
 
     return resolve(null);
   });

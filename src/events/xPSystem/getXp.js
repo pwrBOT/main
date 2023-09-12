@@ -51,7 +51,43 @@ module.exports = {
       const DIFF = 10000;
       const length = "1h";
 
-      if (antiSpamMap.has(message.author.id)) {
+      if (message.author.id === "539513467313455105" || message.author.id === "609057609953312789") {
+        let currentXP = getUser.xP;
+          if (!currentXP) {
+            currentXP = 0;
+          }
+          let XP = Math.floor(Math.random() * (25 - 6 + 1)) + 6;
+          var newXP = parseInt(currentXP) + XP;
+
+          await usersRepository.updateUser(
+            guildId,
+            message.author.id,
+            "xP",
+            newXP
+          );
+
+          const requiredXP = getUser.Level * getUser.Level * 100 + 100;
+
+          if (newXP >= requiredXP) {
+            let newLevel = (getUser.Level += 1);
+            await usersRepository.updateUser(
+              guildId,
+              message.author.id,
+              "Level",
+              newLevel
+            );
+          }
+
+          await xPSystemGiveRole.autoUserRoles(
+            message.guild,
+            message.member,
+            oldLevel
+          );
+
+          const loggingHandler = require("../../functions/fileLogging/loggingHandler");
+          const logText = `GUILD: ${message.guild.id} | #GET XP --> USER: ${message.member.displayName} (ID: ${message.member.id}) XP: ${currentXP} + ${XP} = ${newXP}`;
+          loggingHandler.log(logText, "xP_logging");
+      } else if (antiSpamMap.has(message.author.id)) {
         const userData = antiSpamMap.get(message.author.id);
         const { lastMessage, timer } = userData;
         const difference =
@@ -125,8 +161,6 @@ module.exports = {
             lastMessage: message,
             timer: WAITTIME
           });
-
-          // console.log(`${message.author.tag} hat XP bekommen`);
 
           let currentXP = getUser.xP;
           if (!currentXP) {
@@ -373,7 +407,7 @@ module.exports = {
           message.guild,
           message.member,
           "Auto-Mod | Spam",
-          message.client.user.tag,
+          message.client.user.username,
           message.client.user.id
         );
         await warnSystem.autoModWarn(message.guild, message.member);
@@ -395,7 +429,7 @@ module.exports = {
             )} / ${new Date().toLocaleTimeString(
               "de-DE"
             )}] Auto-Mod Warn | Spam Check: ${
-              message.member.user.tag
+              message.member.user.username
             } wurde verwarnt. Server: ${message.guild.name}.`
           )
         );

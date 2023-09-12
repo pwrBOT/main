@@ -117,8 +117,8 @@ module.exports = {
           return resolve(null);
         }
 
-        const eventStartTime = Date.parse(eventStart) / 1000 - 3600;
-        const eventEndTime = Date.parse(eventEnd) / 1000 - 3600;
+        const eventStartTime = Date.parse(eventStart) / 1000 - 7200;
+        const eventEndTime = Date.parse(eventEnd) / 1000 - 7200;
 
         // DEFINE EMBED
         const eventEmbed = new EmbedBuilder()

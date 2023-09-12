@@ -72,7 +72,7 @@ const eventEndCheck = async client => {
 
   if (allEvents) {
     allEvents.forEach(async event => {
-      if (event.eventEnd < new Date(Date.now() + 3600000)) {
+      if (event.eventEnd < new Date(Date.now() + 7200000)) {
         const channel = await client.channels.fetch(event.channelId).catch(error => {});
         const message = await channel.messages.fetch(event.messageId).catch(error => {});
         const embed = await message.embeds[0];
@@ -109,7 +109,7 @@ const eventEndCheck = async client => {
 
 const eventReminder = async client => {
   const allEvents = await eventRepository.getAllEvents();
-  const dateNow = new Date(Date.now() + 3600000).getTime();
+  const dateNow = new Date(Date.now() + 7200000).getTime();
 
   allEvents.forEach(async event => {
     const remindDate = event.eventStart - 3600000;
@@ -192,7 +192,7 @@ const eventReminder = async client => {
 
 const eventReminderNow = async client => {
   const allEvents = await eventRepository.getAllEvents();
-  const dateNow = new Date(Date.now() + 3600000).getTime();
+  const dateNow = new Date(Date.now() + 7200000).getTime();
 
   allEvents.forEach(async event => {
     const remindDate = event.eventStart - 900000;

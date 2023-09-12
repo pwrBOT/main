@@ -71,21 +71,26 @@ module.exports = {
 
       const reportedMessageEmbed = new EmbedBuilder()
         .setTitle(`⚡️ Report System ⚡️`)
-        .setDescription(`Eine Nachricht von ${member} wurde soeben gemeldet.`)
+        .setDescription(`Eine Nachricht von ${member.displayName} (${member}) wurde soeben gemeldet.`)
         .addFields([
-          {
-            name: `Beschwerdeführer:`,
-            value: `${interaction.member}`,
-            inline: false
-          },
           {
             name: `Nachricht:`,
             value: `${messageContent}\n\n[---> Zur Nachricht](${message.url})`,
             inline: false
+          },
+          {
+            name: `Channel:`,
+            value: `${message.channel}`,
+            inline: true
+          },
+          {
+            name: `Beschwerdeführer:`,
+            value: `${interaction.member.displayName} (${interaction.member})`,
+            inline: true
           }
         ])
         .setThumbnail(client.user.displayAvatarURL())
-        .setColor(0x51ff00)
+        .setColor(0xff6600)
         .setTimestamp(Date.now())
         .setFooter({
           iconURL: client.user.displayAvatarURL(),

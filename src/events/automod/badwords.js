@@ -104,13 +104,13 @@ module.exports = {
         )} / ${new Date().toLocaleTimeString(
           "de-DE"
         )}] AUTO MOD BADWORD | Nachricht (${message.content}) von ${message
-          .member.user.tag} gelöscht. Server: ${message.guild.name} (${message
+          .member.user.username} gelöscht. Server: ${message.guild.name} (${message
           .guild.id}).`;
         loggingHandler.log(logText, "autoMod");
 
         await userlogRepository.addLog(
           message.guild.id,
-          message.member.user.tag,
+          message.member.user.username,
           "BADWORD",
           "AUTOMOD",
           message.content,
@@ -326,7 +326,7 @@ module.exports = {
           message.guild,
           message.member,
           "Auto-Mod | Bad Word",
-          message.client.user.tag,
+          message.client.user.username,
           message.client.user.id
         );
         await warnSystem.autoModWarn(message.guild, message.member);

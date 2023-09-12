@@ -1,5 +1,6 @@
 const userlogRepository = require("../../mysql/userlogRepository");
 const warnsRepository = require("../../mysql/warnsRepository");
+const conspicuousUserRepository = require("../../mysql/conspicuousUserRepository");
 
 const getUserVCActivity = async (member, guild) => {
   return new Promise(async (resolve) => {
@@ -99,7 +100,28 @@ const getVoiceTime = (userData) => {
   return totalVoiceTime;
 };
 
+const getconspicuousUserEntries = async (member) =>{
+  let conspicuousUserText = "";
+  let conspicuousUserEntries = await conspicuousUserRepository.getEntries(member, "active", -1);
+
+  if (conspicuousUserEntries.length === 0) {
+    conspicuousUserText = `Der User hat Einträge!`;
+  } else {
+    conspicuousUserEntries.forEach((entry) => {
+      const date = new Date(entry.timestamp).toLocaleDateString("de-DE");
+      const time = new Date(entry.timestamp).toLocaleTimeString("de-DE", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+      const spacer = `\u00A0\u00A0\u00A0\u00A0`;
+      conspicuousUserText += `⚠️ ${date}:${spacer}${entry.reason}\n`;
+    });
+  }
+  return conspicuousUserText;
+}
+
 module.exports.getUserVCActivity = getUserVCActivity;
 module.exports.getCurrentWarns = getCurrentWarns;
 module.exports.getOldWarns = getOldWarns;
 module.exports.getVoiceTime = getVoiceTime;
+module.exports.getconspicuousUserEntries = getconspicuousUserEntries;

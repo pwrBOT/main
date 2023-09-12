@@ -67,13 +67,13 @@ module.exports = {
         .setTimestamp(Date.now());
 
       if (titelbild) {
-        announcement.setImage(titelbild.url);
+        // announcement.setImage(titelbild.url);
 
-        /** 
+        
         const upload = await imgUpload.upload(titelbild.url);
 
         if (upload.success == true) {
-          announcement.setImage(upload.link);
+          announcement.setImage(upload.data.link);
         } else {
           await interaction.reply({
             content: "Das Bild konnte aus einem unbestimmten Grund nicht hochgeladen werden. Die Ankündigung wurde nicht veröffentlicht!",
@@ -81,7 +81,7 @@ module.exports = {
           });
           return resolve(null)
         }
-        */
+        
       }
 
       if (text) {

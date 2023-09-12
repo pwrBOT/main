@@ -129,7 +129,7 @@ module.exports = {
             },
             {
               name: `Moderator:`,
-              value: `${user.tag}`,
+              value: `${user.username}`,
               inline: false
             }
           ]);
@@ -203,7 +203,7 @@ module.exports = {
             },
             {
               name: `Moderator:`,
-              value: `${user.tag}`,
+              value: `${user.username}`,
               inline: false
             }
           ]);

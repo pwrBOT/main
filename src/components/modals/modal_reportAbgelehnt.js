@@ -38,7 +38,9 @@ module.exports = {
         .setDisabled(true);
 
       const newEmbed = new EmbedBuilder(interaction.message.embeds[0]);
-      newEmbed.addFields([
+      newEmbed
+      .setColor(0x51ff00)
+      .addFields([
         {
           name: `Moderator Abschlussmeldung:`,
           value: `${modMessage}`,

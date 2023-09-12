@@ -36,7 +36,7 @@ const getLogsByAction = async (member, action, limit) => {
 const getLogsByChannelId = async (guildId, channelId, limit=-1) => {
   return new Promise((resolve) => {
     mysqlHelper
-      .query('SELECT * FROM powerbot_userlog WHERE guildId = ? AND oldState = ? OR newState = ? ORDER BY ID DESC', [guildId, channelId, channelId], limit)
+      .query('SELECT * FROM powerbot_userlog WHERE guildId = ? AND type = "VC" ORDER BY ID DESC', [guildId, channelId, channelId], limit)
       .then( (result) => {
         // GIBT DEN ALLE WERTE DES ARRAYS ZURÜCK
         resolve(result ?? null);

@@ -107,7 +107,7 @@ module.exports = {
           },
           {
             name: `Moderator:`,
-            value: interaction.user.tag,
+            value: interaction.user.username,
             inline: true
           }
         ]);
@@ -130,7 +130,7 @@ module.exports = {
           },
           {
             name: `Moderator:`,
-            value: interaction.user.tag,
+            value: interaction.user.username,
             inline: true
           },
           {

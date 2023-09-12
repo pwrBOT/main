@@ -2,7 +2,8 @@ const {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  EmbedBuilder
+  EmbedBuilder,
+  PermissionsBitField
 } = require("discord.js");
 
 module.exports = {
@@ -34,15 +35,6 @@ module.exports = {
       const member = await interaction.guild.members.fetch(memberId);
       const oldNickname = member.displayName;
       let failed = false;
-
-      await member
-        .setNickname(
-          newNickname,
-          `Wunsch des Users | Mod: ${interaction.member.displayName}`
-        )
-        .catch(async (error) => {
-          failed = true;
-        });
 
       const buttonErledigt = new ButtonBuilder()
         .setCustomId("nicknameChange_decline")

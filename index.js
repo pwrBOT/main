@@ -55,6 +55,7 @@ client.comandGlobalArray = [];
 client.commandArray = [];
 client.ldsCommandArray = [];
 client.pwrCommandArray = [];
+client.ggnCommandArray = [];
 
 client.buttons = new Collection();
 client.selectMenus = new Collection();

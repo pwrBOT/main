@@ -39,7 +39,7 @@ module.exports = {
         const welcomeMessage = "Herzlich Willkommen";
         await welcomeBanner.createWelcomeBanner(member, welcomeMessage);
 
-        const logText2 = `[MYSQL DATABASE] User (${member.user.username}#${member.user.discriminator} | ID: ${member.user.id}) bei Guild: ${member.guild.id} erfolgreich angelegt!`;
+        const logText2 = `[MYSQL DATABASE] User (${member.user.username} | ID: ${member.user.id}) bei Guild: ${member.guild.id} erfolgreich angelegt!`;
         loggingHandler.log(logText2, "memberAdd");
 
         await addCommunityRole(member);
@@ -52,7 +52,7 @@ module.exports = {
         const welcomeMessage = "Willkommen zurück";
         await welcomeBanner.createWelcomeBanner(member, welcomeMessage);
 
-        const logText3 = `[MYSQL DATABASE] User (${member.user.username}#${member.user.discriminator} | ID: ${member.user.id}) ist bereits bei Guild: ${member.guild.id} registriert!`;
+        const logText3 = `[MYSQL DATABASE] User (${member.user.username} | ID: ${member.user.id}) ist bereits bei Guild: ${member.guild.id} registriert!`;
         loggingHandler.log(logText3, "memberAdd");
 
         await addCommunityRole(member);

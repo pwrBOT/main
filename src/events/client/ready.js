@@ -129,7 +129,7 @@ module.exports = {
           .addFields([
             {
               name: `Eingeloggt als:`,
-              value: `${client.user.tag}`,
+              value: `${client.user.username}`,
               inline: false
             },
             {
@@ -149,7 +149,7 @@ module.exports = {
         console.log(
           `\x1b[32m
             #########################################################
-            Online! ${client.user.tag} is now logged in and online!
+            Online! ${client.user.username} is now logged in and online!
             #########################################################
             \x1b[0m`
         );

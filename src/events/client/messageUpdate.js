@@ -6,12 +6,12 @@ module.exports = {
   name: "messageUpdate",
   once: false,
   async execute(oldMessage, newMessage) {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       if (!oldMessage || !newMessage) {
         return resolve(null);
       }
 
-      if (!oldMessage.guild){
+      if (!oldMessage.guild) {
         return resolve(null);
       }
 
@@ -54,10 +54,7 @@ module.exports = {
         oldMessage.content.length >= 1024 ||
         newMessage.content.length >= 1024
       ) {
-        const logText = `GUILD: ${oldMessage.guild.name} (${oldMessage.guild
-          .id}) | Nachricht (ID: ${oldMessage.id}) von ${oldMessage.author
-          .username} (${oldMessage.author.id}) in ${oldMessage.channel
-          .name} bearbeitet!\n----> Alte Nachricht: ${oldMessage.content}\n-----> Neue Nachricht: ${newMessage.content}\n`;
+        const logText = `GUILD: ${oldMessage.guild.name} (${oldMessage.guild.id}) | Nachricht (ID: ${oldMessage.id}) von ${oldMessage.author.username} (${oldMessage.author.id}) in ${oldMessage.channel.name} bearbeitet!\n----> Alte Nachricht: ${oldMessage.content}\n-----> Neue Nachricht: ${newMessage.content}\n`;
         loggingHandler.log(logText, "messageUpdate");
         return resolve(null);
       }
@@ -71,6 +68,11 @@ module.exports = {
       } else if (
         oldMessage.content.length === 0 ||
         newMessage.content.length === 0
+      ) {
+        return resolve(null);
+      } else if (
+        oldMessage.content.length >= 1024 ||
+        newMessage.content.length >= 1024
       ) {
         return resolve(null);
       } else {
@@ -98,10 +100,7 @@ module.exports = {
         });
 
       try {
-        const logText = `GUILD: ${oldMessage.guild.name} (${oldMessage.guild
-          .id}) | Nachricht (ID: ${oldMessage.id}) von ${oldMessage.author
-          .username} (${oldMessage.author.id}) in ${oldMessage.channel
-          .name} bearbeitet!\n----> Alte Nachricht: ${oldMessage.content}\n-----> Neue Nachricht: ${newMessage.content}\n`;
+        const logText = `GUILD: ${oldMessage.guild.name} (${oldMessage.guild.id}) | Nachricht (ID: ${oldMessage.id}) von ${oldMessage.author.username} (${oldMessage.author.id}) in ${oldMessage.channel.name} bearbeitet!\n----> Alte Nachricht: ${oldMessage.content}\n-----> Neue Nachricht: ${newMessage.content}\n`;
         loggingHandler.log(logText, "messageUpdate");
       } catch (error) {}
 

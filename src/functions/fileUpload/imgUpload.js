@@ -14,10 +14,8 @@ const upload = async imgLink => {
     image: imgLink,
     type: "stream",
   });
-
-  console.log(uploadedFile)
   
-  return uploadedFile.data
+  return uploadedFile
 };
 
 module.exports.upload = upload;

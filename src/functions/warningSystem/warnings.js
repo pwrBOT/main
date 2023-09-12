@@ -292,7 +292,7 @@ const autoModWarn = async (guild, member) => {
           await tempCommandRepository.addTempCommandUser(
             guild.id,
             member.id,
-            member.user.tag,
+            member.user.username,
             "AutoMod - Zu viele Warns",
             "Auto Mod",
             " ",
@@ -525,7 +525,7 @@ const autoModWarn = async (guild, member) => {
           await tempCommandRepository.addTempCommandUser(
             guild.id,
             member.id,
-            member.user.tag,
+            member.user.username,
             "AutoMod - Zu viele Warns",
             "Auto Mod",
             " ",
@@ -758,7 +758,7 @@ const autoModWarn = async (guild, member) => {
           await tempCommandRepository.addTempCommandUser(
             guild.id,
             member.id,
-            member.user.tag,
+            member.user.username,
             "AutoMod - Zu viele Warns",
             "Auto Mod",
             " ",

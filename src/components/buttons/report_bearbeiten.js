@@ -68,7 +68,7 @@ module.exports = {
       await reportRepository.updateReport(
         interaction.guild.id,
         reportId,
-        `In process by ${interaction.user.tag}`,
+        `In process by ${interaction.user.username}`,
         interaction.user.id,
         "-"
       );

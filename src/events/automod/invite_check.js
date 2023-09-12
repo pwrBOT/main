@@ -238,14 +238,14 @@ module.exports = {
             )} / ${new Date().toLocaleTimeString(
               "de-DE"
             )}] AUTO MOD INVITE | Nachricht (${message.content}) von ${
-              message.member.user.tag
+              message.member.user.username
             } gelöscht. Server: ${message.guild.name}.`
           )
         );
 
         await userlogRepository.addLog(
           message.guild.id,
-          message.member.user.tag,
+          message.member.user.username,
           "INVITECHECK",
           "AUTOMOD",
           message.content,
@@ -496,7 +496,7 @@ module.exports = {
           message.guild,
           message.member,
           "Auto-Mod | Invite Check",
-          message.client.user.tag,
+          message.client.user.username,
           message.client.user.id
         );
         await warnSystem.autoModWarn(message.guild, message.member);
@@ -518,7 +518,7 @@ module.exports = {
             )} / ${new Date().toLocaleTimeString(
               "de-DE"
             )}] AUTO MOD INVITE | User ${
-              message.member.user.tag
+              message.member.user.username
             } wurde verwarnt. Server: ${message.guild.name}.`
           )
         );

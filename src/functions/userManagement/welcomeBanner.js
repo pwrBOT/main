@@ -117,8 +117,7 @@ const createWelcomeBanner = async (member, welcomeMessage) => {
 
     context.fillStyle = "#ffffff";
 
-    const memberDisplayName = `${member.user.username}#${member.user
-      .discriminator}`;
+    const memberDisplayName = `${member.displayName}`;
 
     context.textAlign = "center";
     context.font = "26px Roboto Light";
@@ -135,7 +134,7 @@ const createWelcomeBanner = async (member, welcomeMessage) => {
     ///// links - oben - breite - höhe >> links + radius = links | oben + radius = pfad oben
     context.drawImage(avatar, 270, 50, 160, 160);
 
-    const filenname = `welcome_${member.user.username}.png`;
+    const filenname = `welcome_${member.displayName}.png`;
     const attachment = new AttachmentBuilder(await canvas.encode("png"), {
       name: filenname
     });

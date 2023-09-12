@@ -28,7 +28,7 @@ module.exports = {
       await reportRepository.updateReport(
         interaction.guild.id,
         reportId,
-        `Resolved ${interaction.user.tag}`,
+        `Resolved ${interaction.user.username}`,
         interaction.user.id,
         modMessage
       );
@@ -40,7 +40,9 @@ module.exports = {
         .setDisabled(true);
 
       const newEmbed = new EmbedBuilder(interaction.message.embeds[0]);
-      newEmbed.addFields([
+      newEmbed
+      .setColor(0x51ff00)
+      .addFields([
         {
           name: `Moderator Abschlussmeldung:`,
           value: `${modMessage}`,

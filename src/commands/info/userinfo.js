@@ -62,6 +62,7 @@ module.exports = {
         const warnsText = await userInfos.getCurrentWarns(member);
         const oldWarnsText = await userInfos.getOldWarns(member);
         const userVCActivity = await userInfos.getUserVCActivity(member, guild);
+        const conspicuousUserEntries = await userInfos.getconspicuousUserEntries(member);
 
 
         const userembed = new EmbedBuilder()
@@ -79,7 +80,7 @@ module.exports = {
           .addFields([
             {
               name: `Username:`,
-              value: `${member.user.username} #${member.user.discriminator}`,
+              value: `${member.user.username} (${member.displayName})`,
               inline: true
             },
             {
@@ -161,6 +162,11 @@ module.exports = {
             {
               name: `Abgelaufene / gelöschte Verwarnungen:`,
               value: `${oldWarnsText}`,
+              inline: false
+            },
+            {
+              name: `Verdächtiger User Einträge:`,
+              value: `${conspicuousUserEntries}`,
               inline: false
             },
             {

@@ -74,7 +74,7 @@ module.exports = {
         reportsEmbed.addFields([
           {
             name: `Angefordert von:`,
-            value: `${interaction.user.tag}`,
+            value: `${interaction.user.username}`,
             inline: false
           }
         ]);

@@ -234,7 +234,7 @@ module.exports = {
             },
             {
               name: `Guild Owner:`,
-              value: `${guildOwner.user.tag}\n${guildOwner.user.id}`,
+              value: `${guildOwner.user.username}\n${guildOwner.user.id}`,
               inline: true
             },
             {

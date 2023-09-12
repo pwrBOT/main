@@ -3,7 +3,7 @@ const mysqlHelper = require("./mysqlHelper");
 const addUser = async (guildId, message, userAdd) => {
   return new Promise((resolve) => {
     const userId = message.id;
-    const userName = `${message.username}#${message.discriminator}`;
+    const userName = `${message.username}`;
     const tabelle = `${guildId}_users`;
     let userAddDate = "";
     if (!userAdd) {

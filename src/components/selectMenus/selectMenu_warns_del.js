@@ -68,7 +68,7 @@ module.exports = {
           },
           {
             name: `Gelöscht von Moderator:`,
-            value: `${interaction.user.tag}`,
+            value: `${interaction.user.username}`,
             inline: true
           },
           {
@@ -95,7 +95,7 @@ module.exports = {
           },
           {
             name: `Gelöscht von Moderator:`,
-            value: `${interaction.user.tag}`,
+            value: `${interaction.user.username}`,
             inline: true
           },
           {

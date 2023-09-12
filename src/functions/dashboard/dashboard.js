@@ -7,6 +7,7 @@ const embedsRepository = require("../../mysql/embedsRepository");
 const autoModRepository = require("../../mysql/autoModRepository");
 const guildsRepository = require("../../mysql/guildsRepository");
 const powerbotManagement = require("../../mysql/powerbotManagement");
+const teamlistRepository = require("../../mysql/teamlistRepository");
 const os = require("os");
 let values = [0, null, null, null, null, null, null, null, null, null];
 
@@ -36,6 +37,8 @@ const init = async (client) => {
 
   await DBD.useLicense(config.dbd.license);
   DBD.Dashboard = DBD.UpdatedClass();
+
+  const Handler = new DBD.Handler();
 
   const Dashboard = new DBD.Dashboard({
     port: config.dbd.port,
@@ -93,6 +96,7 @@ const init = async (client) => {
     minimizedConsoleLogs: true,
     bot: client,
     theme: SoftUI({
+      storage: Handler,
       locales: {
         deDE: {
           name: "Deutsch",
@@ -779,8 +783,7 @@ const init = async (client) => {
           {
             optionId: "picturyOnlyChannel",
             optionName: "",
-            optionDescription:
-              "Channels in denen nur Bilder erlaubt sind:",
+            optionDescription: "Channels in denen nur Bilder erlaubt sind:",
             optionType: DBD.formTypes.channelsMultiSelect(
               false,
               true,
@@ -826,8 +829,7 @@ const init = async (client) => {
           {
             optionId: "commandOnlyChannel",
             optionName: "",
-            optionDescription:
-              "Channels in denen nur Commands erlaubt sind:",
+            optionDescription: "Channels in denen nur Commands erlaubt sind:",
             optionType: DBD.formTypes.channelsMultiSelect(
               false,
               true,
@@ -873,8 +875,7 @@ const init = async (client) => {
           {
             optionId: "noPicturesChannel",
             optionName: "",
-            optionDescription:
-              "Channels in denen keine Bilder erlaubt sind:",
+            optionDescription: "Channels in denen keine Bilder erlaubt sind:",
             optionType: DBD.formTypes.channelsMultiSelect(
               false,
               true,
@@ -914,6 +915,61 @@ const init = async (client) => {
                   newDataString
                 );
               }
+              return;
+            }
+          },
+          /// ####### Team-Liste ####### \\\\
+          {
+            optionId: "teamlistStatus",
+            optionName: "",
+            optionDescription:
+              "Auto-Update der Team-Liste aktivieren? (Muss zuerst per /teamlist add eingerichtet werden)",
+            optionType: DBD.formTypes.switch(false),
+            themeOptions: {
+              minimalbutton: {
+                last: true
+              }
+            },
+            getActualSet: async ({ guild }) => {
+              let data = await teamlistRepository.getTeamlistSettings(guild);
+
+              if (data) {
+                if (data.status === 1) return true;
+              } else return false;
+            },
+            setNew: async ({ guild, newData }) => {
+              let data = await teamlistRepository.getTeamlistSettings(guild);
+
+              if (!newData) newData = null;
+
+              if (!data) {
+                return false;
+              } else {
+                const property = "status";
+                await teamlistRepository.updateTeamlistSettings(
+                  guild,
+                  property,
+                  newData
+                );
+              }
+              return;
+            }
+          },
+          {
+            optionId: "teamlistChannel",
+            optionName: "",
+            optionDescription: "Team-Übersicht Channel (Nur zur Übersicht - Kann nicht geändert werden):",
+            optionType: DBD.formTypes.channelsSelect(
+              false,
+              (channelTypes = [ChannelType.GuildText])
+            ),
+            getActualSet: async ({ guild }) => {
+              let data = await teamlistRepository.getTeamlistSettings(guild);
+
+              if (data) return data.teamlistChannelId;
+              else return null;
+            },
+            setNew: async ({ guild, newData }) => {
               return;
             }
           },
@@ -1111,7 +1167,7 @@ const init = async (client) => {
                 "communityrole"
               );
 
-              if (!newData) newData = []
+              if (!newData) newData = [];
 
               if (!data) {
                 const property = "communityrole";
@@ -1594,7 +1650,7 @@ const init = async (client) => {
             setNew: async ({ guild, newData }) => {
               let data = levelsRepository.getlevelSettings(guild);
 
-              if (!newData) newData = []
+              if (!newData) newData = [];
 
               if (!data) {
                 const column = "channelTimeXPCategoryIds";
@@ -1652,7 +1708,7 @@ const init = async (client) => {
             setNew: async ({ guild, newData }) => {
               let data = levelsRepository.getlevelSettings(guild);
 
-              if (!newData) newData = []
+              if (!newData) newData = [];
 
               if (!data) {
                 const column = "channelXpBoostIds";

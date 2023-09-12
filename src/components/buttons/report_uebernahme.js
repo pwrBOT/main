@@ -11,7 +11,7 @@ module.exports = {
     name: `report_uebernahme`
   },
   async execute(interaction, client) {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       await interaction.deferReply({
         ephemeral: true,
         fetchReply: true
@@ -34,7 +34,7 @@ module.exports = {
       let isModerator = false;
 
       const modRoleIds = JSON.parse(modRoleId.value);
-      modRoleIds.forEach(modRoleId => {
+      modRoleIds.forEach((modRoleId) => {
         if (interaction.member.roles.cache.has(modRoleId)) {
           isModerator = true;
         }
@@ -59,7 +59,7 @@ module.exports = {
       await reportRepository.updateReport(
         interaction.guild.id,
         reportId,
-        `Taken from ${interaction.user.tag}`,
+        `Taken from ${interaction.user.username}`,
         interaction.user.id,
         "-"
       );
@@ -87,25 +87,56 @@ module.exports = {
         .setLabel("Report ablehnen")
         .setStyle(ButtonStyle.Danger);
 
-      await interaction.message.edit({
-        components: [
-          new ActionRowBuilder().addComponents([
-            buttonUebernahme,
-            buttonBearbeiten,
-            buttonErledigt,
-            buttonAbgelehnt
-          ])
-        ]
-      });
+      const newEmbed = new EmbedBuilder(interaction.message.embeds[0]);
+      newEmbed.setColor(0xffd700)
 
-      const reportedUserId = await interaction.message.embeds[0].description
+      if (interaction.guild.premiumTier === 3) {
+
+        await interaction.message.edit({
+          embeds: [newEmbed],
+          components: [
+            new ActionRowBuilder().addComponents([
+              buttonUebernahme,
+              buttonBearbeiten,
+              buttonErledigt,
+              buttonAbgelehnt
+            ])
+          ]
+        });
+
+        const reportedUserId = await interaction.message.embeds[0].description
         .split("<@")[1]
         .split(">")[0];
 
-      await interaction.editReply({
-        ephemeral: true,
-        content: `✅ Du hast den Report übernommen!\nBearbeite nun den Report oder nimm vorab mit dem Melder Kontakt auf um weitere Details abzufragen.`
-      });
+        await interaction.editReply({
+          ephemeral: true,
+          content: `✅ Du hast den Report übernommen!\nBearbeite nun den Report oder nimm vorab mit dem Melder Kontakt auf um weitere Details abzufragen.`
+        });
+
+      } else {
+
+        await interaction.message.edit({
+          embeds: [newEmbed],
+          components: [
+            new ActionRowBuilder().addComponents([
+              buttonUebernahme,
+              buttonErledigt,
+              buttonAbgelehnt
+            ])
+          ]
+        });
+
+        const reportedUserId = await interaction.message.embeds[0].description
+        .split("<@")[1]
+        .split(">")[0];
+
+        await interaction.editReply({
+          ephemeral: true,
+          content: `✅ Du hast den Report übernommen!\nBearbeite nun den Report oder nimm vorab mit dem Melder Kontakt auf um weitere Details abzufragen.\n\n*Hinweis: Private Threads sind bei deinem Server nicht verfügbar. Es kann somit kein Thread erstellt werden (Server Boost Level 3 erforderlich)*`
+        });
+      }
+
+      
       return resolve(null);
     });
   }
