@@ -140,7 +140,7 @@ module.exports = {
 
         const length = "1h";
         const guildsRepository = require("../../mysql/guildsRepository");
-        const embedInfo = await guildsRepository.getGuildSetting(
+        let embedInfo = await guildsRepository.getGuildSetting(
           message.guild,
           "embedinfo"
         );

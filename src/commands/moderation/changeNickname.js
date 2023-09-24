@@ -62,7 +62,7 @@ module.exports = {
           }
 
           await interaction.editReply({
-            content: `Dein Nickname wurde geändert.\nAlt: ${member.displayName}\nNeu: ${newNickname}`,
+            content: `Dein Nickname wurde geändert.`,
             ephemeral: true
           });
           return resolve(null);
