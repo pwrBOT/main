@@ -77,34 +77,33 @@ const generateImage = async (interaction, member, guild, guildMember) => {
     }
 
     var backgroundImg = "";
+
     const rankBannerPictureLink = await guildsRepository.getGuildSetting(
       guild,
       "rankBannerPictureLink"
     );
-    if (rankBannerPictureLink) {
-      if (isImage(rankBannerPictureLink.value)) {
-        backgroundImg = rankBannerPictureLink.value;
-      } else {
-        backgroundImg =
-          "./src/components/canvas/img/welcome/powerbot_rankcard.jpg";
-      }
+
+    if (rankBannerPictureLink && isImage(rankBannerPictureLink?.value)) {
+      backgroundImg = rankBannerPictureLink.value;
     } else {
       backgroundImg =
         "./src/components/canvas/img/welcome/powerbot_rankcard.jpg";
     }
 
+
     const canvas = Canvas.createCanvas(700, 250);
     const context = canvas.getContext("2d");
-
-    // draw in the background
     const background = await Canvas.loadImage(backgroundImg);
+
     context.drawImage(background, 0, 0, canvas.width, canvas.height);
 
+
     const avURL = member.displayAvatarURL({
-        extension: "png",
-        size: av.size,
-        dynamic: false
-      })
+      extension: "png",
+      size: av.size,
+      dynamic: false
+    })
+
     const avatar = await Canvas.loadImage(await avURL);
 
     const memberDisplayNameRaw = `${guildMember.displayName}`;
@@ -163,17 +162,28 @@ const generateImage = async (interaction, member, guild, guildMember) => {
     context.strokeStyle = "black";
     context.strokeRect(215, 215, 350, 0);
 
+    let xpToNextLevel = 0
+    let currentUserLevelXP = 0
+
+    if (currentLevel == 0) {
+      xpToNextLevel = nextLevelXP;
+      currentUserLevelXP = currentUserXp;
+    } else {
+      xpToNextLevel = nextLevelXP - ((((currentLevel - 1) * (currentLevel - 1)) * 100 + 100));
+      currentUserLevelXP = currentUserXp - ((((currentLevel - 1) * (currentLevel - 1)) * 100 + 100));
+    }
+
     // Bar Filled
     context.strokeStyle = "#a7b9d7";
-    context.strokeRect(215, 215, 350 * currentUserXp / nextLevelXP, 0);
+    context.strokeRect(215, 215, 350 * currentUserLevelXP / xpToNextLevel, 0);
 
     context.font = "18px Roboto Regular";
     context.fillStyle = "#444444";
-    context.fillText(`XP: ${currentUserXp} / ${nextLevelXP}`, 300, 221);
+    context.fillText(`XP: ${currentUserLevelXP} / ${xpToNextLevel}`, 300, 221);
 
     context.fillStyle = "#ffffff";
-    context.font = "12px Roboto Regular";
-    context.fillText(`LEVEL: ${currentLevel}`, 500, 195);
+    context.font = "10px Roboto Regular";
+    context.fillText(`LEVEL: ${currentLevel} | XP-GESAMT: ${currentUserXp}`, 450, 195);
 
     // Pick up the pen
     context.beginPath();

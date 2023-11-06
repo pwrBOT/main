@@ -87,10 +87,11 @@ module.exports = {
       let leaderboardUsername = "";
       let leaderboardXP = "";
 
-      await sortedUsers.slice(0, 25).forEach(async (user, index) => {
+      await sortedUsers.slice(0, 30).forEach(async (user, index) => {
         const userIndex = index + 1;
+        const guildMember = await interaction.guild.members.cache.get(user.userId)
         leaderboardIndex += `${userIndex}\n`;
-        leaderboardUsername += `${user.userName}\n`;
+        leaderboardUsername += `${guildMember.displayName}\n`;
 
         if (user.totalVoiceTime == 0) {
           leaderboardXP += `${user.xP} XP\t/\t"-"\n`;

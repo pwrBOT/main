@@ -24,7 +24,7 @@ module.exports = {
         if (tempChannelCheckTemp) {
           tempChannelToDelete = await oldState.guild.channels
             .fetch(tempChannelCheckTemp.guildChannelId)
-            .catch((error) => {});
+            .catch((error) => { });
 
           if (tempChannelToDelete) {
             if (tempChannelToDelete.members.size === 0) {
@@ -73,28 +73,30 @@ module.exports = {
 
           try {
             setTimeout(() => member.voice.setChannel(voiceChannel), 200);
-          } catch (error) {}
+          } catch (error) { }
 
-          setTimeout(async () => {
-            if (tempChannelCheck.giveUserPermission == "yes") {
-              await voiceChannel.permissionOverwrites
-                .edit(member, {
-                  ManageChannels: true,
-                  MoveMembers: true,
-                  ManageMessages: true,
-                  MuteMembers: false,
-                  ViewChannel: true,
-                  Connect: true,
-                  Speak: true,
-                  Stream: true
-                })
-                .catch((error) => {});
-            }
-          }, 2000);
+          try {
+            setTimeout(async () => {
+              if (tempChannelCheck.giveUserPermission == "yes") {
+                await voiceChannel.permissionOverwrites
+                  .edit(member, {
+                    ManageChannels: true,
+                    MoveMembers: true,
+                    ManageMessages: true,
+                    MuteMembers: false,
+                    ViewChannel: true,
+                    Connect: true,
+                    Speak: true,
+                    Stream: true
+                  })
+                  .catch((error) => { });
+              }
+            }, 2000);
+          } catch (error) { }
 
           await tempChannelsRepository.addTempVoiceChannel(
-            guild.id,
-            voiceChannel.id,
+            guild?.id,
+            voiceChannel?.id,
             "temp",
             newChannelName,
             member.user.username,
@@ -108,7 +110,7 @@ module.exports = {
         setTimeout(function () {
           tempChannelToDelete
             .delete("del temp channel")
-            .catch((error) => {})
+            .catch((error) => { })
             .then(
               tempChannelsRepository
                 .deleteTempVoiceChannel(guild.id, oldState.channelId, "temp")

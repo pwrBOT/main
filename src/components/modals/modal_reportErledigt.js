@@ -39,21 +39,20 @@ module.exports = {
         .setStyle(ButtonStyle.Success)
         .setDisabled(true);
 
+      const buttonLinkToThread = new ButtonBuilder()
+        .setLabel(`Zum Thread`)
+        .setStyle(ButtonStyle.Link)
+
       const newEmbed = new EmbedBuilder(interaction.message.embeds[0]);
       newEmbed
-      .setColor(0x51ff00)
-      .addFields([
-        {
-          name: `Moderator Abschlussmeldung:`,
-          value: `${modMessage}`,
-          inline: false
-        }
-      ]);
-
-      await interaction.message.edit({
-        embeds: [newEmbed],
-        components: [new ActionRowBuilder().addComponents(buttonErledigt)]
-      });
+        .setColor(0x51ff00)
+        .addFields([
+          {
+            name: `Moderator Abschlussmeldung:`,
+            value: `${modMessage}`,
+            inline: false
+          }
+        ]);
 
       const reportErledigtEmbed = new EmbedBuilder()
         .setTitle(`⚡️ Reporting-System ⚡️`)
@@ -97,8 +96,8 @@ module.exports = {
         const reporter = await interaction.guild.members.fetch(
           reportData.reporterId
         );
-        reporter.send({ embeds: [reportErledigtEmbed] }).catch(error => {});
-      } catch (error) {}
+        reporter.send({ embeds: [reportErledigtEmbed] }).catch(error => { });
+      } catch (error) { }
 
       // LOCK AND ARCHIVE PRIVATE THREAD \\
       const modThreadAreaId = await guildsRepository.getGuildSetting(
@@ -138,6 +137,8 @@ module.exports = {
         return resolve(null);
       }
 
+      buttonLinkToThread.setURL(thread.url)
+
       if (thread.archived === true) {
         await interaction.reply({
           ephemeral: true,
@@ -152,12 +153,17 @@ module.exports = {
       await thread.setAutoArchiveDuration(ThreadAutoArchiveDuration.OneDay);
 
       setTimeout(function () {
-        thread.setArchived(true).catch((error) => {});
+        thread.setArchived(true).catch((error) => { });
       }, 5400000);
 
       await interaction.reply({
         ephemeral: true,
         content: `✅ Du hast den Report erfolgreich erledigt!`
+      });
+
+      await interaction.message.edit({
+        embeds: [newEmbed],
+        components: [new ActionRowBuilder().addComponents(buttonErledigt, buttonLinkToThread)]
       });
 
       // LOCK AND ARCHIVE PRIVATE THREAD END \\

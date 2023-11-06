@@ -91,6 +91,10 @@ module.exports = {
         .setStyle(ButtonStyle.Primary)
         .setDisabled(false);
 
+      const buttonLinkToThread = new ButtonBuilder()
+        .setLabel(`Zum Thread`)
+        .setStyle(ButtonStyle.Link)
+
       // CREATE PRIVATE THREAD \\
       const modThreadAreaId = await guildSettings.getGuildSetting(
         interaction.guild,
@@ -98,12 +102,12 @@ module.exports = {
       );
 
       const reportedUserId = await interaction.message.embeds[0].description
-          .split("<@")[1]
-          .split(">")[0];
+        .split("<@")[1]
+        .split(">")[0];
 
       const reportedMember = await interaction.guild.members
         .fetch(reportedUserId)
-        .catch((error) => {});
+        .catch((error) => { });
 
       if (!reportedMember) {
         await interaction.editReply({
@@ -142,6 +146,8 @@ module.exports = {
           reason: "Thread for moderation"
         });
 
+        buttonLinkToThread.setURL(newThread.url)
+
         const reportedUserId = await interaction.message.embeds[0].description
           .split("<@")[1]
           .split(">")[0];
@@ -170,8 +176,22 @@ module.exports = {
             }
           ]);
 
+        const reportUserEmbed = new EmbedBuilder()
+          .setTitle(`⚡️ Reporting-System ⚡️`)
+          .setDescription(
+            `Hallo ${reportedMember}!\n\nDu wurdest von einem User gemeldet!\n\nEin Moderator bearbeitet den Fall nun und wartet auf deine Rückmeldung\n➡️ [>>> HIER ANTWORTEN <<<](${newThread.url})`
+          )
+          .setColor(0x51ff00)
+          .setTimestamp(Date.now())
+          .setFooter({
+            iconURL: client.user.displayAvatarURL(),
+            text: `powered by Powerbot`
+          })
+
+        await reportedMember.send({ embeds: [reportUserEmbed] }).catch(error => { })
+
         try {
-          await newThread.members.add(interaction.member.id);
+          await newThread.members.add(interaction.member.id).catch(error => { })
         } catch (error) {
           interaction.channel.send({
             content: `✅Thread erstellt\n❌ Du konntest nicht zum Thread hinzugefügt werden, da du die Mod-Area nicht sehen kannst!`
@@ -208,6 +228,8 @@ module.exports = {
           invitable: false,
           reason: "Thread for moderation"
         });
+
+        buttonLinkToThread.setURL(newThread.url)
 
         const reportedUserId = await interaction.message.embeds[0].description
           .split("<@")[1]
@@ -269,9 +291,17 @@ module.exports = {
       }
 
       if (interaction.guild.premiumTier === 3) {
-        createPrivateThread();
+        await interaction.editReply({
+          ephemeral: true,
+          content: `⏳ . . .`
+        });
+        await createPrivateThread();
       } else {
-        createOpenThread();
+        await interaction.editReply({
+          ephemeral: true,
+          content: `⏳ . . .`
+        });
+        await createOpenThread();
       }
       // CREATE PRIVATE THREAD END \\
 
@@ -311,13 +341,14 @@ module.exports = {
           reportData.reporterId
         );
         reporter.send({ embeds: [reportInArbeitEmbed] });
-      } catch (error) {}
+      } catch (error) { }
 
       await interaction.message.edit({
         components: [
           new ActionRowBuilder().addComponents([
             buttonUebernahme,
             buttonBearbeiten,
+            buttonLinkToThread,
             buttonErledigt
           ])
         ]

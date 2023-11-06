@@ -21,6 +21,7 @@ const DLU = require("@dbd-soft-ui/logs");
 const TOKEN = config.powerbot_token;
 
 const client = new Client({
+  restRequestTimeout: 60000,
   intents: [
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.Guilds,

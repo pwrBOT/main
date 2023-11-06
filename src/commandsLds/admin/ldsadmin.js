@@ -62,7 +62,7 @@ module.exports = {
 
       if (interaction.options.getSubcommand() === "generatelocales") {
         const activeCheck = await fetch(
-          "https://app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Locales/branch/master/status?token=6IlQnelRwGa18jynvwRfZg=="
+          "https://app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Locales/job/master/status?token=6IlQnelRwGa18jynvwRfZg=="
         )
           .then((res) => res.json())
           .then(async (res) => {
@@ -103,7 +103,7 @@ module.exports = {
                     checkMessage.delete().catch((error) => {});
                     // ########################################################### \\
                     const response = await fetch(
-                      "https://app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Locales/branch/master/build?token=6IlQnelRwGa18jynvwRfZg=="
+                      "https://app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Locales/job/master/build?token=6IlQnelRwGa18jynvwRfZg=="
                     );
 
                     let msg = "";
@@ -124,7 +124,7 @@ module.exports = {
 
                     const intervalId = setInterval(() => {
                       fetch(
-                        "https://app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Locales/branch/master/status?token=6IlQnelRwGa18jynvwRfZg=="
+                        "https://app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Locales/job/master/status?token=6IlQnelRwGa18jynvwRfZg=="
                       )
                         .then((res) => res.json())
                         .then((res) => {
@@ -186,7 +186,7 @@ module.exports = {
 
       if (interaction.options.getSubcommand() === "generateaudio") {
         const activeCheck = await fetch(
-          "https://app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Audio/branch/master/status?token=6IlQnelRwGa18jynvwRfZg=="
+          "https://app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Audio/job/master/status?token=6IlQnelRwGa18jynvwRfZg=="
         )
           .then((res) => res.json())
           .then(async (res) => {
@@ -227,7 +227,7 @@ module.exports = {
                     checkMessage.delete().catch((error) => {});
                     // ########################################################### \\
                     const response = await fetch(
-                      "https://app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Audio/branch/master/build?token=6IlQnelRwGa18jynvwRfZg=="
+                      "https://app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Audio/job/master/build?token=6IlQnelRwGa18jynvwRfZg=="
                     );
 
                     let msg = "";
@@ -249,7 +249,7 @@ module.exports = {
 
                     const intervalId = setInterval(() => {
                       fetch(
-                        "https://app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Audio/branch/master/status?token=6IlQnelRwGa18jynvwRfZg=="
+                        "https://app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Audio/job/master/status?token=6IlQnelRwGa18jynvwRfZg=="
                       )
                         .then((res) => res.json())
                         .then((res) => {
@@ -311,7 +311,7 @@ module.exports = {
 
       if (interaction.options.getSubcommand() === "generatefirematerials") {
         const activeCheck = await fetch(
-          "https://app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Config/branch/master/status?token=6IlQnelRwGa18jynvwRfZg=="
+          "https://app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Config/job/master/status?token=6IlQnelRwGa18jynvwRfZg=="
         )
           .then((res) => res.json())
           .then(async (res) => {
@@ -352,7 +352,7 @@ module.exports = {
                     checkMessage.delete().catch((error) => {});
                     // ########################################################### \\
                     const response = await fetch(
-                      "https://app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Config/branch/master/build?token=6IlQnelRwGa18jynvwRfZg=="
+                      "https://app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Config/job/master/build?token=6IlQnelRwGa18jynvwRfZg=="
                     );
 
                     let msg = "";
@@ -374,7 +374,7 @@ module.exports = {
 
                     const intervalId = setInterval(() => {
                       fetch(
-                        "https://app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Config/branch/master/status?token=6IlQnelRwGa18jynvwRfZg=="
+                        "https://app.s-loer.de/api/v1/modules/jenkins/external/jobs/EM-Config/job/master/status?token=6IlQnelRwGa18jynvwRfZg=="
                       )
                         .then((res) => res.json())
                         .then((res) => {

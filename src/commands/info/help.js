@@ -58,7 +58,7 @@ module.exports = {
 
         if (voiceChannelIds) {
           voiceChannelIds.forEach(async (channel) => {
-            const categorys = await guild.channels.fetch(channel);
+            const categorys = await guild.channels.fetch(channel).catch(error => {});
             voiceXPCategorys += `${categorys}\n`;
           });
         } else {

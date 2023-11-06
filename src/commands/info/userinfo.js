@@ -42,6 +42,7 @@ module.exports = {
 
         let userId = member.id;
         let guildId = guild.id;
+        console.log("CANVAS / USERBANNER: getUser")
         let userData = await usersRepository.getUser(userId, guildId);
 
         if (!userData) {
@@ -52,6 +53,7 @@ module.exports = {
           return resolve(null);
         }
 
+        console.log("CANVAS / USERBANNER: getVoiceTime")
         const totalVoiceTime = userInfos.getVoiceTime(userData);
         let totalVoiceTimeDays = (userData.totalVoiceTime / 60 / 24).toFixed(1);
 
@@ -59,6 +61,7 @@ module.exports = {
         let currentLevel = userData?.Level ?? 0;
         let nextLevelXP = userData.Level * userData.Level * 100 + 100;
 
+        console.log("CANVAS / USERBANNER: getWarns")
         const warnsText = await userInfos.getCurrentWarns(member);
         const oldWarnsText = await userInfos.getOldWarns(member);
         const userVCActivity = await userInfos.getUserVCActivity(member, guild);
@@ -176,6 +179,7 @@ module.exports = {
             }
           ]);
 
+        console.log("CANVAS / USERBANNER: interactionReply")
         await interaction.reply({ embeds: [userembed], ephemeral: true });
 
         const commandLogRepository = require("../../mysql/commandLogRepository");

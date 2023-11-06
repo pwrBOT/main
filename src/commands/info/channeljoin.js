@@ -38,14 +38,19 @@ module.exports = {
       let message = "";
       let message2 = "";
 
+      if (!channelConnections) {
+        await interaction.reply({ content: `Keine Einträge gefunden!`, ephemeral: true});
+        return
+      }
+
       for (const channelConnection of channelConnections) {
         let member =
-          (await guild.members.fetch(channelConnection.userId)) ?? null;
+          (await guild.members.fetch(channelConnection.userId).catch(error => {})) ?? null;
         if (member == null) {
           member = await client.users.fetch(channelConnection.userId);
         }
 
-        const timestamp = Date.parse(channelConnection.timestamp) / 1000 - 7200;
+        const timestamp = Date.parse(channelConnection.timestamp) / 1000;
         const action = channelConnection.action.replaceAll("JOIN", "➡️").replaceAll("LEAVE", "⬅️").replaceAll("SWITCH", "🔄")
 
         if (message.length >= 900) {
