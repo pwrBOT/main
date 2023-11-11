@@ -48,8 +48,23 @@ module.exports = {
                 .setStyle(ButtonStyle.Secondary)
                 .setDisabled(true);
 
+            // ####### CHANGE EMBED ######## \\
+
+            const oldEmbed = message.embeds[0]
+
+            const newTitle = oldEmbed.title.slice(0, -1) + "e:"
+
+            const playerSearchEmbedNew = new EmbedBuilder()
+                    .setTitle(newTitle)
+                    .addFields(oldEmbed.fields)
+                    .setColor(oldEmbed.hexColor)
+                    .setImage(oldEmbed.image.url)
+                    .setTimestamp(new Date(oldEmbed.timestamp))
+                    .setFooter(oldEmbed.footer);
+
 
             message.edit({
+                embeds: [playerSearchEmbedNew],
                 components: [
                     new ActionRowBuilder().addComponents([
                         buttonPlayersEnd

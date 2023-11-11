@@ -37,6 +37,11 @@ const getldsPlayersearchEntrybyChannel = async (guildId, channelId) => {
 
 const insertPlayersearchEntry = async (guildId, memberId, messageId, messageChannelId, modus, map, anmerkung, spielerzahl, channelId) => {
   return new Promise(async (resolve) => {
+
+    if (!anmerkung) {
+      anmerkung = "-"
+    }
+
     mysqlHelper
       .query(
         "INSERT INTO powerbot_lds_spielersuche (guildId, memberId, messageId, messageChannelId, modus, map, anmerkung, spielerzahl, channelId, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? ,?)",
